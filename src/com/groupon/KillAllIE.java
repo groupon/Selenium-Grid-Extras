@@ -37,16 +37,22 @@
 
 package com.groupon;
 
-public class KillAllInternetExplorerInstances extends ExecuteOSTask {
+public class KillAllIE extends ExecuteOSTask {
   private static String description = "Executes os level kill command on all instance of Internet Explorer";
   private static String endpoint = "/kill_ie";
-  private static String className = KillAllInternetExplorerInstances.class.getCanonicalName();
+  private static String className = KillAllIE.class.getCanonicalName();
 
   public static String execute(){
 
+    String message;
 
+    if (OSChecker.isWindows()){
+      message = KillAllByName.execute("iexplore.exe");
+    } else {
+       message = "{\"exit_code\": \"n/a\", \"standard_out\": \"\", \"standard_error\": \"\"}";
+    }
 
-    return ExecuteCommand.execRuntime("taskkill -F -IM iexplore.exe");
+    return message;
   }
 
 }

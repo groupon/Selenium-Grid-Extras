@@ -48,7 +48,7 @@ public class Setup extends ExecuteOSTask {
 
     //OS specific setup
     if (OSChecker.isWindows()){
-      message =  KillAllInternetExplorerInstances.execute();
+      message =  KillAllIE.execute();
     } else {
       message = "On non windows box";
     }

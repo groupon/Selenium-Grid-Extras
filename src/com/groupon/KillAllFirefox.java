@@ -37,9 +37,9 @@
 
 package com.groupon;
 
-public class KillAllChrome extends ExecuteOSTask {
-  private static String description = "Executes os level kill command on all instance of Google Chrome";
-  private static String endpoint = "/kill_chrome";
+public class KillAllFirefox extends ExecuteOSTask {
+  private static String description = "Executes os level kill command on all instance of Firefox";
+  private static String endpoint = "/kill_firefox";
   private static String className = KillAllChrome.class.getCanonicalName();
 
   public static String execute(){
@@ -47,12 +47,13 @@ public class KillAllChrome extends ExecuteOSTask {
     String message;
 
     if (OSChecker.isWindows()){
-      message = KillAllByName.execute("chrome.exe");
+      message = KillAllByName.execute("firefox.exe");
     } else  {
-      message = KillAllByName.execute("[Cc]hrome");
+      message = KillAllByName.execute("[Ff]irefox");
     }
 
     return message;
 
   }
+
 }
