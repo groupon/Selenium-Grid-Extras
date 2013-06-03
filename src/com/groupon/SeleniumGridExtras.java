@@ -52,14 +52,21 @@ public class SeleniumGridExtras {
         server.createContext("/setup", new HttpExecutor() {
             @Override
             String execute() {
-                return ExecuteCommand.execRuntime("taskkill -F -IM iexplore.exe");
+                return Setup.execute();
             }
         });
         server.createContext("/teardown", new HttpExecutor() {
             @Override
             String execute() {
-                return ExecuteCommand.execRuntime("shutdown -r -t 1 -f", false);
+                return Teardown.execute();
             }
+        });
+
+        server.createContext("/api", new HttpExecutor(){
+          @Override
+          String execute(){
+            return ApiDocumentation.execute();
+          }
         });
 
         server.setExecutor(null);
@@ -80,61 +87,3 @@ abstract class HttpExecutor implements HttpHandler {
     abstract String execute();
 }
 
-class ExecuteCommand {
-    public static String execRuntime(String cmd) {
-        return execRuntime(cmd, true);
-    }
-
-    public static String execRuntime(String cmd, boolean waitToFinish) {
-        System.out.println("Starting to execute - " + cmd);
-        Process process;
-
-        try {
-            process = Runtime.getRuntime().exec(cmd);
-        } catch (IOException e) {
-            return formatResult(1, "", "Problems in running " + cmd + "\n" + e.toString());
-        }
-
-        int exitCode;
-        if (waitToFinish) {
-            try {
-                System.out.println("Waiting to finish");
-                exitCode = process.waitFor();
-                System.out.println("Command Finished");
-            } catch (InterruptedException e) {
-                return formatResult(1, "", "Interrupted running " + cmd + "\n" + e.toString());
-            }
-        } else {
-            System.out.println("Not waiting for finish");
-            return formatResult(0, "Background process started", "");
-        }
-
-        try {
-            String output = inputStreamToString(process.getInputStream());
-            String error = inputStreamToString(process.getErrorStream());
-            String returnResults = formatResult(exitCode, output, error);
-            System.out.println(returnResults);
-            return returnResults;
-        } catch (IOException e) {
-            return formatResult(1, "", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
-        } finally {
-            process.destroy();
-        }
-    }
-
-    public static String formatResult(int result, String output, String error) {
-        return "Exit: " + result + "\n" +
-                "Standard Out: " + output + "\n" +
-                "Standard Error: " + error + "\n";
-    }
-
-    public static String inputStreamToString(InputStream is) throws IOException {
-        StringBuilder result = new StringBuilder();
-        int in;
-        while ((in = is.read()) != -1) {
-            result.append((char) in);
-        }
-        is.close();
-        return result.toString();
-    }
-}
