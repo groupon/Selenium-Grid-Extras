@@ -37,8 +37,12 @@
 
 package com.groupon;
 
+import org.json.simple.JSONValue;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 
 class ExecuteCommand {
@@ -74,7 +78,6 @@ class ExecuteCommand {
       String output = inputStreamToString(process.getInputStream());
       String error = inputStreamToString(process.getErrorStream());
       String returnResults = formatResult(exitCode, output, error);
-      System.out.println(returnResults);
       return returnResults;
     } catch (IOException e) {
       return formatResult(1, "", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
@@ -84,9 +87,13 @@ class ExecuteCommand {
   }
 
   public static String formatResult(int result, String output, String error) {
-    return "Exit: " + result + "\n" +
-           "Standard Out: " + output + "\n" +
-           "Standard Error: " + error + "\n";
+
+    Map resultsHash = new HashMap();
+    resultsHash.put("exit_code", result);
+    resultsHash.put("standard_out", output);
+    resultsHash.put("standard_error", error);
+
+    return JSONValue.toJSONString(resultsHash);
   }
 
   public static String inputStreamToString(InputStream is) throws IOException {
