@@ -1,0 +1,6 @@
+{
+    "activated_modules": ["Setup", "Teardown", "MoveMouse", "RebootNode", "KillAllInternetExplorerInstances"],
+    "deactivated_modules": ["StartVideoRecording", "StopVideoRecording"],
+    "setup": ["KillAllInternetExplorerInstances", "MoveMouse", "StartVideoRecording"],
+    "teardown": ["KillAllInternetExplorerInstances", "StopVideoRecording", "RebootNode"]
+}
