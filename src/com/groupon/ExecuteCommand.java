@@ -37,6 +37,8 @@
 
 package com.groupon;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.IOException;
@@ -88,12 +90,27 @@ class ExecuteCommand {
 
   public static String formatResult(int result, String output, String error) {
 
-    Map resultsHash = new HashMap();
-    resultsHash.put("exit_code", result);
-    resultsHash.put("standard_out", output);
-    resultsHash.put("standard_error", error);
+    JSONObject resultsHash = new JSONObject();
+    JSONArray standardOut = new JSONArray();
+    JSONArray standardError = new JSONArray();
 
-    return JSONValue.toJSONString(resultsHash);
+    String stdOutLines[] = output.split("\n");
+    for(String line: stdOutLines) {
+      standardOut.add(line);
+    }
+
+    String stdErrorLines[] = error.split("\n");
+    for(String line: stdErrorLines) {
+      standardError.add(line);
+    }
+
+
+
+    resultsHash.put("exit_code", result);
+    resultsHash.put("standard_out", standardOut);
+    resultsHash.put("standard_error", standardError);
+
+    return resultsHash.toString();
   }
 
   public static String inputStreamToString(InputStream is) throws IOException {
