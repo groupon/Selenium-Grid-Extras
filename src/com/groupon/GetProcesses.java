@@ -51,7 +51,7 @@ public class GetProcesses {
       if (OSChecker.isWindows()){
         message = ExecuteCommand.execRuntime("tasklist");
       } else {
-        message = "ps aux";
+        message = ExecuteCommand.execRuntime("ps x");
       }
 
       return message;
