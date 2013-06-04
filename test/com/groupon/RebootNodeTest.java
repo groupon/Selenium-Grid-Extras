@@ -6,28 +6,29 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created with IntelliJ IDEA. User: dima Date: 6/4/13 Time: 4:36 PM To change this template use
+ * Created with IntelliJ IDEA. User: dima Date: 6/4/13 Time: 5:15 PM To change this template use
  * File | Settings | File Templates.
  */
-public class KillAllIETest {
+public class RebootNodeTest {
+
   private ExecuteOSTask task;
   private String windowsCommand;
 
   @Before
   public void setUp() throws Exception {
-    task = new KillAllIE();
-    windowsCommand = "taskkill -F -IM iexplore.exe";
+    task = new RebootNode();
+    windowsCommand = "shutdown -r -t 1 -f";
   }
 
   @Test
   public void testGetDescription() throws Exception {
 
-    assertEquals("Executes os level kill command on all instance of Internet Explorer", task.getDescription());
+    assertEquals("Restart the host node", task.getDescription());
   }
 
   @Test
   public void testGetEndpoint() throws Exception {
-    assertEquals("/kill_ie", task.getEndpoint());
+    assertEquals("/reboot", task.getEndpoint());
   }
 
   @Test
