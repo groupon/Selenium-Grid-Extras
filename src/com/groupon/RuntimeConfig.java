@@ -57,12 +57,12 @@ public class RuntimeConfig {
 
   public static Map config;
 
-  public static void loadConfig(String configFile){
+  public static void loadConfig(String configFile) {
 
     String configString = readConfigFile(configFile);
 
     Map parsedConfig = new HashMap();
-    if (configString != ""){
+    if (configString != "") {
       parseJson(configString, parsedConfig);
     }
 
@@ -75,56 +75,56 @@ public class RuntimeConfig {
   }
 
 
-  public static List getSetupModules(){
-    return (List)config.get("setup");
+  public static List<String> getSetupModules() {
+    return (List<String>) config.get("setup");
   }
 
-  public static void printSetupModules(){
+  public static void printSetupModules() {
     System.out.println("=== Modules to run before each test session ===");
-    for( Object o: getSetupModules() ) {
+    for (Object o : getSetupModules()) {
       System.out.println(o);
     }
   }
 
-  public static List getTeardownModules(){
-    return (List)config.get("teardown");
+  public static List<String> getTeardownModules() {
+    return (List<String>) config.get("teardown");
   }
 
-  public static void printTeardownModules(){
+  public static void printTeardownModules() {
     System.out.println("=== Modules to run after each test session ===");
-    for( Object o: getTeardownModules() ) {
+    for (Object o : getTeardownModules()) {
       System.out.println(o);
     }
   }
 
 
-  public static List getActivatedModules(){
-    return (List)config.get("activated_modules");
+  public static List<String> getActivatedModules() {
+    return (List<String>) config.get("activated_modules");
   }
 
-  public static List getDeactivatedModules(){
-    return (List)config.get("deactivated_modules");
+  public static List<String> getDeactivatedModules() {
+    return (List<String>) config.get("deactivated_modules");
   }
 
 
-  public static void printDeactivatedModules(){
+  public static void printDeactivatedModules() {
     System.out.println("=== Modules which are deactivated ===");
-    for( Object o: getDeactivatedModules() ) {
+    for (Object o : getDeactivatedModules()) {
       System.out.println(o);
     }
   }
 
-  public static void printActivatedModules(){
+  public static void printActivatedModules() {
     System.out.println("=== Activated Modules ===");
-    for( Object o: getActivatedModules() ) {
+    for (Object o : getActivatedModules()) {
       System.out.println(o);
     }
   }
 
 
-  private static void updateConfig(Map configHash){
+  private static void updateConfig(Map configHash) {
 
-    if (configHash.isEmpty()){
+    if (configHash.isEmpty()) {
       //Do nothing, the file didn't read anything in
     } else {
       config = configHash;
@@ -132,10 +132,10 @@ public class RuntimeConfig {
 
   }
 
-  private static void parseJson(String inputString, Map returnHash){
+  private static void parseJson(String inputString, Map returnHash) {
 
-    JSONParser parser=new JSONParser();
-    ContainerFactory containerFactory = new ContainerFactory(){
+    JSONParser parser = new JSONParser();
+    ContainerFactory containerFactory = new ContainerFactory() {
       public List creatArrayContainer() {
         return new LinkedList();
       }
@@ -146,11 +146,11 @@ public class RuntimeConfig {
 
     };
 
-    try{
-      Map json = (Map)parser.parse(inputString, containerFactory);
+    try {
+      Map json = (Map) parser.parse(inputString, containerFactory);
       Iterator iter = json.entrySet().iterator();
-      while(iter.hasNext()){
-        Map.Entry entry = (Map.Entry)iter.next();
+      while (iter.hasNext()) {
+        Map.Entry entry = (Map.Entry) iter.next();
         returnHash.put(entry.getKey(), entry.getValue());
       }
 
@@ -160,17 +160,17 @@ public class RuntimeConfig {
     }
   }
 
-  private static String readConfigFile(String filePath){
+  private static String readConfigFile(String filePath) {
     String returnString = "";
-    try{
+    try {
       BufferedReader reader = new BufferedReader(new FileReader(filePath));
       String line = null;
       while ((line = reader.readLine()) != null) {
         returnString = returnString + line;
       }
-    } catch (FileNotFoundException error){
+    } catch (FileNotFoundException error) {
       System.out.println("File" + filePath + " does not exist, going to use default configs");
-    } catch (IOException error){
+    } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
     }
 
