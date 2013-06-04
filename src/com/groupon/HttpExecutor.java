@@ -37,39 +37,22 @@
 
 package com.groupon;
 
-import com.sun.net.httpserver.HttpServer;
-import java.net.InetSocketAddress;
-import java.util.LinkedList;
-import java.util.List;
 
-public class SeleniumGridExtras {
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
-  public static void main(String[] args) throws Exception {
+import java.io.IOException;
+import java.io.OutputStream;
 
-    RuntimeConfig.loadConfig("selenium_grid_extras_config.json");
-    System.out.println(RuntimeConfig.getActivatedModules());
+abstract class HttpExecutor implements HttpHandler {
 
-    HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
-    List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getActivatedModules()) {
-      tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
-    }
-
-    for (final ExecuteOSTask task : tasks) {
-
-      server.createContext(task.getEndpoint(), new HttpExecutor() {
-        @Override
-        String execute() {
-          return task.execute();
-        }
-      });
-
-      task.execute();
-    }
-
-    server.setExecutor(null);
-    server.start();
-    System.out.println("Server has been started");
+  public void handle(HttpExchange t) throws IOException {
+    String response = execute();
+    t.sendResponseHeaders(200, response.length());
+    OutputStream os = t.getResponseBody();
+    os.write(response.getBytes());
+    os.close();
   }
-}
 
+  abstract String execute();
+}
