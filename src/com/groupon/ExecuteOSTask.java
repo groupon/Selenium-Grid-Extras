@@ -40,21 +40,25 @@ package com.groupon;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ExecuteOSTask {
-  private static String description = "";
-  private static String endpoint = "";
-  private static String className = ExecuteOSTask.class.getCanonicalName();
+public abstract class ExecuteOSTask {
 
-  private static String execute(){
-    //TODO: Make this throw an exception if it's not overwritten
-    return "";
-  }
+  public String execute(){
+    throw new RuntimeException("You need to pass in a parameter to this task");
+  };
 
-  private static void register(){
+  public String execute(String command){
+    throw new RuntimeException("This task does not accept parameters");
+  };
+
+  public abstract String getEndpoint();
+
+  public abstract String getDescription();
+
+  public static void register() {
     Map apiDescription = new HashMap();
-    apiDescription.put("endpoint", endpoint);
-    apiDescription.put("description", description);
-    apiDescription.put("class", className);
+//    apiDescription.put("endpoint", endpoint);
+//    apiDescription.put("description", description);
+//    apiDescription.put("class", className);
 
     ApiDocumentation.register(apiDescription);
   }

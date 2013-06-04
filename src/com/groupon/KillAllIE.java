@@ -37,19 +37,32 @@
 
 package com.groupon;
 
-public class KillAllIE extends ExecuteOSTask {
-  private static String description = "Executes os level kill command on all instance of Internet Explorer";
-  private static String endpoint = "/kill_ie";
-  private static String className = KillAllIE.class.getCanonicalName();
+public class KillAllIE extends KillAllByName {
 
-  public static String execute(){
+//  private static String description = "Executes os level kill command on all instance of Internet Explorer";
+//  private static String endpoint = "/kill_ie";
+//  private static String className = KillAllIE.class.getCanonicalName();
+
+
+  @Override
+  public String getEndpoint() {
+    return "/kill_ie";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Executes os level kill command on all instance of Internet Explorer";
+  }
+
+  @Override
+  public String execute() {
 
     String message;
 
-    if (OSChecker.isWindows()){
-      message = KillAllByName.execute("iexplore.exe");
+    if (OSChecker.isWindows()) {
+      message = super.execute("iexplore.exe");
     } else {
-       message = "{\"exit_code\": \"n/a\", \"standard_out\": \"\", \"standard_error\": \"\"}";
+      message = "{\"exit_code\": \"n/a\", \"standard_out\": \"\", \"standard_error\": \"\"}";
     }
 
     return message;

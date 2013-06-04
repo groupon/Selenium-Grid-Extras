@@ -37,19 +37,27 @@
 
 package com.groupon;
 
-public class KillAllFirefox extends ExecuteOSTask {
-  private static String description = "Executes os level kill command on all instance of Firefox";
-  private static String endpoint = "/kill_firefox";
-  private static String className = KillAllChrome.class.getCanonicalName();
+public class KillAllFirefox extends KillAllByName {
 
-  public static String execute(){
+  @Override
+  public String getEndpoint() {
+    return "/kill_firefox";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Executes os level kill command on all instance of Firefox";
+  }
+
+  @Override
+  public String execute() {
 
     String message;
 
-    if (OSChecker.isWindows()){
-      message = KillAllByName.execute("firefox.exe");
-    } else  {
-      message = KillAllByName.execute("[Ff]irefox");
+    if (OSChecker.isWindows()) {
+      message = super.execute("firefox.exe");
+    } else {
+      message = super.execute("[Ff]irefox");
     }
 
     return message;

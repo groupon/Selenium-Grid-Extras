@@ -37,18 +37,28 @@
 
 package com.groupon;
 
-public class KillAllByName {
-  private static String description = "Executes os level kill command on a given PID name";
-  private static String endpoint = "/kill_all_by_name";
-  private static String className = KillAllChrome.class.getCanonicalName();
+public class KillAllByName extends ExecuteOSTask {
 
-  public static String execute(String pidName){
+
+  @Override
+  public String getEndpoint() {
+    return "/kill_all_by_name";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Executes os level kill command on a given PID name";
+  }
+
+
+  @Override
+  public String execute(String pidName) {
 
     String message;
 
-    if (OSChecker.isWindows()){
+    if (OSChecker.isWindows()) {
       message = ExecuteCommand.execRuntime("taskkill -F -IM " + pidName);
-    } else  {
+    } else {
       message = ExecuteCommand.execRuntime("killall -v -m " + pidName);
     }
 

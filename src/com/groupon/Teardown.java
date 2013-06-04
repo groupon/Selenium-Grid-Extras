@@ -37,22 +37,29 @@
 
 package com.groupon;
 
-public class Teardown {
+public class Teardown extends ExecuteOSTask {
 
-  private static String description = "Calls several pre-defined tasks to act as teardown after build";
-  private static String endpoint = "/teardown";
-  private static String className = Teardown.class.getCanonicalName();
-
-  public static String execute(){
+  @Override
+  public String execute() {
 
     String message;
-    if (OSChecker.isWindows()){
-      message =  RebootNode.execute();
+    if (OSChecker.isWindows()) {
+      message = RebootNode.execute();
     } else {
       message = "On non windows box";
     }
 
     return message;
+  }
+
+  @Override
+  public String getEndpoint() {
+    return "/teardown";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Calls several pre-defined tasks to act as teardown after build";
   }
 
 }

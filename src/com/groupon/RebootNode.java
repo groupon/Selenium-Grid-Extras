@@ -38,21 +38,29 @@
 package com.groupon;
 
 
-public class RebootNode {
-  private static String description = "Restart the host node";
-  private static String endpoint = "/reboot";
-  private static String className = RebootNode.class.getCanonicalName();
+public class RebootNode extends ExecuteOSTask {
 
-  public static String execute(){
+  @Override
+  public String execute() {
 
     String message;
 
-    if (OSChecker.isWindows()){
+    if (OSChecker.isWindows()) {
       message = ExecuteCommand.execRuntime("shutdown -r -t 1 -f", false);
     } else {
       message = "not windows";
     }
 
     return message;
+  }
+
+  @Override
+  public String getEndpoint() {
+    return "/reboot";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Restart the host node";
   }
 }

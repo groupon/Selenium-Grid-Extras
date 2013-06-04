@@ -41,18 +41,24 @@ import java.awt.*;
 
 public class MoveMouse extends ExecuteOSTask {
 
-  private static String description = "Moves the computers mouse to 0,0.";
-  private static String endpoint = "/move_mouse";
-  private static String className = MoveMouse.class.getCanonicalName();
+  @Override
+  public String getEndpoint() {
+    return "/move_mouse";
+  }
 
+  @Override
+  public String getDescription() {
+    return "Moves the computers mouse to 0,0.";
+  }
 
-  public static String execute(){
+  @Override
+  public String execute() {
 
     String message;
 
-    try{
+    try {
       Robot moveMouse = new Robot();
-      moveMouse.mouseMove(0,0);
+      moveMouse.mouseMove(0, 0);
       message = "mouse moved to 0,0";
     } catch (AWTException error) {
       message = error.toString();

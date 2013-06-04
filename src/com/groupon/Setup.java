@@ -39,22 +39,30 @@ package com.groupon;
 
 public class Setup extends ExecuteOSTask {
 
-  private static String description = "Calls several pre-defined tasks to act as setup before build";
-  private static String endpoint = "/setup";
-  private static String className = Setup.class.getCanonicalName();
+  @Override
+  public String getEndpoint() {
+    return "/setup";
+  }
 
-  public static String execute() {
-    String message;
+  @Override
+  public String getDescription() {
+    return "Calls several pre-defined tasks to act as setup before build";
+  }
 
-    //OS specific setup
-    if (OSChecker.isWindows()){
-      message =  KillAllIE.execute();
-    } else {
-      message = "On non windows box";
-    }
+  @Override
+  public String execute() {
+    String message = "";
 
-    //Global setup
-      message = message + MoveMouse.execute();
+//    //OS specific setup
+//    if (OSChecker.isWindows()) {
+//
+//      message = KillAllIE.execute();
+//    } else {
+//      message = "On non windows box";
+//    }
+//
+//    //Global setup
+//    message = message + MoveMouse.execute();
 
     return message;
   }

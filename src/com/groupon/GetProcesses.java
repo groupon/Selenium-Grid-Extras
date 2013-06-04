@@ -38,13 +38,19 @@
 
 package com.groupon;
 
-public class GetProcesses {
+public class GetProcesses extends ExecuteOSTask{
+  @Override
+  public String getEndpoint() {
+    return "/ps";
+  }
 
-    private static String description = "Executes os level kill command on all instance of Internet Explorer";
-    private static String endpoint = "/ps";
-    private static String className = GetProcesses.class.getCanonicalName();
+  @Override
+  public String getDescription() {
+    return "Executes os level kill command on all instance of Internet Explorer";
+  }
 
-    public static String execute(){
+  @Override
+  public String execute(){
 
       String message;
 
