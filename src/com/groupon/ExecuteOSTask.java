@@ -42,17 +42,49 @@ import java.util.Map;
 
 public abstract class ExecuteOSTask {
 
-  public String execute(){
-    throw new RuntimeException("You need to pass in a parameter to this task");
-  };
+  final private String noteImplementedError = "This task was not implemented on " + OSChecker.getOSName();
+  public boolean waitToFinishTask = true;
 
-  public String execute(String command){
-    throw new RuntimeException("This task does not accept parameters");
-  };
+  public String execute() {
+    return execute("");
+  }
+
+  public String execute(String parameter) {
+    String command = OSChecker.isWindows() ? getWindowsCommand() : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
+    return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
+  }
 
   public abstract String getEndpoint();
 
   public abstract String getDescription();
+
+
+  public String getWindowsCommand(String parameter){
+    throw new RuntimeException(noteImplementedError);
+  }
+
+  public String getWindowsCommand() {
+    return getWindowsCommand("");
+  }
+
+
+  public String getLinuxCommand(String parameter) {
+    throw new RuntimeException(noteImplementedError);
+  }
+
+  public String getLinuxCommand() {
+    return getLinuxCommand("");
+  }
+
+  public String getMacCommand(String parameter) {
+    return getLinuxCommand();
+  }
+
+  public String getMacCommand()
+  {
+    return getMacCommand("");
+  }
+
 
   public static void register() {
     Map apiDescription = new HashMap();

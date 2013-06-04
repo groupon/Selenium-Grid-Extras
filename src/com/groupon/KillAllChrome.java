@@ -50,19 +50,13 @@ public class KillAllChrome extends KillAllByName {
     return "/kill_chrome";
   }
 
+  @Override
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("chrome.exe");
+  }
 
   @Override
-  public String execute() {
-
-    String message;
-
-    if (OSChecker.isWindows()) {
-      message = super.execute("chrome.exe");
-    } else {
-      message = super.execute("[Cc]hrome");
-    }
-
-    return message;
-
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("[Cc]hrome");
   }
 }

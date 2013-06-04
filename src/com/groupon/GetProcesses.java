@@ -50,17 +50,12 @@ public class GetProcesses extends ExecuteOSTask{
   }
 
   @Override
-  public String execute(){
+  public String getWindowsCommand() {
+    return "tasklist";
+  }
 
-      String message;
-
-      if (OSChecker.isWindows()){
-        message = ExecuteCommand.execRuntime("tasklist");
-      } else {
-        message = ExecuteCommand.execRuntime("ps x");
-      }
-
-      return message;
-    }
-
+  @Override
+  public String getLinuxCommand() {
+    return getMacCommand();
+  }
 }

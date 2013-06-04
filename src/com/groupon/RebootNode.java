@@ -40,18 +40,11 @@ package com.groupon;
 
 public class RebootNode extends ExecuteOSTask {
 
+  public boolean waitToFinishTask = false;
+
   @Override
-  public String execute() {
-
-    String message;
-
-    if (OSChecker.isWindows()) {
-      message = ExecuteCommand.execRuntime("shutdown -r -t 1 -f", false);
-    } else {
-      message = "not windows";
-    }
-
-    return message;
+  public String getWindowsCommand() {
+    return "shutdown -r -t 1 -f";
   }
 
   @Override

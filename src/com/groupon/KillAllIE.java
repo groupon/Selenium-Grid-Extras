@@ -55,17 +55,14 @@ public class KillAllIE extends KillAllByName {
   }
 
   @Override
-  public String execute() {
-
-    String message;
-
-    if (OSChecker.isWindows()) {
-      message = super.execute("iexplore.exe");
-    } else {
-      message = "{\"exit_code\": \"n/a\", \"standard_out\": \"\", \"standard_error\": \"\"}";
-    }
-
-    return message;
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("iexplore.exe");
   }
+
+  @Override
+  public String getLinuxCommand(String parameter) {
+    throw new RuntimeException("Kill All IE task does not work on Non-Windows machines");
+  }
+
 
 }

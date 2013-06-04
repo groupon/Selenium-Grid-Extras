@@ -52,17 +52,13 @@ public class KillAllByName extends ExecuteOSTask {
 
 
   @Override
-  public String execute(String pidName) {
-
-    String message;
-
-    if (OSChecker.isWindows()) {
-      message = ExecuteCommand.execRuntime("taskkill -F -IM " + pidName);
-    } else {
-      message = ExecuteCommand.execRuntime("killall -v -m " + pidName);
-    }
-
-    return message;
-
+  public String getWindowsCommand(String parameter) {
+    return "taskkill -F -IM " + parameter;
   }
+
+  @Override
+  public String getLinuxCommand(String parameter) {
+    return "killall -v -m " + parameter;
+  }
+
 }

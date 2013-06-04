@@ -40,17 +40,15 @@ package com.groupon;
 public class Teardown extends ExecuteOSTask {
 
   @Override
-  public String execute() {
-
-    String message;
-    if (OSChecker.isWindows()) {
-      message = RebootNode.execute();
-    } else {
-      message = "On non windows box";
-    }
-
-    return message;
+  public String getWindowsCommand() {
+    return "";
   }
+
+  @Override
+  public String getLinuxCommand() {
+    return getMacCommand();
+  }
+
 
   @Override
   public String getEndpoint() {

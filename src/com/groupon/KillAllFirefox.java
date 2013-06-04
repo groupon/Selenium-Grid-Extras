@@ -50,18 +50,12 @@ public class KillAllFirefox extends KillAllByName {
   }
 
   @Override
-  public String execute() {
-
-    String message;
-
-    if (OSChecker.isWindows()) {
-      message = super.execute("firefox.exe");
-    } else {
-      message = super.execute("[Ff]irefox");
-    }
-
-    return message;
-
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("firefox.exe");
   }
 
+  @Override
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("[Ff]irefox");
+  }
 }
