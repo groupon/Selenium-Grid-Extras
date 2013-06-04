@@ -42,11 +42,15 @@ public class OSChecker {
 
 
   public static boolean isWindows(){
-    return System.getProperty("os.name").startsWith("Windows");
+    return getOSName().startsWith("Windows");
   }
 
   public static boolean isMac(){
-    return System.getProperty("os.name").startsWith("Mac");
+    return getOSName().startsWith("Mac");
+  }
+
+  public static String getOSName(){
+    return System.getProperty("os.name");
   }
 
 }
