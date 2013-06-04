@@ -77,12 +77,11 @@ public abstract class ExecuteOSTask {
   }
 
   public String getMacCommand(String parameter) {
-    return getLinuxCommand();
+    return getLinuxCommand(parameter);
   }
 
-  public String getMacCommand()
-  {
-    return getMacCommand("");
+  public String getMacCommand() {
+    return getLinuxCommand();
   }
 
 

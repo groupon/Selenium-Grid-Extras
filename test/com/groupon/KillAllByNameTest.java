@@ -20,8 +20,8 @@ public class KillAllByNameTest {
   @Before
   public void setUp() throws Exception {
     task = new KillAllByName();
-    windowsCommand = "taskkill -F -IM ";
-    linuxCommnad = "killall -v -m ";
+    windowsCommand = "taskkill -F -IM test";
+    linuxCommnad = "killall -v -m test";
     macCommand = linuxCommnad;
   }
 
@@ -37,16 +37,32 @@ public class KillAllByNameTest {
 
   @Test
   public void testgetWindowsCommand() throws Exception {
-    assertEquals(windowsCommand, task.getWindowsCommand(""));
+    assertEquals(windowsCommand, task.getWindowsCommand("test"));
   }
 
   @Test
   public void testgetMacCommand() throws Exception {
-    assertEquals(macCommand, task.getMacCommand(""));
+    assertEquals(macCommand, task.getMacCommand("test"));
   }
 
   @Test
   public void testgetLinuxCommand() throws Exception {
     assertEquals(linuxCommnad, task.getLinuxCommand(""));
   }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetLinuxCommandNoParam() throws Exception {
+    task.getLinuxCommand();
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetMacCommandNoParam() throws Exception {
+    task.getMacCommand();
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testGetWindowsCommandNoParam() throws Exception {
+    task.getWindowsCommand();
+  }
+
 }
