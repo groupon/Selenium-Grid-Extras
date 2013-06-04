@@ -73,11 +73,6 @@ public class KillAllFirefoxTest {
   }
 
   @Test
-  public void testgetMacCommand() throws Exception {
-    assertEquals(macCommand, task.getMacCommand());
-  }
-
-  @Test
   public void testgetLinuxCommand() throws Exception {
     assertEquals(linuxCommnad, task.getLinuxCommand());
   }
