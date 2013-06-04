@@ -80,7 +80,7 @@ public class KillAllByNameTest {
 
   @Test
   public void testgetLinuxCommand() throws Exception {
-    assertEquals(linuxCommnad, task.getLinuxCommand(""));
+    assertEquals(linuxCommnad, task.getLinuxCommand("test"));
   }
 
   @Test(expected = RuntimeException.class)
