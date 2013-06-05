@@ -56,11 +56,6 @@ public class RuntimeConfig {
     if (configString != "") {
 
       updateConfig(JsonWrapper.parseJson(configString));
-
-      printModuleStatus();
-
-      printSetupModules();
-      printTeardownModules();
     }
   }
 
@@ -69,24 +64,10 @@ public class RuntimeConfig {
     return (List<String>) config.get("setup");
   }
 
-  public static void printSetupModules() {
-    System.out.println("=== Modules to run before each test session ===");
-    for (Object o : getSetupModules()) {
-      System.out.println(o);
-    }
-  }
 
   public static List<String> getTeardownModules() {
     return (List<String>) config.get("teardown");
   }
-
-  public static void printTeardownModules() {
-    System.out.println("=== Modules to run after each test session ===");
-    for (Object o : getTeardownModules()) {
-      System.out.println(o);
-    }
-  }
-
 
   public static List<String> getActivatedModules() {
     return (List<String>) config.get("activated_modules");
@@ -103,19 +84,6 @@ public class RuntimeConfig {
       System.out.println(o);
     }
   }
-
-  public static void printModuleStatus() {
-
-    System.out.println("=== Selenium Grid Extras Modules ===");
-    for (Object o : getActivatedModules()) {
-      System.out.println("\u2713  " + o);
-    }
-
-    for (Object o : getDeactivatedModules()) {
-      System.out.println("X  " + o);
-    }
-  }
-
 
   private static void updateConfig(Map configHash) {
 
