@@ -102,13 +102,21 @@ public abstract class ExecuteOSTask {
     Boolean initialized = true;
 
     if (initialized) {
-      System.out.println("\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this.getDescription());
+      printInitilizedSuccess();
       return true;
     } else {
-      System.out.println("X " + this.getClass().getSimpleName());
+      printInitilizedFailure();
       return false;
     }
 
+  }
+
+  public void printInitilizedSuccess(){
+    System.out.println("\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this.getDescription());
+  }
+
+  public void printInitilizedFailure(){
+    System.out.println("X " + this.getClass().getSimpleName());
   }
 
   public static void register() {

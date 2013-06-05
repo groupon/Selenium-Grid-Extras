@@ -100,6 +100,7 @@ public class Setup extends ExecuteOSTask {
     }
 
     if (initialized.equals(false)) {
+      printInitilizedFailure();
       System.exit(1);
     }
 

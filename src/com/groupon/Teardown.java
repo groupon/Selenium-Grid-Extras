@@ -88,6 +88,7 @@ public class Teardown extends ExecuteOSTask {
     }
 
     if (initialized.equals(false)) {
+      printInitilizedFailure();
       System.exit(1);
     }
 
