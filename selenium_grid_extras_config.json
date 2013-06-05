@@ -7,7 +7,8 @@
                           "com.groupon.KillAllFirefox",
                           "com.groupon.KillAllChrome",
                           "com.groupon.GetProcesses",
-                          "com.groupon.Screenshot"
+                          "com.groupon.Screenshot",
+                          "com.groupon.ExposeDirectory"
     ],
     "deactivated_modules": ["com.groupon.StartVideoRecording",
                             "com.groupon.StopVideoRecording"],
@@ -16,5 +17,7 @@
               "com.groupon.MoveMouse"],
 
     "teardown": ["com.groupon.KillAllIE",
-                 "com.groupon.RebootNode"]
+                 "com.groupon.RebootNode"],
+
+    "expose_directory": "shared"
 }
