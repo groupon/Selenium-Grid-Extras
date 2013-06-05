@@ -47,7 +47,6 @@ public class SeleniumGridExtras {
   public static void main(String[] args) throws Exception {
 
     RuntimeConfig.loadConfig("selenium_grid_extras_config.json");
-    System.out.println(RuntimeConfig.getActivatedModules());
 
     HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
     List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
@@ -65,8 +64,6 @@ public class SeleniumGridExtras {
             return task.execute();
           }
         });
-      } else {
-        System.out.println("Warning - " + task.getClass().getSimpleName() + " was included in config but could not initialize properly, skipping this task module");
       }
     }
 

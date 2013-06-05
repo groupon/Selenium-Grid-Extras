@@ -57,7 +57,7 @@ public class Screenshot extends ExecuteOSTask {
   }
 
   @Override
-  public String execute(){
+  public String execute() {
 
     try {
       Robot robot = new Robot();
@@ -76,4 +76,17 @@ public class Screenshot extends ExecuteOSTask {
   }
 
 
+  @Override
+  public boolean initialize() {
+
+    if (RuntimeConfig.getActivatedModules().contains("com.groupon.ExposeDirectory")) {
+      printInitilizedSuccess();
+      return true;
+    } else {
+      printInitilizedFailure();
+      System.out.println("  Screenshot Depends on ExposeDirectory Task Module");
+      return false;
+    }
+
+  }
 }
