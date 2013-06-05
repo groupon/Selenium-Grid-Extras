@@ -105,8 +105,10 @@ public class RuntimeConfig {
       }
     } catch (FileNotFoundException error) {
       System.out.println("File" + filePath + " does not exist, going to use default configs");
+      System.exit(1);
     } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
+      System.exit(1);
     }
 
     return returnString;
