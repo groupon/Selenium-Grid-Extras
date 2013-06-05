@@ -42,7 +42,10 @@ import java.util.Map;
 
 public abstract class ExecuteOSTask {
 
-  final private String noteImplementedError = "This task was not implemented on " + OSChecker.getOSName();
+  final private
+  String
+      noteImplementedError =
+      "This task was not implemented on " + OSChecker.getOSName();
   public boolean waitToFinishTask = true;
 
   public String execute() {
@@ -50,7 +53,16 @@ public abstract class ExecuteOSTask {
   }
 
   public String execute(String parameter) {
-    String command = OSChecker.isWindows() ? getWindowsCommand() : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
+
+    System.out.println(
+        this.getClass().getSimpleName() + " was called with '" + parameter + "' parameter");
+
+    String
+
+        command =
+        OSChecker.isWindows() ? getWindowsCommand()
+                              : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
+
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
 
@@ -59,8 +71,8 @@ public abstract class ExecuteOSTask {
   public abstract String getDescription();
 
 
-  public String getWindowsCommand(String parameter){
-    throw new RuntimeException(noteImplementedError);
+  public String getWindowsCommand(String parameter) {
+    throw new RuntimeException(noteImplementedError + " " + this.getClass().getCanonicalName());
   }
 
   public String getWindowsCommand() {
@@ -69,7 +81,7 @@ public abstract class ExecuteOSTask {
 
 
   public String getLinuxCommand(String parameter) {
-    throw new RuntimeException(noteImplementedError);
+    throw new RuntimeException(noteImplementedError + " " + this.getClass().getCanonicalName());
   }
 
   public String getLinuxCommand() {
