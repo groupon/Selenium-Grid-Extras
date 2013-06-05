@@ -38,6 +38,8 @@
 package com.groupon;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public abstract class ExecuteOSTask {
@@ -99,9 +101,8 @@ public abstract class ExecuteOSTask {
   }
 
   public boolean initialize() {
-    Boolean initialized = true;
 
-    if (initialized) {
+    if (allDependenciesLoaded()) {
       printInitilizedSuccess();
       return true;
     } else {
@@ -111,12 +112,35 @@ public abstract class ExecuteOSTask {
 
   }
 
-  public void printInitilizedSuccess(){
-    System.out.println("\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this.getDescription());
+  public void printInitilizedSuccess() {
+    System.out.println(
+        "\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this
+            .getDescription());
   }
 
-  public void printInitilizedFailure(){
+  public void printInitilizedFailure() {
     System.out.println("X " + this.getClass().getSimpleName());
+  }
+
+  public Boolean allDependenciesLoaded() {
+    Boolean returnValue = true;
+
+    for (String module : getDependencies()) {
+      if (RuntimeConfig.checkIfModuleEnabled(module) && returnValue) {
+
+      } else {
+        System.out.println("  " + this.getClass().getSimpleName() + " depends on " + module
+                           + " but it is not activated");
+        returnValue = false;
+      }
+    }
+
+    return returnValue;
+  }
+
+  public List<String> getDependencies() {
+    List<String> dependencies = new LinkedList();
+    return dependencies;
   }
 
   public static void register() {

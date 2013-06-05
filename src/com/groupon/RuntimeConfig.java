@@ -54,7 +54,6 @@ public class RuntimeConfig {
     String configString = readConfigFile(configFile);
 
     if (configString != "") {
-
       updateConfig(JsonWrapper.parseJson(configString));
     }
   }
@@ -64,7 +63,7 @@ public class RuntimeConfig {
     return (List<String>) config.get("setup");
   }
 
-  public static String getExposedDirectory(){
+  public static String getExposedDirectory() {
     return (String) config.get("expose_directory");
   }
 
@@ -78,6 +77,10 @@ public class RuntimeConfig {
 
   public static List<String> getDeactivatedModules() {
     return (List<String>) config.get("deactivated_modules");
+  }
+
+  public static Boolean checkIfModuleEnabled(String module) {
+    return getActivatedModules().contains(module);
   }
 
 

@@ -37,55 +37,20 @@
 
 package com.groupon;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.LinkedList;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
-public class Screenshot extends ExecuteOSTask {
+public class GetFile extends ExecuteOSTask{
 
   @Override
   public String getEndpoint() {
-    return "/screenshot";
+    return "/get_file";
   }
 
   @Override
   public String getDescription() {
-    return "Take a full screen screenshot of the node";
+    return "Retrives a file from Exposed Directory";
   }
-
-  @Override
-  public String execute() {
-
-    String filename;
-
-    try {
-      Robot robot = new Robot();
-      Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-      BufferedImage screenshot = robot.createScreenCapture(captureSize);
-      try {
-        String directory = RuntimeConfig.getExposedDirectory();
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
-        String formattedTimestamp = sdf.format(date);
-        filename = "/screenshot_" + formattedTimestamp + ".png";
-        String fullPath = directory + filename;
-        File outputfile = new File(fullPath);
-        ImageIO.write(screenshot, "png", outputfile);
-      } catch (IOException e) {
-        return JsonWrapper.taskResultToJson(1, "", "Error Saving image to file\n " + e);
-      }
-      return JsonWrapper.filenameToJson(filename);
-    } catch (AWTException error) {
-      return JsonWrapper.taskResultToJson(1, "", "Error with AWT Robot\n" + error);
-    }
-  }
-
 
   @Override
   public List<String> getDependencies(){
