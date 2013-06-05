@@ -78,13 +78,6 @@ public class RuntimeConfig {
   }
 
 
-  public static void printDeactivatedModules() {
-    System.out.println("=== Modules which are deactivated ===");
-    for (Object o : getDeactivatedModules()) {
-      System.out.println(o);
-    }
-  }
-
   private static void updateConfig(Map configHash) {
 
     if (configHash.isEmpty()) {
