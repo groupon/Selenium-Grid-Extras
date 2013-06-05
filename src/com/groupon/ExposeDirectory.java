@@ -38,7 +38,14 @@
 package com.groupon;
 
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
+
 public class ExposeDirectory extends ExecuteOSTask {
+
+  public File sharedDir;
 
   @Override
   public String getEndpoint() {
@@ -48,5 +55,56 @@ public class ExposeDirectory extends ExecuteOSTask {
   @Override
   public String getDescription() {
     return "Exposes a given directory on the Node for users to get files on/off the Node";
+  }
+
+  @Override
+  public String execute() {
+    File[] files = sharedDir.listFiles();
+
+    return JsonWrapper.fileArrayToJson(files);
+  }
+
+  public File getExposedDirectory(){
+    return sharedDir;
+  }
+
+  private void createDir(){
+    File dir = sharedDir;
+    dir.mkdir();
+  }
+
+  public boolean cleanUpExposedDirectory() {
+    try {
+      FileUtils.deleteDirectory(sharedDir);
+      createDir();
+      return true;
+
+    } catch (IOException error) {
+      System.out.println("Attempt to delete " + RuntimeConfig.getExposedDirectory() + " FAILED!!!");
+      return false;
+    }
+  }
+
+  @Override
+  public boolean initialize() {
+
+    try {
+      sharedDir = new File(RuntimeConfig.getExposedDirectory());
+
+      if (sharedDir.exists()) {
+        cleanUpExposedDirectory();
+      } else {
+        createDir();
+      }
+
+    } catch (NullPointerException error) {
+      printInitilizedFailure();
+      System.out.println("  'expose_directory' variable was not set in the config " + error);
+      return false;
+    }
+
+    printInitilizedSuccess();
+    return true;
+
   }
 }
