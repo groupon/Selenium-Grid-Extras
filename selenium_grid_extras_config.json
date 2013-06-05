@@ -11,10 +11,10 @@
     ],
     "deactivated_modules": ["com.groupon.StartVideoRecording",
                             "com.groupon.StopVideoRecording"],
+
     "setup": ["com.groupon.KillAllIE",
-              "com.groupon.MoveMouse",
-              "com.groupon.StartVideoRecording"],
+              "com.groupon.MoveMouse"],
+
     "teardown": ["com.groupon.KillAllIE",
-                 "com.groupon.StopVideoRecording",
                  "com.groupon.RebootNode"]
 }
