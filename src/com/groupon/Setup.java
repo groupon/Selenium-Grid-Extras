@@ -49,6 +49,18 @@ public class Setup extends ExecuteOSTask {
     return "Calls several pre-defined tasks to act as setup before build";
   }
 
+
+
+  @Override
+  public String getWindowsCommand() {
+    return "";
+  }
+
+  @Override
+  public String getLinuxCommand() {
+    return "ls";
+  }
+
   @Override
   public String execute() {
     String message = "";

@@ -46,7 +46,12 @@ public class Teardown extends ExecuteOSTask {
 
   @Override
   public String getLinuxCommand() {
-    return getMacCommand();
+    return "ls";
+  }
+
+  @Override
+  public String getMacCommand(){
+    return "ls";
   }
 
 
