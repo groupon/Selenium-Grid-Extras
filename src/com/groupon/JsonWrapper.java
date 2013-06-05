@@ -44,6 +44,7 @@ import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -109,5 +110,22 @@ public class JsonWrapper {
 
     return returnHash;
   }
+
+  public static String fileArrayToJson(File[] inputArray){
+    JSONArray fileList = new JSONArray();
+
+    for(File f : inputArray){
+      fileList.add(f.toString());
+    }
+
+    return fileList.toString();
+  }
+
+  public static String filenameToJson(String file){
+    JSONArray fileArray = new JSONArray();
+    fileArray.add(file);
+    return fileArray.toString();
+  }
+
 
 }
