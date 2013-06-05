@@ -64,6 +64,9 @@ public class RuntimeConfig {
     return (List<String>) config.get("setup");
   }
 
+  public static String getExposedDirectory(){
+    return (String) config.get("expose_directory");
+  }
 
   public static List<String> getTeardownModules() {
     return (List<String>) config.get("teardown");
