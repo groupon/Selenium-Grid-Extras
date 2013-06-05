@@ -56,6 +56,6 @@ public class GetProcesses extends ExecuteOSTask{
 
   @Override
   public String getLinuxCommand() {
-    return getMacCommand();
+    return "ps x";
   }
 }
