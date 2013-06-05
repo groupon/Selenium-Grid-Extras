@@ -63,8 +63,6 @@ public class SeleniumGridExtras {
           return task.execute();
         }
       });
-
-      task.execute();
     }
 
     server.setExecutor(null);
