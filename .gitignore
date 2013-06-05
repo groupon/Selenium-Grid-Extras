@@ -3,3 +3,4 @@
 lib/*
 ant-build/*
 Selenium-Grid-Extras.iml
+build/*
