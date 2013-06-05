@@ -55,14 +55,19 @@ public class SeleniumGridExtras {
       tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
     }
 
+    System.out.println("=== Initializing Task Modules ===");
     for (final ExecuteOSTask task : tasks) {
 
-      server.createContext(task.getEndpoint(), new HttpExecutor() {
-        @Override
-        String execute() {
-          return task.execute();
-        }
-      });
+      if (task.initialize()) {
+        server.createContext(task.getEndpoint(), new HttpExecutor() {
+          @Override
+          String execute() {
+            return task.execute();
+          }
+        });
+      } else {
+        System.out.println("Warning - " + task.getClass().getSimpleName() + " was included in config but could not initialize properly, skipping this task module");
+      }
     }
 
     server.setExecutor(null);
