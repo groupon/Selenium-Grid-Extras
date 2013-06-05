@@ -72,7 +72,7 @@ public abstract class ExecuteOSTask {
 
 
   public String getWindowsCommand(String parameter) {
-    throw new RuntimeException(noteImplementedError + " " + this.getClass().getCanonicalName());
+    return JsonWrapper.taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
   }
 
   public String getWindowsCommand() {
@@ -81,7 +81,7 @@ public abstract class ExecuteOSTask {
 
 
   public String getLinuxCommand(String parameter) {
-    throw new RuntimeException(noteImplementedError + " " + this.getClass().getCanonicalName());
+    return JsonWrapper.taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
   }
 
   public String getLinuxCommand() {
@@ -95,7 +95,6 @@ public abstract class ExecuteOSTask {
   public String getMacCommand() {
     return getLinuxCommand();
   }
-
 
   public static void register() {
     Map apiDescription = new HashMap();

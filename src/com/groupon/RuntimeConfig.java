@@ -37,18 +37,10 @@
 
 package com.groupon;
 
-import org.json.simple.parser.ContainerFactory;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,17 +53,15 @@ public class RuntimeConfig {
 
     String configString = readConfigFile(configFile);
 
-    Map parsedConfig = new HashMap();
     if (configString != "") {
-      parseJson(configString, parsedConfig);
+
+      updateConfig(JsonWrapper.parseJson(configString));
+
+      printModuleStatus();
+
+      printSetupModules();
+      printTeardownModules();
     }
-
-    updateConfig(parsedConfig);
-
-    printActivatedModules();
-    printDeactivatedModules();
-    printSetupModules();
-    printTeardownModules();
   }
 
 
@@ -114,10 +104,15 @@ public class RuntimeConfig {
     }
   }
 
-  public static void printActivatedModules() {
-    System.out.println("=== Activated Modules ===");
+  public static void printModuleStatus() {
+
+    System.out.println("=== Selenium Grid Extras Modules ===");
     for (Object o : getActivatedModules()) {
-      System.out.println(o);
+      System.out.println("\u2713  " + o);
+    }
+
+    for (Object o : getDeactivatedModules()) {
+      System.out.println("X  " + o);
     }
   }
 
@@ -130,34 +125,6 @@ public class RuntimeConfig {
       config = configHash;
     }
 
-  }
-
-  private static void parseJson(String inputString, Map returnHash) {
-
-    JSONParser parser = new JSONParser();
-    ContainerFactory containerFactory = new ContainerFactory() {
-      public List creatArrayContainer() {
-        return new LinkedList();
-      }
-
-      public Map createObjectContainer() {
-        return new LinkedHashMap();
-      }
-
-    };
-
-    try {
-      Map json = (Map) parser.parse(inputString, containerFactory);
-      Iterator iter = json.entrySet().iterator();
-      while (iter.hasNext()) {
-        Map.Entry entry = (Map.Entry) iter.next();
-        returnHash.put(entry.getKey(), entry.getValue());
-      }
-
-    } catch (ParseException error) {
-      System.out.println("position: " + error.getPosition());
-      System.out.println(error);
-    }
   }
 
   private static String readConfigFile(String filePath) {

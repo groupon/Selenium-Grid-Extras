@@ -61,7 +61,7 @@ public class KillAllIE extends KillAllByName {
 
   @Override
   public String getLinuxCommand(String parameter) {
-    throw new RuntimeException("Kill All IE task does not work on Non-Windows machines");
+    return JsonWrapper.taskResultToJson(1, "", "Reboot command is not implemented on Mac OSX and Linux");
   }
 
 

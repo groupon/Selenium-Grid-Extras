@@ -37,14 +37,8 @@
 
 package com.groupon;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 
 class ExecuteCommand {
@@ -59,7 +53,7 @@ class ExecuteCommand {
     try {
       process = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
-      return formatResult(1, "", "Problems in running " + cmd + "\n" + e.toString());
+      return JsonWrapper.taskResultToJson(1, "", "Problems in running " + cmd + "\n" + e.toString());
     }
 
     int exitCode;
@@ -69,48 +63,23 @@ class ExecuteCommand {
         exitCode = process.waitFor();
         System.out.println("Command Finished");
       } catch (InterruptedException e) {
-        return formatResult(1, "", "Interrupted running " + cmd + "\n" + e.toString());
+        return JsonWrapper.taskResultToJson(1, "", "Interrupted running " + cmd + "\n" + e.toString());
       }
     } else {
       System.out.println("Not waiting for finish");
-      return formatResult(0, "Background process started", "");
+      return JsonWrapper.taskResultToJson(0, "Background process started", "");
     }
 
     try {
       String output = inputStreamToString(process.getInputStream());
       String error = inputStreamToString(process.getErrorStream());
-      String returnResults = formatResult(exitCode, output, error);
+      String returnResults = JsonWrapper.taskResultToJson(exitCode, output, error);
       return returnResults;
     } catch (IOException e) {
-      return formatResult(1, "", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
+      return JsonWrapper.taskResultToJson(1, "", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
     } finally {
       process.destroy();
     }
-  }
-
-  public static String formatResult(int result, String output, String error) {
-
-    JSONObject resultsHash = new JSONObject();
-    JSONArray standardOut = new JSONArray();
-    JSONArray standardError = new JSONArray();
-
-    String stdOutLines[] = output.split("\n");
-    for(String line: stdOutLines) {
-      standardOut.add(line);
-    }
-
-    String stdErrorLines[] = error.split("\n");
-    for(String line: stdErrorLines) {
-      standardError.add(line);
-    }
-
-
-
-    resultsHash.put("exit_code", result);
-    resultsHash.put("standard_out", standardOut);
-    resultsHash.put("standard_error", standardError);
-
-    return resultsHash.toString();
   }
 
   public static String inputStreamToString(InputStream is) throws IOException {

@@ -69,13 +69,13 @@ public class RebootNodeTest {
     assertEquals(windowsCommand, task.getWindowsCommand());
   }
 
-  @Test(expected=RuntimeException.class)
+  @Test
   public void testgetMacCommand() throws Exception {
-    task.getMacCommand();
+    assertEquals(task.getMacCommand(), "{\"standard_error\":[\"This task was not implemented on Mac OS X com.groupon.RebootNode\"],\"exit_code\":1,\"standard_out\":[\"\"]}");
   }
 
-  @Test(expected=RuntimeException.class)
+  @Test
   public void testgetLinuxCommand() throws Exception {
-    task.getLinuxCommand();
+    assertEquals(task.getLinuxCommand(), "{\"standard_error\":[\"This task was not implemented on Mac OS X com.groupon.RebootNode\"],\"exit_code\":1,\"standard_out\":[\"\"]}");
   }
 }
