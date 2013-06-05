@@ -65,4 +65,34 @@ public class Teardown extends ExecuteOSTask {
     return "Calls several pre-defined tasks to act as teardown after build";
   }
 
+
+  @Override
+  public boolean initialize() {
+    Boolean initialized = true;
+    System.out.println("Teardown Tasks");
+
+    for (String module : RuntimeConfig.getTeardownModules()) {
+      try {
+        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
+        System.out.println("    " + foo.getClass().getSimpleName());
+      } catch (ClassNotFoundException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (InstantiationException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (IllegalAccessException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      }
+    }
+
+    if (initialized.equals(false)) {
+      System.exit(1);
+    }
+
+    return true;
+
+  }
+
 }

@@ -72,7 +72,8 @@ public abstract class ExecuteOSTask {
 
 
   public String getWindowsCommand(String parameter) {
-    return JsonWrapper.taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
+    return JsonWrapper
+        .taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
   }
 
   public String getWindowsCommand() {
@@ -81,7 +82,8 @@ public abstract class ExecuteOSTask {
 
 
   public String getLinuxCommand(String parameter) {
-    return JsonWrapper.taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
+    return JsonWrapper
+        .taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
   }
 
   public String getLinuxCommand() {
@@ -94,6 +96,19 @@ public abstract class ExecuteOSTask {
 
   public String getMacCommand() {
     return getLinuxCommand();
+  }
+
+  public boolean initialize() {
+    Boolean initialized = true;
+
+    if (initialized) {
+      System.out.println("\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this.getDescription());
+      return true;
+    } else {
+      System.out.println("X " + this.getClass().getSimpleName());
+      return false;
+    }
+
   }
 
   public static void register() {

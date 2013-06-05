@@ -50,7 +50,6 @@ public class Setup extends ExecuteOSTask {
   }
 
 
-
   @Override
   public String getWindowsCommand() {
     return "";
@@ -77,6 +76,35 @@ public class Setup extends ExecuteOSTask {
 //    message = message + MoveMouse.execute();
 
     return message;
+  }
+
+  @Override
+  public boolean initialize() {
+    Boolean initialized = true;
+    System.out.println("Setup Tasks");
+
+    for (String module : RuntimeConfig.getSetupModules()) {
+      try {
+        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
+        System.out.println("    " + foo.getClass().getSimpleName());
+      } catch (ClassNotFoundException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (InstantiationException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (IllegalAccessException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      }
+    }
+
+    if (initialized.equals(false)) {
+      System.exit(1);
+    }
+
+    return true;
+
   }
 
 }
