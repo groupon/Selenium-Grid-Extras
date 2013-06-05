@@ -1,6 +1,19 @@
 {
-    "activated_modules": ["com.groupon.Setup", "com.groupon.Teardown", "com.groupon.MoveMouse", "com.groupon.RebootNode", "com.groupon.KillAllIE", "com.groupon.GetProcesses"],
-    "deactivated_modules": ["com.groupon.StartVideoRecording", "com.groupon.StopVideoRecording"],
-    "setup": ["com.groupon.KillAllIE", "com.groupon.MoveMouse", "com.groupon.StartVideoRecording"],
-    "teardown": ["com.groupon.KillAllIE", "com.groupon.StopVideoRecording", "com.groupon.RebootNode"]
+    "activated_modules": ["com.groupon.Setup",
+                          "com.groupon.Teardown",
+                          "com.groupon.MoveMouse",
+                          "com.groupon.RebootNode",
+                          "com.groupon.KillAllIE",
+                          "com.groupon.KillAllFirefox",
+                          "com.groupon.KillAllChrome",
+                          "com.groupon.GetProcesses"
+    ],
+    "deactivated_modules": ["com.groupon.StartVideoRecording",
+                            "com.groupon.StopVideoRecording"],
+    "setup": ["com.groupon.KillAllIE",
+              "com.groupon.MoveMouse",
+              "com.groupon.StartVideoRecording"],
+    "teardown": ["com.groupon.KillAllIE",
+                 "com.groupon.StopVideoRecording",
+                 "com.groupon.RebootNode"]
 }
