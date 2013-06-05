@@ -6,7 +6,8 @@
                           "com.groupon.KillAllIE",
                           "com.groupon.KillAllFirefox",
                           "com.groupon.KillAllChrome",
-                          "com.groupon.GetProcesses"
+                          "com.groupon.GetProcesses",
+                          "com.groupon.Screenshot"
     ],
     "deactivated_modules": ["com.groupon.StartVideoRecording",
                             "com.groupon.StopVideoRecording"],
