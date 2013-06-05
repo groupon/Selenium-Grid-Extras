@@ -60,19 +60,4 @@ public class KillAllByName extends ExecuteOSTask {
   public String getLinuxCommand(String parameter) {
     return "killall -v -m " + parameter;
   }
-
-  @Override
-  public String getWindowsCommand() {
-    throw new RuntimeException("You have to pass in a process name to kill");
-  }
-
-  @Override
-  public String getMacCommand() {
-    throw new RuntimeException("You have to pass in a process name to kill");
-  }
-
-  @Override
-  public String getLinuxCommand() {
-    throw new RuntimeException("You have to pass in a process name to kill");
-  }
 }

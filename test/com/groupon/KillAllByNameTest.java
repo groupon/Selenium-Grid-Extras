@@ -83,19 +83,4 @@ public class KillAllByNameTest {
     assertEquals(linuxCommnad, task.getLinuxCommand("test"));
   }
 
-  @Test(expected = RuntimeException.class)
-  public void testGetLinuxCommandNoParam() throws Exception {
-    task.getLinuxCommand();
-  }
-
-  @Test(expected = RuntimeException.class)
-  public void testGetMacCommandNoParam() throws Exception {
-    task.getMacCommand();
-  }
-
-  @Test(expected = RuntimeException.class)
-  public void testGetWindowsCommandNoParam() throws Exception {
-    task.getWindowsCommand();
-  }
-
 }
