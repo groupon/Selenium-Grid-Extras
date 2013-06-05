@@ -64,7 +64,8 @@ public class Screenshot extends ExecuteOSTask {
       Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
       BufferedImage screenshot = robot.createScreenCapture(captureSize);
       try {
-        File outputfile = new File("saved.png");
+        String directory = RuntimeConfig.getExposedDirectory();
+        File outputfile = new File(directory + "/saved.png");
         ImageIO.write(screenshot, "png", outputfile);
       } catch (IOException e) {
         return JsonWrapper.taskResultToJson(1, "", "Error Saving image to file\n " + e);
