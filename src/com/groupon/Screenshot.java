@@ -73,8 +73,8 @@ public class Screenshot extends ExecuteOSTask {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
         String formattedTimestamp = sdf.format(date);
-        filename = "/screenshot_" + formattedTimestamp + ".png";
-        String fullPath = directory + filename;
+        filename = "screenshot_" + formattedTimestamp + ".png";
+        String fullPath = directory + "/" + filename;
         File outputfile = new File(fullPath);
         ImageIO.write(screenshot, "png", outputfile);
       } catch (IOException e) {
