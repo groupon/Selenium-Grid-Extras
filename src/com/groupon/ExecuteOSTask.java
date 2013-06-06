@@ -54,10 +54,15 @@ public abstract class ExecuteOSTask {
     return execute("");
   }
 
-  public String execute(String parameter) {
+  public String execute(Map parameter){
+    if(!parameter.isEmpty() && parameter.containsKey("parameter")){
+      return execute(parameter.get("parameter").toString());
+    } else{
+      return execute();
+    }
+  }
 
-    System.out.println(
-        this.getClass().getSimpleName() + " was called with '" + parameter + "' parameter");
+  public String execute(String parameter) {
 
     String
 
