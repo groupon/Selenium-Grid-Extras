@@ -43,16 +43,18 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 abstract class HttpExecutor implements HttpHandler {
 
   public void handle(HttpExchange t) throws IOException {
-    String response = execute();
+    Map params = (Map)t.getAttribute("parameters");
+    String response = execute(params);
     t.sendResponseHeaders(200, response.length());
     OutputStream os = t.getResponseBody();
     os.write(response.getBytes());
     os.close();
   }
 
-  abstract String execute();
+  abstract String execute(Map params);
 }

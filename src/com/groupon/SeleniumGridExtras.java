@@ -37,10 +37,12 @@
 
 package com.groupon;
 
+import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class SeleniumGridExtras {
 
@@ -58,12 +60,16 @@ public class SeleniumGridExtras {
     for (final ExecuteOSTask task : tasks) {
 
       if (task.initialize()) {
-        server.createContext(task.getEndpoint(), new HttpExecutor() {
+
+        HttpContext context = server.createContext(task.getEndpoint(), new HttpExecutor() {
           @Override
-          String execute() {
-            return task.execute();
+          String execute(Map params) {
+            System.out.println("End-point " + task.getEndpoint() + " was called with HTTP params " + params.toString());
+            return task.execute(params);
           }
         });
+
+        context.getFilters().add(new ParameterFilter());
       }
     }
 
