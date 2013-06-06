@@ -59,7 +59,7 @@ public class Screenshot extends ExecuteOSTask {
 
   @Override
   public String getDescription() {
-    return "Take a full screen screenshot of the node";
+    return "Take a full OS screen Screen Shot of the node";
   }
 
   @Override
