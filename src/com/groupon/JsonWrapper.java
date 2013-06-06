@@ -121,10 +121,14 @@ public class JsonWrapper {
     return fileList.toString();
   }
 
-  public static String filenameToJson(String file){
-    JSONArray fileArray = new JSONArray();
-    fileArray.add(file);
-    return fileArray.toString();
+  public static String screenshotToJson(String encodedImage, String file, String type){
+    JSONObject screenshotInfo = new JSONObject();
+
+    screenshotInfo.put("file_type", type);
+    screenshotInfo.put("file", file);
+    screenshotInfo.put("base64", encodedImage);
+
+    return screenshotInfo.toString();
   }
 
 

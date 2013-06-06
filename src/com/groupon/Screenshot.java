@@ -37,8 +37,11 @@
 
 package com.groupon;
 
+import org.apache.commons.codec.binary.Base64;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -63,6 +66,9 @@ public class Screenshot extends ExecuteOSTask {
   public String execute() {
 
     String filename;
+    String encodedImage;
+
+    //Todo: Clean this mess up!!!!
 
     try {
       Robot robot = new Robot();
@@ -77,10 +83,21 @@ public class Screenshot extends ExecuteOSTask {
         String fullPath = directory + "/" + filename;
         File outputfile = new File(fullPath);
         ImageIO.write(screenshot, "png", outputfile);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(screenshot, "png", baos);
+        baos.flush();
+
+        Base64 base = new Base64(false);
+        encodedImage = base.encodeToString(baos.toByteArray());
+        baos.close();
+
+        encodedImage = java.net.URLEncoder.encode(encodedImage, "ISO-8859-1");
+
       } catch (IOException e) {
         return JsonWrapper.taskResultToJson(1, "", "Error Saving image to file\n " + e);
       }
-      return JsonWrapper.filenameToJson(filename);
+      return JsonWrapper.screenshotToJson(encodedImage, filename, "png");
     } catch (AWTException error) {
       return JsonWrapper.taskResultToJson(1, "", "Error with AWT Robot\n" + error);
     }
