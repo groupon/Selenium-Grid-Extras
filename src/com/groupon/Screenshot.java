@@ -69,6 +69,7 @@ public class Screenshot extends ExecuteOSTask {
     String encodedImage;
 
     //Todo: Clean this mess up!!!!
+    // This is so ugly it makes me cry
 
     try {
       Robot robot = new Robot();
