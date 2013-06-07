@@ -54,7 +54,7 @@ public abstract class ExecuteOSTask {
     return execute("");
   }
 
-  public String execute(Map parameter){
+  public String execute(Map<String, String> parameter){
     if(!parameter.isEmpty() && parameter.containsKey("parameter")){
       return execute(parameter.get("parameter").toString());
     } else{
@@ -108,7 +108,7 @@ public abstract class ExecuteOSTask {
   public boolean initialize() {
 
     if (allDependenciesLoaded()) {
-      printInitilizedSuccess();
+      printInitilizedSuccessAndRegisterWithAPI();
       return true;
     } else {
       printInitilizedFailure();
@@ -117,10 +117,12 @@ public abstract class ExecuteOSTask {
 
   }
 
-  public void printInitilizedSuccess() {
+  public void printInitilizedSuccessAndRegisterWithAPI() {
     System.out.println(
         "\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this
             .getDescription());
+
+    registerApi();
   }
 
   public void printInitilizedFailure() {
@@ -148,13 +150,36 @@ public abstract class ExecuteOSTask {
     return dependencies;
   }
 
-  public static void register() {
-    Map apiDescription = new HashMap();
-//    apiDescription.put("endpoint", endpoint);
-//    apiDescription.put("description", description);
-//    apiDescription.put("class", className);
+  public String getRequestType(){
+    return "GET";
+  }
 
-    ApiDocumentation.register(apiDescription);
+  public String getResponseType(){
+    return "json";
+  }
+
+  public Map getResponseDescription(){
+    return new HashMap();
+  }
+
+  public Map getAcceptedParams(){
+    Map<String, String> params = new HashMap();
+
+    return params;
+  }
+
+  public void registerApi() {
+    Map apiDescription = new HashMap();
+    apiDescription.put("endpoint", getEndpoint());
+    apiDescription.put("description", getDescription());
+    apiDescription.put("class", this.getClass().getCanonicalName());
+    apiDescription.put("accepted_params", getAcceptedParams());
+    apiDescription.put("http_type", getRequestType());
+    apiDescription.put("response_type", getResponseType());
+    apiDescription.put("response_description", getResponseDescription());
+
+
+    ApiDocumentation.registerApiEndPoint(apiDescription);
   }
 
 }

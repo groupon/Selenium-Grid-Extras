@@ -106,6 +106,17 @@ public class Screenshot extends ExecuteOSTask {
 
 
   @Override
+  public Map getResponseDescription() {
+    Map response = new HashMap();
+    response.put("file_type","Type of file returned (PNG/JPG/GIF)");
+    response.put("file", "Name of the file saved on the Node's HD");
+    response.put("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
+    return response;
+  }
+
+
+
+  @Override
   public List<String> getDependencies(){
     List<String> localDependencies = new LinkedList<String>();
 

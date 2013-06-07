@@ -38,6 +38,9 @@
 
 package com.groupon;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GetProcesses extends ExecuteOSTask{
   @Override
   public String getEndpoint() {
@@ -46,7 +49,7 @@ public class GetProcesses extends ExecuteOSTask{
 
   @Override
   public String getDescription() {
-    return "Executes os level kill command on all instance of Internet Explorer";
+    return "Gets a list of currently running processes";
   }
 
   @Override
@@ -58,4 +61,15 @@ public class GetProcesses extends ExecuteOSTask{
   public String getLinuxCommand() {
     return "ps x";
   }
+
+  @Override
+  public Map getResponseDescription() {
+    Map response = new HashMap();
+    response.put("exit_code",
+                 "0 for success, 1 for failure");
+    response.put("standard_out", "Array of PIDS and descriptions");
+    response.put("standard_error", "Error recived on failure");
+    return response;
+  }
+
 }

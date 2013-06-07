@@ -39,26 +39,20 @@ package com.groupon;
 
 
 import org.json.simple.JSONArray;
-import org.json.simple.JSONValue;
-
-import java.util.HashMap;
 import java.util.Map;
 
 
 public class ApiDocumentation {
 
-  private static JSONArray apiSpec;
+  private static JSONArray apiSpec = new JSONArray();
 
-  public static void register(Map endPoint){
+  public static void registerApiEndPoint(Map endPoint){
 
     apiSpec.add(endPoint);
 
   }
 
-  public static String execute(){
-
-    JSONArray apiSpec = new JSONArray();
-
-    return "dima";
+  public static String getApiDocumentation(){
+    return apiSpec.toString();
   }
 }

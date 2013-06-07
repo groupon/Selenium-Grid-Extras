@@ -38,6 +38,8 @@
 package com.groupon;
 
 import java.awt.*;
+import java.awt.List;
+import java.util.*;
 
 public class MoveMouse extends ExecuteOSTask {
 
@@ -52,19 +54,53 @@ public class MoveMouse extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public String execute(Map<String, String> parameter) {
 
-    String message;
+    int x = 0;
+    int y = 0;
 
-    try {
-      Robot moveMouse = new Robot();
-      moveMouse.mouseMove(0, 0);
-      message = "mouse moved to 0,0";
-    } catch (AWTException error) {
-      message = error.toString();
+    if(!parameter.isEmpty() && parameter.containsKey("x") && parameter.containsKey("y")){
+      x = Integer.parseInt(parameter.get("x"));
+      y = Integer.parseInt(parameter.get("y"));
     }
 
-    return message;
+    return moveMouse(x,y);
+  }
+
+
+  @Override
+  public String execute() {
+    return execute(new HashMap<String, String>());
+  }
+
+  @Override
+  public Map getResponseDescription() {
+    Map response = new HashMap();
+    response.put("exit_code",
+                 "0 for success, 1 for failure");
+    response.put("standard_out", "Current position of the mouse");
+    response.put("standard_error", "Error recived on failure");
+    return response;
+  }
+
+  @Override
+  public Map getAcceptedParams(){
+    Map<String, String> params = new HashMap();
+    params.put("x", "X - Coordinate");
+    params.put("y", "Y - Coordinate");
+    return params;
+  }
+
+  private String moveMouse(Integer x, Integer y) {
+    String message;
+    try {
+      Robot moveMouse = new Robot();
+      moveMouse.mouseMove(x, y);
+      return JsonWrapper.taskResultToJson(0, x + "," + y, "");
+    } catch (AWTException error) {
+      return JsonWrapper.taskResultToJson(1, "", error.toString());
+    }
+
   }
 
 }

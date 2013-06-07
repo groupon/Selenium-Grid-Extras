@@ -38,6 +38,9 @@
 package com.groupon;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RebootNode extends ExecuteOSTask {
 
   public boolean waitToFinishTask = false;
@@ -55,5 +58,15 @@ public class RebootNode extends ExecuteOSTask {
   @Override
   public String getDescription() {
     return "Restart the host node";
+  }
+
+  @Override
+  public Map getResponseDescription() {
+    Map response = new HashMap();
+    response.put("exit_code",
+                 "Exit code received from the operating system upon execution of the task");
+    response.put("standard_out", "All of the StandardOut received from the system");
+    response.put("standard_error", "All of the StandardError received from the system");
+    return response;
   }
 }

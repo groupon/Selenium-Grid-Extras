@@ -42,6 +42,8 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ExposeDirectory extends ExecuteOSTask {
 
@@ -54,7 +56,7 @@ public class ExposeDirectory extends ExecuteOSTask {
 
   @Override
   public String getDescription() {
-    return "Exposes a given directory on the Node for users to get files on/off the Node";
+    return "Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.";
   }
 
   @Override
@@ -64,11 +66,11 @@ public class ExposeDirectory extends ExecuteOSTask {
     return JsonWrapper.fileArrayToJson(files);
   }
 
-  public File getExposedDirectory(){
+  public File getExposedDirectory() {
     return sharedDir;
   }
 
-  private void createDir(){
+  private void createDir() {
     File dir = sharedDir;
     dir.mkdir();
   }
@@ -84,6 +86,15 @@ public class ExposeDirectory extends ExecuteOSTask {
       return false;
     }
   }
+
+
+  @Override
+  public Map getResponseDescription() {
+    Map response = new HashMap();
+    response.put("files", "Array list of files in the shared directory");
+    return response;
+  }
+
 
   @Override
   public boolean initialize() {
@@ -103,7 +114,7 @@ public class ExposeDirectory extends ExecuteOSTask {
       return false;
     }
 
-    printInitilizedSuccess();
+    printInitilizedSuccessAndRegisterWithAPI();
     return true;
 
   }

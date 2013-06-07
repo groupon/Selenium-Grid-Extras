@@ -114,11 +114,15 @@ public class JsonWrapper {
   public static String fileArrayToJson(File[] inputArray){
     JSONArray fileList = new JSONArray();
 
+    JSONObject wrapper = new JSONObject();
+
     for(File f : inputArray){
       fileList.add(f.toString());
     }
 
-    return fileList.toString();
+    wrapper.put("files", fileList);
+
+    return wrapper.toString();
   }
 
   public static String screenshotToJson(String encodedImage, String file, String type){
@@ -126,7 +130,7 @@ public class JsonWrapper {
 
     screenshotInfo.put("file_type", type);
     screenshotInfo.put("file", file);
-    screenshotInfo.put("base64", encodedImage);
+    screenshotInfo.put("image", encodedImage);
 
     return screenshotInfo.toString();
   }

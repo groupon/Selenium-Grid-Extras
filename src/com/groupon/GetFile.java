@@ -49,7 +49,12 @@ public class GetFile extends ExecuteOSTask{
 
   @Override
   public String getDescription() {
-    return "Retrives a file from Exposed Directory";
+    return "(Not yet implemented) - Retrives a file from shared Directory";
+  }
+
+  @Override
+  public String execute(){
+    return "{\"exit\": 1, \"standard_error\": \"Not yet implemented\"}";
   }
 
   @Override

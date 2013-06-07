@@ -39,6 +39,7 @@ package com.groupon;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
+
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class SeleniumGridExtras {
     RuntimeConfig.loadConfig("selenium_grid_extras_config.json");
 
     HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
+
     List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
     for (String module : RuntimeConfig.getActivatedModules()) {
       tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
@@ -64,14 +66,27 @@ public class SeleniumGridExtras {
         HttpContext context = server.createContext(task.getEndpoint(), new HttpExecutor() {
           @Override
           String execute(Map params) {
-            System.out.println("End-point " + task.getEndpoint() + " was called with HTTP params " + params.toString());
+            System.out.println(
+                "End-point " + task.getEndpoint() + " was called with HTTP params " + params
+                    .toString());
             return task.execute(params);
           }
         });
 
         context.getFilters().add(new ParameterFilter());
       }
+
+
     }
+
+    System.out.println("=== API documentation ===");
+    System.out.println("/api - Located here");
+    server.createContext("/api", new HttpExecutor() {
+      @Override
+      String execute(Map params) {
+        return ApiDocumentation.getApiDocumentation();
+      }
+    });
 
     server.setExecutor(null);
     server.start();
