@@ -38,6 +38,7 @@
 package com.groupon;
 
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -50,7 +51,12 @@ abstract class HttpExecutor implements HttpHandler {
   public void handle(HttpExchange t) throws IOException {
     Map params = (Map)t.getAttribute("parameters");
     String response = execute(params);
+
+    Headers h = t.getResponseHeaders();
+    h.add("Content-Type", "application/json");
+
     t.sendResponseHeaders(200, response.length());
+
     OutputStream os = t.getResponseBody();
     os.write(response.getBytes());
     os.close();
