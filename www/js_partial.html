@@ -1,0 +1,38 @@
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script type="text/javascript">
+
+    $('document').ready(function () {
+        for(var i = 0; i < nodes.length; i++){
+            var host = nodes[i];
+            var hostUrl = "http://" + host + ":3000";
+
+            $('#nodes').append("<hr>");
+            $('#nodes').append(host);
+            $('#nodes').append("<br/><a href='" + hostUrl + "/move_mouse' target='new'>Move Mouse</a><br/>");
+            $('#nodes').append("<a href='" + hostUrl + "/kill_chrome' target='new'>Kill All Chrome</a><br/>");
+            $('#nodes').append("<a href='" + hostUrl + "/kill_firefox' target='new'>Kill All Firefox</a><br/>");
+
+
+
+            var screenShotUrl = hostUrl + '/screenshot?callback=?';
+
+            $.getJSON(screenShotUrl, '', function (res) {
+                $('#nodes').append("<img id=''" + i + "' class='screenshot' src='data:image/png;base64," + res.image + "' />");
+            });
+
+            var pidsUrl = hostUrl + '/ps?callback=?';
+            $.getJSON(pidsUrl, '',
+                      function (res) {
+                          $('#nodes').append("<ul class='pids'>");
+                          for (var i = 0; i < res.standard_out.length; i++) {
+                              $('#nodes').append("<li>" + res.standard_out[i] + "</li>");
+                          }
+                          $('#nodes').append("</ul>");
+
+                      });
+
+
+        }
+    });
+
+</script>
