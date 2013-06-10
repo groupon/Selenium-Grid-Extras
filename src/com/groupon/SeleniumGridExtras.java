@@ -84,6 +84,8 @@ public class SeleniumGridExtras {
     server.createContext("/api", new HttpExecutor() {
       @Override
       String execute(Map params) {
+
+        System.out.println("/api end point requested");
         return ApiDocumentation.getApiDocumentation();
       }
     });
