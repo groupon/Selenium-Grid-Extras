@@ -32,10 +32,14 @@ Adding new Modules
 ------------------
 1. Create class which extends ExecuteOSTask
 
-``` public class GetProcesses extends ExecuteOSTask{}
+```java
+public class GetProcesses extends ExecuteOSTask{
+
+}
+```
 
 2. Register a new api endpoint for other people to be able to reach you and a short description of what module does
-```
+```java
     @Override
     public String getEndpoint() {
         return "/ps";
@@ -48,7 +52,7 @@ Adding new Modules
 ```
 
 3. Document what your end point will return on success and failure
-```
+```java
 @Override
   public Map getResponseDescription() {
     Map response = new HashMap();
@@ -61,7 +65,7 @@ Adding new Modules
 ```
 
 4. If you have a CLI command that will execute your task, set them up
-```
+```java
   @Override
   public String getWindowsCommand() {
     return "tasklist";
@@ -77,7 +81,7 @@ Example: GetProcess.java
 
 
 5. If you want more freedom than just CLI commands, overwrite the execute() method
-```
+```java
 @Override
   public String execute() {
     return doStuff();
