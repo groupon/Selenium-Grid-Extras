@@ -1,0 +1,1 @@
+java -cp build/*:lib/* com.groupon.SeleniumGridExtras
