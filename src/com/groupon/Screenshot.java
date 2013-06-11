@@ -76,7 +76,7 @@ public class Screenshot extends ExecuteOSTask {
       Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
       BufferedImage screenshot = robot.createScreenCapture(captureSize);
       try {
-        String directory = RuntimeConfig.getExposedDirectory();
+        String directory = RuntimeConfig.getSharedDirectory();
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
         String formattedTimestamp = sdf.format(date);
