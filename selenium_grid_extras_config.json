@@ -20,5 +20,5 @@
     "teardown": ["com.groupon.KillAllIE",
                  "com.groupon.RebootNode"],
 
-    "shared_directory": "shared"
+    "expose_directory": "shared"
 }

@@ -82,7 +82,7 @@ public class ExposeDirectory extends ExecuteOSTask {
       return true;
 
     } catch (IOException error) {
-      System.out.println("Attempt to delete " + RuntimeConfig.getSharedDirectory() + " FAILED!!!");
+      System.out.println("Attempt to delete " + RuntimeConfig.getExposedDirectory() + " FAILED!!!");
       return false;
     }
   }
@@ -100,7 +100,7 @@ public class ExposeDirectory extends ExecuteOSTask {
   public boolean initialize() {
 
     try {
-      sharedDir = new File(RuntimeConfig.getSharedDirectory());
+      sharedDir = new File(RuntimeConfig.getExposedDirectory());
 
       if (sharedDir.exists()) {
         cleanUpExposedDirectory();
