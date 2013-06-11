@@ -1,1 +1,1 @@
-java -cp build/*:lib/* com.groupon.SeleniumGridExtras
+java -cp selenium-grid-extras-0.0.1.jar:lib/* com.groupon.SeleniumGridExtras
