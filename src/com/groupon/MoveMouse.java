@@ -50,7 +50,7 @@ public class MoveMouse extends ExecuteOSTask {
 
   @Override
   public String getDescription() {
-    return "Moves the computers mouse to 0,0.";
+    return "Moves the computers mouse to x and y location. (Default 0,0)";
   }
 
   @Override
