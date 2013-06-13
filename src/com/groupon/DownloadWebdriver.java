@@ -91,9 +91,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
   @Override
   public Map getAcceptedParams() {
     Map<String, String> params = new HashMap();
-
     params.put("version", "Version of WebDriver to download, such as 2.33.0");
-
     return params;
   }
 
