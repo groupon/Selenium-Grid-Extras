@@ -61,7 +61,12 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return downloadWebdriverVersion(getWebdriverVersion());
+    return downloadWebdriverVersion(RuntimeConfig.getWebdriverVersion());
+  }
+
+  @Override
+  public String execute(String version) {
+    return downloadWebdriverVersion(version);
   }
 
   @Override
@@ -70,7 +75,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
     if (parameter.isEmpty() || !parameter.containsKey("version")) {
       return execute();
     } else {
-      return downloadWebdriverVersion(parameter.get("version").toString());
+      return execute(parameter.get("version").toString());
     }
   }
 
@@ -97,10 +102,6 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
   private String getWebdriverDir() {
     return RuntimeConfig.getWebdriverConfig().get("directory").toString();
-  }
-
-  private String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverConfig().get("version").toString();
   }
 
   private String downloadWebdriverVersion(String version) {

@@ -49,7 +49,7 @@ public class SeleniumGridExtras {
 
   public static void main(String[] args) throws Exception {
 
-    RuntimeConfig.loadConfig("selenium_grid_extras_config.json");
+    RuntimeConfig.loadConfig();
 
     HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
 

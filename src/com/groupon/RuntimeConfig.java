@@ -37,9 +37,11 @@
 
 package com.groupon;
 
-import org.json.simple.JSONObject;
+import org.apache.commons.io.FileUtils;
+import org.json.simple.JSONValue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -51,13 +53,14 @@ import java.util.Map;
 public class RuntimeConfig {
 
   public static Map config;
+  public static final String configFile = "selenium_grid_extras_config.json";
 
-  public static void loadConfig(String configFile) {
+  public static void loadConfig() {
 
     String configString = readConfigFile(configFile);
 
     if (configString != "") {
-      updateConfig(JsonWrapper.parseJson(configString));
+      setFullConfig(JsonWrapper.parseJson(configString));
     }
   }
 
@@ -91,8 +94,20 @@ public class RuntimeConfig {
     return wb;
   }
 
-  private static void updateConfig(Map configHash) {
+  public static String getWebdriverVersion(){
+    return RuntimeConfig.getWebdriverConfig().get("version").toString();
+  }
 
+  public static void setWebdriverVersion(String newVersion){
+    getWebdriverConfig().put("version", newVersion);
+  }
+
+  public static void saveConfigToFile() throws IOException{
+    String jsonText = JSONValue.toJSONString(config);
+    FileUtils.writeStringToFile(new File(configFile), jsonText);
+  }
+
+  private static void setFullConfig(Map configHash) {
     if (configHash.isEmpty()) {
       //Do nothing, the file didn't read anything in
     } else {

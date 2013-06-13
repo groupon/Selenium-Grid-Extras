@@ -57,6 +57,8 @@ public class JsonWrapper {
 
   public static String taskResultToJson(int result, String output, String error) {
 
+    //TODO: Move all of these out to each object's toJson() because this is getting to be too much.
+
     JSONObject resultsHash = new JSONObject();
     JSONArray standardOut = new JSONArray();
     JSONArray standardError = new JSONArray();
@@ -149,6 +151,7 @@ public class JsonWrapper {
 
     //Activated Modules
     activeModules.add("com.groupon.DownloadWebdriver");
+    activeModules.add("com.groupon.UpgradeWebdriver");
     activeModules.add("com.groupon.Setup");
     activeModules.add("com.groupon.Teardown");
     activeModules.add("com.groupon.MoveMouse");
@@ -186,6 +189,17 @@ public class JsonWrapper {
     returnResults.put("file", fileName);
     returnResults.put("source_url", sourceUrl);
     returnResults.put("standard_error", error);
+
+    return returnResults.toString();
+  }
+
+  public static String upgradeWebdriverToJson(Integer result, String oldVersion, String newVersion, String error){
+    JSONObject returnResults = new JSONObject();
+
+    returnResults.put("exit_code", result);
+    returnResults.put("old_version", oldVersion);
+    returnResults.put("new_version", newVersion);
+    returnResults.put("error", error);
 
     return returnResults.toString();
   }
