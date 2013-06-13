@@ -81,13 +81,15 @@ public class DownloadWebdriver extends ExecuteOSTask {
     response.put("exit_code", "Record if download was successful or not");
     response.put("root_dir", "Directory to which JAR file was saved to");
     response.put("file", "Filename on node's computer");
-    response.put("source_url", "Url from which the JAR was downloaded");
-    response.put("standard_error", "Any error returned from system, such as 'FileNotFoundException'");
+    response.put("source_url",
+                 "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
+    response
+        .put("standard_error", "Any error returned from system, such as 'FileNotFoundException'");
     return response;
   }
 
   @Override
-  public Map getAcceptedParams(){
+  public Map getAcceptedParams() {
     Map<String, String> params = new HashMap();
 
     params.put("version", "Version of WebDriver to download, such as 2.33.0");
@@ -113,9 +115,14 @@ public class DownloadWebdriver extends ExecuteOSTask {
       URL url = new URL(getUrl(version));
       String jarFile = webdriverDir + "/selenium-webdriver-standalone-" + version + ".jar";
       File destination = new File(jarFile);
-      FileUtils.copyURLToFile(url, destination);
 
-      return JsonWrapper.downloadResultsToJson(0, webdriverDir, jarFile, url.toString(), "");
+      if (destination.exists()) {
+        return JsonWrapper.downloadResultsToJson(0, webdriverDir, jarFile, "", "");
+      } else {
+        FileUtils.copyURLToFile(url, destination);
+        return JsonWrapper.downloadResultsToJson(0, webdriverDir, jarFile, url.toString(), "");
+      }
+
 
     } catch (MalformedURLException error) {
       return JsonWrapper.downloadResultsToJson(1, "", "", "", error.toString());
