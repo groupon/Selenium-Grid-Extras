@@ -81,14 +81,16 @@ public class SeleniumGridExtras {
 
     System.out.println("=== API documentation ===");
     System.out.println("/api - Located here");
-    server.createContext("/api", new HttpExecutor() {
+    HttpContext context =  server.createContext("/api", new HttpExecutor() {
       @Override
       String execute(Map params) {
-
-        System.out.println("/api end point requested");
-        return ApiDocumentation.getApiDocumentation();
+        String foo = ApiDocumentation.getApiDocumentation();
+        System.out.println(foo);
+        return foo;
       }
     });
+
+    context.getFilters().add(new ParameterFilter());
 
     server.setExecutor(null);
     server.start();
