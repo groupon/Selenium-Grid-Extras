@@ -140,7 +140,15 @@ public class JsonWrapper {
     JSONArray activeModules = new JSONArray();
     JSONArray setupTask = new JSONArray();
     JSONArray teardownTask = new JSONArray();
+    JSONObject webdriverConfig = new JSONObject();
 
+    //Webdriver Config
+    webdriverConfig.put("directory", "webdriver");
+    webdriverConfig.put("version", "2.33.0");
+    config.put("webdriver", webdriverConfig);
+
+    //Activated Modules
+    activeModules.add("com.groupon.DownloadWebdriver");
     activeModules.add("com.groupon.Setup");
     activeModules.add("com.groupon.Teardown");
     activeModules.add("com.groupon.MoveMouse");
@@ -152,19 +160,36 @@ public class JsonWrapper {
     activeModules.add("com.groupon.Screenshot");
     activeModules.add("com.groupon.ExposeDirectory");
     activeModules.add("com.groupon.GetFile");
+    config.put("activated_modules", activeModules);
 
+    //Setup Task Modules
     setupTask.add("com.groupon.KillAllIE");
     setupTask.add("com.groupon.MoveMouse");
-
-    teardownTask.add("com.groupon.KillAllIE");
-
-    config.put("activated_modules", activeModules);
     config.put("setup", setupTask);
+
+    //Teardown Task Modules
+    teardownTask.add("com.groupon.KillAllIE");
     config.put("teardown", teardownTask);
+
+
     config.put("expose_directory", "shared");
+
 
     return config.toString();
   }
+
+  public static String downloadResultsToJson(Integer result, String rootDir, String fileName, String sourceUrl, String error){
+    JSONObject returnResults = new JSONObject();
+
+    returnResults.put("exit_code", result);
+    returnResults.put("root_dir", rootDir);
+    returnResults.put("file", fileName);
+    returnResults.put("source_url", sourceUrl);
+    returnResults.put("standard_error", error);
+
+    return returnResults.toString();
+  }
+
 
 
 }

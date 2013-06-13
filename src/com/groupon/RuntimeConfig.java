@@ -37,10 +37,13 @@
 
 package com.groupon;
 
+import org.json.simple.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -83,6 +86,10 @@ public class RuntimeConfig {
     return getActivatedModules().contains(module);
   }
 
+  public static Map getWebdriverConfig(){
+    Map wb = (HashMap<String, HashMap>) config.get("webdriver");
+    return wb;
+  }
 
   private static void updateConfig(Map configHash) {
 
