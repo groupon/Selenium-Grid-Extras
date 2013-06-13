@@ -40,7 +40,7 @@
         </jar>
     </target>
 
-    <target name="build">
+    <target name="build" depends="clean">
 
         <mkdir dir="ant-build"/>
 
@@ -52,5 +52,10 @@
                 </fileset>
             </classpath>
         </javac>
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <mkdir dir="build" />
     </target>
 </project>
