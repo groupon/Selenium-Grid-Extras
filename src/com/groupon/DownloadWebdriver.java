@@ -78,10 +78,21 @@ public class DownloadWebdriver extends ExecuteOSTask {
   @Override
   public Map getResponseDescription() {
     Map response = new HashMap();
-    response.put("exit_code", "");
-    response.put("standard_out", "");
-    response.put("standard_error", "");
+    response.put("exit_code", "Record if download was successful or not");
+    response.put("root_dir", "Directory to which JAR file was saved to");
+    response.put("file", "Filename on node's computer");
+    response.put("source_url", "Url from which the JAR was downloaded");
+    response.put("standard_error", "Any error returned from system, such as 'FileNotFoundException'");
     return response;
+  }
+
+  @Override
+  public Map getAcceptedParams(){
+    Map<String, String> params = new HashMap();
+
+    params.put("version", "Version of WebDriver to download, such as 2.33.0");
+
+    return params;
   }
 
   private String getWebdriverDir() {
