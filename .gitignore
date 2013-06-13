@@ -4,3 +4,4 @@ ant-build/*
 Selenium-Grid-Extras.iml
 build/*
 shared/*
+selenium_grid_extras_config.json

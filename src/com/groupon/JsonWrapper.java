@@ -135,5 +135,36 @@ public class JsonWrapper {
     return screenshotInfo.toString();
   }
 
+  public static String getDefaultConfigs(){
+    JSONObject config = new JSONObject();
+    JSONArray activeModules = new JSONArray();
+    JSONArray setupTask = new JSONArray();
+    JSONArray teardownTask = new JSONArray();
+
+    activeModules.add("com.groupon.Setup");
+    activeModules.add("com.groupon.Teardown");
+    activeModules.add("com.groupon.MoveMouse");
+    activeModules.add("com.groupon.RebootNode");
+    activeModules.add("com.groupon.KillAllIE");
+    activeModules.add("com.groupon.KillAllFirefox");
+    activeModules.add("com.groupon.KillAllChrome");
+    activeModules.add("com.groupon.GetProcesses");
+    activeModules.add("com.groupon.Screenshot");
+    activeModules.add("com.groupon.ExposeDirectory");
+    activeModules.add("com.groupon.GetFile");
+
+    setupTask.add("com.groupon.KillAllIE");
+    setupTask.add("com.groupon.MoveMouse");
+
+    teardownTask.add("com.groupon.KillAllIE");
+
+    config.put("activated_modules", activeModules);
+    config.put("setup", setupTask);
+    config.put("teardown", teardownTask);
+    config.put("expose_directory", "shared");
+
+    return config.toString();
+  }
+
 
 }

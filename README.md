@@ -5,7 +5,10 @@ This project is designed to assist with the management of Selenium Grid Node far
 
 Getting started
 
-1. scripts/start_extras_service.sh - Starts the instance of the Grid Extras locally
+1. Download selenium-grid-extras-X.X.X.jar file, and run
+```shell
+java -cp selenium-grid-extras-X.X.X.jar com.groupon.SeleniumGridExtras
+```
 
 2. scripts/start_grid.sh - Starts an instance of the selenium Grid locally
 

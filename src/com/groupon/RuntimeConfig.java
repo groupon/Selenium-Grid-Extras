@@ -103,11 +103,14 @@ public class RuntimeConfig {
         returnString = returnString + line;
       }
     } catch (FileNotFoundException error) {
-      System.out.println("File" + filePath + " does not exist, going to use default configs");
-      System.exit(1);
+      System.out.println("File " + filePath + " does not exist, going to use default configs");
+      WriteDefaultConfigs.writeConfig(filePath);
+      return readConfigFile(filePath);
+
     } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
-      System.exit(1);
+      WriteDefaultConfigs.writeConfig(filePath);
+      return readConfigFile(filePath);
     }
 
     return returnString;
