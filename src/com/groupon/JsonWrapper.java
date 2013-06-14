@@ -160,6 +160,7 @@ public class JsonWrapper {
     activeModules.add("com.groupon.KillAllFirefox");
     activeModules.add("com.groupon.KillAllChrome");
     activeModules.add("com.groupon.GetProcesses");
+    activeModules.add("com.groupon.KillPid");
     activeModules.add("com.groupon.Screenshot");
     activeModules.add("com.groupon.ExposeDirectory");
     activeModules.add("com.groupon.GetFile");
