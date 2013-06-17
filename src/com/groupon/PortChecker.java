@@ -37,6 +37,12 @@
 
 package com.groupon;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class PortChecker {
 
   public static String getPortInfo(String port) {
@@ -49,16 +55,36 @@ public class PortChecker {
       command.append(port);
     }
 
-    System.out.println(command.toString());
-
     return ExecuteCommand.execRuntime(command.toString(), true);
   }
 
-  public static boolean isPortBusy(String port) {
-    return true;
-  }
 
   public static String getPidOnPort(String port) {
+
+    Map status = JsonWrapper.parseJson(getPortInfo(port));
+    List<String> standardOut = (List<String>) status.get("standard_out");
+    if (OSChecker.isWindows()) {
+      return "";
+    } else {
+      return getLinuxPid(standardOut);
+    }
+  }
+
+  private static String getWindowsPid() {
+    System.out.println("Implement me!!!  Port Checkier get windwos PID");
+    System.exit(1);
+    return "";
+  }
+
+  private static String getLinuxPid(List<String> status) {
+
+    for (String line : status) {
+      Matcher m = Pattern.compile("java\\s*(\\d*).*(\\(LISTEN\\))").matcher(line);
+      if (m.find()) {
+        return m.group(1);
+      }
+    }
+
     return "";
   }
 
