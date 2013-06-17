@@ -55,6 +55,23 @@ import java.util.Map;
 public class JsonWrapper {
 
 
+  public static String startSerivceToJson(int result, String pid, String error) {
+    JSONObject resultsHash = new JSONObject();
+    JSONArray standardOut = new JSONArray();
+    JSONArray standardError = new JSONArray();
+
+    String stdErrorLines[] = error.split("\n");
+    for (String line : stdErrorLines) {
+      standardError.add(line);
+    }
+
+    resultsHash.put("exit_code", result);
+    resultsHash.put("pid", pid);
+    resultsHash.put("error", standardError);
+
+    return resultsHash.toString();
+  }
+
   public static String taskResultToJson(int result, String output, String error) {
 
     //TODO: Move all of these out to each object's toJson() because this is getting to be too much.
@@ -64,16 +81,14 @@ public class JsonWrapper {
     JSONArray standardError = new JSONArray();
 
     String stdOutLines[] = output.split("\n");
-    for(String line: stdOutLines) {
+    for (String line : stdOutLines) {
       standardOut.add(line);
     }
 
     String stdErrorLines[] = error.split("\n");
-    for(String line: stdErrorLines) {
+    for (String line : stdErrorLines) {
       standardError.add(line);
     }
-
-
 
     resultsHash.put("exit_code", result);
     resultsHash.put("standard_out", standardOut);
@@ -113,12 +128,12 @@ public class JsonWrapper {
     return returnHash;
   }
 
-  public static String fileArrayToJson(File[] inputArray){
+  public static String fileArrayToJson(File[] inputArray) {
     JSONArray fileList = new JSONArray();
 
     JSONObject wrapper = new JSONObject();
 
-    for(File f : inputArray){
+    for (File f : inputArray) {
       fileList.add(f.toString());
     }
 
@@ -127,7 +142,7 @@ public class JsonWrapper {
     return wrapper.toString();
   }
 
-  public static String screenshotToJson(String encodedImage, String file, String type){
+  public static String screenshotToJson(String encodedImage, String file, String type) {
     JSONObject screenshotInfo = new JSONObject();
 
     screenshotInfo.put("file_type", type);
@@ -137,12 +152,15 @@ public class JsonWrapper {
     return screenshotInfo.toString();
   }
 
-  public static String getDefaultConfigs(){
+  public static String getDefaultConfigs() {
     JSONObject config = new JSONObject();
     JSONArray activeModules = new JSONArray();
     JSONArray setupTask = new JSONArray();
     JSONArray teardownTask = new JSONArray();
     JSONObject webdriverConfig = new JSONObject();
+    JSONObject gridConfig = new JSONObject();
+    JSONObject gridHubConfig = new JSONObject();
+    JSONObject gridNodeConfig = new JSONObject();
 
     //Webdriver Config
     webdriverConfig.put("directory", "webdriver");
@@ -164,6 +182,7 @@ public class JsonWrapper {
     activeModules.add("com.groupon.Netstat");
     activeModules.add("com.groupon.Screenshot");
     activeModules.add("com.groupon.ExposeDirectory");
+    activeModules.add("com.groupon.StartGrid");
     activeModules.add("com.groupon.GetFile");
     config.put("activated_modules", activeModules);
 
@@ -176,14 +195,27 @@ public class JsonWrapper {
     teardownTask.add("com.groupon.KillAllIE");
     config.put("teardown", teardownTask);
 
-
     config.put("expose_directory", "shared");
 
+    gridHubConfig.put("-role", "hub");
+    gridHubConfig.put("-servlets", "com.groupon.SeleniumGridExtrasServlet");
+    gridHubConfig.put("-port", "4444");
+
+    gridNodeConfig.put("-role", "wd");
+    gridNodeConfig.put("-hub", "http://localhost:4444");
+    gridNodeConfig.put("-port", "5555");
+
+    gridConfig.put("hub", gridHubConfig);
+    gridConfig.put("node", gridNodeConfig);
+    gridConfig.put("default_role", "grid");
+
+    config.put("grid", gridConfig);
 
     return config.toString();
   }
 
-  public static String downloadResultsToJson(Integer result, String rootDir, String fileName, String sourceUrl, String error){
+  public static String downloadResultsToJson(Integer result, String rootDir, String fileName,
+                                             String sourceUrl, String error) {
     JSONObject returnResults = new JSONObject();
 
     returnResults.put("exit_code", result);
@@ -195,7 +227,8 @@ public class JsonWrapper {
     return returnResults.toString();
   }
 
-  public static String upgradeWebdriverToJson(Integer result, String oldVersion, String newVersion, String error){
+  public static String upgradeWebdriverToJson(Integer result, String oldVersion, String newVersion,
+                                              String error) {
     JSONObject returnResults = new JSONObject();
 
     returnResults.put("exit_code", result);
@@ -205,7 +238,6 @@ public class JsonWrapper {
 
     return returnResults.toString();
   }
-
 
 
 }
