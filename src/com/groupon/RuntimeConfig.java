@@ -89,28 +89,36 @@ public class RuntimeConfig {
     return getActivatedModules().contains(module);
   }
 
-  public static Map getWebdriverConfig(){
+  public static Map getWebdriverConfig() {
     Map wb = (HashMap<String, HashMap>) config.get("webdriver");
     return wb;
   }
 
-  public static String getWebdriverVersion(){
+  public static String getWebdriverParentDir() {
+    return RuntimeConfig.getWebdriverConfig().get("directory").toString();
+  }
+
+  public static String getWebdriverVersion() {
     return RuntimeConfig.getWebdriverConfig().get("version").toString();
   }
 
-  public static void setWebdriverVersion(String newVersion){
+  public static Map<String, String> getGridConfig(String role) {
+    Map grid = (HashMap<String, HashMap>) config.get("grid");
+    Map config = (HashMap<String, String>) grid.get(role);
+    return config;
+  }
+
+  public static void setWebdriverVersion(String newVersion) {
     getWebdriverConfig().put("version", newVersion);
   }
 
-  public static void saveConfigToFile() throws IOException{
+  public static void saveConfigToFile() throws IOException {
     String jsonText = JSONValue.toJSONString(config);
     FileUtils.writeStringToFile(new File(configFile), jsonText);
   }
 
   private static void setFullConfig(Map configHash) {
-    if (configHash.isEmpty()) {
-      //Do nothing, the file didn't read anything in
-    } else {
+    if (!configHash.isEmpty()) {
       config = configHash;
     }
 
