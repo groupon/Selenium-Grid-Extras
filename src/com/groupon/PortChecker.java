@@ -37,52 +37,46 @@
 
 package com.groupon;
 
+public class PortChecker {
 
-import java.util.HashMap;
-import java.util.Map;
+  public static String getPortInfo(String port) {
+    StringBuilder command = new StringBuilder();
 
-public class Netstat extends ExecuteOSTask {
+    command.append(getCommand());
 
-  @Override
-  public String getEndpoint() {
-    return "/netstat";
+    if (!port.equals("")) {
+      command.append(getParameters());
+      command.append(port);
+    }
+
+    System.out.println(command.toString());
+
+    return ExecuteCommand.execRuntime(command.toString(), true);
   }
 
-  @Override
-  public String getDescription() {
-    return "Returns application information for a given port";
+  public static boolean isPortBusy(String port) {
+    return true;
   }
 
-  @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code",
-                 "Exit code received from the operating system upon execution of the task");
-    response.put("standard_out", "All of the StandardOut received from the system");
-    response.put("standard_error", "All of the StandardError received from the system");
-    return response;
+  public static String getPidOnPort(String port) {
+    return "";
   }
 
 
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("port", "If port provided, only information on this port will be returned");
-    return params;
-  }
-
-  @Override
-  public String execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey("port")) {
-      return execute();
+  private static String getCommand() {
+    if (OSChecker.isWindows()) {
+      return "netstat -aon ";
     } else {
-      return execute(parameter.get("port").toString());
+      return "lsof -i TCP";
     }
   }
 
-  @Override
-  public String execute(String port) {
-    return PortChecker.getPortInfo(port);
+  private static String getParameters() {
+    if (OSChecker.isWindows()) {
+      return " | findstr :";
+    } else {
+      return ":";
+    }
   }
 
 }
