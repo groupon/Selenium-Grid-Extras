@@ -112,7 +112,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
     try {
       URL url = new URL(getUrl(version));
-      String jarFile = webdriverDir + "/selenium-webdriver-standalone-" + version + ".jar";
+      String jarFile = webdriverDir + "/" + version + ".jar";
       File destination = new File(jarFile);
 
       if (destination.exists()) {
