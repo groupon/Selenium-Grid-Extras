@@ -35,7 +35,7 @@
 <!--*/-->
 <project default="package">
     <target name="package" depends="build">
-        <jar destfile="build/selenium-grid-extras-1.0.3.jar" basedir="ant-build" manifest="Manifest.txt">
+        <jar destfile="build/selenium-grid-extras.jar" basedir="ant-build" manifest="Manifest.txt">
             <zipgroupfileset dir="lib" includes="*.jar" />
         </jar>
     </target>
