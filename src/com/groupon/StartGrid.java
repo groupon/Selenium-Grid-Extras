@@ -57,38 +57,44 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return execute("");
+    return execute(GridWrapper.getDefaultRole());
   }
 
   @Override
   public String execute(String role) {
+    System.out.println("Role: " + role);
+    try {
+      String servicePort = GridWrapper.getGridConfigPortForRole(role);
+      Map<String, String> occupiedPid = PortChecker.getParsedPortInfo(servicePort);
 
-    String servicePort = RuntimeConfig.getGridConfigPortForRole(role);
-    Map<String, String> occupiedPid = PortChecker.getParsedPortInfo(servicePort);
+      if (!occupiedPid.isEmpty()) {
+        System.out.println(servicePort + " port is busy, won't try to start a service");
+        return JsonWrapper.taskResultToJson(1, "", "Port: " + servicePort
+                                                   + " is occupied by some other process: "
+                                                   + occupiedPid);
+      }
 
+      String
 
-    if (!occupiedPid.isEmpty()){
-      System.out.println(servicePort + " port is busy, won't try to start a service");
-      return JsonWrapper.taskResultToJson(1, "", "Port: " + servicePort + " is occupied by some other process: " + occupiedPid);
-    }
+          command =
+          OSChecker.isWindows() ? getWindowsCommand(role)
+                                : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-    String
+      String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
 
-        command =
-        OSChecker.isWindows() ? getWindowsCommand(role)
-                              : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
-
-    System.out.println(command);
-
-    String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
-
-    Map result = JsonWrapper.parseJson(serviceStartResponse);
-    System.out.println(result.get("exit_code") + "\n\n" + result.get("exit_code").getClass().getCanonicalName());
-    if (result.get("exit_code").toString().equals("0")) {
-      return JsonWrapper.taskResultToJson(0, "Service start command sent, might take as long as 10 seconds to spin up", "");
-    } else {
-      System.out.println("Something didn't go right in launching service");
-      return serviceStartResponse;
+      Map result = JsonWrapper.parseJson(serviceStartResponse);
+      System.out.println(
+          result.get("exit_code") + "\n\n" + result.get("exit_code").getClass().getCanonicalName());
+      if (result.get("exit_code").toString().equals("0")) {
+        return JsonWrapper.taskResultToJson(0,
+                                            "Service start command sent, might take as long as 10 seconds to spin up",
+                                            "");
+      } else {
+        System.out.println("Something didn't go right in launching service");
+        return serviceStartResponse;
+      }
+    } catch (Exception error) {
+      return JsonWrapper.taskResultToJson(1, "", error.toString());
     }
 
 
@@ -96,8 +102,7 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String execute(Map<String, String> parameter) {
-
-      if (parameter.isEmpty() || !parameter.containsKey("role")) {
+    if (parameter.isEmpty() || !parameter.containsKey("role")) {
       return execute();
     } else {
       return execute(parameter.get("role").toString());
@@ -122,29 +127,8 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String getLinuxCommand(String role) {
-    return "java -jar " + getWebdriverPath() + " " + getFormattedConfig(role) + " &";
+    return GridWrapper.getStartCommand(role) + " &";
   }
 
-  private String getWebdriverPath() {
-    return RuntimeConfig.getWebdriverParentDir() + "/" + RuntimeConfig.getWebdriverVersion()
-           + ".jar";
-  }
-
-  private String getFormattedConfig(String role) {
-    Map<String, String> config = RuntimeConfig.getGridConfig(role);
-    StringBuilder commandLineParam = new StringBuilder();
-
-    Iterator it = config.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry pairs = (Map.Entry) it.next();
-
-      commandLineParam.append(" " + pairs.getKey());
-      commandLineParam.append(" " + pairs.getValue());
-
-      it.remove();
-    }
-
-    return commandLineParam.toString();
-  }
 
 }

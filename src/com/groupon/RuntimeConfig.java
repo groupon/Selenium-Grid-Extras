@@ -102,12 +102,6 @@ public class RuntimeConfig {
     return RuntimeConfig.getWebdriverConfig().get("version").toString();
   }
 
-  public static Map<String, String> getGridConfig(String role) {
-    Map grid = (HashMap<String, HashMap>) config.get("grid");
-    Map config = (HashMap<String, String>) grid.get(role);
-    return config;
-  }
-
   public static void setWebdriverVersion(String newVersion) {
     getWebdriverConfig().put("version", newVersion);
   }
