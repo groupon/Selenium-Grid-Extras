@@ -63,11 +63,13 @@ public class StartGrid extends ExecuteOSTask {
   @Override
   public String execute(String role) {
 
-    String servicePort = getConfigPort(role);
-    String occupiedPid = PortChecker.getPidOnPort(servicePort);
-    if (!occupiedPid.equals("")){
+    String servicePort = RuntimeConfig.getGridConfigPortForRole(role);
+    Map<String, String> occupiedPid = PortChecker.getParsedPortInfo(servicePort);
+
+
+    if (!occupiedPid.isEmpty()){
       System.out.println(servicePort + " port is busy, won't try to start a service");
-      return JsonWrapper.startSerivceToJson(1, "", "Port: " + servicePort + " is occupied by some other process");
+      return JsonWrapper.taskResultToJson(1, "", "Port: " + servicePort + " is occupied by some other process: " + occupiedPid);
     }
 
     String
@@ -83,8 +85,7 @@ public class StartGrid extends ExecuteOSTask {
     Map result = JsonWrapper.parseJson(serviceStartResponse);
     System.out.println(result.get("exit_code") + "\n\n" + result.get("exit_code").getClass().getCanonicalName());
     if (result.get("exit_code").toString().equals("0")) {
-      System.out.println("Service start command sent, waiting to spin up");
-      return waitForServiceToStart(servicePort);
+      return JsonWrapper.taskResultToJson(0, "Service start command sent, might take as long as 10 seconds to spin up", "");
     } else {
       System.out.println("Something didn't go right in launching service");
       return serviceStartResponse;
@@ -96,7 +97,7 @@ public class StartGrid extends ExecuteOSTask {
   @Override
   public String execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey("role")) {
+      if (parameter.isEmpty() || !parameter.containsKey("role")) {
       return execute();
     } else {
       return execute(parameter.get("role").toString());
@@ -107,8 +108,8 @@ public class StartGrid extends ExecuteOSTask {
   public Map getResponseDescription() {
     Map response = new HashMap();
     response.put("exit_code", "Result of starting service, 0 success, anything else failure");
-    response.put("pid", "Process ID of the service which was started");
-    response.put("error", "Any error that might have come up");
+    response.put("standard_out", "Any message from stardard output");
+    response.put("standard_error", "Any error that might have come up");
     return response;
   }
 
@@ -124,37 +125,9 @@ public class StartGrid extends ExecuteOSTask {
     return "java -jar " + getWebdriverPath() + " " + getFormattedConfig(role) + " &";
   }
 
-  private String waitForServiceToStart(String port) {
-    sleep(10000);
-
-    for (Integer i = 0; i < 10; i++) {
-      String pid = getServicePid(port);
-      if (!pid.equals("")) {
-        return JsonWrapper.startSerivceToJson(0, pid, "");
-      }
-      System.out.println("Waiting for service to start on port: " + port);
-      sleep(10000);
-    }
-
-    return JsonWrapper.startSerivceToJson(1, "", "Service failed to start");
-  }
-
-  private void sleep(int time) {
-    try {
-      Thread.sleep(time);
-    } catch (InterruptedException error) {
-      System.out.println("Something went wrong with sleep command \n" + error.toString());
-    }
-  }
-
   private String getWebdriverPath() {
     return RuntimeConfig.getWebdriverParentDir() + "/" + RuntimeConfig.getWebdriverVersion()
            + ".jar";
-  }
-
-  private String getConfigPort(String role) {
-    Map<String, String> config = RuntimeConfig.getGridConfig(role);
-    return config.get("-port");
   }
 
   private String getFormattedConfig(String role) {
@@ -172,10 +145,6 @@ public class StartGrid extends ExecuteOSTask {
     }
 
     return commandLineParam.toString();
-  }
-
-  private String getServicePid(String port) {
-    return PortChecker.getPidOnPort(port);
   }
 
 }
