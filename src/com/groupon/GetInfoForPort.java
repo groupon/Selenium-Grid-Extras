@@ -56,9 +56,10 @@ public class GetInfoForPort extends ExecuteOSTask {
   @Override
   public Map getResponseDescription() {
     Map response = new HashMap();
-    response.put("process", "Process name/type (ie java, ruby, etc..)");
+    response.put("process_name", "Process name/type (ie java, ruby, etc..)");
     response.put("pid", "Process ID");
     response.put("user", "User who is running process");
+    response.put("port", "Port searched for");
     response.put("error", "Any errors from command");
     return response;
   }
@@ -73,7 +74,7 @@ public class GetInfoForPort extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return JsonWrapper.getPortInfoToJson("", "", "", "Port parameter is required");
+    return JsonWrapper.getPortInfoToJson("", "", "", "", "Port parameter is required");
   }
 
   @Override
@@ -94,6 +95,7 @@ public class GetInfoForPort extends ExecuteOSTask {
       String process = "";
       String pid = "";
       String user = "";
+      String returnError = "";
 
       try {
         process = portInfo.get("process").toString();
@@ -108,11 +110,15 @@ public class GetInfoForPort extends ExecuteOSTask {
       } catch (NullPointerException error) {
       }
 
-      return JsonWrapper.getPortInfoToJson(process, pid, user, "");
+      if (process.equals("") && pid.equals("") && user.equals("")){
+        returnError = "No info found for this port";
+      }
+
+      return JsonWrapper.getPortInfoToJson(process, pid, user, port, returnError);
 
     } catch (Exception error) {
       //Big try catch to see if anything at all went wrong
-      return JsonWrapper.getPortInfoToJson("", "", "", error.toString());
+      return JsonWrapper.getPortInfoToJson("", "", "", "", error.toString());
     }
 
   }

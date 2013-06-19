@@ -71,7 +71,7 @@ public class JsonWrapper {
 //    return resultsHash.toString();
 //  }
 
-  public static String getPortInfoToJson(String process, String pid, String user, String error) {
+  public static String getPortInfoToJson(String process, String pid, String user, String port, String error) {
     JSONObject resultsHash = new JSONObject();
     JSONArray standardOut = new JSONArray();
     JSONArray standardError = new JSONArray();
@@ -81,9 +81,10 @@ public class JsonWrapper {
       standardError.add(line);
     }
 
-    resultsHash.put("process", process);
+    resultsHash.put("process_name", process);
     resultsHash.put("pid", pid);
     resultsHash.put("user", user);
+    resultsHash.put("port", port);
     resultsHash.put("error", standardError);
 
     return resultsHash.toString();
