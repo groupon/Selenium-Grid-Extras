@@ -226,7 +226,7 @@ public class JsonWrapper {
 
     gridConfig.put("hub", gridHubConfig);
     gridConfig.put("node", gridNodeConfig);
-    gridConfig.put("default_role", "grid");
+    gridConfig.put("default_role", "hub");
 
     config.put("grid", gridConfig);
 
