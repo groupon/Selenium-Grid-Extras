@@ -54,8 +54,24 @@ import java.util.Map;
 
 public class JsonWrapper {
 
+//  public static String startSerivceToJson(int result, String pid, String error) {
+//    JSONObject resultsHash = new JSONObject();
+//    JSONArray standardOut = new JSONArray();
+//    JSONArray standardError = new JSONArray();
+//
+//    String stdErrorLines[] = error.split("\n");
+//    for (String line : stdErrorLines) {
+//      standardError.add(line);
+//    }
+//
+//    resultsHash.put("exit_code", result);
+//    resultsHash.put("pid", pid);
+//    resultsHash.put("error", standardError);
+//
+//    return resultsHash.toString();
+//  }
 
-  public static String startSerivceToJson(int result, String pid, String error) {
+  public static String getPortInfoToJson(String process, String pid, String user, String error) {
     JSONObject resultsHash = new JSONObject();
     JSONArray standardOut = new JSONArray();
     JSONArray standardError = new JSONArray();
@@ -65,8 +81,9 @@ public class JsonWrapper {
       standardError.add(line);
     }
 
-    resultsHash.put("exit_code", result);
+    resultsHash.put("process", process);
     resultsHash.put("pid", pid);
+    resultsHash.put("user", user);
     resultsHash.put("error", standardError);
 
     return resultsHash.toString();
@@ -184,6 +201,7 @@ public class JsonWrapper {
     activeModules.add("com.groupon.ExposeDirectory");
     activeModules.add("com.groupon.StartGrid");
     activeModules.add("com.groupon.GetFile");
+    activeModules.add("com.groupon.GetInfoForPort");
     config.put("activated_modules", activeModules);
 
     //Setup Task Modules

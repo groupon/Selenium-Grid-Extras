@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2013, Groupon, Inc.
  * All rights reserved.
@@ -37,45 +38,82 @@
 
 package com.groupon;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Netstat extends ExecuteOSTask {
+public class GetInfoForPort extends ExecuteOSTask {
 
   @Override
   public String getEndpoint() {
-    return "/netstat";
+    return "/port_info";
   }
 
   @Override
   public String getDescription() {
-    return "Returns a system call for all ports. Use /port_info to get parsed details";
+    return "Returns parsed information on a PID occupying a given port";
   }
 
   @Override
   public Map getResponseDescription() {
     Map response = new HashMap();
-    response.put("exit_code",
-                 "Exit code received from the operating system upon execution of the task");
-    response.put("standard_out", "All of the StandardOut received from the system");
-    response.put("standard_error", "All of the StandardError received from the system");
+    response.put("process", "Process name/type (ie java, ruby, etc..)");
+    response.put("pid", "Process ID");
+    response.put("user", "User who is running process");
+    response.put("error", "Any errors from command");
     return response;
   }
 
+
   @Override
-  public String execute(){
-    return PortChecker.getPortInfo("");
+  public Map getAcceptedParams() {
+    Map<String, String> params = new HashMap();
+    params.put("port", "(Required) Port to be used");
+    return params;
+  }
+
+  @Override
+  public String execute() {
+    return JsonWrapper.getPortInfoToJson("", "", "", "Port parameter is required");
   }
 
   @Override
   public String execute(Map<String, String> parameter) {
-    return execute();
+    if (parameter.isEmpty() || !parameter.containsKey("port")) {
+      return execute();
+    } else {
+      return execute(parameter.get("port").toString());
+    }
   }
 
   @Override
   public String execute(String port) {
-    return execute();
-  }
 
+    try {
+      Map<String, String> portInfo = PortChecker.getParsedPortInfo(port);
+
+      String process = "";
+      String pid = "";
+      String user = "";
+
+      try {
+        process = portInfo.get("process").toString();
+      } catch (NullPointerException error) {
+      }
+      try {
+        pid = portInfo.get("pid").toString();
+      } catch (NullPointerException error) {
+      }
+      try {
+        user = portInfo.get("user").toString();
+      } catch (NullPointerException error) {
+      }
+
+      return JsonWrapper.getPortInfoToJson(process, pid, user, "");
+
+    } catch (Exception error) {
+      //Big try catch to see if anything at all went wrong
+      return JsonWrapper.getPortInfoToJson("", "", "", error.toString());
+    }
+
+  }
 }

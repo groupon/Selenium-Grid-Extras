@@ -45,6 +45,16 @@ import java.util.regex.Pattern;
 
 public class PortChecker {
 
+  public static Map<String, String> getParsedPortInfo(String port) {
+
+    Map status = JsonWrapper.parseJson(getPortInfo(port));
+    List<String> standardOut = (List<String>) status.get("standard_out");
+
+    return parseLinuxInfo(standardOut);
+
+  }
+
+
   public static String getPortInfo(String port) {
     StringBuilder command = new StringBuilder();
 
@@ -55,20 +65,9 @@ public class PortChecker {
       command.append(port);
     }
 
-    return ExecuteCommand.execRuntime(command.toString(), true);
+    return ExecuteCommand.execRuntime(command.toString());
   }
 
-
-  public static String getPidOnPort(String port) {
-
-    Map status = JsonWrapper.parseJson(getPortInfo(port));
-    List<String> standardOut = (List<String>) status.get("standard_out");
-    if (OSChecker.isWindows()) {
-      return "";
-    } else {
-      return getLinuxPid(standardOut);
-    }
-  }
 
   private static String getWindowsPid() {
     System.out.println("Implement me!!!  Port Checkier get windwos PID");
@@ -76,16 +75,21 @@ public class PortChecker {
     return "";
   }
 
-  private static String getLinuxPid(List<String> status) {
+  private static Map<String, String> parseLinuxInfo(List<String> status) {
+
+    Map<String, String> info = new HashMap<String, String>();
 
     for (String line : status) {
-      Matcher m = Pattern.compile("java\\s*(\\d*).*(\\(LISTEN\\))").matcher(line);
+      Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(line);
       if (m.find()) {
-        return m.group(1);
+        info.put("process", m.group(1));
+        info.put("pid", m.group(2));
+        info.put("user", m.group(3));
+        return info;
       }
     }
 
-    return "";
+    return info;
   }
 
 
