@@ -47,10 +47,16 @@ import java.util.Map;
 public class JsonResponseBuilder {
 
 
-  private Map<String, String> keyDescriptions = new HashMap<String, String>();
-  private JSONObject keyValues = new JSONObject();
+  private Map<String, String> keyDescriptions;
+  private JSONObject keyValues;
 
   public JsonResponseBuilder() {
+    initilize();
+  }
+
+  private void initilize(){
+    keyDescriptions = new HashMap<String, String>();
+    keyValues = new JSONObject();
     keyDescriptions.put("error", "Error recived during execution of command");
     keyDescriptions.put("exit_code", "Exit code for operation");
     keyDescriptions.put("out", "All of the StandardOut received from the system");
@@ -101,7 +107,9 @@ public class JsonResponseBuilder {
   }
 
   public String toString() {
-    return keyValues.toJSONString();
+    String tempString = keyValues.toJSONString();
+    initilize();
+    return tempString;
   }
 
   protected Map<String, String> getKeyDescriptions() {
