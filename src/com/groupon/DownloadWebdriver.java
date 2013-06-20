@@ -113,15 +113,20 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
     try {
       URL url = new URL(getUrl(version));
+      System.out.println("Source URL: " + url);
       String jarFile = webdriverDir + "/" + version + ".jar";
+      System.out.println("Target file: " + jarFile);
       File destination = new File(jarFile);
 
       if (destination.exists()) {
+        System.out.println("File already exists, will not download");
         getJsonResponse().addKeyValues("file", jarFile);
-
+        getJsonResponse().addKeyValues("out", "File already exist, no need to download again.");
         return getJsonResponse().toString();
       } else {
+        System.out.println("File does not exist, will download");
         FileUtils.copyURLToFile(url, destination);
+        System.out.println("Download complete from " + url);
 
         getJsonResponse().addKeyValues("file", jarFile);
         getJsonResponse().addKeyValues("source_url", url.toString());
