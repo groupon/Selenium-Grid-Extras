@@ -74,13 +74,14 @@ public class MoveMouse extends ExecuteOSTask {
   }
 
   @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code",
-                 "0 for success, 1 for failure");
-    response.put("standard_out", "Current position of the mouse");
-    response.put("standard_error", "Error recived on failure");
-    return response;
+  public JsonResponseBuilder getJsonResponse() {
+
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+      jsonResponse.addKeyDescriptions("x", "Current X postion of the mouse");
+      jsonResponse.addKeyDescriptions("y", "Current Y postion of the mouse");
+    }
+    return jsonResponse;
   }
 
   @Override
@@ -96,9 +97,13 @@ public class MoveMouse extends ExecuteOSTask {
     try {
       Robot moveMouse = new Robot();
       moveMouse.mouseMove(x, y);
-      return JsonWrapper.taskResultToJson(0, x + "," + y, "");
+      getJsonResponse().addKeyValues("x", x);
+      getJsonResponse().addKeyValues("y", y);
+      return getJsonResponse().toString();
     } catch (AWTException error) {
-      return JsonWrapper.taskResultToJson(1, "", error.toString());
+      getJsonResponse().addKeyValues("exit_code", 1);
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
     }
 
   }
