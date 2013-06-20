@@ -40,6 +40,7 @@ package com.groupon;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JsonResponseBuilder {
@@ -47,6 +48,14 @@ public class JsonResponseBuilder {
 
   private Map<String, String> keyDescriptions = new HashMap<String, String>();
   private JSONObject keyValues = new JSONObject();
+
+  public JsonResponseBuilder(){
+    keyDescriptions.put("error","Error recived during execution of command");
+    keyDescriptions.put("exit_code", "Exit code for operation");
+    keyDescriptions.put("out", "All of the StandardOut received from the system");
+
+    addKeyValues("exit_code", 0);
+  }
 
   public void addKeyDescriptions(String key, String description){
     keyDescriptions.put(key, description);
@@ -65,7 +74,15 @@ public class JsonResponseBuilder {
     keyValues.put(key, value);
   }
 
-  public String getJsonString(){
+  public void addKeyValues(String key, int value){
+    keyValues.put(key, value);
+  }
+
+  public void addKeyValues(String key, List value){
+    keyValues.put(key, value);
+  }
+
+  public String toString(){
     return keyValues.toJSONString();
   }
 
