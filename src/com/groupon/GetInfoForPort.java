@@ -43,7 +43,6 @@ import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
-  private JsonResponseBuilder jsonResponse;
 
   @Override
   public String getEndpoint() {
@@ -56,17 +55,18 @@ public class GetInfoForPort extends ExecuteOSTask {
   }
 
   @Override
-  public Map getResponseDescription() {
+  public JsonResponseBuilder getJsonResponse() {
 
-    jsonResponse = new JsonResponseBuilder();
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
 
-
-    jsonResponse.addKeyDescriptions("process_name", "Process name/type (ie java, ruby, etc..)");
-    jsonResponse.addKeyDescriptions("pid", "Process ID");
-    jsonResponse.addKeyDescriptions("user", "User who is running process");
-    jsonResponse.addKeyDescriptions("port", "Port searched for");
-    jsonResponse.addKeyDescriptions("error", "Any errors from command");
-    return jsonResponse.getKeyDescriptions();
+      jsonResponse.addKeyDescriptions("process_name", "Process name/type (ie java, ruby, etc..)");
+      jsonResponse.addKeyDescriptions("pid", "Process ID");
+      jsonResponse.addKeyDescriptions("user", "User who is running process");
+      jsonResponse.addKeyDescriptions("port", "Port searched for");
+      jsonResponse.addKeyDescriptions("error", "Any errors from command");
+    }
+    return jsonResponse;
   }
 
 
@@ -79,8 +79,8 @@ public class GetInfoForPort extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    jsonResponse.addKeyValues("error", "Port parameter is required");
-    return jsonResponse.toString();
+    getJsonResponse().addKeyValues("error", "Port parameter is required");
+    return getJsonResponse().toString();
   }
 
   @Override
@@ -116,20 +116,20 @@ public class GetInfoForPort extends ExecuteOSTask {
       } catch (NullPointerException error) {
       }
 
-      if (process.equals("") && pid.equals("") && user.equals("")){
+      if (process.equals("") && pid.equals("") && user.equals("")) {
         returnError = "No info found for this port";
       }
 
-      jsonResponse.addKeyValues("process_name", process);
-      jsonResponse.addKeyValues("pid", pid);
-      jsonResponse.addKeyValues("user", user);
-      jsonResponse.addKeyValues("port", port);
-      return jsonResponse.toString();
+      getJsonResponse().addKeyValues("process_name", process);
+      getJsonResponse().addKeyValues("pid", pid);
+      getJsonResponse().addKeyValues("user", user);
+      getJsonResponse().addKeyValues("port", port);
+      return getJsonResponse().toString();
 
     } catch (Exception error) {
       //Big try catch to see if anything at all went wrong
-      jsonResponse.addKeyValues("error", error.toString());
-      return jsonResponse.toString();
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
     }
 
   }
