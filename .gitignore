@@ -1,4 +1,5 @@
 .idea
+.iml
 .idea/*
 ant-build/*
 Selenium-Grid-Extras.iml
