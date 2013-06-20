@@ -93,7 +93,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
       jsonResponse.addKeyDescriptions("error", "Any Errors that occured");
 
       jsonResponse.addKeyValues("exit_code", 0);
-      jsonResponse.addKeyValues("root_dir", getWebdriverDir());
+      jsonResponse.addKeyValues("root_dir", GridWrapper.getWebdriverHome());
     }
     return jsonResponse;
   }
@@ -105,13 +105,9 @@ public class DownloadWebdriver extends ExecuteOSTask {
     return params;
   }
 
-  private String getWebdriverDir() {
-    return RuntimeConfig.getWebdriverConfig().get("directory").toString();
-  }
-
   private String downloadWebdriverVersion(String version) {
 
-    String webdriverDir = getWebdriverDir();
+    String webdriverDir = GridWrapper.getWebdriverHome();
     System.out.println("Downloading Driver here " + webdriverDir);
     createWebdriverDir(webdriverDir);
 
@@ -163,6 +159,33 @@ public class DownloadWebdriver extends ExecuteOSTask {
         "http://selenium.googlecode.com/files/selenium-server-standalone-" + version + ".jar";
     System.out.println("Will download from " + fullUrl);
     return fullUrl;
+  }
+
+  @Override
+  public boolean initialize() {
+
+    try {
+      File webdriverJar = new File(GridWrapper.getCurrentJarPath());
+      File webdriverHome = new File(RuntimeConfig.getWebdriverParentDir());
+
+      if (!webdriverHome.exists()) {
+         webdriverHome.mkdir();
+      }
+
+      if (!webdriverJar.exists()) {
+        downloadWebdriverVersion(GridWrapper.getWebdriverVersion());
+      }
+
+
+    } catch (NullPointerException error) {
+      printInitilizedFailure();
+      System.out.println("  'expose_directory' variable was not set in the config " + error);
+      return false;
+    }
+
+    printInitilizedSuccessAndRegisterWithAPI();
+    return true;
+
   }
 
 
