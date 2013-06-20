@@ -40,18 +40,20 @@ package com.groupon.seleniumgridextras;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.IOException;
 
 public class WriteDefaultConfigs {
 
 
   public static void writeConfig(String file){
-    String defaultConfig = JsonWrapper.getDefaultConfigs();
-
     try{
-      FileUtils.writeStringToFile(new File(file), defaultConfig);
-    } catch (IOException error){
-      System.out.println("Could not write default config file, exti with error " + error);
+      System.out.println("i'm here");
+      String defaultConfig = JsonWrapper.getDefaultConfigs();
+      System.out.println("...");
+      File f = new File(file);
+      System.out.println("writing " + f + "...");
+      FileUtils.writeStringToFile(f, defaultConfig);
+    } catch (Exception error){
+      System.out.println("Could not write default config file, exit with error " + error.toString());
       System.exit(1);
     }
   }

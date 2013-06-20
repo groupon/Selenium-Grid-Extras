@@ -39,16 +39,16 @@ package com.groupon.seleniumgridextras;
 
 import org.apache.commons.codec.binary.Base64;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 public class Screenshot extends ExecuteOSTask {
 

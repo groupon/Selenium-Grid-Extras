@@ -1,9 +1,6 @@
 package com.groupon.seleniumgridextras;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
+import org.apache.commons.io.IOUtils;
 import org.openqa.grid.internal.ProxySet;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.RemoteProxy;
@@ -12,14 +9,8 @@ import org.openqa.grid.web.servlet.RegistryBasedServlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
 
 public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
 
@@ -51,8 +42,8 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     String s = "";
 
     try {
-      s = new String(Files.readAllBytes(Paths.get(file)));
-
+      InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+      s = IOUtils.toString(is, "UTF-8");
     } catch (Exception error) {
       System.out.println(error);
     }

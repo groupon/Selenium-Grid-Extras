@@ -37,7 +37,6 @@
 
 package com.groupon.seleniumgridextras;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class GridStatus extends ExecuteOSTask {

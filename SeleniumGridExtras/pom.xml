@@ -12,7 +12,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>2.32.0</version>
+            <version>2.33.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -30,6 +30,4 @@
             <version>1.1.1</version>
         </dependency>
     </dependencies>
-
-
 </project>

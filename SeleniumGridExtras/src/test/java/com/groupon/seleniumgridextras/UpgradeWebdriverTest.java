@@ -37,15 +37,11 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.sun.jdi.connect.spi.TransportService;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -93,7 +89,7 @@ public class UpgradeWebdriverTest {
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
+        task.getAcceptedParams().get("version"));
     assertEquals(1, task.getAcceptedParams().keySet().size());
   }
 }

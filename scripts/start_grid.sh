@@ -1,1 +1,1 @@
-java -cp lib/selenium-server.jar:selenium-grid-extras-1.0.0.jar org.openqa.grid.selenium.GridLauncher -servlets com.groupon.SeleniumGridExtrasServlet -role hub
+java -cp selenium-server-standalone-2.32.0.jar:selenium-grid-extras.jar org.openqa.grid.selenium.GridLauncher -servlets com.groupon.seleniumgridextras.SeleniumGridExtrasServlet -role hub

@@ -38,8 +38,8 @@
 package com.groupon.seleniumgridextras;
 
 import java.awt.*;
-import java.awt.List;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MoveMouse extends ExecuteOSTask {
 

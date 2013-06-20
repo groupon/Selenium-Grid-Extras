@@ -39,7 +39,6 @@ package com.groupon.seleniumgridextras;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
 import org.json.simple.parser.ContainerFactory;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -101,6 +100,7 @@ public class JsonWrapper {
   }
 
   public static String getDefaultConfigs() {
+    System.out.println("0");
     JSONObject config = new JSONObject();
     JSONArray activeModules = new JSONArray();
     JSONArray setupTask = new JSONArray();
@@ -109,12 +109,12 @@ public class JsonWrapper {
     JSONObject gridConfig = new JSONObject();
     JSONObject gridHubConfig = new JSONObject();
     JSONObject gridNodeConfig = new JSONObject();
-
+    System.out.println("1");
     //Webdriver Config
     webdriverConfig.put("directory", "webdriver");
     webdriverConfig.put("version", "2.33.0");
     config.put("webdriver", webdriverConfig);
-
+    System.out.println("2");
     //Activated Modules
     activeModules.add("com.groupon.DownloadWebdriver");
     activeModules.add("com.groupon.UpgradeWebdriver");
@@ -138,12 +138,12 @@ public class JsonWrapper {
     activeModules.add("com.groupon.StopGrid");
     activeModules.add("com.groupon.GetConfig");
     config.put("activated_modules", activeModules);
-
+    System.out.println("3");
     //Setup Task Modules
     setupTask.add("com.groupon.KillAllIE");
     setupTask.add("com.groupon.MoveMouse");
     config.put("setup", setupTask);
-
+    System.out.println("4");
     //Teardown Task Modules
     teardownTask.add("com.groupon.KillAllIE");
     config.put("teardown", teardownTask);
@@ -154,7 +154,7 @@ public class JsonWrapper {
     gridHubConfig.put("-servlets", "com.groupon.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
     gridNodeConfig.put("-host", "http://127.0.0.1");
-
+    System.out.println("5");
     gridNodeConfig.put("-role", "wd");
     gridNodeConfig.put("-hub", "http://localhost:4444");
     gridNodeConfig.put("-port", "5555");
