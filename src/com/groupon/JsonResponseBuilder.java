@@ -55,6 +55,8 @@ public class JsonResponseBuilder {
     keyDescriptions.put("out", "All of the StandardOut received from the system");
 
     addKeyValues("exit_code", 0);
+    addKeyValues("out", "");
+    addKeyValues("error", "");
   }
 
   public void addKeyDescriptions(String key, String description){
@@ -78,7 +80,7 @@ public class JsonResponseBuilder {
     keyValues.put(key, value);
   }
 
-  public void addKeyValues(String key, List value){
+  public void addKeyValues(String key, List<String> value){
     keyValues.put(key, value);
   }
 
