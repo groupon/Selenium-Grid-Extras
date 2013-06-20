@@ -94,6 +94,10 @@ public class RuntimeConfig {
     return wb;
   }
 
+  public static Map<String, HashMap> getGridConfig(){
+    return (HashMap<String, HashMap>) config.get("grid");
+  }
+
   public static String getWebdriverParentDir() {
     return RuntimeConfig.getWebdriverConfig().get("directory").toString();
   }

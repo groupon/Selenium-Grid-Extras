@@ -203,6 +203,7 @@ public class JsonWrapper {
     activeModules.add("com.groupon.StartGrid");
     activeModules.add("com.groupon.GetFile");
     activeModules.add("com.groupon.GetInfoForPort");
+    activeModules.add("com.groupon.GridStatus");
     config.put("activated_modules", activeModules);
 
     //Setup Task Modules
@@ -219,10 +220,12 @@ public class JsonWrapper {
     gridHubConfig.put("-role", "hub");
     gridHubConfig.put("-servlets", "com.groupon.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
+    gridNodeConfig.put("-host", "http://127.0.0.1");
 
     gridNodeConfig.put("-role", "wd");
     gridNodeConfig.put("-hub", "http://localhost:4444");
     gridNodeConfig.put("-port", "5555");
+    gridNodeConfig.put("-host", "http://127.0.0.1");
 
     gridConfig.put("hub", gridHubConfig);
     gridConfig.put("node", gridNodeConfig);
