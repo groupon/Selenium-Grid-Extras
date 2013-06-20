@@ -51,8 +51,8 @@ class ExecuteCommand {
 
     JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
     jsonResponse.addKeyValues("exit_code", 1);
-    jsonResponse.addKeyValues("standard_out", "");
-    jsonResponse.addKeyValues("standard_error", "");
+    jsonResponse.addKeyValues("out", "");
+    jsonResponse.addKeyValues("error", "");
 
     Process process;
 
@@ -77,7 +77,7 @@ class ExecuteCommand {
     } else {
       System.out.println("Not waiting for finish");
       jsonResponse.addKeyValues("exit_code", 0);
-      jsonResponse.addKeyValues("standard_out", "Background process started");
+      jsonResponse.addKeyValues("out", "Background process started");
       return jsonResponse.toString();
     }
 
@@ -85,11 +85,11 @@ class ExecuteCommand {
       String output = inputStreamToString(process.getInputStream());
       String error = inputStreamToString(process.getErrorStream());
       jsonResponse.addKeyValues("exit_code", exitCode);
-      jsonResponse.addKeyValues("standard_out", output);
-      jsonResponse.addKeyValues("standard_error", error);
+      jsonResponse.addKeyValues("out", output);
+      jsonResponse.addKeyValues("error", error);
       return jsonResponse.toString();
     } catch (IOException e) {
-      jsonResponse.addKeyValues("standard_error", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
+      jsonResponse.addKeyValues("error", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
       return jsonResponse.toString();
 
     } finally {

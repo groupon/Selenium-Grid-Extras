@@ -61,8 +61,8 @@ public class GetProcesses extends ExecuteOSTask{
     Map response = new HashMap();
     response.put("exit_code",
                  "0 for success, 1 for failure");
-    response.put("standard_out", "Array of PIDS and descriptions");
-    response.put("standard_error", "Error recived on failure");
+    response.put("out", "Array of PIDS and descriptions");
+    response.put("error", "Error recived on failure");
     return response;
   }
 ```

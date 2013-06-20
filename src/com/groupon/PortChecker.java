@@ -48,7 +48,7 @@ public class PortChecker {
   public static Map<String, String> getParsedPortInfo(String port) {
 
     Map status = JsonWrapper.parseJson(getPortInfo(port));
-    List<String> standardOut = (List<String>) status.get("standard_out");
+    List<String> standardOut = (List<String>) status.get("out");
 
     return parseLinuxInfo(standardOut);
 

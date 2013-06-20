@@ -16,8 +16,8 @@
             $.getJSON('http://localhost:3000/ps?callback=?', '',
                       function (res) {
                           $('#pids').append("<ul>");
-                          for (var i = 0; i < res.standard_out.length; i++) {
-                              $('#pids').append("<li>" + res.standard_out[i] + "</li>");
+                          for (var i = 0; i < res.out.length; i++) {
+                              $('#pids').append("<li>" + res.out[i] + "</li>");
                           }
                           $('#pids').append("</ul>");
 

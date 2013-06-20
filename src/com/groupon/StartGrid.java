@@ -62,7 +62,6 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String execute(String role) {
-    System.out.println("Role: " + role);
     try {
       String servicePort = GridWrapper.getGridConfigPortForRole(role);
       Map<String, String> occupiedPid = PortChecker.getParsedPortInfo(servicePort);
