@@ -75,14 +75,6 @@ public class KillAllByName extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
-    getJsonResponse().addKeyValues("error", "name parameter is required");
-    getJsonResponse().addKeyValues("exit_code", 1);
-    return getJsonResponse().toString();
-  }
-
-
-  @Override
   public Map getAcceptedParams() {
     Map<String, String> params = new HashMap();
     params.put("name", "Name of process");
