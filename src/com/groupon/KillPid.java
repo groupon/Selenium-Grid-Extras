@@ -45,7 +45,10 @@ public class KillPid extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return JsonWrapper.taskResultToJson(1, "", "ID is a required parameter");
+
+    getJsonResponse().addKeyValues("exit_code", 1);
+    getJsonResponse().addKeyValues("standard_error", "ID is a required parameter");
+    return getJsonResponse().toString();
   }
 
   @Override
@@ -84,16 +87,6 @@ public class KillPid extends ExecuteOSTask {
     return "kill " + parameter;
   }
 
-
-  @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code",
-                 "Exit code received from the operating system upon execution of the task");
-    response.put("standard_out", "All of the StandardOut received from the system");
-    response.put("standard_error", "All of the StandardError received from the system");
-    return response;
-  }
 
 
   @Override

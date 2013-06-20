@@ -37,56 +37,63 @@
 
 package com.groupon;
 
+import com.sun.jdi.connect.spi.TransportService;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
-public class KillAllByName extends ExecuteOSTask {
+import static org.junit.Assert.assertEquals;
 
+public class UpgradeWebdriverTest {
 
-  @Override
-  public String getEndpoint() {
-    return "/kill_all_by_name";
+  public ExecuteOSTask task;
+
+  @Before
+  public void setUp() throws Exception {
+    task = new UpgradeWebdriver();
   }
 
-  @Override
-  public String getDescription() {
-    return "Executes os level kill command on a given PID name";
+  @Test
+  public void testGetEndpoint() throws Exception {
+    assertEquals("/upgrade_webdriver", task.getEndpoint());
   }
 
-
-  @Override
-  public String getWindowsCommand(String parameter) {
-    return "taskkill -F -IM " + parameter;
+  @Test
+  public void testGetDescription() throws Exception {
+    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
   }
 
-  @Override
-  public String getLinuxCommand(String parameter) {
-    return "killall -v -m " + parameter;
+//  @Test
+//  public void testExecute() throws Exception {
+//
+//  }
+//
+//  @Test
+//  public void testExecute() throws Exception {
+//
+//  }
+
+  @Test
+  public void testGetDependencies() throws Exception {
+    List<String> expected = new LinkedList();
+    expected.add("com.groupon.DownloadWebdriver");
+    assertEquals(expected, task.getDependencies());
   }
 
-  @Override
-  public String execute(Map<String, String> parameter) {
+  @Test
+  public void testGetJsonResponse() throws Exception {
 
-    if (!parameter.isEmpty() && parameter.containsKey("name")) {
-      return execute(parameter.get("name").toString());
-    }
-
-    return execute();
   }
 
-  @Override
-  public String execute() {
-    getJsonResponse().addKeyValues("error", "name parameter is required");
-    getJsonResponse().addKeyValues("exit_code", 1);
-    return getJsonResponse().toString();
+  @Test
+  public void testGetAcceptedParams() throws Exception {
+    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
+                 task.getAcceptedParams().get("version"));
+    assertEquals(1, task.getAcceptedParams().keySet().size());
   }
-
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("name", "Name of process");
-    return params;
-  }
-
 }

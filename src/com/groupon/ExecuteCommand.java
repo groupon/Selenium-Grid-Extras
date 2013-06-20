@@ -48,12 +48,19 @@ class ExecuteCommand {
 
   public static String execRuntime(String cmd, boolean waitToFinish) {
     System.out.println("Starting to execute - " + cmd);
+
+    JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
+    jsonResponse.addKeyValues("exit_code", 1);
+    jsonResponse.addKeyValues("standard_out", "");
+    jsonResponse.addKeyValues("standard_error", "");
+
     Process process;
 
     try {
       process = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
-      return JsonWrapper.taskResultToJson(1, "", "Problems in running " + cmd + "\n" + e.toString());
+      jsonResponse.addKeyValues("standard_error", "Problems in running " + cmd + "\n" + e.toString());
+      return jsonResponse.toString();
     }
 
     int exitCode;
@@ -63,20 +70,28 @@ class ExecuteCommand {
         exitCode = process.waitFor();
         System.out.println("Command Finished");
       } catch (InterruptedException e) {
-        return JsonWrapper.taskResultToJson(1, "", "Interrupted running " + cmd + "\n" + e.toString());
+
+        jsonResponse.addKeyValues("standard_error", "Interrupted running " + cmd + "\n" + e.toString());
+        return jsonResponse.toString();
       }
     } else {
       System.out.println("Not waiting for finish");
-      return JsonWrapper.taskResultToJson(0, "Background process started", "");
+      jsonResponse.addKeyValues("exit_code", 0);
+      jsonResponse.addKeyValues("standard_out", "Background process started");
+      return jsonResponse.toString();
     }
 
     try {
       String output = inputStreamToString(process.getInputStream());
       String error = inputStreamToString(process.getErrorStream());
-      String returnResults = JsonWrapper.taskResultToJson(exitCode, output, error);
-      return returnResults;
+      jsonResponse.addKeyValues("exit_code", exitCode);
+      jsonResponse.addKeyValues("standard_out", output);
+      jsonResponse.addKeyValues("standard_error", error);
+      return jsonResponse.toString();
     } catch (IOException e) {
-      return JsonWrapper.taskResultToJson(1, "", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
+      jsonResponse.addKeyValues("standard_error", "Problems reading stdout and stderr from " + cmd + "\n" + e.toString());
+      return jsonResponse.toString();
+
     } finally {
       process.destroy();
     }

@@ -81,16 +81,21 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
 
   @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code", "Record if download was successful or not");
-    response.put("root_dir", "Directory to which JAR file was saved to");
-    response.put("file", "Filename on node's computer");
-    response.put("source_url",
-                 "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
-    response
-        .put("standard_error", "Any error returned from system, such as 'FileNotFoundException'");
-    return response;
+  public JsonResponseBuilder getJsonResponse() {
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+
+      jsonResponse.addKeyDescriptions("exit_code", "Record if download was successful or not");
+      jsonResponse.addKeyDescriptions("root_dir", "Directory to which JAR file was saved to");
+      jsonResponse.addKeyDescriptions("file", "Filename on node's computer");
+      jsonResponse.addKeyDescriptions("source_url",
+                                      "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
+      jsonResponse.addKeyDescriptions("error", "Any Errors that occured");
+
+      jsonResponse.addKeyValues("exit_code", 0);
+      jsonResponse.addKeyValues("root_dir", getWebdriverDir());
+    }
+    return jsonResponse;
   }
 
   @Override
@@ -116,17 +121,27 @@ public class DownloadWebdriver extends ExecuteOSTask {
       File destination = new File(jarFile);
 
       if (destination.exists()) {
-        return JsonWrapper.downloadResultsToJson(0, webdriverDir, jarFile, "", "");
+        jsonResponse.addKeyValues("file", jarFile);
+
+        return jsonResponse.toString();
       } else {
         FileUtils.copyURLToFile(url, destination);
-        return JsonWrapper.downloadResultsToJson(0, webdriverDir, jarFile, url.toString(), "");
+
+        jsonResponse.addKeyValues("file", jarFile);
+        jsonResponse.addKeyValues("source_url", url.toString());
+
+        return jsonResponse.toString();
       }
 
 
     } catch (MalformedURLException error) {
-      return JsonWrapper.downloadResultsToJson(1, "", "", "", error.toString());
+      jsonResponse.addKeyValues("error", error.toString());
+      jsonResponse.addKeyValues("exit_code", 1);
+      return jsonResponse.toString();
     } catch (IOException error) {
-      return JsonWrapper.downloadResultsToJson(1, "", "", "", error.toString());
+      jsonResponse.addKeyValues("error", error.toString());
+      jsonResponse.addKeyValues("exit_code", 1);
+      return jsonResponse.toString();
     }
   }
 

@@ -43,6 +43,8 @@ import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
+  private JsonResponseBuilder jsonResponse;
+
   @Override
   public String getEndpoint() {
     return "/port_info";
@@ -55,13 +57,16 @@ public class GetInfoForPort extends ExecuteOSTask {
 
   @Override
   public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("process_name", "Process name/type (ie java, ruby, etc..)");
-    response.put("pid", "Process ID");
-    response.put("user", "User who is running process");
-    response.put("port", "Port searched for");
-    response.put("error", "Any errors from command");
-    return response;
+
+    jsonResponse = new JsonResponseBuilder();
+
+
+    jsonResponse.addKeyDescriptions("process_name", "Process name/type (ie java, ruby, etc..)");
+    jsonResponse.addKeyDescriptions("pid", "Process ID");
+    jsonResponse.addKeyDescriptions("user", "User who is running process");
+    jsonResponse.addKeyDescriptions("port", "Port searched for");
+    jsonResponse.addKeyDescriptions("error", "Any errors from command");
+    return jsonResponse.getKeyDescriptions();
   }
 
 
@@ -74,7 +79,8 @@ public class GetInfoForPort extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return JsonWrapper.getPortInfoToJson("", "", "", "", "Port parameter is required");
+    jsonResponse.addKeyValues("error", "Port parameter is required");
+    return jsonResponse.toString();
   }
 
   @Override
@@ -114,11 +120,16 @@ public class GetInfoForPort extends ExecuteOSTask {
         returnError = "No info found for this port";
       }
 
-      return JsonWrapper.getPortInfoToJson(process, pid, user, port, returnError);
+      jsonResponse.addKeyValues("process_name", process);
+      jsonResponse.addKeyValues("pid", pid);
+      jsonResponse.addKeyValues("user", user);
+      jsonResponse.addKeyValues("port", port);
+      return jsonResponse.toString();
 
     } catch (Exception error) {
       //Big try catch to see if anything at all went wrong
-      return JsonWrapper.getPortInfoToJson("", "", "", "", error.toString());
+      jsonResponse.addKeyValues("error", error.toString());
+      return jsonResponse.toString();
     }
 
   }

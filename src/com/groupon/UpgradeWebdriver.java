@@ -45,6 +45,7 @@ import java.util.Map;
 
 public class UpgradeWebdriver extends ExecuteOSTask {
 
+
   @Override
   public String getEndpoint() {
     return "/upgrade_webdriver";
@@ -57,7 +58,9 @@ public class UpgradeWebdriver extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return JsonWrapper.upgradeWebdriverToJson(1, "", "", "version parameter is required");
+    getJsonResponse().addKeyValues("exit_code", 1);
+    getJsonResponse().addKeyValues("standard_error", "version parameter is required");
+    return getJsonResponse().toString();
   }
 
   @Override
@@ -65,19 +68,22 @@ public class UpgradeWebdriver extends ExecuteOSTask {
 
     DownloadWebdriver downloader = new DownloadWebdriver();
     Map<String, String> result = JsonWrapper.parseJson(downloader.execute(version));
-    String oldVersion = RuntimeConfig.getWebdriverVersion();
 
     if (result.get("standard_error").isEmpty()) {
       RuntimeConfig.setWebdriverVersion(version);
       try {
         RuntimeConfig.saveConfigToFile();
-        return JsonWrapper.upgradeWebdriverToJson(0, oldVersion, version, "");
+        getJsonResponse().addKeyValues("new_version", version);
+        return getJsonResponse().toString();
       } catch (IOException error) {
-        return JsonWrapper.upgradeWebdriverToJson(1, oldVersion, "", error.toString());
+        getJsonResponse().addKeyValues("exit_code", 1);
+        getJsonResponse().addKeyValues("standard_error", error.toString());
+        return getJsonResponse().toString();
       }
     } else {
-      return JsonWrapper
-          .upgradeWebdriverToJson(1, oldVersion, "", result.get("standard_error").toString());
+      getJsonResponse().addKeyValues("exit_code", 1);
+      getJsonResponse().addKeyValues("standard_error", result.get("standard_error").toString());
+      return getJsonResponse().toString();
     }
   }
 
@@ -99,13 +105,20 @@ public class UpgradeWebdriver extends ExecuteOSTask {
   }
 
   @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code", "Record if upgrade was successful or not");
-    response.put("old_version", "");
-    response.put("new_version", "");
-    response.put("standard_error", "Any error returned from.");
-    return response;
+  public JsonResponseBuilder getJsonResponse() {
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+
+      jsonResponse.addKeyDescriptions("exit_code", "Record if upgrade was successful or not");
+      jsonResponse.addKeyDescriptions("old_version", "Old version of the jar that got replaced");
+      jsonResponse.addKeyDescriptions("new_version", "New version downloaded and reconfigured");
+      jsonResponse.addKeyDescriptions("standard_error", "Any error returned from.");
+
+      jsonResponse.addKeyValues("exit_code", 0);
+      jsonResponse.addKeyValues("old_version", RuntimeConfig.getWebdriverVersion());
+    }
+
+    return jsonResponse;
   }
 
   @Override

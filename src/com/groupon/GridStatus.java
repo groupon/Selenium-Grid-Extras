@@ -81,10 +81,10 @@ public class GridStatus extends ExecuteOSTask {
       jsonResponse.addKeyValues("hub_info", hubInfo);
       jsonResponse.addKeyValues("node_info", nodeInfo);
 
-      return jsonResponse.getJsonString();
+      return jsonResponse.toString();
     } catch (Exception error) {
       jsonResponse.addKeyValues("error", error.toString());
-      return jsonResponse.getJsonString();
+      return jsonResponse.toString();
     }
   }
 

@@ -39,10 +39,6 @@ package com.groupon;
 
 public class KillAllIE extends KillAllByName {
 
-//  private static String description = "Executes os level kill command on all instance of Internet Explorer";
-//  private static String endpoint = "/kill_ie";
-//  private static String className = KillAllIE.class.getCanonicalName();
-
 
   @Override
   public String getEndpoint() {
@@ -61,7 +57,14 @@ public class KillAllIE extends KillAllByName {
 
   @Override
   public String getLinuxCommand(String parameter) {
-    return JsonWrapper.taskResultToJson(1, "", "Reboot command is not implemented on Mac OSX and Linux");
+    try{
+      getJsonResponse().addKeyValues("exit_code", 1);
+      getJsonResponse().addKeyValues("standard_error", "Kill IE command is not implemented on Mac OSX and Linux");
+    return getJsonResponse().toString();
+    } catch (Exception error){
+      System.out.println(error);
+      return "";
+    }
   }
 
 

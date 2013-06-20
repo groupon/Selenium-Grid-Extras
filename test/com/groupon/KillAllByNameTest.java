@@ -83,4 +83,18 @@ public class KillAllByNameTest {
     assertEquals(linuxCommnad, task.getLinuxCommand("test"));
   }
 
+  @Test
+  public void testgetKillNoParam() throws Exception {
+    assertEquals("{\"exit_code\":1,\"error\":\"name parameter is required\",\"out\":\"\"}",
+                 task.execute());
+  }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"out\":\"\"}",
+                 task.getJsonResponse().toString());
+
+    assertEquals(3, task.getJsonResponse().getKeyDescriptions().keySet().size());
+
+  }
 }

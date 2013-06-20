@@ -49,17 +49,26 @@ public abstract class ExecuteOSTask {
       noteImplementedError =
       "This task was not implemented on " + OSChecker.getOSName();
   public boolean waitToFinishTask = true;
+  protected JsonResponseBuilder jsonResponse;
 
   public String execute() {
     return execute("");
   }
 
-  public String execute(Map<String, String> parameter){
-    if(!parameter.isEmpty() && parameter.containsKey("parameter")){
+  public String execute(Map<String, String> parameter) {
+    if (!parameter.isEmpty() && parameter.containsKey("parameter")) {
       return execute(parameter.get("parameter").toString());
-    } else{
+    } else {
       return execute();
     }
+  }
+
+  public JsonResponseBuilder getJsonResponse() {
+
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+    }
+    return jsonResponse;
   }
 
   public String execute(String parameter) {
@@ -79,8 +88,13 @@ public abstract class ExecuteOSTask {
 
 
   public String getWindowsCommand(String parameter) {
-    return JsonWrapper
-        .taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
+
+    getJsonResponse().addKeyValues("exit_code", 1);
+    getJsonResponse().addKeyValues("error",
+                                   noteImplementedError + " " + this.getClass().getCanonicalName());
+
+    return getJsonResponse().toString();
+
   }
 
   public String getWindowsCommand() {
@@ -89,8 +103,12 @@ public abstract class ExecuteOSTask {
 
 
   public String getLinuxCommand(String parameter) {
-    return JsonWrapper
-        .taskResultToJson(1, "", noteImplementedError + " " + this.getClass().getCanonicalName());
+    getJsonResponse().addKeyValues("exit_code", 1);
+    getJsonResponse().addKeyValues("error",
+                                   noteImplementedError + " " + this.getClass().getCanonicalName());
+
+    return getJsonResponse().toString();
+
   }
 
   public String getLinuxCommand() {
@@ -150,19 +168,20 @@ public abstract class ExecuteOSTask {
     return dependencies;
   }
 
-  public String getRequestType(){
+  public String getRequestType() {
     return "GET";
   }
 
-  public String getResponseType(){
+  public String getResponseType() {
     return "json";
   }
 
-  public Map getResponseDescription(){
-    return new HashMap();
+
+  public Map getResponseDescription() {
+    return getJsonResponse().getKeyDescriptions();
   }
 
-  public Map getAcceptedParams(){
+  public Map getAcceptedParams() {
     Map<String, String> params = new HashMap();
 
     return params;
@@ -177,7 +196,6 @@ public abstract class ExecuteOSTask {
     apiDescription.put("http_type", getRequestType());
     apiDescription.put("response_type", getResponseType());
     apiDescription.put("response_description", getResponseDescription());
-
 
     ApiDocumentation.registerApiEndPoint(apiDescription);
   }

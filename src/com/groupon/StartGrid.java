@@ -69,9 +69,12 @@ public class StartGrid extends ExecuteOSTask {
 
       if (!occupiedPid.isEmpty()) {
         System.out.println(servicePort + " port is busy, won't try to start a service");
-        return JsonWrapper.taskResultToJson(1, "", "Port: " + servicePort
-                                                   + " is occupied by some other process: "
-                                                   + occupiedPid);
+        getJsonResponse().addKeyValues("exit_code", 1);
+        getJsonResponse().addKeyValues("error", "Port: " + servicePort
+                                                + " is occupied by some other process: "
+                                                + occupiedPid);
+
+        return getJsonResponse().toString();
       }
 
       String
@@ -83,18 +86,19 @@ public class StartGrid extends ExecuteOSTask {
       String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
 
       Map result = JsonWrapper.parseJson(serviceStartResponse);
-      System.out.println(
-          result.get("exit_code") + "\n\n" + result.get("exit_code").getClass().getCanonicalName());
+
       if (result.get("exit_code").toString().equals("0")) {
-        return JsonWrapper.taskResultToJson(0,
-                                            "Service start command sent, might take as long as 10 seconds to spin up",
-                                            "");
+        getJsonResponse().addKeyValues("out",
+                                       "Service start command sent, might take as long as 10 seconds to spin up");
+        return getJsonResponse().toString();
       } else {
         System.out.println("Something didn't go right in launching service");
         return serviceStartResponse;
       }
     } catch (Exception error) {
-      return JsonWrapper.taskResultToJson(1, "", error.toString());
+      getJsonResponse().addKeyValues("exit_code", 1);
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
     }
 
 
@@ -107,15 +111,6 @@ public class StartGrid extends ExecuteOSTask {
     } else {
       return execute(parameter.get("role").toString());
     }
-  }
-
-  @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code", "Result of starting service, 0 success, anything else failure");
-    response.put("standard_out", "Any message from stardard output");
-    response.put("standard_error", "Any error that might have come up");
-    return response;
   }
 
   @Override

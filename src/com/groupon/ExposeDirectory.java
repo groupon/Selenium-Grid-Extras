@@ -43,6 +43,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class ExposeDirectory extends ExecuteOSTask {
@@ -62,8 +64,13 @@ public class ExposeDirectory extends ExecuteOSTask {
   @Override
   public String execute() {
     File[] files = sharedDir.listFiles();
+    List<String> filesToString = new LinkedList<String>();
 
-    return JsonWrapper.fileArrayToJson(files);
+    for (File f : files) {
+      filesToString.add(f.toString());
+    }
+    getJsonResponse().addKeyValues("files", filesToString);
+    return getJsonResponse().toString();
   }
 
   public File getExposedDirectory() {
@@ -89,10 +96,13 @@ public class ExposeDirectory extends ExecuteOSTask {
 
 
   @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("files", "Array list of files in the shared directory");
-    return response;
+  public JsonResponseBuilder getJsonResponse() {
+
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+      jsonResponse.addKeyDescriptions("files", "Array list of files in the shared directory");
+    }
+    return jsonResponse;
   }
 
 

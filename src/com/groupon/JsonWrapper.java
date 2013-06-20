@@ -54,66 +54,6 @@ import java.util.Map;
 
 public class JsonWrapper {
 
-//  public static String startSerivceToJson(int result, String pid, String error) {
-//    JSONObject resultsHash = new JSONObject();
-//    JSONArray standardOut = new JSONArray();
-//    JSONArray standardError = new JSONArray();
-//
-//    String stdErrorLines[] = error.split("\n");
-//    for (String line : stdErrorLines) {
-//      standardError.add(line);
-//    }
-//
-//    resultsHash.put("exit_code", result);
-//    resultsHash.put("pid", pid);
-//    resultsHash.put("error", standardError);
-//
-//    return resultsHash.toString();
-//  }
-
-  public static String getPortInfoToJson(String process, String pid, String user, String port, String error) {
-    JSONObject resultsHash = new JSONObject();
-    JSONArray standardOut = new JSONArray();
-    JSONArray standardError = new JSONArray();
-
-    String stdErrorLines[] = error.split("\n");
-    for (String line : stdErrorLines) {
-      standardError.add(line);
-    }
-
-    resultsHash.put("process_name", process);
-    resultsHash.put("pid", pid);
-    resultsHash.put("user", user);
-    resultsHash.put("port", port);
-    resultsHash.put("error", standardError);
-
-    return resultsHash.toString();
-  }
-
-  public static String taskResultToJson(int result, String output, String error) {
-
-    //TODO: Move all of these out to each object's toJson() because this is getting to be too much.
-
-    JSONObject resultsHash = new JSONObject();
-    JSONArray standardOut = new JSONArray();
-    JSONArray standardError = new JSONArray();
-
-    String stdOutLines[] = output.split("\n");
-    for (String line : stdOutLines) {
-      standardOut.add(line);
-    }
-
-    String stdErrorLines[] = error.split("\n");
-    for (String line : stdErrorLines) {
-      standardError.add(line);
-    }
-
-    resultsHash.put("exit_code", result);
-    resultsHash.put("standard_out", standardOut);
-    resultsHash.put("standard_error", standardError);
-
-    return resultsHash.toString();
-  }
 
   public static Map parseJson(String inputString) {
     Map returnHash = new HashMap();
@@ -160,16 +100,6 @@ public class JsonWrapper {
     return wrapper.toString();
   }
 
-  public static String screenshotToJson(String encodedImage, String file, String type) {
-    JSONObject screenshotInfo = new JSONObject();
-
-    screenshotInfo.put("file_type", type);
-    screenshotInfo.put("file", file);
-    screenshotInfo.put("image", encodedImage);
-
-    return screenshotInfo.toString();
-  }
-
   public static String getDefaultConfigs() {
     JSONObject config = new JSONObject();
     JSONArray activeModules = new JSONArray();
@@ -204,6 +134,7 @@ public class JsonWrapper {
     activeModules.add("com.groupon.GetFile");
     activeModules.add("com.groupon.GetInfoForPort");
     activeModules.add("com.groupon.GridStatus");
+    activeModules.add("com.groupon.KillAllByName");
     config.put("activated_modules", activeModules);
 
     //Setup Task Modules
@@ -234,31 +165,6 @@ public class JsonWrapper {
     config.put("grid", gridConfig);
 
     return config.toString();
-  }
-
-  public static String downloadResultsToJson(Integer result, String rootDir, String fileName,
-                                             String sourceUrl, String error) {
-    JSONObject returnResults = new JSONObject();
-
-    returnResults.put("exit_code", result);
-    returnResults.put("root_dir", rootDir);
-    returnResults.put("file", fileName);
-    returnResults.put("source_url", sourceUrl);
-    returnResults.put("standard_error", error);
-
-    return returnResults.toString();
-  }
-
-  public static String upgradeWebdriverToJson(Integer result, String oldVersion, String newVersion,
-                                              String error) {
-    JSONObject returnResults = new JSONObject();
-
-    returnResults.put("exit_code", result);
-    returnResults.put("old_version", oldVersion);
-    returnResults.put("new_version", newVersion);
-    returnResults.put("error", error);
-
-    return returnResults.toString();
   }
 
 
