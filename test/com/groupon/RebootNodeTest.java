@@ -71,11 +71,15 @@ public class RebootNodeTest {
 
   @Test
   public void testgetMacCommand() throws Exception {
-    assertEquals(task.getMacCommand(), "{\"standard_error\":[\"This task was not implemented on Mac OS X com.groupon.RebootNode\"],\"exit_code\":1,\"standard_out\":[\"\"]}");
+    assertEquals(
+        "{\"exit_code\":1,\"error\":\"This task was not implemented on Mac OS X com.groupon.RebootNode\",\"out\":\"\"}",
+        task.getLinuxCommand());
   }
 
   @Test
   public void testgetLinuxCommand() throws Exception {
-    assertEquals(task.getLinuxCommand(), "{\"standard_error\":[\"This task was not implemented on Mac OS X com.groupon.RebootNode\"],\"exit_code\":1,\"standard_out\":[\"\"]}");
+    assertEquals(
+        "{\"exit_code\":1,\"error\":\"This task was not implemented on Mac OS X com.groupon.RebootNode\",\"out\":\"\"}",
+        task.getLinuxCommand());
   }
 }

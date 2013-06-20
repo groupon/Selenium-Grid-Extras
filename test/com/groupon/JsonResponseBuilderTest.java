@@ -68,38 +68,45 @@ public class JsonResponseBuilderTest {
     jsonResponseObject.addKeyDescriptions("new", "key");
     defaultDescriptions.put("new", "key");
     assertEquals(defaultDescriptions, jsonResponseObject.getKeyDescriptions());
-    assertEquals("{\"exit_code\":0,\"new\":\"\"}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"new\":\"\",\"error\":\"\",\"out\":\"\"}",
+                 jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesString() throws Exception {
     jsonResponseObject.addKeyValues("foo", "bar");
-    assertEquals("{\"exit_code\":0,\"foo\":\"bar\"}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":\"bar\",\"out\":\"\"}",
+                 jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesBoolean() throws Exception {
     jsonResponseObject.addKeyValues("foo", true);
-    assertEquals("{\"exit_code\":0,\"foo\":true}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":true,\"out\":\"\"}",
+                 jsonResponseObject.toString());
 
     jsonResponseObject.addKeyValues("foo", "true");
-    assertEquals("{\"exit_code\":0,\"foo\":\"true\"}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":\"true\",\"out\":\"\"}",
+                 jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesMap() throws Exception {
     Map<String, String> bar = new HashMap<String, String>();
     jsonResponseObject.addKeyValues("foo", bar);
-    assertEquals("{\"exit_code\":0,\"foo\":{}}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":{},\"out\":\"\"}",
+                 jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesInt() throws Exception {
     jsonResponseObject.addKeyValues("foo", 1);
-    assertEquals("{\"exit_code\":0,\"foo\":1}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":1,\"out\":\"\"}",
+                 jsonResponseObject.toString());
 
     jsonResponseObject.addKeyValues("foo", "1");
-    assertEquals("{\"exit_code\":0,\"foo\":\"1\"}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":\"1\",\"out\":\"\"}",
+                 jsonResponseObject.toString());
   }
 
   @Test
@@ -108,12 +115,13 @@ public class JsonResponseBuilderTest {
     foo.add("a");
     foo.add("b");
     jsonResponseObject.addKeyValues("foo", foo);
-    assertEquals("{\"exit_code\":0,\"foo\":[\"a\",\"b\"]}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":[\"a\",\"b\"],\"out\":\"\"}",
+                 jsonResponseObject.toString());
   }
 
   @Test
   public void testToStringDefault() throws Exception {
-    assertEquals("{\"exit_code\":0}", jsonResponseObject.toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"out\":\"\"}", jsonResponseObject.toString());
   }
 
   @Test

@@ -34,47 +34,66 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
 package com.groupon;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-public class KillAllIETest {
+public class ExposeDirectoryTest {
+
   private ExecuteOSTask task;
-  private String windowsCommand;
 
   @Before
   public void setUp() throws Exception {
-    task = new KillAllIE();
-    windowsCommand = "taskkill -F -IM iexplore.exe";
+    task = new ExposeDirectory();
+  }
+
+
+  @Test
+  public void testGetEndpoint() throws Exception {
+    assertEquals("/dir", task.getEndpoint());
   }
 
   @Test
   public void testGetDescription() throws Exception {
-
-    assertEquals("Executes os level kill command on all instance of Internet Explorer", task.getDescription());
+    assertEquals(
+        "Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.",
+        task.getDescription());
   }
 
   @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/kill_ie", task.getEndpoint());
+  public void testExecute() throws Exception {
+    //TODO: Write me
   }
 
   @Test
-  public void testgetWindowsCommand() throws Exception {
-    assertEquals(windowsCommand, task.getWindowsCommand());
+  public void testGetExposedDirectory() throws Exception {
+    //TODO: Write me
   }
 
   @Test
-  public void testgetMacCommand() throws Exception {
-    assertEquals("{\"standard_error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getMacCommand());
+  public void testCleanUpExposedDirectory() throws Exception {
+    //TODO: Write me
   }
 
   @Test
-  public void testgetLinuxCommand() throws Exception {
-    assertEquals("{\"standard_error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getLinuxCommand());
+  public void testGetResponseDescription() throws Exception {
+    //TODO: Write me
+  }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    assertEquals("{\"files\":\"\",\"exit_code\":0,\"error\":\"\",\"out\":\"\"}", task.getJsonResponse().toString());
+
+    assertEquals("Array list of files in the shared directory",
+                 task.getJsonResponse().getKeyDescriptions().get("files"));
+    assertEquals(4, task.getJsonResponse().getKeyDescriptions().keySet().size());
+  }
+
+  @Test
+  public void testInitialize() throws Exception {
+
   }
 }

@@ -61,7 +61,8 @@ public class MoveMouseTest {
 
   @Test
   public void testGetDescription() throws Exception {
-    assertEquals("Moves the computers mouse to x and y location. (Default 0,0)", task.getDescription());
+    assertEquals("Moves the computers mouse to x and y location. (Default 0,0)",
+                 task.getDescription());
   }
 
   @Test
@@ -71,21 +72,24 @@ public class MoveMouseTest {
     foo.put("x", "20");
     foo.put("y", "20");
 
-    assertEquals("{\"exit_code\":0,\"y\":20,\"x\":20}", task.execute(foo));
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"y\":20,\"x\":20,\"out\":\"\"}",
+                 task.execute(foo));
   }
 
   @Test
   public void testExecuteNoParam() throws Exception {
-       assertEquals("{\"exit_code\":0,\"y\":0,\"x\":0}", task.execute());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"y\":0,\"x\":0,\"out\":\"\"}", task.execute());
   }
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    assertEquals("{\"exit_code\":0,\"y\":\"\",\"x\":\"\"}", task.getJsonResponse().toString());
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"y\":\"\",\"x\":\"\",\"out\":\"\"}",
+                 task.getJsonResponse().toString());
 
     assertEquals("Current Y postion of the mouse",
                  task.getJsonResponse().getKeyDescriptions().get("y"));
-    assertEquals("Current X postion of the mouse", task.getJsonResponse().getKeyDescriptions().get("x"));
+    assertEquals("Current X postion of the mouse",
+                 task.getJsonResponse().getKeyDescriptions().get("x"));
   }
 
   @Test
