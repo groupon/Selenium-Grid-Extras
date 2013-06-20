@@ -59,7 +59,7 @@ public class UpgradeWebdriver extends ExecuteOSTask {
   @Override
   public String execute() {
     getJsonResponse().addKeyValues("exit_code", 1);
-    getJsonResponse().addKeyValues("standard_error", "version parameter is required");
+    getJsonResponse().addKeyValues("error", "version parameter is required");
     return getJsonResponse().toString();
   }
 
@@ -69,7 +69,7 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     DownloadWebdriver downloader = new DownloadWebdriver();
     Map<String, String> result = JsonWrapper.parseJson(downloader.execute(version));
 
-    if (result.get("standard_error").isEmpty()) {
+    if (result.get("error").isEmpty()) {
       RuntimeConfig.setWebdriverVersion(version);
       try {
         RuntimeConfig.saveConfigToFile();
@@ -77,12 +77,12 @@ public class UpgradeWebdriver extends ExecuteOSTask {
         return getJsonResponse().toString();
       } catch (IOException error) {
         getJsonResponse().addKeyValues("exit_code", 1);
-        getJsonResponse().addKeyValues("standard_error", error.toString());
+        getJsonResponse().addKeyValues("error", error.toString());
         return getJsonResponse().toString();
       }
     } else {
       getJsonResponse().addKeyValues("exit_code", 1);
-      getJsonResponse().addKeyValues("standard_error", result.get("standard_error").toString());
+      getJsonResponse().addKeyValues("error", result.get("error").toString());
       return getJsonResponse().toString();
     }
   }
@@ -112,7 +112,7 @@ public class UpgradeWebdriver extends ExecuteOSTask {
       jsonResponse.addKeyDescriptions("exit_code", "Record if upgrade was successful or not");
       jsonResponse.addKeyDescriptions("old_version", "Old version of the jar that got replaced");
       jsonResponse.addKeyDescriptions("new_version", "New version downloaded and reconfigured");
-      jsonResponse.addKeyDescriptions("standard_error", "Any error returned from.");
+      jsonResponse.addKeyDescriptions("error", "Any error returned from.");
 
       jsonResponse.addKeyValues("exit_code", 0);
       jsonResponse.addKeyValues("old_version", RuntimeConfig.getWebdriverVersion());

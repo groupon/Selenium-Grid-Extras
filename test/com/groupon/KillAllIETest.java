@@ -70,11 +70,11 @@ public class KillAllIETest {
 
   @Test
   public void testgetMacCommand() throws Exception {
-    assertEquals("{\"standard_error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getMacCommand());
+    assertEquals("{\"error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getMacCommand());
   }
 
   @Test
   public void testgetLinuxCommand() throws Exception {
-    assertEquals("{\"standard_error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getLinuxCommand());
+    assertEquals("{\"error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getLinuxCommand());
   }
 }

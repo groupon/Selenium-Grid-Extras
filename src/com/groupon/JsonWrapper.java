@@ -131,10 +131,11 @@ public class JsonWrapper {
     activeModules.add("com.groupon.Screenshot");
     activeModules.add("com.groupon.ExposeDirectory");
     activeModules.add("com.groupon.StartGrid");
-    activeModules.add("com.groupon.GetFile");
+//    activeModules.add("com.groupon.GetFile");
     activeModules.add("com.groupon.GetInfoForPort");
     activeModules.add("com.groupon.GridStatus");
     activeModules.add("com.groupon.KillAllByName");
+    activeModules.add("com.groupon.StopGrid");
     config.put("activated_modules", activeModules);
 
     //Setup Task Modules

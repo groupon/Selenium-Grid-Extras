@@ -59,7 +59,7 @@ public class KillAllIE extends KillAllByName {
   public String getLinuxCommand(String parameter) {
     try{
       getJsonResponse().addKeyValues("exit_code", 1);
-      getJsonResponse().addKeyValues("standard_error", "Kill IE command is not implemented on Mac OSX and Linux");
+      getJsonResponse().addKeyValues("error", "Kill IE command is not implemented on Mac OSX and Linux");
     return getJsonResponse().toString();
     } catch (Exception error){
       System.out.println(error);

@@ -54,7 +54,7 @@ public class GetFile extends ExecuteOSTask{
 
   @Override
   public String execute(){
-    return "{\"exit\": 1, \"standard_error\": \"Not yet implemented\"}";
+    return "{\"exit\": 1, \"error\": \"Not yet implemented\"}";
   }
 
   @Override

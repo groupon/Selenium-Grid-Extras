@@ -47,7 +47,7 @@ public class KillPid extends ExecuteOSTask {
   public String execute() {
 
     getJsonResponse().addKeyValues("exit_code", 1);
-    getJsonResponse().addKeyValues("standard_error", "ID is a required parameter");
+    getJsonResponse().addKeyValues("error", "ID is a required parameter");
     return getJsonResponse().toString();
   }
 

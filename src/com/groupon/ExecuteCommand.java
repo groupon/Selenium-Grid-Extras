@@ -59,7 +59,7 @@ class ExecuteCommand {
     try {
       process = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
-      jsonResponse.addKeyValues("standard_error", "Problems in running " + cmd + "\n" + e.toString());
+      jsonResponse.addKeyValues("error", "Problems in running " + cmd + "\n" + e.toString());
       return jsonResponse.toString();
     }
 
@@ -71,7 +71,7 @@ class ExecuteCommand {
         System.out.println("Command Finished");
       } catch (InterruptedException e) {
 
-        jsonResponse.addKeyValues("standard_error", "Interrupted running " + cmd + "\n" + e.toString());
+        jsonResponse.addKeyValues("error", "Interrupted running " + cmd + "\n" + e.toString());
         return jsonResponse.toString();
       }
     } else {
