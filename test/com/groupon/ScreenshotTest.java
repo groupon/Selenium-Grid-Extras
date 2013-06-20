@@ -37,12 +37,12 @@
 
 package com.groupon;
 
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -74,4 +74,18 @@ public class ScreenshotTest {
     expectedDependencies.add("com.groupon.ExposeDirectory");
     assertEquals(expectedDependencies, actualDependencies);
   }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    assertEquals("{\"exit_code\":1,\"file\":\"\",\"image\":\"\",\"file_type\":\"PNG\"}", task.getJsonResponse().toString());
+  }
+
+  @Test
+  public void testAPIDescription() throws Exception{
+    assertEquals("Base64 URL Encoded (ISO-8859-1) string of the image", task.getJsonResponse().getKeyDescriptions().get("image"));
+    assertEquals("Type of file returned (PNG/JPG/GIF)", task.getJsonResponse().getKeyDescriptions().get("file_type"));
+    assertEquals("Name of the file saved on the Node's HD", task.getJsonResponse().getKeyDescriptions().get("file"));
+    assertEquals(6, task.getJsonResponse().getKeyDescriptions().keySet().size());
+  }
+
 }

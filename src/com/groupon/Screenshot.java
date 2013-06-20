@@ -96,28 +96,39 @@ public class Screenshot extends ExecuteOSTask {
         encodedImage = java.net.URLEncoder.encode(encodedImage, "ISO-8859-1");
 
       } catch (IOException e) {
-        return JsonWrapper.taskResultToJson(1, "", "Error Saving image to file\n " + e);
+        getJsonResponse().addKeyValues("error", "Error Saving image to file\n " + e);
+        return getJsonResponse().toString();
       }
-      return JsonWrapper.screenshotToJson(encodedImage, filename, "png");
+      getJsonResponse().addKeyValues("file", filename);
+      getJsonResponse().addKeyValues("image", encodedImage);
+      return getJsonResponse().toString();
     } catch (AWTException error) {
-      return JsonWrapper.taskResultToJson(1, "", "Error with AWT Robot\n" + error);
+      getJsonResponse().addKeyValues("error", "Error with AWT Robot\n" + error);
+      return getJsonResponse().toString();
     }
   }
 
 
   @Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("file_type","Type of file returned (PNG/JPG/GIF)");
-    response.put("file", "Name of the file saved on the Node's HD");
-    response.put("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
-    return response;
+  public JsonResponseBuilder getJsonResponse() {
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+      jsonResponse.addKeyDescriptions("file_type", "Type of file returned (PNG/JPG/GIF)");
+      jsonResponse.addKeyDescriptions("file", "Name of the file saved on the Node's HD");
+      jsonResponse
+          .addKeyDescriptions("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
+
+      jsonResponse.addKeyValues("file_type", "PNG");
+      jsonResponse.addKeyValues("exit_code", 1);
+    }
+    return jsonResponse;
+
+
   }
 
 
-
   @Override
-  public List<String> getDependencies(){
+  public List<String> getDependencies() {
     List<String> localDependencies = new LinkedList<String>();
 
     localDependencies.add("com.groupon.ExposeDirectory");
