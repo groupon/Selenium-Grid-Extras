@@ -108,7 +108,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
   private String downloadWebdriverVersion(String version) {
 
     String webdriverDir = GridWrapper.getWebdriverHome();
-    System.out.println("Downloading Driver here " + webdriverDir);
+    System.out.println("Downloading Driver to " + webdriverDir);
     createWebdriverDir(webdriverDir);
 
     try {
@@ -117,27 +117,27 @@ public class DownloadWebdriver extends ExecuteOSTask {
       File destination = new File(jarFile);
 
       if (destination.exists()) {
-        jsonResponse.addKeyValues("file", jarFile);
+        getJsonResponse().addKeyValues("file", jarFile);
 
-        return jsonResponse.toString();
+        return getJsonResponse().toString();
       } else {
         FileUtils.copyURLToFile(url, destination);
 
-        jsonResponse.addKeyValues("file", jarFile);
-        jsonResponse.addKeyValues("source_url", url.toString());
+        getJsonResponse().addKeyValues("file", jarFile);
+        getJsonResponse().addKeyValues("source_url", url.toString());
 
-        return jsonResponse.toString();
+        return getJsonResponse().toString();
       }
 
 
     } catch (MalformedURLException error) {
-      jsonResponse.addKeyValues("error", error.toString());
-      jsonResponse.addKeyValues("exit_code", 1);
-      return jsonResponse.toString();
+      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues("exit_code", 1);
+      return getJsonResponse().toString();
     } catch (IOException error) {
-      jsonResponse.addKeyValues("error", error.toString());
-      jsonResponse.addKeyValues("exit_code", 1);
-      return jsonResponse.toString();
+      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues("exit_code", 1);
+      return getJsonResponse().toString();
     }
   }
 
@@ -179,7 +179,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
     } catch (NullPointerException error) {
       printInitilizedFailure();
-      System.out.println("  'expose_directory' variable was not set in the config " + error);
+      System.out.println(error);
       return false;
     }
 
