@@ -35,31 +35,55 @@
  * Time: 4:06 PM
  */
 
-
 package com.groupon;
 
-import java.util.HashMap;
-import java.util.Map;
 
-public class GetProcesses extends ExecuteOSTask{
-  @Override
-  public String getEndpoint() {
-    return "/ps";
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+public class GetProcessesTest {
+
+  private ExecuteOSTask task;
+
+
+  @Before
+  public void setUp() throws Exception {
+    task = new GetProcesses();
   }
 
-  @Override
-  public String getDescription() {
-    return "Gets a list of currently running processes";
+  @Test
+  public void testGetEndpoint() throws Exception {
+    assertEquals("/ps", task.getEndpoint());
   }
 
-  @Override
-  public String getWindowsCommand() {
-    return "tasklist";
+  @Test
+  public void testGetDescription() throws Exception {
+    assertEquals("Gets a list of currently running processes", task.getDescription());
   }
 
-  @Override
-  public String getLinuxCommand() {
-    return "ps x";
+
+  @Test
+  public void testGetWindowsCommand() throws Exception {
+    assertEquals("tasklist", task.getWindowsCommand());
+  }
+
+  @Test
+  public void testGetLinuxCommand() throws Exception {
+    assertEquals("ps x", task.getLinuxCommand());
+  }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    assertEquals("{\"exit_code\":0,\"error\":\"\",\"out\":\"\"}",
+                 task.getJsonResponse().toString());
+
+    assertEquals(3, task.getJsonResponse().getKeyDescriptions().keySet().size());
+
   }
 
 }
