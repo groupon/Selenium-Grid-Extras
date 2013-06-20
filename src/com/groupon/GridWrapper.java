@@ -59,14 +59,14 @@ public class GridWrapper {
   }
 
   public static Map<String, String> getGridConfig(String role) {
-    Map grid = (HashMap<String, HashMap>) RuntimeConfig.config.get("grid");
+    Map grid = RuntimeConfig.getGridConfig();
     Map config = (HashMap<String, String>) grid.get(role);
 
     return config;
   }
 
-  public static String getDefaultRole(){
-    Map grid = (HashMap<String, HashMap>) RuntimeConfig.config.get("grid");
+  public static String getDefaultRole() {
+    Map grid = RuntimeConfig.getGridConfig();
     return grid.get("default_role").toString();
   }
 
@@ -74,14 +74,9 @@ public class GridWrapper {
     Map<String, String> config = getGridConfig(role);
     StringBuilder commandLineParam = new StringBuilder();
 
-    Iterator it = config.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry pairs = (Map.Entry) it.next();
-
-      commandLineParam.append(" " + pairs.getKey());
-      commandLineParam.append(" " + pairs.getValue());
-
-      it.remove();
+    for (Map.Entry<String, String> entry : config.entrySet()) {
+      commandLineParam.append(" " + entry.getKey());
+      commandLineParam.append(" " + entry.getValue());
     }
 
     return commandLineParam.toString();
