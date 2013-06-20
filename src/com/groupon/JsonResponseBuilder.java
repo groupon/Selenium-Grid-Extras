@@ -40,6 +40,7 @@ package com.groupon;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -49,47 +50,73 @@ public class JsonResponseBuilder {
   private Map<String, String> keyDescriptions = new HashMap<String, String>();
   private JSONObject keyValues = new JSONObject();
 
-  public JsonResponseBuilder(){
-    keyDescriptions.put("error","Error recived during execution of command");
+  public JsonResponseBuilder() {
+    keyDescriptions.put("error", "Error recived during execution of command");
     keyDescriptions.put("exit_code", "Exit code for operation");
     keyDescriptions.put("out", "All of the StandardOut received from the system");
 
+    List<String> out = new LinkedList();
+    List<String> error = new LinkedList();
+
     addKeyValues("exit_code", 0);
-    addKeyValues("out", "");
-    addKeyValues("error", "");
+    addKeyValues("out", out);
+    addKeyValues("error", error);
   }
 
-  public void addKeyDescriptions(String key, String description){
+
+  public void addKeyDescriptions(String key, String description) {
     keyDescriptions.put(key, description);
     addKeyValues(key, "");
   }
 
-  public void addKeyValues(String key, String value){
+  public void addKeyValues(String key, String value) {
+
+    List<String> valueArray = convertLineToArray(value);
+
+    if (key.equals("out")) {
+      addKeyValues(key, valueArray);
+    } else if (key.equals("error")) {
+      addKeyValues(key, valueArray);
+    } else {
+      keyValues.put(key, valueArray);
+    }
+
+
+  }
+
+  public void addKeyValues(String key, Boolean value) {
     keyValues.put(key, value);
   }
 
-  public void addKeyValues(String key, Boolean value){
+  public void addKeyValues(String key, Map value) {
     keyValues.put(key, value);
   }
 
-  public void addKeyValues(String key, Map value){
+  public void addKeyValues(String key, int value) {
     keyValues.put(key, value);
   }
 
-  public void addKeyValues(String key, int value){
+  public void addKeyValues(String key, List<String> value) {
     keyValues.put(key, value);
   }
 
-  public void addKeyValues(String key, List<String> value){
-    keyValues.put(key, value);
-  }
-
-  public String toString(){
+  public String toString() {
     return keyValues.toJSONString();
   }
 
-  protected Map<String, String> getKeyDescriptions(){
+  protected Map<String, String> getKeyDescriptions() {
     return keyDescriptions;
+  }
+
+  private List<String> convertLineToArray(String input) {
+    List output = new LinkedList<String>();
+
+    String stdOutLines[] = input.split("\n");
+    for (String line : stdOutLines) {
+      output.add(line);
+    }
+
+    return output;
   }
 
 
