@@ -35,7 +35,7 @@
  * Time: 4:06 PM
  */
 
-package com.groupon;
+package com.groupon.seleniumgridextras;
 
 import org.junit.Before;
 import org.junit.Test;

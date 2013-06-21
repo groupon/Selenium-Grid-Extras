@@ -35,7 +35,8 @@
  * Time: 4:06 PM
  */
 
-package com.groupon;
+package com.groupon.seleniumgridextras;
+
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
