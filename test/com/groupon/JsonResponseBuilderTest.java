@@ -125,6 +125,25 @@ public class JsonResponseBuilderTest {
   }
 
   @Test
+  public void testStringValueWithAndWithoutLineSplit() throws Exception {
+    jsonResponseObject.addKeyValues("no_split", "all\none\nline\nplease", false);
+    assertEquals(
+        "{\"exit_code\":0,\"error\":[],\"no_split\":[\"all\\none\\nline\\nplease\"],\"out\":[]}",
+        jsonResponseObject.toString());
+
+    jsonResponseObject.addKeyValues("with_split", "all\non\nnew\nlines\nplease", true);
+    assertEquals(
+        "{\"exit_code\":0,\"error\":[],\"with_split\":[\"all\",\"on\",\"new\",\"lines\",\"please\"],\"out\":[]}",
+        jsonResponseObject.toString());
+
+    jsonResponseObject.addKeyValues("with_split_default", "all\non\nnew\nlines\nplease", true);
+    assertEquals(
+        "{\"exit_code\":0,\"with_split_default\":[\"all\",\"on\",\"new\",\"lines\",\"please\"],\"error\":[],\"out\":[]}",
+        jsonResponseObject.toString());
+  }
+
+
+  @Test
   public void testToStringDefault() throws Exception {
 
     final String descriptionMessage = "should still be here when done";

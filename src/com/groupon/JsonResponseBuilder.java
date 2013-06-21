@@ -58,7 +58,7 @@ public class JsonResponseBuilder {
     clearValues();
   }
 
-  private void clearValues(){
+  private void clearValues() {
 
     keyValues = new JSONObject();
 
@@ -77,8 +77,17 @@ public class JsonResponseBuilder {
   }
 
   public void addKeyValues(String key, String value) {
+    addKeyValues(key, value, true);
+  }
 
-    List<String> valueArray = convertLineToArray(value);
+  public void addKeyValues(String key, String value, Boolean splitLineToArray) {
+    List<String> valueArray;
+    if (splitLineToArray) {
+      valueArray = convertLineToArray(value);
+    } else {
+      valueArray = new LinkedList<String>();
+      valueArray.add(value);
+    }
 
     if (key.equals("out")) {
       addKeyValues(key, valueArray);
@@ -88,8 +97,8 @@ public class JsonResponseBuilder {
       keyValues.put(key, valueArray);
     }
 
-
   }
+
 
   public void addKeyValues(String key, Boolean value) {
     keyValues.put(key, value);
