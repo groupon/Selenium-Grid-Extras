@@ -48,7 +48,7 @@ shared_examples "No Errors" do
   end
   
   it "should not have any errors in error stream" do
-    (@response["error"] == [] or @response["error"] == [""]).should == true
+    @response["error"].should == []
   end
   
 end
