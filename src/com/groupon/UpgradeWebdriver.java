@@ -58,7 +58,6 @@ public class UpgradeWebdriver extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    getJsonResponse().addKeyValues("exit_code", 1);
     getJsonResponse().addKeyValues("error", "version parameter is required");
     return getJsonResponse().toString();
   }
@@ -76,12 +75,10 @@ public class UpgradeWebdriver extends ExecuteOSTask {
         getJsonResponse().addKeyValues("new_version", version);
         return getJsonResponse().toString();
       } catch (IOException error) {
-        getJsonResponse().addKeyValues("exit_code", 1);
         getJsonResponse().addKeyValues("error", error.toString());
         return getJsonResponse().toString();
       }
     } else {
-      getJsonResponse().addKeyValues("exit_code", 1);
       getJsonResponse().addKeyValues("error", result.get("error").toString());
       return getJsonResponse().toString();
     }

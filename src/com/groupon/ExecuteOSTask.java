@@ -89,7 +89,6 @@ public abstract class ExecuteOSTask {
 
   public String getWindowsCommand(String parameter) {
 
-    getJsonResponse().addKeyValues("exit_code", 1);
     getJsonResponse().addKeyValues("error",
                                    noteImplementedError + " " + this.getClass().getCanonicalName());
 
@@ -103,7 +102,6 @@ public abstract class ExecuteOSTask {
 
 
   public String getLinuxCommand(String parameter) {
-    getJsonResponse().addKeyValues("exit_code", 1);
     getJsonResponse().addKeyValues("error",
                                    noteImplementedError + " " + this.getClass().getCanonicalName());
 

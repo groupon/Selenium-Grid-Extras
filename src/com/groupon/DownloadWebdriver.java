@@ -137,11 +137,9 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
     } catch (MalformedURLException error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      getJsonResponse().addKeyValues("exit_code", 1);
       return getJsonResponse().toString();
     } catch (IOException error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      getJsonResponse().addKeyValues("exit_code", 1);
       return getJsonResponse().toString();
     }
   }

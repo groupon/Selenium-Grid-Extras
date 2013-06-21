@@ -68,7 +68,6 @@ public class StartGrid extends ExecuteOSTask {
 
       if (!occupiedPid.isEmpty()) {
         System.out.println(servicePort + " port is busy, won't try to start a service");
-        getJsonResponse().addKeyValues("exit_code", 1);
         getJsonResponse().addKeyValues("error", "Port: " + servicePort
                                                 + " is occupied by some other process: "
                                                 + occupiedPid);
@@ -95,7 +94,6 @@ public class StartGrid extends ExecuteOSTask {
         return serviceStartResponse;
       }
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("exit_code", 1);
       getJsonResponse().addKeyValues("error", error.toString());
       return getJsonResponse().toString();
     }

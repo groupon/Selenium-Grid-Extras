@@ -101,7 +101,6 @@ public class MoveMouse extends ExecuteOSTask {
       getJsonResponse().addKeyValues("y", y);
       return getJsonResponse().toString();
     } catch (AWTException error) {
-      getJsonResponse().addKeyValues("exit_code", 1);
       getJsonResponse().addKeyValues("error", error.toString());
       return getJsonResponse().toString();
     }

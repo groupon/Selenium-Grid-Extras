@@ -67,7 +67,6 @@ public class StopGrid extends ExecuteOSTask {
       ExecuteOSTask killer = new KillPid();
       return killer.execute(processInfo.get("pid"));
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("exit_code", 1);
       getJsonResponse().addKeyValues("error", error.toString());
       return getJsonResponse().toString();
     }
