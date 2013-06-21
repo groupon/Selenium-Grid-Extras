@@ -116,42 +116,42 @@ public class JsonWrapper {
     config.put("webdriver", webdriverConfig);
     System.out.println("2");
     //Activated Modules
-    activeModules.add("com.groupon.DownloadWebdriver");
-    activeModules.add("com.groupon.UpgradeWebdriver");
-    activeModules.add("com.groupon.Setup");
-    activeModules.add("com.groupon.Teardown");
-    activeModules.add("com.groupon.MoveMouse");
-    activeModules.add("com.groupon.RebootNode");
-    activeModules.add("com.groupon.KillAllIE");
-    activeModules.add("com.groupon.KillAllFirefox");
-    activeModules.add("com.groupon.KillAllChrome");
-    activeModules.add("com.groupon.GetProcesses");
-    activeModules.add("com.groupon.KillPid");
-    activeModules.add("com.groupon.Netstat");
-    activeModules.add("com.groupon.Screenshot");
-    activeModules.add("com.groupon.ExposeDirectory");
-    activeModules.add("com.groupon.StartGrid");
+    activeModules.add("com.groupon.seleniumgridextras.DownloadWebdriver");
+    activeModules.add("com.groupon.seleniumgridextras.UpgradeWebdriver");
+    activeModules.add("com.groupon.seleniumgridextras.Setup");
+    activeModules.add("com.groupon.seleniumgridextras.Teardown");
+    activeModules.add("com.groupon.seleniumgridextras.MoveMouse");
+    activeModules.add("com.groupon.seleniumgridextras.RebootNode");
+    activeModules.add("com.groupon.seleniumgridextras.KillAllIE");
+    activeModules.add("com.groupon.seleniumgridextras.KillAllFirefox");
+    activeModules.add("com.groupon.seleniumgridextras.KillAllChrome");
+    activeModules.add("com.groupon.seleniumgridextras.GetProcesses");
+    activeModules.add("com.groupon.seleniumgridextras.KillPid");
+    activeModules.add("com.groupon.seleniumgridextras.Netstat");
+    activeModules.add("com.groupon.seleniumgridextras.Screenshot");
+    activeModules.add("com.groupon.seleniumgridextras.ExposeDirectory");
+    activeModules.add("com.groupon.seleniumgridextras.StartGrid");
 //    activeModules.add("com.groupon.GetFile");
-    activeModules.add("com.groupon.GetInfoForPort");
-    activeModules.add("com.groupon.GridStatus");
-    activeModules.add("com.groupon.KillAllByName");
-    activeModules.add("com.groupon.StopGrid");
-    activeModules.add("com.groupon.GetConfig");
+    activeModules.add("com.groupon.seleniumgridextras.GetInfoForPort");
+    activeModules.add("com.groupon.seleniumgridextras.GridStatus");
+    activeModules.add("com.groupon.seleniumgridextras.KillAllByName");
+    activeModules.add("com.groupon.seleniumgridextras.StopGrid");
+    activeModules.add("com.groupon.seleniumgridextras.GetConfig");
     config.put("activated_modules", activeModules);
     System.out.println("3");
     //Setup Task Modules
-    setupTask.add("com.groupon.KillAllIE");
-    setupTask.add("com.groupon.MoveMouse");
+    setupTask.add("com.groupon.seleniumgridextras.KillAllIE");
+    setupTask.add("com.groupon.seleniumgridextras.MoveMouse");
     config.put("setup", setupTask);
     System.out.println("4");
     //Teardown Task Modules
-    teardownTask.add("com.groupon.KillAllIE");
+    teardownTask.add("com.groupon.seleniumgridextras.KillAllIE");
     config.put("teardown", teardownTask);
 
     config.put("expose_directory", "shared");
 
     gridHubConfig.put("-role", "hub");
-    gridHubConfig.put("-servlets", "com.groupon.SeleniumGridExtrasServlet");
+    gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
     gridNodeConfig.put("-host", "http://127.0.0.1");
     System.out.println("5");

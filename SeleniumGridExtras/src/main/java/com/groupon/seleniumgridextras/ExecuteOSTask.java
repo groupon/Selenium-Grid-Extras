@@ -86,7 +86,6 @@ public abstract class ExecuteOSTask {
 
   public abstract String getDescription();
 
-
   public String getWindowsCommand(String parameter) {
 
     getJsonResponse().addKeyValues("error",
@@ -99,7 +98,6 @@ public abstract class ExecuteOSTask {
   public String getWindowsCommand() {
     return getWindowsCommand("");
   }
-
 
   public String getLinuxCommand(String parameter) {
     getJsonResponse().addKeyValues("error",
@@ -173,7 +171,6 @@ public abstract class ExecuteOSTask {
   public String getResponseType() {
     return "json";
   }
-
 
   public Map getResponseDescription() {
     return getJsonResponse().getKeyDescriptions();
