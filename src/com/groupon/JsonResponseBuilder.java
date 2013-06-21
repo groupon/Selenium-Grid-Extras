@@ -92,6 +92,7 @@ public class JsonResponseBuilder {
     if (key.equals("out")) {
       addKeyValues(key, valueArray);
     } else if (key.equals("error")) {
+      addKeyValues("exit_code", 1);
       addKeyValues(key, valueArray);
     } else {
       keyValues.put(key, valueArray);

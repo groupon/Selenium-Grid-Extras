@@ -155,6 +155,14 @@ public class JsonResponseBuilderTest {
   }
 
   @Test
+  public void testAddingErrorMessageAutoChangesExitCode() throws Exception {
+    assertEquals("{\"exit_code\":0,\"error\":[],\"out\":[]}", jsonResponseObject.toString());
+    jsonResponseObject.addKeyValues("error", "this is an error");
+    assertEquals("{\"exit_code\":1,\"error\":[\"this is an error\"],\"out\":[]}",
+                 jsonResponseObject.toString());
+  }
+
+  @Test
   public void testGetKeyDescriptions() throws Exception {
     assertEquals(defaultDescriptions, jsonResponseObject.getKeyDescriptions());
   }
