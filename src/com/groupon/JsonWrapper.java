@@ -136,6 +136,7 @@ public class JsonWrapper {
     activeModules.add("com.groupon.GridStatus");
     activeModules.add("com.groupon.KillAllByName");
     activeModules.add("com.groupon.StopGrid");
+    activeModules.add("com.groupon.GetConfig");
     config.put("activated_modules", activeModules);
 
     //Setup Task Modules
