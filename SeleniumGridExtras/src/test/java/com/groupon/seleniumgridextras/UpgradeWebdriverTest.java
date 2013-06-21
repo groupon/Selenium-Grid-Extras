@@ -77,7 +77,7 @@ public class UpgradeWebdriverTest {
   @Test
   public void testGetDependencies() throws Exception {
     List<String> expected = new LinkedList();
-    expected.add("com.groupon.DownloadWebdriver");
+    expected.add("com.groupon.seleniumgridextras.DownloadWebdriver");
     assertEquals(expected, task.getDependencies());
   }
 

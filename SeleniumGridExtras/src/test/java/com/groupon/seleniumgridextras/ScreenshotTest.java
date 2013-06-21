@@ -71,7 +71,7 @@ public class ScreenshotTest {
   public void testGetDependencies() throws Exception {
     List<String> actualDependencies = task.getDependencies();
     List<String> expectedDependencies = new LinkedList<String>();
-    expectedDependencies.add("com.groupon.ExposeDirectory");
+    expectedDependencies.add("com.groupon.seleniumgridextras.ExposeDirectory");
     assertEquals(expectedDependencies, actualDependencies);
   }
 
