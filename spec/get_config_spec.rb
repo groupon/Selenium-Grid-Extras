@@ -37,7 +37,7 @@ describe "GetConfig.java" do
     @response = get_json "config"
     @expected_from_file = JSON.parse(File.open(@response["filename"].first, "r").read)
     @actual_from_file   = JSON.parse(@response["config_file"].first)
-    
+
   end
   
   it "should have the config file path correctly named" do

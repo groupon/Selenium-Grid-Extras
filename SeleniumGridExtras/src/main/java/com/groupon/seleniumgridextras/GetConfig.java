@@ -63,6 +63,7 @@ public class GetConfig extends ExecuteOSTask {
       jsonResponse.addKeyDescriptions("config_file", "Config that currently lives saved on file");
       jsonResponse
           .addKeyDescriptions("config_runtime", "Runtime config that currently set in memory");
+      jsonResponse.addKeyValues("filename", "Filename from which the config was read");
     }
     return jsonResponse;
   }
@@ -71,6 +72,9 @@ public class GetConfig extends ExecuteOSTask {
   public String execute(String param) {
 
     readConfigFile(RuntimeConfig.getConfigFile());
+
+    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig());
+    getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
 
     return getJsonResponse().toString();
   }
