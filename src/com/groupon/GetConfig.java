@@ -69,7 +69,7 @@ public class GetConfig extends ExecuteOSTask {
   @Override
   public String execute(String param) {
 
-    readConfigFile(RuntimeConfig.configFile);
+    readConfigFile(RuntimeConfig.getConfigFile());
 
     return getJsonResponse().toString();
   }

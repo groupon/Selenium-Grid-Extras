@@ -52,8 +52,16 @@ import java.util.Map;
 
 public class RuntimeConfig {
 
-  public static Map config;
-  public static final String configFile = "selenium_grid_extras_config.json";
+  private static Map config;
+  private static final String configFile = "selenium_grid_extras_config.json";
+
+  public static Map getConfig(){
+    return config;
+  }
+
+  public static String getConfigFile(){
+    return configFile;
+  }
 
   public static void loadConfig() {
 
