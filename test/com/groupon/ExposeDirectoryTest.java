@@ -85,11 +85,14 @@ public class ExposeDirectoryTest {
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    assertEquals("{\"files\":\"\",\"exit_code\":0,\"error\":\"\",\"out\":\"\"}", task.getJsonResponse().toString());
+
+    assertEquals("{\"files\":[\"\"],\"exit_code\":0,\"error\":[],\"out\":[]}",
+                 task.getJsonResponse().toString());
 
     assertEquals("Array list of files in the shared directory",
                  task.getJsonResponse().getKeyDescriptions().get("files"));
     assertEquals(4, task.getJsonResponse().getKeyDescriptions().keySet().size());
+
   }
 
   @Test

@@ -43,6 +43,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class KillAllIETest {
+
   private ExecuteOSTask task;
   private String windowsCommand;
 
@@ -55,7 +56,8 @@ public class KillAllIETest {
   @Test
   public void testGetDescription() throws Exception {
 
-    assertEquals("Executes os level kill command on all instance of Internet Explorer", task.getDescription());
+    assertEquals("Executes os level kill command on all instance of Internet Explorer",
+                 task.getDescription());
   }
 
   @Test
@@ -70,11 +72,15 @@ public class KillAllIETest {
 
   @Test
   public void testgetMacCommand() throws Exception {
-    assertEquals("{\"error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getMacCommand());
+    assertEquals(
+        "{\"exit_code\":1,\"error\":[\"Kill IE command is not implemented on Mac OSX and Linux\"],\"out\":[]}",
+        task.getMacCommand());
   }
 
   @Test
   public void testgetLinuxCommand() throws Exception {
-    assertEquals("{\"error\":\"Kill IE command is not implemented on Mac OSX and Linux\",\"exit_code\":1,\"error\":\"\",\"out\":\"\"}", task.getLinuxCommand());
+    assertEquals(
+        "{\"exit_code\":1,\"error\":[\"Kill IE command is not implemented on Mac OSX and Linux\"],\"out\":[]}",
+        task.getLinuxCommand());
   }
 }
