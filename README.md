@@ -7,7 +7,7 @@ Getting started
 
 1. Download selenium-grid-extras-X.X.X.jar file, and run
 ```shell
-java -cp selenium-grid-extras-X.X.X.jar com.groupon.SeleniumGridExtras
+java -cp selenium-grid-extras-X.X.X.jar com.groupon.seleniumgridextras.SeleniumGridExtras
 ```
 
 2. scripts/start_grid.sh - Starts an instance of the selenium Grid locally

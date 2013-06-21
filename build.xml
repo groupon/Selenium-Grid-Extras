@@ -44,13 +44,13 @@
 
         <mkdir dir="ant-build"/>
 
-        <javac srcdir="src/" source="1.5" target="1.5" destdir="ant-build" debug="true" includeantruntime="false">
+        <javac srcdir="SeleniumGridExtras/src/" source="1.5" target="1.5" destdir="ant-build" debug="true" includeantruntime="false">
 
-            <classpath>
-                <fileset dir="lib">
-                    <include name="*.jar"/>
-                </fileset>
-            </classpath>
+            <!--<classpath>-->
+                <!--<fileset dir="lib">-->
+                    <!--<include name="*.jar"/>-->
+                <!--</fileset>-->
+            <!--</classpath>-->
         </javac>
     </target>
 
