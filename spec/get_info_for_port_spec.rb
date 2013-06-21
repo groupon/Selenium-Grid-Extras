@@ -30,7 +30,7 @@
 
 require 'spec_helper'
 
-describe "DownloadWebdriver.java" do
+describe "GetInfoForPort.java" do
   
   
   before(:all) do  
