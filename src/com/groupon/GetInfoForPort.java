@@ -64,7 +64,6 @@ public class GetInfoForPort extends ExecuteOSTask {
       jsonResponse.addKeyDescriptions("pid", "Process ID");
       jsonResponse.addKeyDescriptions("user", "User who is running process");
       jsonResponse.addKeyDescriptions("port", "Port searched for");
-      jsonResponse.addKeyDescriptions("error", "Any errors from command");
     }
     return jsonResponse;
   }
@@ -101,7 +100,6 @@ public class GetInfoForPort extends ExecuteOSTask {
       String process = "";
       String pid = "";
       String user = "";
-      String returnError = "";
 
       try {
         process = portInfo.get("process").toString();
@@ -116,9 +114,6 @@ public class GetInfoForPort extends ExecuteOSTask {
       } catch (NullPointerException error) {
       }
 
-      if (process.equals("") && pid.equals("") && user.equals("")) {
-        returnError = "No info found for this port";
-      }
 
       getJsonResponse().addKeyValues("process_name", process);
       getJsonResponse().addKeyValues("pid", pid);
