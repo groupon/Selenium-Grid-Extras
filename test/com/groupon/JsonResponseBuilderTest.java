@@ -68,25 +68,25 @@ public class JsonResponseBuilderTest {
     jsonResponseObject.addKeyDescriptions("new", "key");
     defaultDescriptions.put("new", "key");
     assertEquals(defaultDescriptions, jsonResponseObject.getKeyDescriptions());
-    assertEquals("{\"exit_code\":0,\"new\":\"\",\"error\":\"\",\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"new\":[\"\"],\"error\":[],\"out\":[]}",
                  jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesString() throws Exception {
     jsonResponseObject.addKeyValues("foo", "bar");
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":\"bar\",\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":[\"bar\"],\"out\":[]}",
                  jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesBoolean() throws Exception {
     jsonResponseObject.addKeyValues("foo", true);
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":true,\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":true,\"out\":[]}",
                  jsonResponseObject.toString());
 
     jsonResponseObject.addKeyValues("foo", "true");
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":\"true\",\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":[\"true\"],\"out\":[]}",
                  jsonResponseObject.toString());
   }
 
@@ -94,18 +94,18 @@ public class JsonResponseBuilderTest {
   public void testAddKeyValuesMap() throws Exception {
     Map<String, String> bar = new HashMap<String, String>();
     jsonResponseObject.addKeyValues("foo", bar);
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":{},\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":{},\"out\":[]}",
                  jsonResponseObject.toString());
   }
 
   @Test
   public void testAddKeyValuesInt() throws Exception {
     jsonResponseObject.addKeyValues("foo", 1);
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":1,\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":1,\"out\":[]}",
                  jsonResponseObject.toString());
 
     jsonResponseObject.addKeyValues("foo", "1");
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":\"1\",\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":[\"1\"],\"out\":[]}",
                  jsonResponseObject.toString());
   }
 
@@ -115,13 +115,24 @@ public class JsonResponseBuilderTest {
     foo.add("a");
     foo.add("b");
     jsonResponseObject.addKeyValues("foo", foo);
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"foo\":[\"a\",\"b\"],\"out\":\"\"}",
+    assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":[\"a\",\"b\"],\"out\":[]}",
                  jsonResponseObject.toString());
   }
 
   @Test
+  public void testCallingToStringMultipleTimesDoesNotClearDescriptions() throws Exception {
+    assertEquals("{\"exit_code\":0,\"error\":[],\"out\":[]}", jsonResponseObject.toString());
+  }
+
+  @Test
   public void testToStringDefault() throws Exception {
-    assertEquals("{\"exit_code\":0,\"error\":\"\",\"out\":\"\"}", jsonResponseObject.toString());
+
+    final String descriptionMessage = "should still be here when done";
+
+    jsonResponseObject.addKeyDescriptions("test", descriptionMessage);
+    jsonResponseObject.toString();
+    jsonResponseObject.toString();
+    assertEquals(descriptionMessage, jsonResponseObject.getKeyDescriptions().get("test"));
   }
 
   @Test

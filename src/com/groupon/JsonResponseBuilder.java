@@ -51,15 +51,16 @@ public class JsonResponseBuilder {
   private JSONObject keyValues;
 
   public JsonResponseBuilder() {
-    initilize();
-  }
-
-  private void initilize(){
     keyDescriptions = new HashMap<String, String>();
-    keyValues = new JSONObject();
     keyDescriptions.put("error", "Error recived during execution of command");
     keyDescriptions.put("exit_code", "Exit code for operation");
     keyDescriptions.put("out", "All of the StandardOut received from the system");
+    clearValues();
+  }
+
+  private void clearValues(){
+
+    keyValues = new JSONObject();
 
     List<String> out = new LinkedList();
     List<String> error = new LinkedList();
@@ -108,7 +109,7 @@ public class JsonResponseBuilder {
 
   public String toString() {
     String tempString = keyValues.toJSONString();
-    initilize();
+    clearValues();
     return tempString;
   }
 
