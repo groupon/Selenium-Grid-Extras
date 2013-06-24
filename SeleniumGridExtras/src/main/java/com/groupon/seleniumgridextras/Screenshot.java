@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -99,7 +100,9 @@ public class Screenshot extends ExecuteOSTask {
         getJsonResponse().addKeyValues("error", "Error Saving image to file\n " + e);
         return getJsonResponse().toString();
       }
-      getJsonResponse().addKeyValues("file", filename);
+      getJsonResponse().addKeyValues("file_type", "PNG");
+      getJsonResponse().addKeyValues("file",
+                                     RuntimeConfig.getExposedDirectory() + "/" + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
       return getJsonResponse().toString();
     } catch (AWTException error) {
@@ -117,8 +120,6 @@ public class Screenshot extends ExecuteOSTask {
       jsonResponse.addKeyDescriptions("file", "Name of the file saved on the Node's HD");
       jsonResponse
           .addKeyDescriptions("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
-
-      jsonResponse.addKeyValues("file_type", "PNG");
     }
     return jsonResponse;
 
