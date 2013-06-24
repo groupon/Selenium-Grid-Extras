@@ -52,12 +52,18 @@ public class GridWrapper {
     return RuntimeConfig.getWebdriverVersion();
   }
 
+  public static String getGridClassPath() {
+    return SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  }
+
   public static String getWebdriverHome() {
     return RuntimeConfig.getWebdriverParentDir();
   }
 
   public static String getStartCommand(String role) {
-    return "java -jar " + getCurrentJarPath() + " " + getFormattedConfig(role);
+    return "java -cp " + getGridClassPath() + ":" + getCurrentJarPath() + " "
+           + " org.openqa.grid.selenium.GridLauncher " + getFormattedConfig(
+        role);
   }
 
   public static String getGridConfigPortForRole(String role) {
