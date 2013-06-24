@@ -42,16 +42,16 @@ import org.json.simple.JSONObject;
 
 public class DefaultConfig {
 
-  private JSONObject defaultConfig = new JSONObject();
-  private JSONArray enabledPlugins = new JSONArray();
-  private JSONArray disabledPlugins = new JSONArray();
-  private JSONArray setupTask = new JSONArray();
-  private JSONArray teardownTask = new JSONArray();
-  private JSONObject gridConfig = new JSONObject();
-  private JSONObject webdriverConfig = new JSONObject();
+  private static JSONObject defaultConfig = new JSONObject();
+  private static JSONArray enabledPlugins = new JSONArray();
+  private static JSONArray disabledPlugins = new JSONArray();
+  private static JSONArray setupTask = new JSONArray();
+  private static JSONArray teardownTask = new JSONArray();
+  private static JSONObject gridConfig = new JSONObject();
+  private static JSONObject webdriverConfig = new JSONObject();
 
 
-  public DefaultConfig() {
+  public static String toJsonString() {
     loadDisabledPlugins();
     loadEnabledPlugins();
     loadSetupConfig();
@@ -59,31 +59,29 @@ public class DefaultConfig {
     loadGridConfig();
     loadSharedDir();
     loadWebDriverInfo();
-  }
 
-  public String toString() {
     return defaultConfig.toJSONString();
   }
 
-  private void loadSetupConfig() {
+  private static void loadSetupConfig() {
     setupTask.add("com.groupon.seleniumgridextras.KillAllIE");
     setupTask.add("com.groupon.seleniumgridextras.MoveMouse");
     defaultConfig.put("setup", setupTask);
   }
 
-  private void loadTeardownConfig() {
+  private static void loadTeardownConfig() {
     teardownTask.add("com.groupon.seleniumgridextras.KillAllIE");
     defaultConfig.put("teardown", teardownTask);
   }
 
 
-  private void loadWebDriverInfo() {
+  private static void loadWebDriverInfo() {
     webdriverConfig.put("directory", "webdriver");
     webdriverConfig.put("version", "2.33.0");
     defaultConfig.put("webdriver", webdriverConfig);
   }
 
-  private void loadEnabledPlugins() {
+  private static void loadEnabledPlugins() {
     enabledPlugins.add("com.groupon.seleniumgridextras.DownloadWebdriver");
     enabledPlugins.add("com.groupon.seleniumgridextras.UpgradeWebdriver");
     enabledPlugins.add("com.groupon.seleniumgridextras.Setup");
@@ -108,12 +106,12 @@ public class DefaultConfig {
     defaultConfig.put("activated_modules", enabledPlugins);
   }
 
-  private void loadDisabledPlugins() {
+  private static void loadDisabledPlugins() {
     disabledPlugins.add("com.groupon.GetFile");
     defaultConfig.put("disabled_modules", disabledPlugins);
   }
 
-  private void loadGridConfig() {
+  private static void loadGridConfig() {
     gridConfig.put("default_role", "hub");
     gridConfig.put("hub", getGridHubConfig());
     gridConfig.put("node", getGridNodeConfig());
@@ -121,7 +119,7 @@ public class DefaultConfig {
     defaultConfig.put("grid", gridConfig);
   }
 
-  private JSONObject getGridHubConfig() {
+  private static JSONObject getGridHubConfig() {
     JSONObject gridHubConfig = new JSONObject();
     gridHubConfig.put("-role", "hub");
     gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.SeleniumGridExtrasServlet");
@@ -129,7 +127,7 @@ public class DefaultConfig {
     return gridHubConfig;
   }
 
-  private JSONObject getGridNodeConfig() {
+  private static JSONObject getGridNodeConfig() {
     JSONObject gridNodeConfig = new JSONObject();
 
     gridNodeConfig.put("-host", "http://127.0.0.1");
@@ -141,7 +139,7 @@ public class DefaultConfig {
     return gridNodeConfig;
   }
 
-  private void loadSharedDir() {
+  private static void loadSharedDir() {
     defaultConfig.put("expose_directory", "shared");
   }
 

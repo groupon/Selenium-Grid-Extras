@@ -37,21 +37,12 @@
 
 package com.groupon.seleniumgridextras;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-
-public class WriteDefaultConfigs {
+public class FirstTimeRunConfig {
 
 
-  public static void writeConfig(String file){
-    try{
-      File f = new File(file);
-      FileUtils.writeStringToFile(f, FirstTimeRunConfig.toJsonString(DefaultConfig.toJsonString()));
-    } catch (Exception error){
-      System.out.println("Could not write default config file, exit with error " + error.toString());
-      System.exit(1);
-    }
+
+  public static String toJsonString(String defaultConfig){
+    return defaultConfig;
   }
 
 }
