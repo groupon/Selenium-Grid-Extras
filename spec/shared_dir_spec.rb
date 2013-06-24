@@ -58,4 +58,6 @@ describe "ExposeDirectory.java" do
     response["files"].should == []
   end
   
+  it_behaves_like "No Errors"
+  
 end
