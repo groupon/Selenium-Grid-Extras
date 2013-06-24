@@ -43,13 +43,24 @@ import java.io.File;
 
 public class WriteDefaultConfigs {
 
+  public static void writeConfig(String file) {
+    writeConfig(file, true);
+  }
 
-  public static void writeConfig(String file){
-    try{
+  public static void writeConfig(String file, Boolean askForInput) {
+    try {
       File f = new File(file);
-      FileUtils.writeStringToFile(f, FirstTimeRunConfig.toJsonString(DefaultConfig.getDefaultConfig()));
-    } catch (Exception error){
-      System.out.println("Could not write default config file, exit with error " + error.toString());
+      String config;
+      if (askForInput) {
+        config = FirstTimeRunConfig.toJsonString(DefaultConfig.getDefaultConfig());
+      } else {
+        config = DefaultConfig.toJsonString();
+      }
+
+      FileUtils.writeStringToFile(f, config);
+    } catch (Exception error) {
+      System.out
+          .println("Could not write default config file, exit with error " + error.toString());
       System.exit(1);
     }
   }

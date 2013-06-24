@@ -55,11 +55,11 @@ public class RuntimeConfig {
   private static Map config;
   private static final String configFile = "selenium_grid_extras_config.json";
 
-  public static Map getConfig(){
+  public static Map getConfig() {
     return config;
   }
 
-  public static String getConfigFile(){
+  public static String getConfigFile() {
     return configFile;
   }
 
@@ -98,13 +98,39 @@ public class RuntimeConfig {
   }
 
   public static Map getWebdriverConfig() {
-    Map wb = (HashMap<String, HashMap>) config.get("webdriver");
-    return wb;
+    return (HashMap<String, HashMap>) config.get("webdriver");
   }
 
-  public static Map<String, HashMap> getGridConfig(){
+  public static Map<String, HashMap> getGridConfig() {
     return (HashMap<String, HashMap>) config.get("grid");
   }
+
+  public static Boolean autoStartHub() {
+    Map grid = getGridConfig();
+
+    System.out.println(grid);
+
+    String value = (String) grid.get("auto_start_hub");
+
+    if (value.equals("1")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public static Boolean autoStartNode() {
+    Map grid = getGridConfig();
+    System.out.println(grid);
+    String value = (String) grid.get("auto_start_node");
+
+    if (value.equals("1")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 
   public static String getWebdriverParentDir() {
     return RuntimeConfig.getWebdriverConfig().get("directory").toString();

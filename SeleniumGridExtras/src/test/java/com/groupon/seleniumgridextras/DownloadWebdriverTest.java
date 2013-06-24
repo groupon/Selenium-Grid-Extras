@@ -51,6 +51,7 @@ public class DownloadWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
+    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     task = new DownloadWebdriver();
   }

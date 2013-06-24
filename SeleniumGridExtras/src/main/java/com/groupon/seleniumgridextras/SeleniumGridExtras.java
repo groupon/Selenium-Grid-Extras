@@ -81,7 +81,7 @@ public class SeleniumGridExtras {
 
     System.out.println("=== API documentation ===");
     System.out.println("/api - Located here");
-    HttpContext context =  server.createContext("/api", new HttpExecutor() {
+    HttpContext context = server.createContext("/api", new HttpExecutor() {
       @Override
       String execute(Map params) {
         String foo = ApiDocumentation.getApiDocumentation();
@@ -89,6 +89,18 @@ public class SeleniumGridExtras {
         return foo;
       }
     });
+
+    if (RuntimeConfig.autoStartHub()) {
+      System.out.println("=== Grid Hub was set to Autostart ===");
+      ExecuteOSTask grid = new StartGrid();
+      String value = grid.execute("hub");
+    }
+
+    if (RuntimeConfig.autoStartNode()) {
+      System.out.println("=== Grid Node was set to Autostart ===");
+      ExecuteOSTask grid = new StartGrid();
+      String value = grid.execute("node");
+    }
 
     context.getFilters().add(new ParameterFilter());
 

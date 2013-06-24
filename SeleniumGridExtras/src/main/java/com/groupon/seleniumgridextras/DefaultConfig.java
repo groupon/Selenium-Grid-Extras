@@ -51,6 +51,10 @@ public class DefaultConfig {
   private static JSONObject webdriverConfig = new JSONObject();
 
 
+  public static String toJsonString(){
+    return getDefaultConfig().toJSONString();
+  }
+
   public static JSONObject getDefaultConfig() {
     loadDisabledPlugins();
     loadEnabledPlugins();
@@ -113,6 +117,8 @@ public class DefaultConfig {
 
   private static void loadGridConfig() {
     gridConfig.put("default_role", "hub");
+    gridConfig.put("auto_start_hub", "0");
+    gridConfig.put("auto_start_node", "1");
     gridConfig.put("hub", getGridHubConfig());
     gridConfig.put("node", getGridNodeConfig());
 

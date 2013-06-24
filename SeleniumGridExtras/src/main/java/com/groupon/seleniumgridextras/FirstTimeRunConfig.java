@@ -48,15 +48,31 @@ public class FirstTimeRunConfig {
     System.out.println(
         "\n\n\n\nWe noticed this is a first time running, we will ask some configuration settings\n\n");
 
-
     setWebDriverVersion(defaultConfig);
     setDefaultService(defaultConfig);
     setGridHubUrl(defaultConfig);
+    setGridHubAutostart(defaultConfig);
+    setGridNodeAutostart(defaultConfig);
 
-
-    System.out.println("Than you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
+    System.out
+        .println("Than you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
     System.out.println("You can modify this file directly to tweak more options");
     return defaultConfig.toJSONString();
+  }
+
+
+  private static JSONObject setGridHubAutostart(JSONObject defaultConfig) {
+    String value = askQuestion("Do you want Grid Hub to be auto started? (1-yes/0-no)", "0");
+    JSONObject grid = (JSONObject) defaultConfig.get("grid");
+    grid.put("auto_start_hub", value);
+    return defaultConfig;
+  }
+
+  private static JSONObject setGridNodeAutostart(JSONObject defaultConfig) {
+    String value = askQuestion("Do you want Grid Node to be auto started? (1-yes/0-no)", "1");
+    JSONObject grid = (JSONObject) defaultConfig.get("grid");
+    grid.put("auto_start_node", value);
+    return defaultConfig;
   }
 
   private static JSONObject setWebDriverVersion(JSONObject defaultConfig) {
@@ -94,14 +110,14 @@ public class FirstTimeRunConfig {
   }
 
 
-  private static String askQuestion(String question, String defaultValue){
+  private static String askQuestion(String question, String defaultValue) {
 
     System.out.println("\n\n" + question);
     System.out.println("Default Value: " + defaultValue);
 
     String answer = readLine();
 
-    if (answer.equals("")){
+    if (answer.equals("")) {
       answer = defaultValue;
     }
 
