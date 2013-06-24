@@ -61,7 +61,6 @@ public class GridStatus extends ExecuteOSTask {
     jsonResponse.addKeyDescriptions("node_running", "Boolean if node is running on given port");
     jsonResponse.addKeyDescriptions("hub_info", "Hash object describing the Hub Process");
     jsonResponse.addKeyDescriptions("node_info", "Hash object describing the Node Process");
-    jsonResponse.addKeyDescriptions("error", "Any error that might have happened");
 
     return jsonResponse.getKeyDescriptions();
   }
