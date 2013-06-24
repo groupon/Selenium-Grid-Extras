@@ -107,4 +107,17 @@ public class MoveMouse extends ExecuteOSTask {
 
   }
 
+  @Override
+  public boolean initialize() {
+
+    if (allDependenciesLoaded() && !java.awt.GraphicsEnvironment.isHeadless()) {
+      printInitilizedSuccessAndRegisterWithAPI();
+      return true;
+    } else {
+      printInitilizedFailure();
+      return false;
+    }
+
+  }
+
 }
