@@ -108,8 +108,6 @@ public class RuntimeConfig {
   public static Boolean autoStartHub() {
     Map grid = getGridConfig();
 
-    System.out.println(grid);
-
     String value = (String) grid.get("auto_start_hub");
 
     if (value.equals("1")) {
@@ -121,7 +119,6 @@ public class RuntimeConfig {
 
   public static Boolean autoStartNode() {
     Map grid = getGridConfig();
-    System.out.println(grid);
     String value = (String) grid.get("auto_start_node");
 
     if (value.equals("1")) {
