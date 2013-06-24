@@ -40,8 +40,8 @@ package com.groupon.seleniumgridextras;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
 
 import static org.junit.Assert.assertEquals;
 

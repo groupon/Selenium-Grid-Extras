@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
+import com.groupon.seleniumgridextras.tasks.StartGrid;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;

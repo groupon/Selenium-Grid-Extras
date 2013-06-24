@@ -39,6 +39,7 @@
 package com.groupon.seleniumgridextras.grid;
 
 import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.SeleniumGridExtras;
 
 import java.util.HashMap;
 import java.util.Map;
