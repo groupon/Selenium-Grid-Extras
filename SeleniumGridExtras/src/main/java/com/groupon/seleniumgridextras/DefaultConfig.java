@@ -51,7 +51,7 @@ public class DefaultConfig {
   private static JSONObject webdriverConfig = new JSONObject();
 
 
-  public static String toJsonString() {
+  public static JSONObject getDefaultConfig() {
     loadDisabledPlugins();
     loadEnabledPlugins();
     loadSetupConfig();
@@ -60,7 +60,7 @@ public class DefaultConfig {
     loadSharedDir();
     loadWebDriverInfo();
 
-    return defaultConfig.toJSONString();
+    return defaultConfig;
   }
 
   private static void loadSetupConfig() {

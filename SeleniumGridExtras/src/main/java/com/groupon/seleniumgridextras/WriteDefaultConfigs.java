@@ -47,7 +47,7 @@ public class WriteDefaultConfigs {
   public static void writeConfig(String file){
     try{
       File f = new File(file);
-      FileUtils.writeStringToFile(f, FirstTimeRunConfig.toJsonString(DefaultConfig.toJsonString()));
+      FileUtils.writeStringToFile(f, FirstTimeRunConfig.toJsonString(DefaultConfig.getDefaultConfig()));
     } catch (Exception error){
       System.out.println("Could not write default config file, exit with error " + error.toString());
       System.exit(1);

@@ -37,12 +37,92 @@
 
 package com.groupon.seleniumgridextras;
 
+import org.json.simple.JSONObject;
+
+import java.io.*;
+
 public class FirstTimeRunConfig {
 
 
+  public static String toJsonString(JSONObject defaultConfig) {
+    System.out.println(
+        "\n\n\n\nWe noticed this is a first time running, we will ask some configuration settings\n\n");
 
-  public static String toJsonString(String defaultConfig){
+
+    setWebDriverVersion(defaultConfig);
+    setDefaultService(defaultConfig);
+    setGridHubUrl(defaultConfig);
+
+
+    System.out.println("Than you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
+    System.out.println("You can modify this file directly to tweak more options");
+    return defaultConfig.toJSONString();
+  }
+
+  private static JSONObject setWebDriverVersion(JSONObject defaultConfig) {
+    JSONObject webdriver = (JSONObject) defaultConfig.get("webdriver");
+    String currentVersion = webdriver.get("version").toString();
+
+    String newVersion = askQuestion("What version of webdriver JAR should we use?", currentVersion);
+
+    webdriver.put("version", newVersion);
+
     return defaultConfig;
+  }
+
+  private static JSONObject setGridHubUrl(JSONObject defaultConfig) {
+
+    JSONObject grid = (JSONObject) defaultConfig.get("grid");
+    JSONObject nodeConfig = (JSONObject) grid.get("node");
+
+    String url = askQuestion("What is the url for the Selenium Grid Hub?", "http://localhost:4444");
+
+    nodeConfig.put("-hub", url);
+
+    return defaultConfig;
+  }
+
+
+  private static JSONObject setDefaultService(JSONObject defaultConfig) {
+    JSONObject grid = (JSONObject) defaultConfig.get("grid");
+
+    String role = askQuestion("What is the default Role of this computer? (hub|node)", "node");
+
+    grid.put("default_role", role);
+
+    return defaultConfig;
+  }
+
+
+  private static String askQuestion(String question, String defaultValue){
+
+    System.out.println("\n\n" + question);
+    System.out.println("Default Value: " + defaultValue);
+
+    String answer = readLine();
+
+    if (answer.equals("")){
+      answer = defaultValue;
+    }
+
+    System.out.println("'" + answer + "' was set as your value\n\n");
+
+    return answer;
+
+  }
+
+  private static String readLine() {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    String line = null;
+
+    try {
+      line = br.readLine();
+    } catch (IOException ioe) {
+      System.out.println("IO error trying to read your input.");
+      System.exit(1);
+    }
+
+    return line;
   }
 
 }
