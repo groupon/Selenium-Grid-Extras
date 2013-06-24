@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.grid;
 
 import org.apache.commons.io.IOUtils;
 import org.openqa.grid.internal.ProxySet;

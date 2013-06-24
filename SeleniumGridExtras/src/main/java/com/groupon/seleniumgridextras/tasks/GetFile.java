@@ -35,50 +35,35 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-public class KillAllByName extends ExecuteOSTask {
+import java.util.LinkedList;
+import java.util.List;
 
+public class GetFile extends ExecuteOSTask {
 
   @Override
   public String getEndpoint() {
-    return "/kill_all_by_name";
+    return "/get_file";
   }
 
   @Override
   public String getDescription() {
-    return "Executes os level kill command on a given PID name";
-  }
-
-
-  @Override
-  public String getWindowsCommand(String parameter) {
-    return "taskkill -F -IM " + parameter;
+    return "(Not yet implemented) - Retrives a file from shared Directory";
   }
 
   @Override
-  public String getLinuxCommand(String parameter) {
-    return "killall -v -m " + parameter;
+  public String execute(){
+    return "{\"exit\": 1, \"error\": \"Not yet implemented\"}";
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public List<String> getDependencies(){
+    List<String> localDependencies = new LinkedList<String>();
 
-    if (!parameter.isEmpty() && parameter.containsKey("name")) {
-      return execute(parameter.get("name").toString());
-    }
-
-    return execute();
+    localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
+    return localDependencies;
   }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("name", "Name of process");
-    return params;
-  }
-
 }

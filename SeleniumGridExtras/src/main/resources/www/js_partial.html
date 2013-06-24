@@ -1,26 +1,38 @@
 <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 
     $('document').ready(function () {
-        for(var i = 0; i < nodes.length; i++){
-            var host = nodes[i];
-            var hostUrl = "http://" + host + ":3000";
+    var hostID = -1;
+    for (var i = 0; i < nodes.length; i++) {
+    var host = nodes[i];
+    hostID++;
+    var hostUrl = "http://" + host + ":3000";
 
-            $('#nodes').append("<div class='node'>");
-            $('#nodes').append(host);
-            $('#nodes').append("<br/><a href='" + hostUrl + "/move_mouse' target='new'>Move Mouse</a><br/>");
-            $('#nodes').append("<a href='" + hostUrl + "/kill_chrome' target='new'>Kill All Chrome</a><br/>");
-            $('#nodes').append("<a href='" + hostUrl + "/kill_firefox' target='new'>Kill All Firefox</a><br/>");
-            $('#nodes').append("<a href='" + hostUrl + "/ps' target='new'>Get All Processes</a><br/>");
-    $('#nodes').append("</div>");
-            var screenShotUrl = hostUrl + '/screenshot?callback=?';
+    $('#nodes').append("<div class='node well well-small span4 text-center' id='node" + hostID + "'></div>");
+    $('#node' + hostID).append("<h4>" + host + "</h4>");
+    $('#node' + hostID).append("<div class='image' id='image"+ hostID +"'></div>");
+    $('#node' + hostID).append("<div class='pagination pagination-mini pagination-centered text-center'><ul id='apilist"+ hostID +"'></ul></div>");
+    $('#apilist'+ hostID).append("<li><a href='" + hostUrl + "/move_mouse' class='btn btn-mini btn-success' target='new'>Move Mouse</a></li>");
+    $('#apilist'+ hostID).append("<li><a href='" + hostUrl + "/kill_chrome' class='btn btn-mini btn-danger' target='new'>Kill All Chrome</a></li>");
+    $('#apilist'+ hostID).append("<li><a href='" + hostUrl + "/kill_firefox' class='btn btn-mini btn-danger' target='new'>Kill All Firefox</a></li>");
+    $('#apilist'+ hostID).append("<li><a href='" + hostUrl + "/ps' class='btn btn-mini btn-info' target='new'>Get All Processes</a></li>");
 
-            $.getJSON(screenShotUrl, '', function (res) {
-                $('#nodes').append("<img id='" + i + "' class='screenshot' src='data:image/png;base64," + res.image + "' />");
-            });
+    var screenShotUrl = hostUrl + '/screenshot?callback=?';
+    console.log(hostID);
+    getImage(screenShotUrl, hostID);
 
+    }
 
-        }
+    function getImage(screenShotUrl, hostID) {
+    var currentHostID = hostID;
+
+    $.getJSON(screenShotUrl, '', function (res) {
+    console.log(currentHostID);
+    $("#image" + currentHostID +"").html("<img id='" + currentHostID + "' class='screenshot' src='data:image/png;base64," + res.image + "' />");
+    });
+    }
+
     });
 
 </script>

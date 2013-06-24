@@ -35,95 +35,71 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
 
-import org.apache.commons.io.FileUtils;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
-public class ExposeDirectory extends ExecuteOSTask {
-
-  public File sharedDir;
+public class GetConfig extends ExecuteOSTask {
 
   @Override
   public String getEndpoint() {
-    return "/dir";
+    return "/config";
   }
 
   @Override
   public String getDescription() {
-    return "Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.";
+    return "Returns JSON view of the full configuration of the Selenium Grid Extras";
   }
-
-  @Override
-  public String execute() {
-    File[] files = sharedDir.listFiles();
-    List<String> filesToString = new LinkedList<String>();
-
-    for (File f : files) {
-      filesToString.add(f.toString());
-    }
-    getJsonResponse().addKeyValues("files", filesToString);
-    return getJsonResponse().toString();
-  }
-
-  public File getExposedDirectory() {
-    return sharedDir;
-  }
-
-  private void createDir() {
-    File dir = sharedDir;
-    dir.mkdir();
-  }
-
-  public boolean cleanUpExposedDirectory() {
-    try {
-      FileUtils.deleteDirectory(sharedDir);
-      createDir();
-      return true;
-
-    } catch (IOException error) {
-      System.out.println("Attempt to delete " + RuntimeConfig.getExposedDirectory() + " FAILED!!!");
-      return false;
-    }
-  }
-
 
   @Override
   public JsonResponseBuilder getJsonResponse() {
 
     if (jsonResponse == null) {
       jsonResponse = new JsonResponseBuilder();
-      jsonResponse.addKeyDescriptions("files", "Array list of files in the shared directory");
+      jsonResponse.addKeyDescriptions("config_file", "Config that currently lives saved on file");
+      jsonResponse
+          .addKeyDescriptions("config_runtime", "Runtime config that currently set in memory");
+      jsonResponse.addKeyValues("filename", "Filename from which the config was read");
     }
     return jsonResponse;
   }
 
-
   @Override
-  public boolean initialize() {
+  public String execute(String param) {
 
+    readConfigFile(RuntimeConfig.getConfigFile());
+
+    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig());
+    getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
+
+    return getJsonResponse().toString();
+  }
+
+  private void readConfigFile(String filename) {
+    String returnString = "";
     try {
-      sharedDir = new File(RuntimeConfig.getExposedDirectory());
-
-      if (sharedDir.exists()) {
-        cleanUpExposedDirectory();
-      } else {
-        createDir();
+      BufferedReader reader = new BufferedReader(new FileReader(filename));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        returnString = returnString + line;
       }
 
-    } catch (NullPointerException error) {
-      printInitilizedFailure();
-      System.out.println("  'expose_directory' variable was not set in the config " + error);
-      return false;
+      getJsonResponse().addKeyValues("config_file", returnString, false);
+
+    } catch (FileNotFoundException error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+    } catch (IOException error) {
+      getJsonResponse().addKeyValues("error", error.toString());
     }
 
-    printInitilizedSuccessAndRegisterWithAPI();
-    return true;
-
   }
+
 }

@@ -35,27 +35,61 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
 
-public class KillAllFirefox extends KillAllByName {
+package com.groupon.seleniumgridextras.tasks;
+
+
+import com.groupon.seleniumgridextras.grid.GridWrapper;
+import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class StopGrid extends ExecuteOSTask {
 
   @Override
   public String getEndpoint() {
-    return "/kill_firefox";
+    return "/stop_grid";
   }
 
   @Override
   public String getDescription() {
-    return "Executes os level kill command on all instance of Firefox";
+    return "Stops grid or node process";
   }
 
   @Override
-  public String getWindowsCommand() {
-    return super.getWindowsCommand("firefox.exe");
+  public String execute() {
+    return execute(GridWrapper.getDefaultRole());
   }
 
   @Override
-  public String getLinuxCommand() {
-    return super.getLinuxCommand("[Ff]irefox");
+  public String execute(String role) {
+    try {
+      String servicePort = GridWrapper.getGridConfigPortForRole(role);
+      Map<String, String> processInfo = PortChecker.getParsedPortInfo(servicePort);
+      ExecuteOSTask killer = new KillPid();
+      return killer.execute(processInfo.get("pid"));
+    } catch (Exception error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
+    }
   }
+
+  @Override
+  public String execute(Map<String, String> parameter) {
+    if (parameter.isEmpty() || !parameter.containsKey("role")) {
+      return execute();
+    } else {
+      return execute(parameter.get("role").toString());
+    }
+  }
+
+  @Override
+  public Map getAcceptedParams() {
+    Map<String, String> params = new HashMap();
+    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    return params;
+  }
+
 }

@@ -35,8 +35,11 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
@@ -131,7 +134,7 @@ public class Screenshot extends ExecuteOSTask {
   public List<String> getDependencies() {
     List<String> localDependencies = new LinkedList<String>();
 
-    localDependencies.add("com.groupon.seleniumgridextras.ExposeDirectory");
+    localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
     return localDependencies;
   }
 }

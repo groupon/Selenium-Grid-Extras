@@ -35,28 +35,68 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-public class KillAllChrome extends KillAllByName {
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-
-  @Override
-  public String getDescription() {
-    return "Executes os level kill command on all instance of Google Chrome";
-  }
-
-  @Override
-  public String getEndpoint() {
-    return "/kill_chrome";
-  }
+public class Teardown extends ExecuteOSTask {
 
   @Override
   public String getWindowsCommand() {
-    return super.getWindowsCommand("chrome.exe");
+    return "";
   }
 
   @Override
   public String getLinuxCommand() {
-    return super.getLinuxCommand("[Cc]hrome");
+    return "ls";
   }
+
+  @Override
+  public String getMacCommand(){
+    return "ls";
+  }
+
+
+  @Override
+  public String getEndpoint() {
+    return "/teardown";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Calls several pre-defined tasks to act as teardown after build";
+  }
+
+
+  @Override
+  public boolean initialize() {
+    Boolean initialized = true;
+    System.out.println("Teardown Tasks");
+
+    for (String module : RuntimeConfig.getTeardownModules()) {
+      try {
+        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
+        System.out.println("    " + foo.getClass().getSimpleName());
+      } catch (ClassNotFoundException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (InstantiationException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (IllegalAccessException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      }
+    }
+
+    if (initialized.equals(false)) {
+      printInitilizedFailure();
+      System.exit(1);
+    }
+
+    return true;
+
+  }
+
 }

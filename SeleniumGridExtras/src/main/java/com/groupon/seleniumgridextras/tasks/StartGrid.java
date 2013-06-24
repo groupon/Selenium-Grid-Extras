@@ -35,7 +35,14 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
+
+import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
+import com.groupon.seleniumgridextras.JsonWrapper;
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.util.HashMap;
 import java.util.Map;

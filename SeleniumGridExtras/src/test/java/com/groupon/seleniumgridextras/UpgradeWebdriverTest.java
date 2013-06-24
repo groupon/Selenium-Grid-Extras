@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -77,7 +79,7 @@ public class UpgradeWebdriverTest {
   @Test
   public void testGetDependencies() throws Exception {
     List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.DownloadWebdriver");
+    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
     assertEquals(expected, task.getDependencies());
   }
 

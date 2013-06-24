@@ -35,7 +35,12 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
+
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.JsonWrapper;
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -97,7 +102,7 @@ public class UpgradeWebdriver extends ExecuteOSTask {
   @Override
   public List<String> getDependencies() {
     List<String> dependencies = new LinkedList();
-    dependencies.add("com.groupon.seleniumgridextras.DownloadWebdriver");
+    dependencies.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
     return dependencies;
   }
 

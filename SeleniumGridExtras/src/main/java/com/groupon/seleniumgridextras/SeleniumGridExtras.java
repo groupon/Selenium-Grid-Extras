@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 

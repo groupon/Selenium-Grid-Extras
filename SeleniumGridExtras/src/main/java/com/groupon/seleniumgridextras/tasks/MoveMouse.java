@@ -35,7 +35,10 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
+
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.awt.*;
 import java.util.HashMap;

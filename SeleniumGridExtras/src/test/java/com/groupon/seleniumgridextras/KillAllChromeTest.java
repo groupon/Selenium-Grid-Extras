@@ -38,6 +38,8 @@
 package com.groupon.seleniumgridextras;
 
 
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.KillAllChrome;
 import org.junit.Before;
 import org.junit.Test;
 

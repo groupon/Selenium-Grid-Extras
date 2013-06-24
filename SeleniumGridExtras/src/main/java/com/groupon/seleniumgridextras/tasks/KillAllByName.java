@@ -35,28 +35,52 @@
  * Time: 4:06 PM
  */
 
+package com.groupon.seleniumgridextras.tasks;
 
-package com.groupon.seleniumgridextras;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-public class GetProcesses extends ExecuteOSTask{
+import java.util.HashMap;
+import java.util.Map;
+
+public class KillAllByName extends ExecuteOSTask {
+
+
   @Override
   public String getEndpoint() {
-    return "/ps";
+    return "/kill_all_by_name";
   }
 
   @Override
   public String getDescription() {
-    return "Gets a list of currently running processes";
+    return "Executes os level kill command on a given PID name";
+  }
+
+
+  @Override
+  public String getWindowsCommand(String parameter) {
+    return "taskkill -F -IM " + parameter;
   }
 
   @Override
-  public String getWindowsCommand() {
-    return "tasklist";
+  public String getLinuxCommand(String parameter) {
+    return "killall -v -m " + parameter;
   }
 
   @Override
-  public String getLinuxCommand() {
-    return "ps x";
+  public String execute(Map<String, String> parameter) {
+
+    if (!parameter.isEmpty() && parameter.containsKey("name")) {
+      return execute(parameter.get("name").toString());
+    }
+
+    return execute();
+  }
+
+  @Override
+  public Map getAcceptedParams() {
+    Map<String, String> params = new HashMap();
+    params.put("name", "Name of process");
+    return params;
   }
 
 }

@@ -35,25 +35,28 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+public class KillAllChrome extends KillAllByName {
 
-public class RebootNode extends ExecuteOSTask {
-
-  public boolean waitToFinishTask = false;
 
   @Override
-  public String getWindowsCommand() {
-    return "shutdown -r -t 1 -f";
+  public String getDescription() {
+    return "Executes os level kill command on all instance of Google Chrome";
   }
 
   @Override
   public String getEndpoint() {
-    return "/reboot";
+    return "/kill_chrome";
   }
 
   @Override
-  public String getDescription() {
-    return "Restart the host node";
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("chrome.exe");
+  }
+
+  @Override
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("[Cc]hrome");
   }
 }

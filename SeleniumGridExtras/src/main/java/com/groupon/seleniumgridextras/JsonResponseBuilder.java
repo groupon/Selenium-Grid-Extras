@@ -123,7 +123,7 @@ public class JsonResponseBuilder {
     return tempString;
   }
 
-  protected Map<String, String> getKeyDescriptions() {
+  public Map<String, String> getKeyDescriptions() {
     return keyDescriptions;
   }
 

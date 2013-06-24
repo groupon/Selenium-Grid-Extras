@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-class ExecuteCommand {
+public class ExecuteCommand {
   public static String execRuntime(String cmd) {
     return execRuntime(cmd, true);
   }

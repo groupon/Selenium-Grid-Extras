@@ -35,9 +35,13 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
 
+import com.groupon.seleniumgridextras.grid.GridWrapper;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

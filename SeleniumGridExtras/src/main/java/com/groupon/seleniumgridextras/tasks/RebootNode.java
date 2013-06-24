@@ -35,33 +35,27 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import java.util.LinkedList;
-import java.util.List;
 
-public class GetFile extends ExecuteOSTask{
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+
+public class RebootNode extends ExecuteOSTask {
+
+  public boolean waitToFinishTask = false;
+
+  @Override
+  public String getWindowsCommand() {
+    return "shutdown -r -t 1 -f";
+  }
 
   @Override
   public String getEndpoint() {
-    return "/get_file";
+    return "/reboot";
   }
 
   @Override
   public String getDescription() {
-    return "(Not yet implemented) - Retrives a file from shared Directory";
-  }
-
-  @Override
-  public String execute(){
-    return "{\"exit\": 1, \"error\": \"Not yet implemented\"}";
-  }
-
-  @Override
-  public List<String> getDependencies(){
-    List<String> localDependencies = new LinkedList<String>();
-
-    localDependencies.add("com.groupon.seleniumgridextras.ExposeDirectory");
-    return localDependencies;
+    return "Restart the host node";
   }
 }

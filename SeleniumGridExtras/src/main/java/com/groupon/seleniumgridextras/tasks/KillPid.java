@@ -35,36 +35,67 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-public class KillAllIE extends KillAllByName {
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class KillPid extends ExecuteOSTask {
 
 
   @Override
+  public String execute() {
+
+    getJsonResponse().addKeyValues("error", "ID is a required parameter");
+    return getJsonResponse().toString();
+  }
+
+  @Override
+  public String execute(Map<String, String> parameter) {
+
+    if (parameter.isEmpty() || !parameter.containsKey("id")) {
+
+      return execute();
+    } else {
+      String pid = parameter.get("id").toString();
+      if (!OSChecker.isWindows() && parameter.containsKey("signal")) {
+        pid = "-" + parameter.get("signal").toString() + " " + pid;
+      }
+
+      return execute(pid);
+    }
+  }
+
+  @Override
   public String getEndpoint() {
-    return "/kill_ie";
+    return "/kill_pid";
   }
 
   @Override
   public String getDescription() {
-    return "Executes os level kill command on all instance of Internet Explorer";
+    return "Kills a given process id";
   }
 
   @Override
-  public String getWindowsCommand() {
-    return super.getWindowsCommand("iexplore.exe");
+  public String getWindowsCommand(String parameter) {
+    return "taskkill -F -IM " + parameter;
   }
 
   @Override
   public String getLinuxCommand(String parameter) {
-    try{
-      getJsonResponse().addKeyValues("error", "Kill IE command is not implemented on Mac OSX and Linux");
-    return getJsonResponse().toString();
-    } catch (Exception error){
-      System.out.println(error);
-      return "";
-    }
+    return "kill " + parameter;
   }
 
 
+
+  @Override
+  public Map getAcceptedParams() {
+    Map<String, String> params = new HashMap();
+    params.put("id", "(Required) -  Process ID (PID) to terminate.");
+    params.put("signal", "(unix only) - Signal Term number such as 1, 2...9");
+    return params;
+  }
 }

@@ -35,65 +35,30 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
 
-public class Teardown extends ExecuteOSTask {
+package com.groupon.seleniumgridextras.tasks;
 
-  @Override
-  public String getWindowsCommand() {
-    return "";
-  }
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-  @Override
-  public String getLinuxCommand() {
-    return "ls";
-  }
-
-  @Override
-  public String getMacCommand(){
-    return "ls";
-  }
-
-
+public class GetProcesses extends ExecuteOSTask {
   @Override
   public String getEndpoint() {
-    return "/teardown";
+    return "/ps";
   }
 
   @Override
   public String getDescription() {
-    return "Calls several pre-defined tasks to act as teardown after build";
+    return "Gets a list of currently running processes";
   }
 
+  @Override
+  public String getWindowsCommand() {
+    return "tasklist";
+  }
 
   @Override
-  public boolean initialize() {
-    Boolean initialized = true;
-    System.out.println("Teardown Tasks");
-
-    for (String module : RuntimeConfig.getTeardownModules()) {
-      try {
-        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
-        System.out.println("    " + foo.getClass().getSimpleName());
-      } catch (ClassNotFoundException error) {
-        System.out.println(module + "   " + error);
-        initialized = false;
-      } catch (InstantiationException error) {
-        System.out.println(module + "   " + error);
-        initialized = false;
-      } catch (IllegalAccessException error) {
-        System.out.println(module + "   " + error);
-        initialized = false;
-      }
-    }
-
-    if (initialized.equals(false)) {
-      printInitilizedFailure();
-      System.exit(1);
-    }
-
-    return true;
-
+  public String getLinuxCommand() {
+    return "ps x";
   }
 
 }

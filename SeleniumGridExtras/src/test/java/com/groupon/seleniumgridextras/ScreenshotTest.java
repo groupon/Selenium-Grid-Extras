@@ -38,6 +38,8 @@
 package com.groupon.seleniumgridextras;
 
 
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.Screenshot;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -71,7 +73,7 @@ public class ScreenshotTest {
   public void testGetDependencies() throws Exception {
     List<String> actualDependencies = task.getDependencies();
     List<String> expectedDependencies = new LinkedList<String>();
-    expectedDependencies.add("com.groupon.seleniumgridextras.ExposeDirectory");
+    expectedDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
     assertEquals(expectedDependencies, actualDependencies);
   }
 

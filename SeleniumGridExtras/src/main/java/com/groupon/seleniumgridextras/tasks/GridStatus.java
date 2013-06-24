@@ -35,57 +35,60 @@
  * Time: 4:06 PM
  */
 
+package com.groupon.seleniumgridextras.tasks;
 
-package com.groupon.seleniumgridextras;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-
-import java.util.HashMap;
 import java.util.Map;
 
-public class StopGrid extends ExecuteOSTask {
+public class GridStatus extends ExecuteOSTask {
+
+  private JsonResponseBuilder jsonResponse;
 
   @Override
   public String getEndpoint() {
-    return "/stop_grid";
+    return "/grid_status";
   }
 
   @Override
   public String getDescription() {
-    return "Stops grid or node process";
+    return "Returns status of the Selenium Grid hub/node. If currently running and what is the PID";
+  }
+
+  @Override
+  public Map getResponseDescription() {
+
+    jsonResponse = new JsonResponseBuilder();
+    jsonResponse.addKeyDescriptions("hub_running", "Boolean if hub is running on given port");
+    jsonResponse.addKeyDescriptions("node_running", "Boolean if node is running on given port");
+    jsonResponse.addKeyDescriptions("hub_info", "Hash object describing the Hub Process");
+    jsonResponse.addKeyDescriptions("node_info", "Hash object describing the Node Process");
+
+    return jsonResponse.getKeyDescriptions();
   }
 
   @Override
   public String execute() {
-    return execute(GridWrapper.getDefaultRole());
-  }
-
-  @Override
-  public String execute(String role) {
     try {
-      String servicePort = GridWrapper.getGridConfigPortForRole(role);
-      Map<String, String> processInfo = PortChecker.getParsedPortInfo(servicePort);
-      ExecuteOSTask killer = new KillPid();
-      return killer.execute(processInfo.get("pid"));
+      String hubPort = GridWrapper.getGridConfigPortForRole("hub");
+      String nodePort = GridWrapper.getGridConfigPortForRole("node");
+
+      Map<String, String> hubInfo = PortChecker.getParsedPortInfo(hubPort);
+      Map<String, String> nodeInfo = PortChecker.getParsedPortInfo(nodePort);
+
+      jsonResponse.addKeyValues("hub_running", hubInfo.isEmpty() ? false : true);
+      jsonResponse.addKeyValues("node_running", nodeInfo.isEmpty() ? false : true);
+      jsonResponse.addKeyValues("hub_info", hubInfo);
+      jsonResponse.addKeyValues("node_info", nodeInfo);
+
+      return jsonResponse.toString();
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      jsonResponse.addKeyValues("error", error.toString());
+      return jsonResponse.toString();
     }
-  }
-
-  @Override
-  public String execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey("role")) {
-      return execute();
-    } else {
-      return execute(parameter.get("role").toString());
-    }
-  }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("role", "hub|node - defaults to 'default_role' param in config file");
-    return params;
   }
 
 }

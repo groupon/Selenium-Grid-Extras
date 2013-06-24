@@ -35,31 +35,36 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+public class KillAllIE extends KillAllByName {
 
-import java.util.Map;
-
-public class Netstat extends ExecuteOSTask {
 
   @Override
   public String getEndpoint() {
-    return "/netstat";
+    return "/kill_ie";
   }
 
   @Override
   public String getDescription() {
-    return "Returns a system call for all ports. Use /port_info to get parsed details";
+    return "Executes os level kill command on all instance of Internet Explorer";
   }
 
   @Override
-  public String execute(){
-    return PortChecker.getPortInfo("");
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("iexplore.exe");
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
-    return execute();
+  public String getLinuxCommand(String parameter) {
+    try{
+      getJsonResponse().addKeyValues("error", "Kill IE command is not implemented on Mac OSX and Linux");
+    return getJsonResponse().toString();
+    } catch (Exception error){
+      System.out.println(error);
+      return "";
+    }
   }
+
 
 }

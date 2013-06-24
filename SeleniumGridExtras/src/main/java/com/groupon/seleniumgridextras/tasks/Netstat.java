@@ -35,64 +35,34 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import java.util.HashMap;
+
+import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+
 import java.util.Map;
 
-public class KillPid extends ExecuteOSTask {
-
-
-  @Override
-  public String execute() {
-
-    getJsonResponse().addKeyValues("error", "ID is a required parameter");
-    return getJsonResponse().toString();
-  }
-
-  @Override
-  public String execute(Map<String, String> parameter) {
-
-    if (parameter.isEmpty() || !parameter.containsKey("id")) {
-
-      return execute();
-    } else {
-      String pid = parameter.get("id").toString();
-      if (!OSChecker.isWindows() && parameter.containsKey("signal")) {
-        pid = "-" + parameter.get("signal").toString() + " " + pid;
-      }
-
-      return execute(pid);
-    }
-  }
+public class Netstat extends ExecuteOSTask {
 
   @Override
   public String getEndpoint() {
-    return "/kill_pid";
+    return "/netstat";
   }
 
   @Override
   public String getDescription() {
-    return "Kills a given process id";
+    return "Returns a system call for all ports. Use /port_info to get parsed details";
   }
 
   @Override
-  public String getWindowsCommand(String parameter) {
-    return "taskkill -F -IM " + parameter;
+  public String execute(){
+    return PortChecker.getPortInfo("");
   }
 
   @Override
-  public String getLinuxCommand(String parameter) {
-    return "kill " + parameter;
+  public String execute(Map<String, String> parameter) {
+    return execute();
   }
 
-
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("id", "(Required) -  Process ID (PID) to terminate.");
-    params.put("signal", "(unix only) - Signal Term number such as 1, 2...9");
-    return params;
-  }
 }

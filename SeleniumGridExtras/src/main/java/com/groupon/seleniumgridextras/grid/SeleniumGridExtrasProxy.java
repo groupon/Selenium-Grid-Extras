@@ -36,8 +36,9 @@
  */
 
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.grid;
 
+import com.groupon.seleniumgridextras.ExecuteCommand;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
