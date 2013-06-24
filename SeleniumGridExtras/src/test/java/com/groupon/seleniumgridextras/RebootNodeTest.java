@@ -68,22 +68,4 @@ public class RebootNodeTest {
   public void testgetWindowsCommand() throws Exception {
     assertEquals(windowsCommand, task.getWindowsCommand());
   }
-
-  @Test
-  public void testgetMacCommand() throws Exception {
-    if (OSChecker.isMac()) {
-      assertEquals(
-          "{\"exit_code\":1,\"error\":[\"This task was not implemented on Mac OS X com.groupon.seleniumgridextras.RebootNode\"],\"out\":[]}",
-          task.getLinuxCommand());
-    }
-  }
-
-  @Test
-  public void testgetLinuxCommand() throws Exception {
-    if (!OSChecker.isMac() && !OSChecker.isWindows()) {
-      assertEquals(
-          "{\"exit_code\":1,\"error\":[\"This task was not implemented on Mac OS X com.groupon.seleniumgridextras.RebootNode\"],\"out\":[]}",
-          task.getLinuxCommand());
-    }
-  }
 }
