@@ -84,15 +84,11 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public JsonResponseBuilder getJsonResponse() {
     if (jsonResponse == null) {
       jsonResponse = new JsonResponseBuilder();
-
-      jsonResponse.addKeyDescriptions("exit_code", "Record if download was successful or not");
       jsonResponse.addKeyDescriptions("root_dir", "Directory to which JAR file was saved to");
       jsonResponse.addKeyDescriptions("file", "Filename on node's computer");
       jsonResponse.addKeyDescriptions("source_url",
                                       "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
-      jsonResponse.addKeyDescriptions("error", "Any Errors that occured");
 
-      jsonResponse.addKeyValues("exit_code", 0);
       jsonResponse.addKeyValues("root_dir", GridWrapper.getWebdriverHome());
     }
     return jsonResponse;
