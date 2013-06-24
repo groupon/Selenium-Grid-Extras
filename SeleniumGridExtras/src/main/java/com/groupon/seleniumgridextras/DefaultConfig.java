@@ -124,6 +124,7 @@ public class DefaultConfig {
     gridHubConfig.put("-role", "hub");
     gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
+    gridHubConfig.put("-host", "http://127.0.0.1");
     return gridHubConfig;
   }
 
