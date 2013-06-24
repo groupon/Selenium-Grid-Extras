@@ -35,7 +35,7 @@ describe "GetConfig.java" do
 
   before(:all) do  
     @response = get_json "config"
-    @expected_from_file = JSON.parse(File.open(@response["filename"].first, "r").read)
+    @expected_from_file = get_local_config
     @actual_from_file   = JSON.parse(@response["config_file"].first)
 
   end

@@ -42,6 +42,10 @@ def get_json(endpoint)
   JSON.parse(get(endpoint))
 end
 
+def get_local_config
+  JSON.parse(File.open("selenium_grid_extras_config.json", "r").read)
+end
+
 shared_examples "No Errors" do
   it "should return 0 exit code" do
     @response["exit_code"].should == 0
@@ -52,3 +56,4 @@ shared_examples "No Errors" do
   end
   
 end
+

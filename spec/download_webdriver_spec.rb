@@ -32,11 +32,17 @@ require 'spec_helper'
 
 describe "DownloadWebdriver.java" do
   
-  before(:all) do  
+  before(:all) do
+    @wd_default_version = get_local_config["webdriver"]["version"]  
     @wd_version = "2.30.0"
     @wd_jar = "webdriver/#{@wd_version}.jar"
     FileUtils.rm @wd_jar if File.exist? @wd_jar
     @response = get_json "download_webdriver?version=#{@wd_version}"
+  end
+  
+  it "should default to config version if version is not provided" do
+    response = get_json "download_webdriver"
+    response["file"].first.should == "webdriver/#{@wd_default_version}.jar"
   end
   
   it "should have the downloaded version on file system" do
