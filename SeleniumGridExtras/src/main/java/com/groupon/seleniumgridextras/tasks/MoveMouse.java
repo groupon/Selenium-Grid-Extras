@@ -35,67 +35,79 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.sun.net.httpserver.HttpContext;
-import com.sun.net.httpserver.HttpServer;
 
-import java.net.InetSocketAddress;
-import java.util.LinkedList;
-import java.util.List;
+import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 
-public class SeleniumGridExtras {
+public class MoveMouse extends ExecuteOSTask {
 
-  public static void main(String[] args) throws Exception {
-
-    RuntimeConfig.loadConfig();
-
-    HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
-
-    List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getActivatedModules()) {
-      tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
-    }
-
-    System.out.println("=== Initializing Task Modules ===");
-    for (final ExecuteOSTask task : tasks) {
-
-      if (task.initialize()) {
-
-        HttpContext context = server.createContext(task.getEndpoint(), new HttpExecutor() {
-          @Override
-          String execute(Map params) {
-            System.out.println(
-                "End-point " + task.getEndpoint() + " was called with HTTP params " + params
-                    .toString());
-            return task.execute(params);
-          }
-        });
-
-        context.getFilters().add(new ParameterFilter());
-      }
-
-
-    }
-
-    System.out.println("=== API documentation ===");
-    System.out.println("/api - Located here");
-    HttpContext context = server.createContext("/api", new HttpExecutor() {
-      @Override
-      String execute(Map params) {
-        String foo = ApiDocumentation.getApiDocumentation();
-        System.out.println(foo);
-        return foo;
-      }
-    });
-
-    context.getFilters().add(new ParameterFilter());
-
-    server.setExecutor(null);
-    server.start();
-    System.out.println("Server has been started");
+  @Override
+  public String getEndpoint() {
+    return "/move_mouse";
   }
-}
 
+  @Override
+  public String getDescription() {
+    return "Moves the computers mouse to x and y location. (Default 0,0)";
+  }
+
+  @Override
+  public String execute(Map<String, String> parameter) {
+
+    int x = 0;
+    int y = 0;
+
+    if(!parameter.isEmpty() && parameter.containsKey("x") && parameter.containsKey("y")){
+      x = Integer.parseInt(parameter.get("x"));
+      y = Integer.parseInt(parameter.get("y"));
+    }
+
+    return moveMouse(x,y);
+  }
+
+
+  @Override
+  public String execute() {
+    return execute(new HashMap<String, String>());
+  }
+
+  @Override
+  public JsonResponseBuilder getJsonResponse() {
+
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+      jsonResponse.addKeyDescriptions("x", "Current X postion of the mouse");
+      jsonResponse.addKeyDescriptions("y", "Current Y postion of the mouse");
+    }
+    return jsonResponse;
+  }
+
+  @Override
+  public Map getAcceptedParams(){
+    Map<String, String> params = new HashMap();
+    params.put("x", "X - Coordinate");
+    params.put("y", "Y - Coordinate");
+    return params;
+  }
+
+  private String moveMouse(Integer x, Integer y) {
+    String message;
+    try {
+      Robot moveMouse = new Robot();
+      moveMouse.mouseMove(x, y);
+      getJsonResponse().addKeyValues("x", x);
+      getJsonResponse().addKeyValues("y", y);
+      return getJsonResponse().toString();
+    } catch (AWTException error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
+    }
+
+  }
+
+}

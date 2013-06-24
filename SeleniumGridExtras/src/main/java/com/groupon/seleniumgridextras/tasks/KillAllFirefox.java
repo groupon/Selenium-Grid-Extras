@@ -35,63 +35,27 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
+public class KillAllFirefox extends KillAllByName {
 
-import java.util.LinkedList;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-
-public class UpgradeWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  @Override
+  public String getEndpoint() {
+    return "/kill_firefox";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String getDescription() {
+    return "Executes os level kill command on all instance of Firefox";
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("firefox.exe");
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
-  }
-
-  @Test
-  public void testGetJsonResponse() throws Exception {
-
-  }
-
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+  @Override
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("[Ff]irefox");
   }
 }

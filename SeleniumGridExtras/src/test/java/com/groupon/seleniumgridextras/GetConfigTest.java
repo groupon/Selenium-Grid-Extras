@@ -37,13 +37,10 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.GetConfig;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 

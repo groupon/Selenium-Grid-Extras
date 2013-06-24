@@ -35,63 +35,68 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
+public class Teardown extends ExecuteOSTask {
 
-import static org.junit.Assert.assertEquals;
-
-public class UpgradeWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  @Override
+  public String getWindowsCommand() {
+    return "";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String getLinuxCommand() {
+    return "ls";
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public String getMacCommand(){
+    return "ls";
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
 
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
+  @Override
+  public String getEndpoint() {
+    return "/teardown";
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
+  @Override
+  public String getDescription() {
+    return "Calls several pre-defined tasks to act as teardown after build";
+  }
+
+
+  @Override
+  public boolean initialize() {
+    Boolean initialized = true;
+    System.out.println("Teardown Tasks");
+
+    for (String module : RuntimeConfig.getTeardownModules()) {
+      try {
+        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
+        System.out.println("    " + foo.getClass().getSimpleName());
+      } catch (ClassNotFoundException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (InstantiationException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      } catch (IllegalAccessException error) {
+        System.out.println(module + "   " + error);
+        initialized = false;
+      }
+    }
+
+    if (initialized.equals(false)) {
+      printInitilizedFailure();
+      System.exit(1);
+    }
+
+    return true;
 
   }
 
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
-  }
 }

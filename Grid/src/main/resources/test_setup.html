@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<title>Dima</title>
+<head>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        $('document').ready(function () {
+
+            $.getJSON('http://localhost:3000/screenshot?callback=?', '', function (res) {
+                $('#screenshot').append("<img height='700' width='900' src='data:image/png;base64,"
+                                                + res.image + "' />");
+            });
+
+            $.getJSON('http://localhost:3000/ps?callback=?', '',
+                      function (res) {
+                          $('#pids').append("<ul>");
+                          for (var i = 0; i < res.out.length; i++) {
+                              $('#pids').append("<li>" + res.out[i] + "</li>");
+                          }
+                          $('#pids').append("</ul>");
+
+                      });
+
+            $('#loading_gif').hide();
+
+        });
+
+    </script>
+
+    <style type="text/css">
+        .module {
+            border: 1px solid;
+            width: 900px;
+            height: 200px;
+            overflow: scroll;
+        }
+
+        #screenshot {
+            width: 900px;
+            height: 700px;
+        }
+    </style>
+
+</head>
+<body>
+PIDS
+<div id="pids" class="module"></div>
+Desktop
+<div id="screenshot" class="module"></div>
+
+<div id="loading_gif"><img src="ajax-loader.gif"></div>
+
+</body>
+</html>

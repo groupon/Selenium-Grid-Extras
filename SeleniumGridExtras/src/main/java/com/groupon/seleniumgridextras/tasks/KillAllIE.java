@@ -35,63 +35,36 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
+public class KillAllIE extends KillAllByName {
 
-import java.util.LinkedList;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-
-public class UpgradeWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  @Override
+  public String getEndpoint() {
+    return "/kill_ie";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String getDescription() {
+    return "Executes os level kill command on all instance of Internet Explorer";
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("iexplore.exe");
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
+  @Override
+  public String getLinuxCommand(String parameter) {
+    try{
+      getJsonResponse().addKeyValues("error", "Kill IE command is not implemented on Mac OSX and Linux");
+    return getJsonResponse().toString();
+    } catch (Exception error){
+      System.out.println(error);
+      return "";
+    }
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
 
-  }
-
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
-  }
 }

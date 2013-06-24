@@ -35,63 +35,67 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+public class GetConfig extends ExecuteOSTask {
 
-public class UpgradeWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  @Override
+  public String getEndpoint() {
+    return "/config";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String getDescription() {
+    return "Returns JSON view of the full configuration of the Selenium Grid Extras";
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public JsonResponseBuilder getJsonResponse() {
+
+    if (jsonResponse == null) {
+      jsonResponse = new JsonResponseBuilder();
+      jsonResponse.addKeyDescriptions("config_file", "Config that currently lives saved on file");
+      jsonResponse
+          .addKeyDescriptions("config_runtime", "Runtime config that currently set in memory");
+    }
+    return jsonResponse;
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
+  @Override
+  public String execute(String param) {
 
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
+    readConfigFile(RuntimeConfig.getConfigFile());
+
+    return getJsonResponse().toString();
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
+  private void readConfigFile(String filename) {
+    String returnString = "";
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader(filename));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        returnString = returnString + line;
+      }
+
+      getJsonResponse().addKeyValues("config_file", returnString, false);
+
+    } catch (FileNotFoundException error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+    } catch (IOException error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+    }
 
   }
 
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
-  }
 }

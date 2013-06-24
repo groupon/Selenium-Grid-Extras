@@ -49,22 +49,18 @@ import java.util.Map;
 abstract class HttpExecutor implements HttpHandler {
 
   public void handle(HttpExchange t) throws IOException {
-    Map<String, String> params = (Map)t.getAttribute("parameters");
+    Map params = (Map)t.getAttribute("parameters");
     String response = execute(params);
 
     if (params.containsKey("callback")){
       response = params.get("callback") + "(" + response + ")";
     }
-
     System.out.println(response);
 
     Headers h = t.getResponseHeaders();
     h.add("Content-Type", "application/json");
 
     t.sendResponseHeaders(200, response.length());
-
-
-
 
     OutputStream os = t.getResponseBody();
     os.write(response.getBytes());

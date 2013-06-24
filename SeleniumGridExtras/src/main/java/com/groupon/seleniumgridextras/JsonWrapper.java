@@ -113,40 +113,40 @@ public class JsonWrapper {
     webdriverConfig.put("version", "2.33.0");
     config.put("webdriver", webdriverConfig);
     //Activated Modules
-    activeModules.add("com.groupon.seleniumgridextras.DownloadWebdriver");
-    activeModules.add("com.groupon.seleniumgridextras.UpgradeWebdriver");
-    activeModules.add("com.groupon.seleniumgridextras.Setup");
-    activeModules.add("com.groupon.seleniumgridextras.Teardown");
-    activeModules.add("com.groupon.seleniumgridextras.MoveMouse");
-    activeModules.add("com.groupon.seleniumgridextras.RebootNode");
-    activeModules.add("com.groupon.seleniumgridextras.KillAllIE");
-    activeModules.add("com.groupon.seleniumgridextras.KillAllFirefox");
-    activeModules.add("com.groupon.seleniumgridextras.KillAllChrome");
-    activeModules.add("com.groupon.seleniumgridextras.GetProcesses");
-    activeModules.add("com.groupon.seleniumgridextras.KillPid");
-    activeModules.add("com.groupon.seleniumgridextras.Netstat");
-    activeModules.add("com.groupon.seleniumgridextras.Screenshot");
-    activeModules.add("com.groupon.seleniumgridextras.ExposeDirectory");
-    activeModules.add("com.groupon.seleniumgridextras.StartGrid");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.UpgradeWebdriver");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.Setup");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.Teardown");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.RebootNode");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.KillAllIE");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.KillAllFirefox");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.KillAllChrome");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.GetProcesses");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.KillPid");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.Netstat");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.Screenshot");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.StartGrid");
 //    activeModules.add("com.groupon.GetFile");
-    activeModules.add("com.groupon.seleniumgridextras.GetInfoForPort");
-    activeModules.add("com.groupon.seleniumgridextras.GridStatus");
-    activeModules.add("com.groupon.seleniumgridextras.KillAllByName");
-    activeModules.add("com.groupon.seleniumgridextras.StopGrid");
-    activeModules.add("com.groupon.seleniumgridextras.GetConfig");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.GetInfoForPort");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.GridStatus");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.KillAllByName");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.StopGrid");
+    activeModules.add("com.groupon.seleniumgridextras.tasks.GetConfig");
     config.put("activated_modules", activeModules);
     //Setup Task Modules
-    setupTask.add("com.groupon.seleniumgridextras.KillAllIE");
-    setupTask.add("com.groupon.seleniumgridextras.MoveMouse");
+    setupTask.add("com.groupon.seleniumgridextras.tasks.KillAllIE");
+    setupTask.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
     config.put("setup", setupTask);
     //Teardown Task Modules
-    teardownTask.add("com.groupon.seleniumgridextras.KillAllIE");
+    teardownTask.add("com.groupon.seleniumgridextras.tasks.KillAllIE");
     config.put("teardown", teardownTask);
 
     config.put("expose_directory", "shared");
 
     gridHubConfig.put("-role", "hub");
-    gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.SeleniumGridExtrasServlet");
+    gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
 
     gridNodeConfig.put("-host", "http://127.0.0.1");

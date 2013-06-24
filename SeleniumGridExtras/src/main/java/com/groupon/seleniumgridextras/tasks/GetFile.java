@@ -35,63 +35,35 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+public class GetFile extends ExecuteOSTask {
 
-public class UpgradeWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  @Override
+  public String getEndpoint() {
+    return "/get_file";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String getDescription() {
+    return "(Not yet implemented) - Retrives a file from shared Directory";
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public String execute(){
+    return "{\"exit\": 1, \"error\": \"Not yet implemented\"}";
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
+  @Override
+  public List<String> getDependencies(){
+    List<String> localDependencies = new LinkedList<String>();
 
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
-  }
-
-  @Test
-  public void testGetJsonResponse() throws Exception {
-
-  }
-
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
+    return localDependencies;
   }
 }

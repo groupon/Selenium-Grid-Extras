@@ -35,63 +35,61 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
+package com.groupon.seleniumgridextras.grid;
 
-import java.util.LinkedList;
-import java.util.List;
+import com.groupon.seleniumgridextras.RuntimeConfig;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
+import java.util.Map;
 
-public class UpgradeWebdriverTest {
+public class GridWrapper {
 
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  public static String getCurrentJarPath() {
+    return getWebdriverHome() + "/" + getWebdriverVersion()
+           + ".jar";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  public static String getWebdriverVersion() {
+    return RuntimeConfig.getWebdriverVersion();
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  public static String getWebdriverHome() {
+    return RuntimeConfig.getWebdriverParentDir();
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
+  public static String getStartCommand(String role) {
+    return "java -jar " + getCurrentJarPath() + " " + getFormattedConfig(role);
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
-
+  public static String getGridConfigPortForRole(String role) {
+    Map<String, String> config = getGridConfig(role);
+    return config.get("-port");
   }
 
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+  public static Map<String, String> getGridConfig(String role) {
+    Map grid = RuntimeConfig.getGridConfig();
+    Map config = (HashMap<String, String>) grid.get(role);
+
+    return config;
   }
+
+  public static String getDefaultRole() {
+    Map grid = RuntimeConfig.getGridConfig();
+    return grid.get("default_role").toString();
+  }
+
+  private static String getFormattedConfig(String role) {
+    Map<String, String> config = getGridConfig(role);
+    StringBuilder commandLineParam = new StringBuilder();
+
+    for (Map.Entry<String, String> entry : config.entrySet()) {
+      commandLineParam.append(" " + entry.getKey());
+      commandLineParam.append(" " + entry.getValue());
+    }
+
+    return commandLineParam.toString();
+  }
+
+
 }

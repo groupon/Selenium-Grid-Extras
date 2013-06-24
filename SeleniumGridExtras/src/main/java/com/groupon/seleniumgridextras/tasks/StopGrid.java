@@ -35,63 +35,61 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
 
+package com.groupon.seleniumgridextras.tasks;
+
+
+import com.groupon.seleniumgridextras.grid.GridWrapper;
+import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+public class StopGrid extends ExecuteOSTask {
 
-public class UpgradeWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+  @Override
+  public String getEndpoint() {
+    return "/stop_grid";
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String getDescription() {
+    return "Stops grid or node process";
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public String execute() {
+    return execute(GridWrapper.getDefaultRole());
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
+  @Override
+  public String execute(String role) {
+    try {
+      String servicePort = GridWrapper.getGridConfigPortForRole(role);
+      Map<String, String> processInfo = PortChecker.getParsedPortInfo(servicePort);
+      ExecuteOSTask killer = new KillPid();
+      return killer.execute(processInfo.get("pid"));
+    } catch (Exception error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
+    }
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
-
+  @Override
+  public String execute(Map<String, String> parameter) {
+    if (parameter.isEmpty() || !parameter.containsKey("role")) {
+      return execute();
+    } else {
+      return execute(parameter.get("role").toString());
+    }
   }
 
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+  @Override
+  public Map getAcceptedParams() {
+    Map<String, String> params = new HashMap();
+    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    return params;
   }
+
 }

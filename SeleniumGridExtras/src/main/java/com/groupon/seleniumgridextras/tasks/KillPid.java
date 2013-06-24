@@ -35,63 +35,67 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-import org.junit.Before;
-import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+public class KillPid extends ExecuteOSTask {
 
-public class UpgradeWebdriverTest {
 
-  public ExecuteOSTask task;
+  @Override
+  public String execute() {
 
-  @Before
-  public void setUp() throws Exception {
-    task = new UpgradeWebdriver();
+    getJsonResponse().addKeyValues("error", "ID is a required parameter");
+    return getJsonResponse().toString();
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+  @Override
+  public String execute(Map<String, String> parameter) {
+
+    if (parameter.isEmpty() || !parameter.containsKey("id")) {
+
+      return execute();
+    } else {
+      String pid = parameter.get("id").toString();
+      if (!OSChecker.isWindows() && parameter.containsKey("signal")) {
+        pid = "-" + parameter.get("signal").toString() + " " + pid;
+      }
+
+      return execute(pid);
+    }
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart", task.getDescription());
+  @Override
+  public String getEndpoint() {
+    return "/kill_pid";
   }
 
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-//
-//  @Test
-//  public void testExecute() throws Exception {
-//
-//  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
+  @Override
+  public String getDescription() {
+    return "Kills a given process id";
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
-
+  @Override
+  public String getWindowsCommand(String parameter) {
+    return "taskkill -F -IM " + parameter;
   }
 
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+  @Override
+  public String getLinuxCommand(String parameter) {
+    return "kill " + parameter;
+  }
+
+
+
+  @Override
+  public Map getAcceptedParams() {
+    Map<String, String> params = new HashMap();
+    params.put("id", "(Required) -  Process ID (PID) to terminate.");
+    params.put("signal", "(unix only) - Signal Term number such as 1, 2...9");
+    return params;
   }
 }
