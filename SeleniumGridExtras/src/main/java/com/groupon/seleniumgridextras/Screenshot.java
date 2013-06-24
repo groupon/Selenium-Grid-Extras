@@ -119,7 +119,6 @@ public class Screenshot extends ExecuteOSTask {
           .addKeyDescriptions("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
 
       jsonResponse.addKeyValues("file_type", "PNG");
-      jsonResponse.addKeyValues("exit_code", 1);
     }
     return jsonResponse;
 

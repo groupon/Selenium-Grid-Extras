@@ -78,7 +78,7 @@ public class ScreenshotTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":1,\"error\":[],\"file\":[\"\"],\"image\":[\"\"],\"file_type\":[\"PNG\"],\"out\":[]}",
+        "{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"image\":[\"\"],\"file_type\":[\"PNG\"],\"out\":[]}",
         task.getJsonResponse().toString());
   }
 
