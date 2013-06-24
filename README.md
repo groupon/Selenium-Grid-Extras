@@ -1,108 +1,68 @@
 Selenium-Grid-Extras
 ====================
 
-This project is designed to assist with the management of Selenium Grid Node farm. It provides an API end point for tests to programmatically control certain aspects of the node.
+This project is designed to help you manage your Selenium Grid installation by giving you control over the Grid Hub machine and Grid Node machine. This is very useful in cases when Internet Explorer Driver crashes, and you need to kill the iedriver.exe so that next test can start and not fail.
 
-Getting started
+Currently we do not have a stable release, so you will have to compile from source to run on your nodes.
 
-1. Download selenium-grid-extras-X.X.X.jar file, and run
-```shell
-java -cp selenium-grid-extras-X.X.X.jar com.groupon.seleniumgridextras.SeleniumGridExtras
+Setup Instructions
+==================
+
+```bash
+git clone https://github.com/groupon/Selenium-Grid-Extras.git
+cd Selenium-Grid-Extras
+mvn package
 ```
 
-2. scripts/start_grid.sh - Starts an instance of the selenium Grid locally
+After all the tests are finished running and all dependencies are downloaded, you will find 2 JAR files in SeleniumGridExtras/target/
+* SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
+* SeleniumGridExtras-X.X.X-SNAPSHOT.jar
 
-3. scripts/start_grid_node.sh - Starts and attaches a node to local grid
-Note: scripts/start_grid_node.sh is hard coded to http://localhost:4444, modify the HUB_HOST variable to fit your needs
+The JAR file with "-jar-with-dependencies.jar" extension has all of the dependencies pre-packed into itself. You can use it but it's larger in size. If you want to add all dependencies to CLASSPATH yourself, you can use the smaller JAR
 
-4. Node's api should be here http://localhost:3000/api
+Move the JAR file to desired location and run command
 
-5. Grid integration will be here http://localhost:4444/grid/admin/SeleniumGridExtrasServlet
-
-
-Configuring
------------
-
-All of the configurations are stored in selenium_grid_extras_config.json file.
-
-* activated_modules - A list of modules which will be loaded into memory at run time
-* deactivated_modules - List of modules that will not be loaded
-* setup - List of modules to execute before each test starts to run
-* teardown - List of modules to execute after the tests are complete
-
-
-Adding new Modules
-------------------
-1. Create class which extends ExecuteOSTask
-
-```java
-public class GetProcesses extends ExecuteOSTask{
-
-}
+```bash
+java -jar SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
 ```
 
-2. Register a new api endpoint for other people to be able to reach you and a short description of what module does
-```java
-    @Override
-    public String getEndpoint() {
-        return "/ps";
-    }
+On first run you will be asked the Node's default role (hub|node), what version of WebDriver JAR to use and URL to the Grid Hub node.
 
-    @Override
-    public String getDescription() {
-      return "Gets a list of currently running processes";
-    }
-```
+After the information is provided, the application will download the desired version of webdriver to "webdriver/(version).jar" and will auto configure version number and url for the grid hub.
 
-3. Document what your end point will return on success and failure
-```java
-@Override
-  public Map getResponseDescription() {
-    Map response = new HashMap();
-    response.put("exit_code",
-                 "0 for success, 1 for failure");
-    response.put("out", "Array of PIDS and descriptions");
-    response.put("error", "Error recived on failure");
-    return response;
-  }
-```
+Once the service is running, you can hit http://localhost:3000/api for the list of api commands available on a given node.
 
-4. If you have a CLI command that will execute your task, set them up
-```java
-  @Override
-  public String getWindowsCommand() {
-    return "tasklist";
-  }
+Starting Grid
+=============
 
-  @Override
-  public String getLinuxCommand() {
-    return "ps x";
-  }
-```
-Note: getMacCommand() by default points to getLinuxCommand(), you should use it if some CLI command is just slightly different on Mac than on Linux
-Example: GetProcess.java
+To start a Grid Hub on a give computer, hit this URL http://localhost:3000/start_grid?role=hub
+To start a Grid Node on a given computer, hit this URL http://localhost:3000/start_grid?role=node
+You can check the status of HUB/Node ona given computer by hitting http://localhost:3000/grid_status
+
+Other Useful Commands
+=====================
+(This is an incomplete list, please hit /api for more detailed breakdown)
+
+/upgrade_webdriver - Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart
+/move_mouse - Moves the computers mouse to x and y location. (Default 0,0)
+/kill_ie - Executes os level kill command on all instance of Internet Explorer
+/ps - Gets a list of currently running processes
+/kill_pid - Kills a given process id
+/netstat - Returns a system call for all ports. Use /port_info to get parsed details
+/port_info - Returns parsed information on a PID occupying a given port
+/stop_grid - Stops grid or node process
+/screenshot - Take a full OS screen Screen Shot of the node
 
 
-5. If you want more freedom than just CLI commands, overwrite the execute() method
-```java
-@Override
-  public String execute() {
-    return doStuff();
-  }
-```
-Example: MoveMouse.java
+Web GUI
+=======
+
+We are currently working on providing a WEB GUI to allow you to get information about the nodes and control them.
 
 
+Contributing
+============
 
-TODO:
-* Add ability to add custom items to RuntimeConfig from extension points
-* Implement Setup/Teardown modules
-* Video recording of the tests
-* Tighter integration with Grid servletes
-* VM spin up / spin-down
-* Make the Selenium-Grid-Extras launch the Selenium Node Server so there is only 1 server to start for user
-* Give ability for the node to send files to some network location (Video recordings, etc...)
-* Give ability for the node to receive files from the test to be used in the test, such as uploading
+For This project, add functionality, make sure all tests pass, send pull request.
 
-
-
+Note: This product exposes your machine to the whole network, anyone on the network will be able to perform OS level task by simply hitting an HTTP url. There are no security measures at the moment, and at the moment no plans to add any security. You have been warned!
