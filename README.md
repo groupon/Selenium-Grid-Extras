@@ -3,16 +3,28 @@ Selenium-Grid-Extras
 
 This project is designed to help you manage your Selenium Grid installation by giving you control over the Grid Hub machine and Grid Node machine. This is very useful in cases when Internet Explorer Driver crashes, and you need to kill the iedriver.exe so that next test can start and not fail.
 
-Currently we do not have a stable release, so you will have to compile from source to run on your nodes.
 
 Setup Instructions
 ==================
+
+Compiled Jars
+-------------
+The current version of compiled jars lives in the current directory at the root of directory
+[Grid Extras JAR With Dependencies](/current/SeleniumGridExtras-1.1.2-SNAPSHOT-jar-with-dependencies.jar)
+[Grid Extras JAR Without Dependencies](/current/SeleniumGridExtras-1.1.2-SNAPSHOT.jar)
+
+
+Compile from source
+-------------------
 
 ```bash
 git clone https://github.com/groupon/Selenium-Grid-Extras.git
 cd Selenium-Grid-Extras
 mvn package
 ```
+
+Starting Serivces
+-------------------
 
 After all the tests are finished running and all dependencies are downloaded, you will find 2 JAR files in SeleniumGridExtras/target/
 * SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
