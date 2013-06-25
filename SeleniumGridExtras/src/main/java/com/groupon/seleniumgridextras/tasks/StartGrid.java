@@ -42,8 +42,10 @@ import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,8 +81,8 @@ public class StartGrid extends ExecuteOSTask {
       if (!occupiedPid.isEmpty()) {
         System.out.println(servicePort + " port is busy, won't try to start a service");
         getJsonResponse().addKeyValues("error", "Port: " + servicePort
-                                                + " is occupied by some other process: "
-                                                + occupiedPid);
+            + " is occupied by some other process: "
+            + occupiedPid);
 
         return getJsonResponse().toString();
       }
@@ -89,15 +91,15 @@ public class StartGrid extends ExecuteOSTask {
 
           command =
           OSChecker.isWindows() ? getWindowsCommand(role)
-                                : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
+              : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-      String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
+      String serviceStartResponse = ExecuteCommand.execRuntime(command, false);
 
       Map result = JsonWrapper.parseJson(serviceStartResponse);
 
       if (result.get("exit_code").toString().equals("0")) {
         getJsonResponse().addKeyValues("out",
-                                       "Service start command sent, might take as long as 10 seconds to spin up");
+            "Service start command sent, might take as long as 10 seconds to spin up");
         return getJsonResponse().toString();
       } else {
         System.out.println("Something didn't go right in launching service");
@@ -107,8 +109,6 @@ public class StartGrid extends ExecuteOSTask {
       getJsonResponse().addKeyValues("error", error.toString());
       return getJsonResponse().toString();
     }
-
-
   }
 
   @Override
@@ -125,5 +125,21 @@ public class StartGrid extends ExecuteOSTask {
     return GridWrapper.getStartCommand(role) + " &";
   }
 
+  @Override
+  public String getWindowsCommand(String role) {
+    try {
+      String pathToBatch = "start_" + role + ".bat";
+      File f = new File(pathToBatch);
+      FileUtils.writeStringToFile(f, getWindowsFullCommand(role));
+      return "start 'Selenium Grid " + role + "' /max /wait " + pathToBatch;
+    } catch (Exception error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return "";
+    }
+  }
+
+  public String getWindowsFullCommand(String role) {
+    return GridWrapper.getWindowsStartCommand(role);
+  }
 
 }

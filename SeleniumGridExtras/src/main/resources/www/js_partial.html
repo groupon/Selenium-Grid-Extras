@@ -15,7 +15,7 @@
             $('#node' + hostID).append("<div class='text-center' id='apilist"+ hostID +"'></div>");
 
             $.each(obj.endpoints, function(i, obj){
-                $('#apilist'+ hostID).append("<a href='" + hostUrl + obj.endpoint + "' class='btn btn-mini " + obj.css + "' target='new'>" + obj.button_text + "</a> ");
+                $('#apilist'+ hostID).append("<a href='" + hostUrl + obj.endpoint + "' class='btn btn-mini " + obj.css + "' style='margin-bottom: 4px;' target='new'>" + obj.button_text + "</a> ");
             });
 
             var screenShotUrl = hostUrl + '/screenshot?callback=?';
