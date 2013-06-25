@@ -41,7 +41,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -168,7 +168,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public boolean initialize() {
 
     try {
-      File webdriverJar = new File(GridWrapper.getCurrentJarPath());
+      File webdriverJar = new File(GridWrapper.getCurrentWebDriverJarPath());
       File webdriverHome = new File(RuntimeConfig.getWebdriverParentDir());
 
       if (!webdriverHome.exists()) {

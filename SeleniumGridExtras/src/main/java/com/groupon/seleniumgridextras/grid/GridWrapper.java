@@ -38,15 +38,15 @@
 
 package com.groupon.seleniumgridextras.grid;
 
+import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.SeleniumGridExtras;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GridWrapper {
 
-  public static String getCurrentJarPath() {
+  public static String getCurrentWebDriverJarPath() {
     return getWebdriverHome() + "/" + getWebdriverVersion()
            + ".jar";
   }
@@ -55,8 +55,8 @@ public class GridWrapper {
     return RuntimeConfig.getWebdriverVersion();
   }
 
-  public static String getGridClassPath() {
-    return SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  public static String getSeleniumGridExtrasPath() {
+    return RuntimeConfig.getSeleniungGridExtrasJarPath();
   }
 
   public static String getWebdriverHome() {
@@ -64,10 +64,29 @@ public class GridWrapper {
   }
 
   public static String getStartCommand(String role) {
-    return "java -cp " + getGridClassPath() + ":" + getCurrentJarPath() + " "
-           + " org.openqa.grid.selenium.GridLauncher " + getFormattedConfig(
-        role);
+    return getOsSpecificStartCommand(role, false);
   }
+
+  public static String getWindowsStartCommand(String role) {
+    return getOsSpecificStartCommand(role, true);
+  }
+
+  private static String getOsSpecificStartCommand(String role, Boolean windows) {
+    String command = "java -cp ";
+
+    command = command + getSeleniumGridExtrasPath() + ":" + getCurrentWebDriverJarPath() + " ";
+
+    if (windows) {
+      command = OSChecker.toWindowsPath(command);
+    }
+
+    command = command + " org.openqa.grid.selenium.GridLauncher ";
+
+    command = command + getFormattedConfig(role);
+
+    return command.toString();
+  }
+
 
   public static String getGridConfigPortForRole(String role) {
     Map<String, String> config = getGridConfig(role);

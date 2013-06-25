@@ -128,6 +128,10 @@ public class RuntimeConfig {
     }
   }
 
+  public static String getSeleniungGridExtrasJarPath(){
+    return SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  }
+
 
   public static String getWebdriverParentDir() {
     return RuntimeConfig.getWebdriverConfig().get("directory").toString();

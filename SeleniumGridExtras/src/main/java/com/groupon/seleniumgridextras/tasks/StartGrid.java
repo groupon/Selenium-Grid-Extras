@@ -42,14 +42,14 @@ import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
-
-  public boolean waitToFinishTask = false;
 
   @Override
   public String getEndpoint() {
@@ -87,7 +87,7 @@ public class StartGrid extends ExecuteOSTask {
           OSChecker.isWindows() ? getWindowsCommand(role)
                                 : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-      String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
+      String serviceStartResponse = ExecuteCommand.execRuntime(command, false);
 
       Map result = JsonWrapper.parseJson(serviceStartResponse);
 
@@ -128,5 +128,21 @@ public class StartGrid extends ExecuteOSTask {
     return GridWrapper.getStartCommand(role) + " &";
   }
 
+  @Override
+  public String getWindowsCommand(String role) {
+    try {
+      String pathToBatch = "start_" + role + ".bat";
+      File f = new File(pathToBatch);
+      FileUtils.writeStringToFile(f, getWindowsFullCommand(role));
+      return "start 'Selenium Grid " + role + "' /max /wait " + pathToBatch;
+    } catch (Exception error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return "";
+    }
+  }
+
+  public String getWindowsFullCommand(String role) {
+    return GridWrapper.getWindowsStartCommand(role);
+  }
 
 }
