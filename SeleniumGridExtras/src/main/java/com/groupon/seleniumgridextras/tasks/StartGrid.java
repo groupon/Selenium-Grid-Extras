@@ -37,13 +37,18 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.DefaultConfig;
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.FirstTimeRunConfig;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,6 +129,30 @@ public class StartGrid extends ExecuteOSTask {
   @Override
   public String getLinuxCommand(String role) {
     return GridWrapper.getStartCommand(role) + " &";
+  }
+
+  @Override
+  public String getWindowsCommand(String role) {
+    String batchFile = "start_" + role + ".bat";
+
+    writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
+
+    return "start 'Selenium Grid " + role + "' /max /wait " + batchFile;
+  }
+
+  private void writeBatchFile(String filename, String input) {
+
+    File file = new File(filename);
+
+    try {
+      FileUtils.writeStringToFile(file, input);
+    } catch (Exception error) {
+      System.out
+          .println("Could not write default config file, exit with error " + error.toString());
+
+    }
+
+
   }
 
 
