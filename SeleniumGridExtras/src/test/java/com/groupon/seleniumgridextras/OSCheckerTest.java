@@ -48,4 +48,15 @@ public class OSCheckerTest {
   public void testGetOSName() throws Exception {
     assertEquals(OSChecker.getOSName(), System.getProperty("os.name"));
   }
+
+  @Test
+  public void testToWindowsPathReplacesColons() throws Exception{
+    assertEquals("foo;bar", OSChecker.toWindowsPath("foo:bar"));
+  }
+
+  @Test
+  public void testToWindowsPathReplacesForwardSlashes() throws Exception{
+    assertEquals("foo\\bar", OSChecker.toWindowsPath("foo/bar"));
+    assertEquals("foo\\bar\\foo", OSChecker.toWindowsPath("foo/bar/foo"));
+  }
 }
