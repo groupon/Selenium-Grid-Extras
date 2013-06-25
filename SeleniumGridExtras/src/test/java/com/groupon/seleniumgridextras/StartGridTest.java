@@ -133,7 +133,7 @@ public class StartGridTest {
 
   @Test
   public void testGetWindowsHubCommand() throws Exception {
-    String expectedCommand = "java -cp replaced\\for\\now\\;webdriver\\2.33.0.jar  " +
+    String expectedCommand = "java -cp replaced-for-now;webdriver\\2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
                              "-host http://127.0.0.1 -role hub -servlets " +
                              "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet";
@@ -147,16 +147,14 @@ public class StartGridTest {
     String modifiedActual = readBatchFile(batch.getPath());
 
     modifiedActual =
-        modifiedActual
-            .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasJarPath()),
-                     "replaced\\for\\now\\");
+        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasJarPath(), "replaced-for-now");
 
     assertEquals(expectedCommand, modifiedActual);
   }
 
   @Test
   public void testGetWindowsNodeCommand() throws Exception {
-    String expectedCommand = "java -cp replaced\\for\\now\\;webdriver\\2.33.0.jar  " +
+    String expectedCommand = "java -cp replaced-for-now;webdriver\\2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 5555 " +
                              "-hub http://localhost:4444 -host http://127.0.0.1 -role wd";
 
@@ -168,9 +166,7 @@ public class StartGridTest {
 
     String modifiedActual = readBatchFile(batch.getPath());
     modifiedActual =
-        modifiedActual
-            .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasJarPath()),
-                     "replaced\\for\\now\\");
+        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasJarPath(), "replaced-for-now");
 
     assertEquals(expectedCommand, modifiedActual);
 
