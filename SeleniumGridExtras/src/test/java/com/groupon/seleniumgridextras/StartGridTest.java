@@ -43,6 +43,8 @@ import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 import com.groupon.seleniumgridextras.tasks.*;
 import com.groupon.seleniumgridextras.tasks.MoveMouse;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -65,6 +67,19 @@ public class StartGridTest {
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     task = new com.groupon.seleniumgridextras.tasks.StartGrid();
+  }
+
+  @After
+  public void teardown() throws Exception {
+    File file = new File("start_hub.bat");
+    if (file.exists()) {
+      FileUtils.forceDelete(file);
+    }
+
+    File file2 = new File("start_node.bat");
+    if (file2.exists()) {
+      FileUtils.forceDelete(file2);
+    }
   }
 
 
@@ -125,7 +140,6 @@ public class StartGridTest {
 
     assertEquals("start 'Selenium Grid hub' /max /wait start_hub.bat",
                  task.getWindowsCommand("hub"));
-
 
     File batch = new File("start_hub.bat");
     assertEquals(true, batch.exists());
