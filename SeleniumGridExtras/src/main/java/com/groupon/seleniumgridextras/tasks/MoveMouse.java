@@ -46,14 +46,19 @@ import java.util.Map;
 
 public class MoveMouse extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/move_mouse";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Moves the computers mouse to x and y location. (Default 0,0)";
+  public MoveMouse() {
+    setEndpoint("/move_mouse");
+    setDescription("Moves the computers mouse to x and y location. (Default 0,0)");
+    Map<String, String> params = new HashMap();
+    params.put("x", "X - Coordinate");
+    params.put("y", "Y - Coordinate");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-succes");
+    setButtonText("Move mouse");
+    setEnabledInGui(true);
   }
 
   @Override
@@ -85,14 +90,6 @@ public class MoveMouse extends ExecuteOSTask {
       jsonResponse.addKeyDescriptions("y", "Current Y postion of the mouse");
     }
     return jsonResponse;
-  }
-
-  @Override
-  public Map getAcceptedParams(){
-    Map<String, String> params = new HashMap();
-    params.put("x", "X - Coordinate");
-    params.put("y", "Y - Coordinate");
-    return params;
   }
 
   private String moveMouse(Integer x, Integer y) {

@@ -1,21 +1,34 @@
 package com.groupon.seleniumgridextras.grid;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicHttpRequest;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.JSONArray;
 import org.openqa.grid.internal.ProxySet;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.RemoteProxy;
+import org.openqa.grid.internal.TestSlot;
 import org.openqa.grid.web.servlet.RegistryBasedServlet;
-import sun.misc.BASE64Encoder;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
 
@@ -30,6 +43,17 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     super(null);
   }
 
+  private static String extractMessage(HttpResponse resp) throws IOException, JSONException {
+    BufferedReader rd = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
+    StringBuilder s = new StringBuilder();
+    String line;
+    while ((line = rd.readLine()) != null) {
+      s.append(line);
+    }
+    rd.close();
+    return s.toString();
+  }
+
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -38,7 +62,11 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
 
-    response.getWriter().write(getHtml());
+    try {
+      response.getWriter().write(getHtml());
+    } catch (JSONException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
     response.getWriter().close();
 
   }
@@ -55,56 +83,97 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     return s;
   }
 
-//  private void getApi(RemoteProxy proxy) {
-//    System.out.println(proxy.getRemoteHost());
-//    System.out.println("http://" + proxy.getRemoteHost().getHost() + ":3000/api");
-//    String json = getJSON("http://" + proxy.getRemoteHost().getHost() + ":3000/api", 1000);
-//    JSONArray api = (JSONArray) JSONValue.parse(json);
-//    for (Object entry : api){
-//      System.out.println(entry.toString());
-//    }
-//    //JSONArray array = (JSONArray) api;
-//    System.out.println(api.size() + ", " + api.toString());
-//  }
-//
-//  public String getJSON(String url, int timeout) {
-//    try {
-//      URL u = new URL(url);
-//      HttpURLConnection c = (HttpURLConnection) u.openConnection();
-//      c.setRequestMethod("GET");
-//      c.setRequestProperty("Content-length", "0");
-//      c.setUseCaches(false);
-//      c.setAllowUserInteraction(false);
-//      c.setConnectTimeout(timeout);
-//      c.setReadTimeout(timeout);
-//      c.connect();
-//      int status = c.getResponseCode();
-//
-//      switch (status) {
-//        case 200:
-//        case 201:
-//          BufferedReader br = new BufferedReader(new InputStreamReader(c.getInputStream()));
-//          StringBuilder sb = new StringBuilder();
-//          String line;
-//          while ((line = br.readLine()) != null) {
-//            sb.append(line + "\n");
-//          }
-//          br.close();
-//          return sb.toString();
-//      }
-//
-//    } catch (MalformedURLException ex) {
-//      System.out.println(ex);
-//    } catch (IOException ex) {
-//      System.out.println(ex);
-//    }
-//    return null;
-//  }
+  private List<ExtrasEndPoint> getAvailableEndpoints(RemoteProxy proxy) throws IOException, JSONException {
+    URL apiURL = new URL("http://" + proxy.getRemoteHost().getHost() + ":3000/api");
+    String json = getJSON(apiURL);
+    if (json == "")
+      return new ArrayList<ExtrasEndPoint>();
+    Gson gson = new Gson();
+    Type listType = new TypeToken<List<ExtrasEndPoint>>() {
+    }.getType();
+    List<ExtrasEndPoint> endpoints = gson.fromJson(json, listType);
+    return endpoints;
+  }
 
-  protected String getHtml() {
+  private String getJSON(URL url) throws IOException, JSONException {
+    try {
+      HttpClient client = new DefaultHttpClient();
+
+      BasicHttpRequest r = new BasicHttpRequest("GET", url.toString());
+
+      HttpResponse response = client.execute(new HttpHost(url.getHost(), url.getPort()), r);
+      return extractMessage(response);
+    } catch (Exception e) {
+      System.out.println("Problem loading from : " + url.toString() + ", error:" + e.toString());
+      return "";
+    }
+  }
+
+  protected String getHtml() throws IOException, JSONException {
 
     StringBuilder html = new StringBuilder();
-    String spinnerBase64 = "R0lGODlhIAAgAPMAAP///wAAAMbGxoSEhLa2tpqamjY2NlZWVtjY2OTk5Ly8vB4eHgQEBAAAAAAAAAAAACH/C05FVFNDQVB" +
+    String spinnerBase64 = getSpinnerBase64String();
+
+    html.append(readFile("www/body_partial.html"));
+
+    ProxySet proxies = getRegistry().getAllProxies();
+
+
+    html.append("<script>");
+    html.append("var spinnerBase64 ='" + spinnerBase64 + "';");
+    html.append("var nodes = new Array();");
+
+    JSONArray nodes = new JSONArray();
+    for (RemoteProxy p : proxies) {
+      JSONObject node = new JSONObject();
+      node.put("host", p.getRemoteHost().getHost());
+      node.put("platform", p.getOriginalRegistrationRequest().getCapabilities().get(0).getPlatform());
+      node.put("status", getTestSlots(p));
+
+
+      List<ExtrasEndPoint> availableEndpoints = getAvailableEndpoints(p);
+      JSONArray endpoints = new JSONArray();
+      for (ExtrasEndPoint e : availableEndpoints) {
+        if(!e.getEnabledInGui())
+          continue;
+        JSONObject endpoint = new JSONObject();
+        endpoint.put("endpoint", e.getEndpoint());
+        endpoint.put("css", e.getCssClass());
+        endpoint.put("button_text", e.getButtonText());
+        endpoint.put("endpoint", e.getEndpoint());
+        endpoint.put("description", e.getDescription());
+        endpoints.add(endpoint);
+      }
+      if (!endpoints.isEmpty()) {
+        node.put("endpoints", endpoints);
+        nodes.add(node);
+        html.append("nodes.push(\"" + p.getRemoteHost().getHost() + "\");");
+      }
+    }
+    System.out.println(nodes.toString());
+    html.append("var nodesJson = '" + nodes.toString() + "';");
+    html.append("</script>");
+    html.append(readFile("www/css_partial.html"));
+    html.append(readFile("www/js_partial.html"));
+
+    return html.toString();
+  }
+
+  private String getTestSlots(RemoteProxy p) {
+    int busy = 0;
+    int free = 0;
+    for (TestSlot slot : p.getTestSlots()) {
+      if (slot.getSession() == null) {
+        free++;
+      } else {
+        busy++;
+      }
+    }
+    return "free: " + free + ", busy: " + busy;
+  }
+
+  private String getSpinnerBase64String() {
+    return "R0lGODlhIAAgAPMAAP///wAAAMbGxoSEhLa2tpqamjY2NlZWVtjY2OTk5Ly8vB4eHgQEBAAAAAAAAAAAACH/C05FVFNDQVB" +
         "FMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAIAAgAAAE5xDISWlhperN52JLhSSdRgwVo1ICQZRUsiwHpT" +
         "JT4iowNS8vyW2icCF6k8HMMBkCEDskxTBDAZwuAkkqIfxIQyhBQBFvAQSDITM5VDW6XNE4KagNh6Bgwe60smQUB3d4Rz1ZBApnFASDd0hihh12BkE9k" +
         "jAJVlycXIg7CQIFA6SlnJ87paqbSKiKoqusnbMdmDC2tXQlkUhziYtyWTxIfy6BE8WJt5YJvpJivxNaGmLHT0VnOgSYf0dZXS7APdpB309RnHOG5gDq" +
@@ -141,30 +210,6 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
         "ABPAQyElpUqnqzaciSoVkXVUMFaFSwlpOCcMYlErAavhOMnNLNo8KsZsMZItJEIDIFSkLGQoQTNhIsFehRww2CQLKF0tYGKYSg+ygsZIuNqJksKgbfgIGepN" +
         "o2cIUB3V1B3IvNiBYNQaDSTtfhhx0CwVPI0UJe0+bm4g5VgcGoqOcnjmjqDSdnhgEoamcsZuXO1aWQy8KAwOAuTYYGwi7w5h+Kr0SJ8MFihpNbx+4Erq7BYB" +
         "uzsdiH1jCAzoSfl0rVirNbRXlBBlLX+BP0XJLAPGzTkAuAOqb0WT5AH7OcdCm5B8TgRwSRKIHQtaLCwg1RAAAOwAAAAAAAAAAAA==";
-
-    html.append(readFile("www/body_partial.html"));
-
-    ProxySet proxies = getRegistry().getAllProxies();
-
-
-    html.append("<script>");
-    html.append("var spinnerBase64 ='" + spinnerBase64 + "';");
-    html.append("var nodes = new Array();");
-
-    for (RemoteProxy p : proxies) {
-//      getApi(p);
-      html.append("nodes.push(\"" + p.getRemoteHost().getHost() + "\");");
-    }
-
-    html.append("</script>");
-
-    html.append(readFile("www/css_partial.html"));
-    html.append(readFile("www/js_partial.html"));
-
-
-    return html.toString();
-
-
   }
 
 }

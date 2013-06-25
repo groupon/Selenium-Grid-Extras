@@ -41,18 +41,22 @@ package com.groupon.seleniumgridextras.tasks;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Netstat extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/netstat";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Returns a system call for all ports. Use /port_info to get parsed details";
+  public Netstat() {
+    setEndpoint("/netstat");
+    setDescription("Returns a system call for all ports. Use /port_info to get parsed details");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-info");
+    setButtonText("netstat");
+    setEnabledInGui(true);
   }
 
   @Override

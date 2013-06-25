@@ -49,16 +49,20 @@ import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
 
-  public boolean waitToFinishTask = false;
+  public StartGrid() {
+    waitToFinishTask = false;
 
-  @Override
-  public String getEndpoint() {
-    return "/start_grid";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Starts an instance of Selenium Grid Hub or Node";
+    setEndpoint("/start_grid");
+    setDescription("Starts an instance of Selenium Grid Hub or Node");
+    Map<String, String> params = new HashMap();
+    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-info");
+    setButtonText("StartGrid");
+    setEnabledInGui(false);
   }
 
   @Override
@@ -114,13 +118,6 @@ public class StartGrid extends ExecuteOSTask {
     } else {
       return execute(parameter.get("role").toString());
     }
-  }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("role", "hub|node - defaults to 'default_role' param in config file");
-    return params;
   }
 
   @Override

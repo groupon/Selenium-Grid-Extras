@@ -38,17 +38,22 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GetProcesses extends ExecuteOSTask {
-  @Override
-  public String getEndpoint() {
-    return "/ps";
-  }
 
-  @Override
-  public String getDescription() {
-    return "Gets a list of currently running processes";
+  public GetProcesses(){
+    setEndpoint("/ps");
+    setDescription("Gets a list of currently running processes");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("Get Processes");
+    setEnabledInGui(true);
   }
 
   @Override
