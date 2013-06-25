@@ -63,8 +63,13 @@ public class DefaultConfig {
     loadGridConfig();
     loadSharedDir();
     loadWebDriverInfo();
+    loadConfigVersion();
 
     return defaultConfig;
+  }
+
+  public static void loadConfigVersion(){
+    defaultConfig.put("config_version", "1.0");
   }
 
   private static void loadSetupConfig() {
