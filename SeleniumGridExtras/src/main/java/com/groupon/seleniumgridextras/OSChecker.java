@@ -53,4 +53,11 @@ public class OSChecker {
     return System.getProperty("os.name");
   }
 
+  public static String toWindowsPath(String path){
+    String windowsPath = path;
+    windowsPath = windowsPath.replaceAll("[:]", ";");
+    windowsPath = windowsPath.replaceAll("[\\/]", "\\\\");
+    return windowsPath;
+  }
+
 }
