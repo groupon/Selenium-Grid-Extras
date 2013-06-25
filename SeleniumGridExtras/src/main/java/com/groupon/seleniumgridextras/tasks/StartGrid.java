@@ -101,6 +101,7 @@ public class StartGrid extends ExecuteOSTask {
         return getJsonResponse().toString();
       } else {
         System.out.println("Something didn't go right in launching service");
+        System.out.println(serviceStartResponse);
         return serviceStartResponse;
       }
     } catch (Exception error) {
