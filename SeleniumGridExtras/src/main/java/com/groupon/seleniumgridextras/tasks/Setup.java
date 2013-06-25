@@ -40,18 +40,23 @@ package com.groupon.seleniumgridextras.tasks;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Setup extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/setup";
+  public Setup() {
+    setEndpoint("/setup");
+    setDescription("Calls several pre-defined tasks to act as setup before build");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn");
+    setButtonText("setup");
+    setEnabledInGui(false);
   }
-
-  @Override
-  public String getDescription() {
-    return "Calls several pre-defined tasks to act as setup before build";
-  }
-
 
   @Override
   public String getWindowsCommand() {

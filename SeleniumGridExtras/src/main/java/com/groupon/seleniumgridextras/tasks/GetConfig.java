@@ -46,17 +46,22 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GetConfig extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/config";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Returns JSON view of the full configuration of the Selenium Grid Extras";
+  public GetConfig(){
+    setEndpoint("/config");
+    setDescription("Returns JSON view of the full configuration of the Selenium Grid Extras");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("Get Config");
+    setEnabledInGui(true);
   }
 
   @Override

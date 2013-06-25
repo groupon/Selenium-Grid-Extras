@@ -37,17 +37,22 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KillAllChrome extends KillAllByName {
 
-
-  @Override
-  public String getDescription() {
-    return "Executes os level kill command on all instance of Google Chrome";
-  }
-
-  @Override
-  public String getEndpoint() {
-    return "/kill_chrome";
+  public KillAllChrome() {
+    setEndpoint("/kill_chrome");
+    setDescription("Executes os level kill command on all instance of Google Chrome");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-danger");
+    setButtonText("Kill all chrome");
+    setEnabledInGui(true);
   }
 
   @Override

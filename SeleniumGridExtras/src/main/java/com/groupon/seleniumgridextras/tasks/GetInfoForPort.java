@@ -47,15 +47,18 @@ import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
-
-  @Override
-  public String getEndpoint() {
-    return "/port_info";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Returns parsed information on a PID occupying a given port";
+  public GetInfoForPort(){
+    setEndpoint("/port_info");
+    setDescription("Returns parsed information on a PID occupying a given port");
+    Map<String, String> params = new HashMap();
+    params.put("port", "(Required) Port to be used");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("Get Info for Port");
+    setEnabledInGui(true);
   }
 
   @Override
@@ -84,15 +87,6 @@ public class GetInfoForPort extends ExecuteOSTask {
   public String execute() {
     getJsonResponse().addKeyValues("error", "Port parameter is required");
     return getJsonResponse().toString();
-  }
-
-  @Override
-  public String execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey("port")) {
-      return execute();
-    } else {
-      return execute(parameter.get("port").toString());
-    }
   }
 
   @Override

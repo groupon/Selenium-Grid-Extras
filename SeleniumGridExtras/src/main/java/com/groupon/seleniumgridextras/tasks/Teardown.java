@@ -40,7 +40,23 @@ package com.groupon.seleniumgridextras.tasks;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Teardown extends ExecuteOSTask {
+
+  public Teardown() {
+    setEndpoint("/teardown");
+    setDescription("Calls several pre-defined tasks to act as teardown after build");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-info");
+    setButtonText("Teardown");
+    setEnabledInGui(false);
+  }
 
   @Override
   public String getWindowsCommand() {
@@ -56,18 +72,6 @@ public class Teardown extends ExecuteOSTask {
   public String getMacCommand(){
     return "ls";
   }
-
-
-  @Override
-  public String getEndpoint() {
-    return "/teardown";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Calls several pre-defined tasks to act as teardown after build";
-  }
-
 
   @Override
   public boolean initialize() {

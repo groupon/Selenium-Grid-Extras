@@ -34,28 +34,28 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
 package com.groupon.seleniumgridextras.tasks;
 
-
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RebootNode extends ExecuteOSTask {
 
-  public boolean waitToFinishTask = false;
+  public RebootNode() {
+    setEndpoint("/reboot");
+    setDescription("Restart the host node");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-danger");
+    setButtonText("reboot");
+    setEnabledInGui(true);
+  }
 
   @Override
   public String getWindowsCommand() {
     return "shutdown -r -t 1 -f";
-  }
-
-  @Override
-  public String getEndpoint() {
-    return "/reboot";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Restart the host node";
   }
 }

@@ -34,23 +34,18 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
 package com.groupon.seleniumgridextras;
-
 
 import org.json.simple.JSONArray;
 
 import java.util.Map;
-
 
 public class ApiDocumentation {
 
   private static JSONArray apiSpec = new JSONArray();
 
   public static void registerApiEndPoint(Map endPoint){
-
     apiSpec.add(endPoint);
-
   }
 
   public static String getApiDocumentation(){

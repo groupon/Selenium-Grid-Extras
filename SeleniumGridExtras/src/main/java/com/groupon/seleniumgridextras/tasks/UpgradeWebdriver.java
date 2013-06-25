@@ -50,15 +50,18 @@ import java.util.Map;
 
 public class UpgradeWebdriver extends ExecuteOSTask {
 
-
-  @Override
-  public String getEndpoint() {
-    return "/upgrade_webdriver";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart";
+  public UpgradeWebdriver() {
+    setEndpoint("/upgrade_webdriver");
+    setDescription("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart");
+    Map<String, String> params = new HashMap();
+    params.put("version", "(Required) - Version of WebDriver to download, such as 2.33.0");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-warning");
+    setButtonText("Upgrade WebDriver");
+    setEnabledInGui(true);
   }
 
   @Override
@@ -121,13 +124,6 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     }
 
     return jsonResponse;
-  }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("version", "(Required) - Version of WebDriver to download, such as 2.33.0");
-    return params;
   }
 
 }
