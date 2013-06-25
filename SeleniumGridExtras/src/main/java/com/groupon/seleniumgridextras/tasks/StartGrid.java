@@ -37,14 +37,12 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.DefaultConfig;
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.FirstTimeRunConfig;
+import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import org.apache.commons.io.FileUtils;
 
@@ -133,7 +131,7 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String getWindowsCommand(String role) {
-    String batchFile = "start_" + role + ".bat";
+    String batchFile = RuntimeConfig.getSeleniungGridExtrasJarPath() +  "start_" + role + ".bat";
 
     writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
 

@@ -62,23 +62,33 @@ public class StartGridTest {
 
   public com.groupon.seleniumgridextras.tasks.ExecuteOSTask task;
 
+  public static final
+  String
+      hubBatch =
+      RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_hub.bat";
+  public static final
+  String
+      nodeBatch =
+      RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_node.bat";
+
   @Before
   public void setUp() throws Exception {
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     task = new com.groupon.seleniumgridextras.tasks.StartGrid();
+
   }
 
   @After
   public void teardown() throws Exception {
-    File file = new File("start_hub.bat");
+    File file = new File(hubBatch);
     if (file.exists()) {
-      FileUtils.forceDelete(file);
+      file.delete();
     }
 
-    File file2 = new File("start_node.bat");
+    File file2 = new File(nodeBatch);
     if (file2.exists()) {
-      FileUtils.forceDelete(file2);
+      file.delete();
     }
   }
 
@@ -138,10 +148,10 @@ public class StartGridTest {
                              "-host http://127.0.0.1 -role hub -servlets " +
                              "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet";
 
-    assertEquals("start 'Selenium Grid hub' /max /wait start_hub.bat",
+    assertEquals("start 'Selenium Grid hub' /max /wait " + hubBatch,
                  task.getWindowsCommand("hub"));
 
-    File batch = new File("start_hub.bat");
+    File batch = new File(hubBatch);
     assertEquals(true, batch.exists());
 
     String modifiedActual = readBatchFile(batch.getPath());
@@ -158,10 +168,10 @@ public class StartGridTest {
                              "org.openqa.grid.selenium.GridLauncher  -port 5555 " +
                              "-hub http://localhost:4444 -host http://127.0.0.1 -role wd";
 
-    assertEquals("start 'Selenium Grid node' /max /wait start_node.bat",
+    assertEquals("start 'Selenium Grid node' /max /wait " + nodeBatch,
                  task.getWindowsCommand("node"));
 
-    File batch = new File("start_node.bat");
+    File batch = new File(nodeBatch);
     assertEquals(true, batch.exists());
 
     String modifiedActual = readBatchFile(batch.getPath());
