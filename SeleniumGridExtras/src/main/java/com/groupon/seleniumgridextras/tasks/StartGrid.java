@@ -42,23 +42,27 @@ import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/start_grid";
-  }
+  public StartGrid() {
+    waitToFinishTask = false;
 
-  @Override
-  public String getDescription() {
-    return "Starts an instance of Selenium Grid Hub or Node";
+    setEndpoint("/start_grid");
+    setDescription("Starts an instance of Selenium Grid Hub or Node");
+    Map<String, String> params = new HashMap();
+    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-info");
+    setButtonText("StartGrid");
+    setEnabledInGui(false);
   }
 
   @Override
@@ -87,7 +91,7 @@ public class StartGrid extends ExecuteOSTask {
           OSChecker.isWindows() ? getWindowsCommand(role)
                                 : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-      String serviceStartResponse = ExecuteCommand.execRuntime(command, false);
+      String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
 
       Map result = JsonWrapper.parseJson(serviceStartResponse);
 
@@ -117,32 +121,9 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("role", "hub|node - defaults to 'default_role' param in config file");
-    return params;
-  }
-
-  @Override
   public String getLinuxCommand(String role) {
     return GridWrapper.getStartCommand(role) + " &";
   }
 
-  @Override
-  public String getWindowsCommand(String role) {
-    try {
-      String pathToBatch = "start_" + role + ".bat";
-      File f = new File(pathToBatch);
-      FileUtils.writeStringToFile(f, getWindowsFullCommand(role));
-      return "start 'Selenium Grid " + role + "' /max /wait " + pathToBatch;
-    } catch (Exception error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-      return "";
-    }
-  }
-
-  public String getWindowsFullCommand(String role) {
-    return GridWrapper.getWindowsStartCommand(role);
-  }
 
 }

@@ -51,19 +51,24 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class Screenshot extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/screenshot";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Take a full OS screen Screen Shot of the node";
+  public Screenshot() {
+    setEndpoint("/screenshot");
+    setDescription("Take a full OS screen Screen Shot of the node");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-info");
+    setButtonText("screenshot");
+    setEnabledInGui(true);
   }
 
   @Override

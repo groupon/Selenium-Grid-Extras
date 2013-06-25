@@ -42,20 +42,22 @@ import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GridStatus extends ExecuteOSTask {
 
-  private JsonResponseBuilder jsonResponse;
-
-  @Override
-  public String getEndpoint() {
-    return "/grid_status";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Returns status of the Selenium Grid hub/node. If currently running and what is the PID";
+  public GridStatus(){
+    setEndpoint("/grid_status");
+    setDescription("Returns status of the Selenium Grid hub/node. If currently running and what is the PID");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("Grid Status");
+    setEnabledInGui(true);
   }
 
   @Override

@@ -53,14 +53,18 @@ import java.util.Map;
 
 public class DownloadWebdriver extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/download_webdriver";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Downloads a version of WebDriver jar to local machine";
+  public DownloadWebdriver(){
+    setEndpoint("/download_webdriver");
+    setDescription("Downloads a version of WebDriver jar to local machine");
+    Map<String, String> params = new HashMap();
+    params.put("version", "Version of WebDriver to download, such as 2.33.0");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("Download WebDriver");
+    setEnabledInGui(true);
   }
 
   @Override
@@ -96,13 +100,6 @@ public class DownloadWebdriver extends ExecuteOSTask {
       jsonResponse.addKeyValues("root_dir", GridWrapper.getWebdriverHome());
     }
     return jsonResponse;
-  }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("version", "Version of WebDriver to download, such as 2.33.0");
-    return params;
   }
 
   private String downloadWebdriverVersion(String version) {

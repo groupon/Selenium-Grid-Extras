@@ -45,22 +45,26 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class ExposeDirectory extends ExecuteOSTask {
 
   public File sharedDir;
 
-  @Override
-  public String getEndpoint() {
-    return "/dir";
+  public ExposeDirectory(){
+    setEndpoint("/dir");
+    setDescription("Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.");
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("List Shared Dir");
+    setEnabledInGui(true);
   }
 
-  @Override
-  public String getDescription() {
-    return "Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.";
-  }
 
   @Override
   public String execute() {

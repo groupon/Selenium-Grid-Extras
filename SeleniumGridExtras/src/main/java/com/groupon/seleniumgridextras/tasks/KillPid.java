@@ -45,6 +45,20 @@ import java.util.Map;
 
 public class KillPid extends ExecuteOSTask {
 
+  public KillPid() {
+    setEndpoint("/kill_pid");
+    setDescription("Kills a given process id");
+    Map<String, String> params = new HashMap();
+    params.put("id", "(Required) -  Process ID (PID) to terminate.");
+    params.put("signal", "(unix only) - Signal Term number such as 1, 2...9");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-danger");
+    setButtonText("Kill PID");
+    setEnabledInGui(false);
+  }
 
   @Override
   public String execute() {
@@ -70,16 +84,6 @@ public class KillPid extends ExecuteOSTask {
   }
 
   @Override
-  public String getEndpoint() {
-    return "/kill_pid";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Kills a given process id";
-  }
-
-  @Override
   public String getWindowsCommand(String parameter) {
     return "taskkill -F -IM " + parameter;
   }
@@ -87,15 +91,5 @@ public class KillPid extends ExecuteOSTask {
   @Override
   public String getLinuxCommand(String parameter) {
     return "kill " + parameter;
-  }
-
-
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("id", "(Required) -  Process ID (PID) to terminate.");
-    params.put("signal", "(unix only) - Signal Term number such as 1, 2...9");
-    return params;
   }
 }

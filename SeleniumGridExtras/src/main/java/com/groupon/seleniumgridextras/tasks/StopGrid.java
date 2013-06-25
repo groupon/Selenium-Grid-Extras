@@ -48,14 +48,18 @@ import java.util.Map;
 
 public class StopGrid extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/stop_grid";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Stops grid or node process";
+  public StopGrid() {
+    setEndpoint("/stop_grid");
+    setDescription("Stops grid or node process");
+    Map<String, String> params = new HashMap();
+    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-info");
+    setButtonText("Stop Grid");
+    setEnabledInGui(false);
   }
 
   @Override
@@ -83,13 +87,6 @@ public class StopGrid extends ExecuteOSTask {
     } else {
       return execute(parameter.get("role").toString());
     }
-  }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("role", "hub|node - defaults to 'default_role' param in config file");
-    return params;
   }
 
 }

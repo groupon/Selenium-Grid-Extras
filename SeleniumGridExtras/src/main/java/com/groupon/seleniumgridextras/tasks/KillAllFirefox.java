@@ -37,16 +37,22 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KillAllFirefox extends KillAllByName {
 
-  @Override
-  public String getEndpoint() {
-    return "/kill_firefox";
-  }
-
-  @Override
-  public String getDescription() {
-    return "Executes os level kill command on all instance of Firefox";
+  public KillAllFirefox() {
+    setEndpoint("/kill_firefox");
+    setDescription("Executes os level kill command on all instance of Firefox");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-danger");
+    setButtonText("Kill all firefox");
+    setEnabledInGui(true);
   }
 
   @Override

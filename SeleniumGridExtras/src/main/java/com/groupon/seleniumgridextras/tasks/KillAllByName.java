@@ -37,24 +37,24 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class KillAllByName extends ExecuteOSTask {
 
-
-  @Override
-  public String getEndpoint() {
-    return "/kill_all_by_name";
+  public KillAllByName() {
+    setEndpoint("/kill_all_by_name");
+    setDescription("Executes os level kill command on a given PID name");
+    Map<String, String> params = new HashMap();
+    params.put("name", "Name of process");
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-danger");
+    setButtonText("Kill all by name");
+    setEnabledInGui(true);
   }
-
-  @Override
-  public String getDescription() {
-    return "Executes os level kill command on a given PID name";
-  }
-
 
   @Override
   public String getWindowsCommand(String parameter) {
@@ -68,19 +68,10 @@ public class KillAllByName extends ExecuteOSTask {
 
   @Override
   public String execute(Map<String, String> parameter) {
-
     if (!parameter.isEmpty() && parameter.containsKey("name")) {
       return execute(parameter.get("name").toString());
     }
-
     return execute();
-  }
-
-  @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("name", "Name of process");
-    return params;
   }
 
 }

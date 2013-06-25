@@ -37,8 +37,23 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class KillAllIE extends KillAllByName {
 
+  public KillAllIE() {
+    setEndpoint("/kill_ie");
+    setDescription("Executes os level kill command on all instance of Internet Explorer");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-danger");
+    setButtonText("Kill all IE");
+    setEnabledInGui(true);
+  }
 
   @Override
   public String getEndpoint() {

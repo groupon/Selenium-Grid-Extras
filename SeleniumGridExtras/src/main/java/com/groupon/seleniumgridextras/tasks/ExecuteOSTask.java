@@ -37,22 +37,21 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.ApiDocumentation;
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ExecuteOSTask {
+public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
   final private
   String
-      noteImplementedError =
+      notImplementedError =
       "This task was not implemented on " + OSChecker.getOSName();
   public boolean waitToFinishTask = true;
   protected JsonResponseBuilder jsonResponse;
@@ -88,14 +87,14 @@ public abstract class ExecuteOSTask {
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
 
-  public abstract String getEndpoint();
+//  public abstract String getEndpoint();
 
-  public abstract String getDescription();
+//  public abstract String getDescription();
 
   public String getWindowsCommand(String parameter) {
 
     getJsonResponse().addKeyValues("error",
-                                   noteImplementedError + " " + this.getClass().getCanonicalName());
+                                   notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -107,7 +106,7 @@ public abstract class ExecuteOSTask {
 
   public String getLinuxCommand(String parameter) {
     getJsonResponse().addKeyValues("error",
-                                   noteImplementedError + " " + this.getClass().getCanonicalName());
+                                   notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -168,37 +167,6 @@ public abstract class ExecuteOSTask {
   public List<String> getDependencies() {
     List<String> dependencies = new LinkedList();
     return dependencies;
-  }
-
-  public String getRequestType() {
-    return "GET";
-  }
-
-  public String getResponseType() {
-    return "json";
-  }
-
-  public Map getResponseDescription() {
-    return getJsonResponse().getKeyDescriptions();
-  }
-
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-
-    return params;
-  }
-
-  public void registerApi() {
-    Map apiDescription = new HashMap();
-    apiDescription.put("endpoint", getEndpoint());
-    apiDescription.put("description", getDescription());
-    apiDescription.put("class", this.getClass().getCanonicalName());
-    apiDescription.put("accepted_params", getAcceptedParams());
-    apiDescription.put("http_type", getRequestType());
-    apiDescription.put("response_type", getResponseType());
-    apiDescription.put("response_description", getResponseDescription());
-
-    ApiDocumentation.registerApiEndPoint(apiDescription);
   }
 
 }

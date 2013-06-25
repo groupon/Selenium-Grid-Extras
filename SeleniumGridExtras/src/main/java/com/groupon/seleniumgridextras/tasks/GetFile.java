@@ -39,20 +39,26 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class GetFile extends ExecuteOSTask {
 
-  @Override
-  public String getEndpoint() {
-    return "/get_file";
+  public GetFile(){
+    setEndpoint("/get_file");
+    setDescription("(Not yet implemented) - Retrives a file from shared Directory");
+    Map<String, String> params = new HashMap();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass("btn-success");
+    setButtonText("Get File");
+    setEnabledInGui(true);
   }
 
-  @Override
-  public String getDescription() {
-    return "(Not yet implemented) - Retrives a file from shared Directory";
-  }
 
   @Override
   public String execute(){
