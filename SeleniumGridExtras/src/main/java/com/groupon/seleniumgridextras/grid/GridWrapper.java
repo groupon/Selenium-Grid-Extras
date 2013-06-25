@@ -47,7 +47,7 @@ import java.util.Map;
 public class GridWrapper {
 
   public static String getCurrentWebDriverJarPath() {
-    return getWebdriverHome() + "/" + getWebdriverVersion()
+    return RuntimeConfig.getSeleniungGridExtrasJarPath() + getWebdriverHome() + "/" + getWebdriverVersion()
            + ".jar";
   }
 

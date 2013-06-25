@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.grid;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.CORBA.NO_MEMORY;
 
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
@@ -73,11 +74,16 @@ public class GridWrapperTest {
     String command = "java -cp ";
 
     command = command + RuntimeConfig.getSeleniungGridExtrasJarPath();
-    command = command + ":" + wdHome + "/" + wdVersion + ".jar  ";
 
+    String
+        stuff =
+        ":" + RuntimeConfig.getSeleniungGridExtrasJarPath() + wdHome + "/" + wdVersion + ".jar  ";
     if (windows) {
-      command = OSChecker.toWindowsPath(command);
+      stuff = OSChecker.toWindowsPath(stuff);
     }
+
+    command =
+        command + stuff;
 
     command = command + "org.openqa.grid.selenium.GridLauncher  -port 5555";
     command = command + " -hub http://localhost:4444 -host http://127.0.0.1 -role wd";
@@ -87,7 +93,8 @@ public class GridWrapperTest {
 
   @Test
   public void testGetCurrentJarPath() throws Exception {
-    assertEquals(wdHome + "/" + wdVersion + ".jar", GridWrapper.getCurrentWebDriverJarPath());
+    assertEquals(RuntimeConfig.getSeleniungGridExtrasJarPath() + wdHome + "/" + wdVersion + ".jar",
+                 GridWrapper.getCurrentWebDriverJarPath());
   }
 
   @Test
@@ -139,7 +146,8 @@ public class GridWrapperTest {
     expectedConfig.put("-port", "4444");
     expectedConfig.put("-host", "http://127.0.0.1");
     expectedConfig.put("-role", "hub");
-    expectedConfig.put("-servlets", "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet");
+    expectedConfig
+        .put("-servlets", "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet");
 
     assertEquals(expectedConfig, GridWrapper.getGridConfig("hub"));
   }
