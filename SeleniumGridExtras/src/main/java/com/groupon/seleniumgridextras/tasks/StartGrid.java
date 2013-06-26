@@ -131,6 +131,8 @@ public class StartGrid extends ExecuteOSTask {
   public String getWindowsCommand(String role) {
     String batchFile = RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_" + role + ".bat";
 
+    System.out.println("\n\n\n" + batchFile + "\n\n\n\n");
+
     writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
 
     return "start 'Selenium Grid " + role + "' /max /wait " + batchFile;
