@@ -94,7 +94,7 @@ public class StartGrid extends ExecuteOSTask {
           OSChecker.isWindows() ? getWindowsCommand(role)
                                 : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-      String serviceStartResponse = ExecuteCommand.execRuntime(command, waitToFinishTask);
+      String serviceStartResponse = ExecuteCommand.execRuntime(command, false);
 
       Map result = JsonWrapper.parseJson(serviceStartResponse);
 
@@ -111,8 +111,6 @@ public class StartGrid extends ExecuteOSTask {
       getJsonResponse().addKeyValues("error", error.toString());
       return getJsonResponse().toString();
     }
-
-
   }
 
   @Override
@@ -131,7 +129,7 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String getWindowsCommand(String role) {
-    String batchFile = RuntimeConfig.getSeleniungGridExtrasJarPath() +  "start_" + role + ".bat";
+    String batchFile = RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_" + role + ".bat";
 
     writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
 
@@ -149,9 +147,5 @@ public class StartGrid extends ExecuteOSTask {
           .println("Could not write default config file, exit with error " + error.toString());
 
     }
-
-
   }
-
-
 }
