@@ -129,7 +129,7 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public String getWindowsCommand(String role) {
-    String batchFile = RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_" + role + ".bat";
+    String batchFile = RuntimeConfig.getSeleniungGridExtrasHomePath() + "start_" + role + ".bat";
 
     System.out.println("\n\n\n" + batchFile + "\n\n\n\n");
 

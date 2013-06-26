@@ -37,13 +37,6 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
-import com.groupon.seleniumgridextras.tasks.*;
-import com.groupon.seleniumgridextras.tasks.MoveMouse;
-
-import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +46,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,11 +56,11 @@ public class StartGridTest {
   public static final
   String
       hubBatch =
-      RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_hub.bat";
+      RuntimeConfig.getSeleniungGridExtrasHomePath() + "start_hub.bat";
   public static final
   String
       nodeBatch =
-      RuntimeConfig.getSeleniungGridExtrasJarPath() + "start_node.bat";
+      RuntimeConfig.getSeleniungGridExtrasHomePath() + "start_node.bat";
 
   @Before
   public void setUp() throws Exception {
@@ -121,13 +112,16 @@ public class StartGridTest {
     String modifiedActual = task.getLinuxCommand("hub");
 
     modifiedActual =
-        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasJarPath(), "replaced/for/now/");
+        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced/for/now/");
 
     assertEquals(expectedCommand, modifiedActual);
   }
 
   @Test
   public void testGetLinuxNodeCommand() throws Exception {
+
+
+
     String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 5555 " +
                              "-hub http://localhost:4444 -host http://127.0.0.1 -role wd &";
@@ -135,7 +129,7 @@ public class StartGridTest {
     String modifiedActual = task.getLinuxCommand("node");
 
     modifiedActual =
-        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasJarPath(), "replaced/for/now/");
+        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced/for/now/");
 
     assertEquals(expectedCommand, modifiedActual);
   }
@@ -157,7 +151,7 @@ public class StartGridTest {
 //    String modifiedActual = readBatchFile(batch.getPath());
 //
 //    modifiedActual =
-//        modifiedActual.replaceAll(RuntimeConfig.getSeleniungGridExtrasJarPath(), "replaced-for-now-");
+//        modifiedActual.replaceAll(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced-for-now-");
 //
 //
 //    assertEquals(expectedCommand, modifiedActual);
@@ -177,7 +171,7 @@ public class StartGridTest {
 //
 //    String modifiedActual = readBatchFile(batch.getPath());
 //    modifiedActual =
-//        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasJarPath(), "replaced-for-now");
+//        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced-for-now");
 //
 //    assertEquals(expectedCommand, modifiedActual);
 //

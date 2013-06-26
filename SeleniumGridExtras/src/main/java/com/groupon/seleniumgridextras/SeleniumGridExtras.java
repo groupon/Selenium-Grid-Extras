@@ -60,6 +60,8 @@ public class SeleniumGridExtras {
       tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
     }
 
+    System.out.println(RuntimeConfig.getSeleniungGridExtrasHomePath());
+
     System.out.println("=== Initializing Task Modules ===");
     for (final ExecuteOSTask task : tasks) {
 

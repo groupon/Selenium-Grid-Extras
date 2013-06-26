@@ -128,8 +128,10 @@ public class RuntimeConfig {
     }
   }
 
-  public static String getSeleniungGridExtrasJarPath(){
-    return SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  public static String getSeleniungGridExtrasHomePath(){
+    String path = SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+    path = path.replaceAll("[\\w-\\d\\.]*\\.jar", "");
+    return path;
   }
 
 

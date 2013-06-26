@@ -39,7 +39,6 @@ package com.groupon.seleniumgridextras.grid;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.NO_MEMORY;
 
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
@@ -73,11 +72,11 @@ public class GridWrapperTest {
 
     String command = "java -cp ";
 
-    command = command + RuntimeConfig.getSeleniungGridExtrasJarPath();
+    command = command + RuntimeConfig.getSeleniungGridExtrasHomePath();
 
     String
         stuff =
-        ":" + RuntimeConfig.getSeleniungGridExtrasJarPath() + wdHome + "/" + wdVersion + ".jar  ";
+        ":" + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar  ";
     if (windows) {
       stuff = OSChecker.toWindowsPath(stuff);
     }
@@ -93,7 +92,7 @@ public class GridWrapperTest {
 
   @Test
   public void testGetCurrentJarPath() throws Exception {
-    assertEquals(RuntimeConfig.getSeleniungGridExtrasJarPath() + wdHome + "/" + wdVersion + ".jar",
+    assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar",
                  GridWrapper.getCurrentWebDriverJarPath());
   }
 
@@ -104,7 +103,7 @@ public class GridWrapperTest {
 
   @Test
   public void testGetSeleniumGridExtrasPath() throws Exception {
-    assertEquals(RuntimeConfig.getSeleniungGridExtrasJarPath(),
+    assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath(),
                  GridWrapper.getSeleniumGridExtrasPath());
   }
 
