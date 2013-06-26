@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 rm -rf current
 mkdir current
