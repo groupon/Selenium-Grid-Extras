@@ -1,3 +1,4 @@
+1.1.5 - Windows now starts node/hub jars properly
 1.1.4 - Fixing some bugs at how services are started on windows. Using full paths instead of relative.
 1.1.3 - Implement Start Grid Hub/Node commands on windows
 1.1.2 - Updates to make GUI in browser look nicer

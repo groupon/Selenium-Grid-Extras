@@ -131,18 +131,9 @@ public class StartGrid extends ExecuteOSTask {
   public String getWindowsCommand(String role) {
     String batchFile = RuntimeConfig.getSeleniungGridExtrasHomePath() + "start_" + role + ".bat";
 
-    System.out.println("\n\n\n" + batchFile + "\n\n\n\n");
-
     writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
 
-//    String command = "start \"Selenium Grid " + role + "\" /max /wait " + batchFile;
-
-
-    String command = "powershell.exe /c \"Start-Process " + batchFile +  "\"";
-
-    System.out.println("\n\n\n\n\n" + command + "\n\n\n\n\n\n");
-
-    return command;
+    return "powershell.exe /c \"Start-Process " + batchFile +  "\"";
   }
 
   private void writeBatchFile(String filename, String input) {

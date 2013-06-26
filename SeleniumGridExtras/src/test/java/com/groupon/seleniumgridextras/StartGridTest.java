@@ -120,8 +120,6 @@ public class StartGridTest {
   @Test
   public void testGetLinuxNodeCommand() throws Exception {
 
-
-
     String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 5555 " +
                              "-hub http://localhost:4444 -host http://127.0.0.1 -role wd &";
@@ -135,47 +133,61 @@ public class StartGridTest {
   }
 
 
-//  @Test
-//  public void testGetWindowsHubCommand() throws Exception {
-//    String expectedCommand = "java -cp replaced-for-now-;replaced-for-now-webdriver\\2.33.0.jar  " +
-//                             "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
-//                             "-host http://127.0.0.1 -role hub -servlets " +
-//                             "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet";
-//
-//    assertEquals("start 'Selenium Grid hub' /max /wait " + hubBatch,
-//                 task.getWindowsCommand("hub"));
-//
-//    File batch = new File(hubBatch);
-//    assertEquals(true, batch.exists());
-//
-//    String modifiedActual = readBatchFile(batch.getPath());
-//
-//    modifiedActual =
-//        modifiedActual.replaceAll(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced-for-now-");
-//
-//
-//    assertEquals(expectedCommand, modifiedActual);
-//  }
-//
-//  @Test
-//  public void testGetWindowsNodeCommand() throws Exception {
-//    String expectedCommand = "java -cp replaced-for-now;webdriver\\2.33.0.jar  " +
-//                             "org.openqa.grid.selenium.GridLauncher  -port 5555 " +
-//                             "-hub http://localhost:4444 -host http://127.0.0.1 -role wd";
-//
-//    assertEquals("start 'Selenium Grid node' /max /wait " + nodeBatch,
-//                 task.getWindowsCommand("node"));
-//
-//    File batch = new File(nodeBatch);
-//    assertEquals(true, batch.exists());
-//
-//    String modifiedActual = readBatchFile(batch.getPath());
-//    modifiedActual =
-//        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced-for-now");
-//
-//    assertEquals(expectedCommand, modifiedActual);
-//
-//  }
+  @Test
+  public void testGetWindowsHubCommand() throws Exception {
+    String
+        expectedCommand =
+        "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
+        "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
+        "-host http://127.0.0.1 -role hub -servlets " +
+        "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet";
+
+    assertEquals("powershell.exe /c \"Start-Process " + hubBatch + "\"",
+                 task.getWindowsCommand("hub"));
+
+    File batch = new File(hubBatch);
+    assertEquals(true, batch.exists());
+
+    String modifiedActual = readBatchFile(batch.getPath());
+
+    modifiedActual =
+        modifiedActual
+            .replaceAll(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced-for-now-");
+
+    modifiedActual =
+        modifiedActual
+            .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
+                     "replaced-for-now-");
+
+    assertEquals(expectedCommand, modifiedActual);
+  }
+
+  @Test
+  public void testGetWindowsNodeCommand() throws Exception {
+    String
+        expectedCommand =
+        "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
+        "org.openqa.grid.selenium.GridLauncher  -port 5555 " +
+        "-hub http://localhost:4444 -host http://127.0.0.1 -role wd";
+
+    assertEquals("powershell.exe /c \"Start-Process " + nodeBatch + "\"",
+                 task.getWindowsCommand("node"));
+
+    File batch = new File(nodeBatch);
+    assertEquals(true, batch.exists());
+
+    String modifiedActual = readBatchFile(batch.getPath());
+    modifiedActual =
+        modifiedActual.replace(RuntimeConfig.getSeleniungGridExtrasHomePath(), "replaced-for-now-");
+
+    modifiedActual =
+        modifiedActual
+            .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
+                     "replaced-for-now-");
+
+    assertEquals(expectedCommand, modifiedActual);
+
+  }
 
   private String readBatchFile(String filePath) {
     String returnString = "";
