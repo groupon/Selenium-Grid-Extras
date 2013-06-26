@@ -135,7 +135,12 @@ public class StartGrid extends ExecuteOSTask {
 
     writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
 
-    return "start 'Selenium Grid " + role + "' /max /wait " + batchFile;
+    String command = "start 'Selenium Grid " + role + "' /max /wait " + batchFile;
+
+
+    System.out.println("\n\n\n\n\n" + command + "\n\n\n\n\n\n");
+
+    return command;
   }
 
   private void writeBatchFile(String filename, String input) {
