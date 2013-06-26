@@ -131,6 +131,11 @@ public class RuntimeConfig {
   public static String getSeleniungGridExtrasHomePath(){
     String path = SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
     path = path.replaceAll("[\\w-\\d\\.]*\\.jar", "");
+
+    if (OSChecker.isWindows()){
+      path = OSChecker.toWindowsPath(path);
+    }
+
     return path;
   }
 

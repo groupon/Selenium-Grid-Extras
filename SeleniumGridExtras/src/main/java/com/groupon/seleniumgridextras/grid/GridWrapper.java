@@ -73,10 +73,16 @@ public class GridWrapper {
 
   private static String getOsSpecificStartCommand(String role, Boolean windows) {
     String command = "java -cp ";
+    String colon = ":";
+
+    if (windows){
+      colon = ";";
+    }
+
 
     command = command + getSeleniumGridExtrasPath();
 
-    String stuff = ":" + getCurrentWebDriverJarPath() + " ";
+    String stuff = colon + getCurrentWebDriverJarPath() + " ";
 
     if (windows) {
       stuff = OSChecker.toWindowsPath(stuff);

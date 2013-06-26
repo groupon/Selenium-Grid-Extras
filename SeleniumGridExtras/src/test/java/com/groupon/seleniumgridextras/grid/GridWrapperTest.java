@@ -71,12 +71,18 @@ public class GridWrapperTest {
   private String getNodeStartCommand(Boolean windows) {
 
     String command = "java -cp ";
+    String colon = ":";
+
+    if (windows){
+      colon = ";";
+    }
+
 
     command = command + RuntimeConfig.getSeleniungGridExtrasHomePath();
 
     String
         stuff =
-        ":" + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar  ";
+        colon + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar  ";
     if (windows) {
       stuff = OSChecker.toWindowsPath(stuff);
     }

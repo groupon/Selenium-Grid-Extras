@@ -55,7 +55,7 @@ public class OSChecker {
 
   public static String toWindowsPath(String path){
     String windowsPath = path;
-    windowsPath = windowsPath.replaceAll("[:]", ";");
+    windowsPath = windowsPath.replaceAll("^/", "");
     windowsPath = windowsPath.replaceAll("[\\/]", "\\\\");
     return windowsPath;
   }

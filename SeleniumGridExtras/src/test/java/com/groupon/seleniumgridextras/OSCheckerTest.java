@@ -50,8 +50,8 @@ public class OSCheckerTest {
   }
 
   @Test
-  public void testToWindowsPathReplacesColons() throws Exception{
-    assertEquals("foo;bar", OSChecker.toWindowsPath("foo:bar"));
+  public void testToWindowsPathDoesNotReplacesColons() throws Exception{
+    assertEquals("foo:bar", OSChecker.toWindowsPath("foo:bar"));
   }
 
   @Test
