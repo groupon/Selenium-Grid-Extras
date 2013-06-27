@@ -77,7 +77,7 @@ public class KillAllIE extends KillAllByName {
       return killIEAndIEDriver();
     } else {
       getJsonResponse().addKeyValues("error", "Kill IE command is only implemented in Windows");
-      return "";
+      return getJsonResponse().toString();
     }
   }
 
@@ -90,11 +90,11 @@ public class KillAllIE extends KillAllByName {
 
 
     getJsonResponse().addKeyValues("out", "Killing IE Browser");
-    getJsonResponse().addKeyValues("out", killBrowser.get("out"));
+//    getJsonResponse().addKeyValues("out", killBrowser.get("out"));
 
-    if(!killBrowser.get("out").equals("0")){
-      getJsonResponse().addKeyValues("error", killBrowser.get("error"));
-    }
+//    if(!killBrowser.get("out").equals("0")){
+//      getJsonResponse().addKeyValues("error", killBrowser.get("error"));
+//    }
 
 
     Map<String, String>
@@ -103,11 +103,11 @@ public class KillAllIE extends KillAllByName {
             .parseJson(ExecuteCommand.execRuntime(getWindowsKillCommand("IEDriverServer.exe")));
 
     getJsonResponse().addKeyValues("out", "Killing IE Driver");
-    getJsonResponse().addKeyValues("out", killDriver.get("out"));
-
-    if(!killBrowser.get("out").equals("0")){
-      getJsonResponse().addKeyValues("error", killDriver.get("error"));
-    }
+//    getJsonResponse().addKeyValues("out", killDriver.get("out"));
+//
+//    if(!killBrowser.get("out").equals("0")){
+//      getJsonResponse().addKeyValues("error", killDriver.get("error"));
+//    }
 
     return getJsonResponse().toString();
 
