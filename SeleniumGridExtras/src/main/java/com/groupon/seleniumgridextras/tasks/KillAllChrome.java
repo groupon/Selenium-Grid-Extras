@@ -37,6 +37,9 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.OSChecker;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,13 +58,36 @@ public class KillAllChrome extends KillAllByName {
     setEnabledInGui(true);
   }
 
-  @Override
-  public String getWindowsCommand() {
-    return super.getWindowsCommand("chrome.exe");
-  }
 
   @Override
-  public String getLinuxCommand() {
-    return super.getLinuxCommand("[Cc]hrome");
+  public String execute(String param) {
+
+    if (OSChecker.isWindows()) {
+      return killChromeOnWindows();
+    } else {
+      return killChromeOnLinux();
+    }
+  }
+
+
+  private String killChromeOnLinux(){
+    return ExecuteCommand.execRuntime(getLinuxCommand("[Cc]hrome"));
+  }
+
+  private String killChromeOnWindows(){
+
+    String killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe"));
+    String killDriverResult = ExecuteCommand.execRuntime(
+        getWindowsKillCommand("chromedriver.exe"));
+
+    if (killBrowserResult.contains("\"exit_code\":0") && killDriverResult
+        .contains("\"exit_code\":0")) {
+      getJsonResponse().addKeyValues("out", "[" + killBrowserResult + ", " + killDriverResult + "]");
+    } else {
+      getJsonResponse().addKeyValues("error", "[" + killBrowserResult + ", " + killDriverResult + "]");
+    }
+
+    return getJsonResponse().toString();
+
   }
 }

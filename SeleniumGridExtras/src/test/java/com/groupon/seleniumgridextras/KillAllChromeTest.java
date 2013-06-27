@@ -70,13 +70,13 @@ public class KillAllChromeTest {
     assertEquals("/kill_chrome", task.getEndpoint());
   }
 
-  @Test
-  public void testgetWindowsCommand() throws Exception {
-    assertEquals(windowsCommand, task.getWindowsCommand());
-  }
-
-  @Test
-  public void testgetLinuxCommand() throws Exception {
-    assertEquals(linuxCommnad, task.getLinuxCommand());
-  }
+//  @Test
+//  public void testgetWindowsCommand() throws Exception {
+//    assertEquals(windowsCommand, task.getWindowsCommand());
+//  }
+//
+//  @Test
+//  public void testgetLinuxCommand() throws Exception {
+//    assertEquals(linuxCommnad, task.getLinuxCommand());
+//  }
 }
