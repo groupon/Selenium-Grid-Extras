@@ -138,14 +138,14 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
   public void printInitilizedSuccessAndRegisterWithAPI() {
     System.out.println(
-        "\u2713 " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this
+        "Y " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this
             .getDescription());
 
     registerApi();
   }
 
   public void printInitilizedFailure() {
-    System.out.println("X " + this.getClass().getSimpleName());
+    System.out.println("N " + this.getClass().getSimpleName());
   }
 
   public Boolean allDependenciesLoaded() {
