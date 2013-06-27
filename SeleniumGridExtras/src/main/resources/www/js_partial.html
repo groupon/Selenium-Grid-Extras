@@ -19,19 +19,32 @@
             });
 
             var screenShotUrl = hostUrl + '/screenshot?callback=?';
-            getImage(screenShotUrl, hostID);
+            getImage(screenShotUrl, hostID, 1);
 
         });
 
 
-        function getImage(screenShotUrl, hostID) {
+        function getImage(screenShotUrl, hostID, fadeOn) {
             var currentHostID = hostID;
-            $.getJSON(screenShotUrl, '', function (res) {
-                $("#image" + currentHostID +"").html("<img id='" + currentHostID + "' class='screenshot' src='data:image/png;base64," + res.image + "' style='display: none;'/>");
-                $("#image" + currentHostID +" img").fadeIn();
+            var currentScreenShotUrl = screenShotUrl;
+
+            $.getJSON(currentScreenShotUrl, '', function (res) {
+                if(fadeOn) {
+                    var imgStyle = "display: none;";
+                } else {
+                    var imgStyle = "";
+                }
+
+                $("#image" + currentHostID +"").html("<img id='" + currentHostID + "' class='screenshot' src='data:image/png;base64," + res.image + "' style='" + imgStyle + "'/>");
+
+                if(fadeOn) {
+                    $("#image" + currentHostID +" img").fadeIn();
+                }
+
+                setTimeout(function () {
+                    getImage(screenShotUrl, hostID, 0);
+                }, 5000);
             });
         }
-
     });
-
 </script>

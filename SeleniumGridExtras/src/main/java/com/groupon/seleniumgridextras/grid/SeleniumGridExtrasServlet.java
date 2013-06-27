@@ -78,7 +78,8 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
       InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
       s = IOUtils.toString(is, "UTF-8");
     } catch (Exception error) {
-      System.out.println(error);
+      System.out.println("Problem reading: " + file);
+      error.printStackTrace();
     }
     return s;
   }
@@ -150,7 +151,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
         html.append("nodes.push(\"" + p.getRemoteHost().getHost() + "\");");
       }
     }
-    System.out.println(nodes.toString());
+    //System.out.println(nodes.toString());
     html.append("var nodesJson = '" + nodes.toString() + "';");
     html.append("</script>");
     html.append(readFile("www/css_partial.html"));

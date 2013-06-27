@@ -34,11 +34,6 @@
             <artifactId>gson</artifactId>
             <version>2.2.2</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>org.json</groupId>-->
-            <!--<artifactId>json</artifactId>-->
-            <!--<version>20080701</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
@@ -47,14 +42,6 @@
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>${basedir}/src/test/ruby</directory>
-                <includes>
-                    <include>**/*.rb</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -79,27 +66,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>rspec-maven-plugin</artifactId>-->
-                <!--<configuration>-->
-                    <!--<jrubyHome>${env.JRUBY_HOME}</jrubyHome>-->
-                    <!--<sourceDirectory>${basedir}/src/test/specs</sourceDirectory>-->
-                    <!--<outputDirectory>${basedir}/target</outputDirectory>-->
-                    <!--<systemProperties>-->
-                        <!--<property><name>testProp</name><value>testValue</value></property>-->
-                    <!--</systemProperties>-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>test</id>-->
-                        <!--<phase>test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>spec</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 </project>
