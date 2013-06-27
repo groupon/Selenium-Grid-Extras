@@ -39,11 +39,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -62,6 +60,8 @@ public class Screenshot extends ExecuteOSTask {
     setEndpoint("/screenshot");
     setDescription("Take a full OS screen Screen Shot of the node");
     Map<String, String> params = new HashMap();
+    params.put("width", "width");
+    params.put("height", "height");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -73,34 +73,32 @@ public class Screenshot extends ExecuteOSTask {
 
   @Override
   public String execute() {
+    return execute(new HashMap<String, String>());
+  }
 
+  @Override
+  public String execute(Map<String, String> parameter) {
+
+    int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
+    int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
+
+    return createScreenshot(width, height);
+  }
+
+  private String createScreenshot(int width, int height) {
     String filename;
     String encodedImage;
-
-    //Todo: Clean this mess up!!!!
-    // This is so ugly it makes me cry
-
     try {
-      Robot robot = new Robot();
-      Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-      BufferedImage screenshot = robot.createScreenCapture(captureSize);
+      BufferedImage screenshot = takeScreenshot();
+      if(width > 0 || height >0){
+        screenshot = createResizedCopy(screenshot, width, height, true);
+      }
       try {
-        String directory = RuntimeConfig.getExposedDirectory();
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
-        String formattedTimestamp = sdf.format(date);
-        filename = "screenshot_" + formattedTimestamp + ".png";
-        String fullPath = directory + "/" + filename;
-        File outputfile = new File(fullPath);
-        ImageIO.write(screenshot, "png", outputfile);
+        filename = writeImageToDisk(screenshot);
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(screenshot, "png", baos);
-        baos.flush();
+        ByteArrayOutputStream baos = writeImageToStream(screenshot);
 
-        Base64 base = new Base64(false);
-        encodedImage = base.encodeToString(baos.toByteArray());
-        baos.close();
+        encodedImage = encodeStreamToBase64(baos);
 
         encodedImage = java.net.URLEncoder.encode(encodedImage, "ISO-8859-1");
 
@@ -110,7 +108,7 @@ public class Screenshot extends ExecuteOSTask {
       }
       getJsonResponse().addKeyValues("file_type", "PNG");
       getJsonResponse().addKeyValues("file",
-                                     RuntimeConfig.getExposedDirectory() + "/" + filename);
+          RuntimeConfig.getExposedDirectory() + "/" + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
       return getJsonResponse().toString();
     } catch (AWTException error) {
@@ -119,6 +117,58 @@ public class Screenshot extends ExecuteOSTask {
     }
   }
 
+  private String encodeStreamToBase64(ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+    String encodedImage;
+    Base64 base = new Base64(false);
+    encodedImage = base.encodeToString(byteArrayOutputStream.toByteArray());
+    byteArrayOutputStream.close();
+    return encodedImage;
+  }
+
+  private ByteArrayOutputStream writeImageToStream(BufferedImage screenshot) throws IOException {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ImageIO.write(screenshot, "png", baos);
+    baos.flush();
+    return baos;
+  }
+
+  private String writeImageToDisk(BufferedImage screenshot) throws IOException {
+    String filename;
+    String directory = RuntimeConfig.getExposedDirectory();
+    filename = createTimestampFilename();
+    String fullPath = directory + "/" + filename;
+    File outputFile = new File(fullPath);
+    ImageIO.write(screenshot, "png", outputFile);
+    return filename;
+  }
+
+  private String createTimestampFilename() {
+    String filename;Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
+    String formattedTimestamp = sdf.format(date);
+    filename = "screenshot_" + formattedTimestamp + ".png";
+    return filename;
+  }
+
+  private BufferedImage takeScreenshot() throws AWTException {
+    Robot robot = new Robot();
+    Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+    return robot.createScreenCapture(captureSize);
+  }
+
+  private BufferedImage createResizedCopy(Image originalImage,
+                                          int scaledWidth, int scaledHeight,
+                                          boolean preserveAlpha) {
+    int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
+    BufferedImage scaledBI = new BufferedImage(scaledWidth, scaledHeight, imageType);
+    Graphics2D g = scaledBI.createGraphics();
+    if (preserveAlpha) {
+      g.setComposite(AlphaComposite.Src);
+    }
+    g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
+    g.dispose();
+    return scaledBI;
+  }
 
   @Override
   public JsonResponseBuilder getJsonResponse() {
@@ -130,10 +180,7 @@ public class Screenshot extends ExecuteOSTask {
           .addKeyDescriptions("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
     }
     return jsonResponse;
-
-
   }
-
 
   @Override
   public List<String> getDependencies() {

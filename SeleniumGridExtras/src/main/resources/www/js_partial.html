@@ -28,7 +28,7 @@
             var currentHostID = hostID;
             var currentScreenShotUrl = screenShotUrl;
 
-            $.getJSON(currentScreenShotUrl, '', function (res) {
+            $.getJSON(currentScreenShotUrl, 'width=518&height=350', function (res) {
                 if(fadeOn) {
                     var imgStyle = "display: none;";
                 } else {
