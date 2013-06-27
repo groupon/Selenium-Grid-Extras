@@ -93,8 +93,8 @@ public class DefaultConfig {
   private static void loadEnabledPlugins() {
     enabledPlugins.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
     enabledPlugins.add("com.groupon.seleniumgridextras.tasks.UpgradeWebdriver");
-//    enabledPlugins.add("com.groupon.seleniumgridextras.tasks.Setup");
-//    enabledPlugins.add("com.groupon.seleniumgridextras.tasks.Teardown");
+    enabledPlugins.add("com.groupon.seleniumgridextras.tasks.Setup");
+    enabledPlugins.add("com.groupon.seleniumgridextras.tasks.Teardown");
     enabledPlugins.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
     enabledPlugins.add("com.groupon.seleniumgridextras.tasks.RebootNode");
     enabledPlugins.add("com.groupon.seleniumgridextras.tasks.KillAllIE");
