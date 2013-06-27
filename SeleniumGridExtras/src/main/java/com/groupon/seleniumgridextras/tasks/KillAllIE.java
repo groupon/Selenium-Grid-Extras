@@ -84,30 +84,16 @@ public class KillAllIE extends KillAllByName {
 
   private String killIEAndIEDriver() {
 
-    Map<String, String>
-        killBrowser =
-        JsonWrapper.parseJson(ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe")));
+    String killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe"));
+    String killDriverResult = ExecuteCommand.execRuntime(
+        getWindowsKillCommand("IEDriverServer.exe"));
 
-
-    getJsonResponse().addKeyValues("out", "Killing IE Browser");
-//    getJsonResponse().addKeyValues("out", killBrowser.get("out"));
-
-//    if(!killBrowser.get("out").equals("0")){
-//      getJsonResponse().addKeyValues("error", killBrowser.get("error"));
-//    }
-
-
-    Map<String, String>
-        killDriver =
-        JsonWrapper
-            .parseJson(ExecuteCommand.execRuntime(getWindowsKillCommand("IEDriverServer.exe")));
-
-    getJsonResponse().addKeyValues("out", "Killing IE Driver");
-//    getJsonResponse().addKeyValues("out", killDriver.get("out"));
-//
-//    if(!killBrowser.get("out").equals("0")){
-//      getJsonResponse().addKeyValues("error", killDriver.get("error"));
-//    }
+    if (killBrowserResult.contains("\"exit_code\":0") && killDriverResult
+        .contains("\"exit_code\":0")) {
+      getJsonResponse().addKeyValues("out", "[" + killBrowserResult + ", " + killDriverResult + "]");
+    } else {
+      getJsonResponse().addKeyValues("error", "[" + killBrowserResult + ", " + killDriverResult + "]");
+    }
 
     return getJsonResponse().toString();
 
