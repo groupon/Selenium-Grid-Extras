@@ -58,12 +58,13 @@ public class KillAllByName extends ExecuteOSTask {
 
   @Override
   public String getWindowsCommand(String parameter) {
-    return "taskkill -F -IM " + parameter;
+    return getWindowsKillCommand(parameter);
   }
+
 
   @Override
   public String getLinuxCommand(String parameter) {
-    return "killall -v -m " + parameter;
+    return getLinuxKillCommand(parameter);
   }
 
   @Override
@@ -73,5 +74,15 @@ public class KillAllByName extends ExecuteOSTask {
     }
     return execute();
   }
+
+
+  protected String getWindowsKillCommand(String parameter) {
+    return "taskkill -F -IM "  + parameter;
+  }
+
+  protected String getLinuxKillCommand(String parameter) {
+    return "killall -v -m "  + parameter;
+  }
+
 
 }

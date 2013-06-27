@@ -37,7 +37,12 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonWrapper;
+import com.groupon.seleniumgridextras.OSChecker;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class KillAllIE extends KillAllByName {
@@ -66,19 +71,46 @@ public class KillAllIE extends KillAllByName {
   }
 
   @Override
-  public String getWindowsCommand() {
-    return super.getWindowsCommand("iexplore.exe");
-  }
+  public String execute(String param) {
 
-  @Override
-  public String getLinuxCommand(String parameter) {
-    try{
-      getJsonResponse().addKeyValues("error", "Kill IE command is not implemented on Mac OSX and Linux");
-    return getJsonResponse().toString();
-    } catch (Exception error){
-      System.out.println(error);
+    if (OSChecker.isWindows()) {
+      return killIEAndIEDriver();
+    } else {
+      getJsonResponse().addKeyValues("error", "Kill IE command is only implemented in Windows");
       return "";
     }
+  }
+
+
+  private String killIEAndIEDriver() {
+
+    Map<String, String>
+        killBrowser =
+        JsonWrapper.parseJson(ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe")));
+
+
+    getJsonResponse().addKeyValues("out", "Killing IE Browser");
+    getJsonResponse().addKeyValues("out", killBrowser.get("out"));
+
+    if(!killBrowser.get("out").equals("0")){
+      getJsonResponse().addKeyValues("error", killBrowser.get("error"));
+    }
+
+
+    Map<String, String>
+        killDriver =
+        JsonWrapper
+            .parseJson(ExecuteCommand.execRuntime(getWindowsKillCommand("IEDriverServer.exe")));
+
+    getJsonResponse().addKeyValues("out", "Killing IE Driver");
+    getJsonResponse().addKeyValues("out", killDriver.get("out"));
+
+    if(!killBrowser.get("out").equals("0")){
+      getJsonResponse().addKeyValues("error", killDriver.get("error"));
+    }
+
+    return getJsonResponse().toString();
+
   }
 
 
