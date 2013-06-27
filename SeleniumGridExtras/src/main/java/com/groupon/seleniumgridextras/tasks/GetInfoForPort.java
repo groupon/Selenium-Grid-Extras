@@ -90,6 +90,18 @@ public class GetInfoForPort extends ExecuteOSTask {
   }
 
   @Override
+  public String execute(Map<String, String> parameter) {
+
+    if(!parameter.isEmpty() && parameter.containsKey("port")){
+      return execute(parameter.get("port").toString());
+    } else {
+      return execute();
+    }
+
+  }
+
+
+  @Override
   public String execute(String port) {
 
     try {
