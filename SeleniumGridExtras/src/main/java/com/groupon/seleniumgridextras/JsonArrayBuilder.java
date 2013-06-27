@@ -37,48 +37,33 @@
 
 package com.groupon.seleniumgridextras;
 
-import org.json.simple.parser.ContainerFactory;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
-public class JsonWrapper {
+public class JsonArrayBuilder {
 
+  private JSONArray arrayBuilder = new JSONArray();
 
-  public static Map parseJson(String inputString) {
-    Map returnHash = new HashMap();
-
-    JSONParser parser = new JSONParser();
-    ContainerFactory containerFactory = new ContainerFactory() {
-      public List creatArrayContainer() {
-        return new LinkedList();
-      }
-
-      public Map createObjectContainer() {
-        return new LinkedHashMap();
-      }
-
-    };
-
-    try {
-      Map json = (Map) parser.parse(inputString, containerFactory);
-      Iterator iter = json.entrySet().iterator();
-      while (iter.hasNext()) {
-        Map.Entry entry = (Map.Entry) iter.next();
-        returnHash.put(entry.getKey(), entry.getValue());
-      }
-
-    } catch (ParseException error) {
-      System.out.println("position: " + error.getPosition());
-      System.out.println(error);
-    }
-
-    return returnHash;
+  public void add(String value){
+    arrayBuilder.add(value);
   }
+
+  public void add(JSONArray value){
+    arrayBuilder.add(value);
+  }
+
+  public void add(JSONObject value){
+    arrayBuilder.add(value);
+  }
+
+  public void add(Map value){
+    arrayBuilder.add(value);
+  }
+
+  public JSONArray toJsonArray(){
+    return arrayBuilder;
+  }
+
 }

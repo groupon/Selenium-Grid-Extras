@@ -38,9 +38,12 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class KillAllChrome extends KillAllByName {
@@ -76,15 +79,21 @@ public class KillAllChrome extends KillAllByName {
 
   private String killChromeOnWindows(){
 
-    String killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe"));
-    String killDriverResult = ExecuteCommand.execRuntime(
-        getWindowsKillCommand("chromedriver.exe"));
+    Map<String, Object> killBrowserResult = JsonWrapper.parseJson(
+        ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe")));
 
-    if (killBrowserResult.contains("\"exit_code\":0") && killDriverResult
-        .contains("\"exit_code\":0")) {
-      getJsonResponse().addKeyValues("out", "[" + killBrowserResult + ", " + killDriverResult + "]");
+    Map<String, Object> killDriverResult = JsonWrapper.parseJson(ExecuteCommand.execRuntime(
+        getWindowsKillCommand("chromedriver.exe")));
+
+    List<Map> response = new LinkedList<Map>();
+    response.add(killBrowserResult);
+    response.add(killDriverResult);
+
+    if (killBrowserResult.get("exit_code").equals("0") && killDriverResult.get("exit_code")
+        .equals("0")) {
+      getJsonResponse().addKeyValues("out", response);
     } else {
-      getJsonResponse().addKeyValues("error", "[" + killBrowserResult + ", " + killDriverResult + "]");
+      getJsonResponse().addKeyValues("error", response);
     }
 
     return getJsonResponse().toString();

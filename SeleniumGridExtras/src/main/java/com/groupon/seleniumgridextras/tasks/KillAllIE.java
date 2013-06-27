@@ -38,10 +38,12 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonArrayBuilder;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -84,15 +86,22 @@ public class KillAllIE extends KillAllByName {
 
   private String killIEAndIEDriver() {
 
-    String killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe"));
-    String killDriverResult = ExecuteCommand.execRuntime(
-        getWindowsKillCommand("IEDriverServer.exe"));
+    Map<String, Object> killBrowserResult = JsonWrapper.parseJson(
+        ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe")));
 
-    if (killBrowserResult.contains("\"exit_code\":0") && killDriverResult
-        .contains("\"exit_code\":0")) {
-      getJsonResponse().addKeyValues("out", "[" + killBrowserResult + ", " + killDriverResult + "]");
+    Map<String, Object> killDriverResult = JsonWrapper.parseJson(ExecuteCommand.execRuntime(
+        getWindowsKillCommand("IEDriverServer.exe")));
+
+
+    List<Map> response = new LinkedList<Map>();
+    response.add(killBrowserResult);
+    response.add(killDriverResult);
+
+    if (killBrowserResult.get("exit_code").equals("0") && killDriverResult.get("exit_code")
+        .equals("0")) {
+      getJsonResponse().addKeyValues("out", response);
     } else {
-      getJsonResponse().addKeyValues("error", "[" + killBrowserResult + ", " + killDriverResult + "]");
+      getJsonResponse().addKeyValues("error", response);
     }
 
     return getJsonResponse().toString();

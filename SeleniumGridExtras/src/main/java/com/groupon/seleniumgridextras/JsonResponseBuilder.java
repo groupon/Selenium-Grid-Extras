@@ -113,7 +113,7 @@ public class JsonResponseBuilder {
     keyValues.put(key, value);
   }
 
-  public void addKeyValues(String key, List<String> value) {
+  public void addKeyValues(String key, List value) {
     keyValues.put(key, value);
   }
 
