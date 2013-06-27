@@ -92,4 +92,14 @@ public class KillAllByNameTest {
     assertEquals(3, task.getJsonResponse().getKeyDescriptions().keySet().size());
 
   }
+
+  @Test
+  public void testGetWindowsCommand() throws Exception {
+    assertEquals("taskkill -F -IM test", task.getWindowsCommand("test"));
+  }
+
+  @Test
+  public void testGetNotWindowsCommand() throws Exception {
+    assertEquals("killall -v -m test", task.getLinuxCommand("test"));
+  }
 }

@@ -67,22 +67,14 @@ public class KillAllIETest {
     assertEquals("/kill_ie", task.getEndpoint());
   }
 
-//  @Test
-//  public void testgetWindowsCommand() throws Exception {
-//    assertEquals(windowsCommand, task.getWindowsCommand());
-//  }
+  @Test
+  public void testOnlyWindowsSupported() throws Exception {
 
-//  @Test
-//  public void testgetMacCommand() throws Exception {
-//    assertEquals(
-//        "{\"exit_code\":1,\"error\":[\"Kill IE command is not implemented on Mac OSX and Linux\"],\"out\":[]}",
-//        task.getMacCommand());
-//  }
+    if(!OSChecker.isWindows()){
+    assertEquals(
+        "{\"exit_code\":1,\"error\":[\"Kill IE command is only implemented in Windows\"],\"out\":[]}",
+        task.execute());
+    }
+  }
 
-//  @Test
-//  public void testgetLinuxCommand() throws Exception {
-//    assertEquals(
-//        "{\"exit_code\":1,\"error\":[\"Kill IE command is not implemented on Mac OSX and Linux\"],\"out\":[]}",
-//        task.getLinuxCommand());
-//  }
 }
