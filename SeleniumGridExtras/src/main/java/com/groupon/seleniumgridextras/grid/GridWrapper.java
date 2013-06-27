@@ -59,6 +59,10 @@ public class GridWrapper {
     return RuntimeConfig.getSeleniungGridExtrasHomePath();
   }
 
+  public static String getGridExtrasJarFilePath(){
+    return RuntimeConfig.getSeleniumGridExtrasJarFile();
+  }
+
   public static String getWebdriverHome() {
     return RuntimeConfig.getWebdriverParentDir();
   }
@@ -80,7 +84,7 @@ public class GridWrapper {
     }
 
 
-    command = command + getSeleniumGridExtrasPath();
+    command = command + getGridExtrasJarFilePath();
 
     String stuff = colon + getCurrentWebDriverJarPath() + " ";
 
