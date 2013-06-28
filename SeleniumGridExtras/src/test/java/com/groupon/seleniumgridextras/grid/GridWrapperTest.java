@@ -72,7 +72,7 @@ public class GridWrapperTest {
   }
 
   @After
-  public void tearDown() throws Exception{
+  public void tearDown() throws Exception {
     File config = new File(RuntimeConfig.getConfigFile());
     config.delete();
   }
@@ -82,16 +82,16 @@ public class GridWrapperTest {
     String command = "java -cp ";
     String colon = ":";
 
-    if (windows){
+    if (windows) {
       colon = ";";
     }
-
 
     command = command + RuntimeConfig.getSeleniungGridExtrasHomePath();
 
     String
         stuff =
-        colon + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar  ";
+        colon + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion
+        + ".jar  ";
     if (windows) {
       stuff = OSChecker.toWindowsPath(stuff);
     }
@@ -99,8 +99,11 @@ public class GridWrapperTest {
     command =
         command + stuff;
 
-    command = command + "org.openqa.grid.selenium.GridLauncher  -port 5555";
-    command = command + " -hub http://localhost:4444 -host http://127.0.0.1 -role wd";
+    command = command + "org.openqa.grid.selenium.GridLauncher  -port 4445 ";
+    command =
+        command + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
+        + "-hub http://localhost:4444 " +
+        "-host " + RuntimeConfig.getCurrentHostIP() + " -role wd";
 
     return command;
   }
@@ -139,16 +142,17 @@ public class GridWrapperTest {
 
   @Test
   public void testGetGridConfigPortForRole() throws Exception {
-    assertEquals("5555", GridWrapper.getGridConfigPortForRole("node"));
+    assertEquals("4445", GridWrapper.getGridConfigPortForRole("node"));
     assertEquals("4444", GridWrapper.getGridConfigPortForRole("hub"));
   }
 
   @Test
   public void testGetGridNodeConfig() throws Exception {
     Map<String, String> expectedConfig = new HashMap<String, String>();
-    expectedConfig.put("-port", "5555");
+    expectedConfig.put("-port", "4445");
     expectedConfig.put("-hub", "http://localhost:4444");
-    expectedConfig.put("-host", "http://127.0.0.1");
+    expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
+    expectedConfig.put("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
     expectedConfig.put("-role", "wd");
 
     assertEquals(expectedConfig, GridWrapper.getGridConfig("node"));
@@ -158,7 +162,7 @@ public class GridWrapperTest {
   public void testGetGridHubConfig() throws Exception {
     Map<String, String> expectedConfig = new HashMap<String, String>();
     expectedConfig.put("-port", "4444");
-    expectedConfig.put("-host", "http://127.0.0.1");
+    expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
     expectedConfig.put("-role", "hub");
     expectedConfig
         .put("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
