@@ -158,10 +158,11 @@ public class DefaultConfig {
   private static JSONObject getGridNodeConfig() {
     JSONObject gridNodeConfig = new JSONObject();
 
-    gridNodeConfig.put("-host", "http://127.0.0.1");
     gridNodeConfig.put("-role", "wd");
     gridNodeConfig.put("-hub", "http://localhost:4444");
     gridNodeConfig.put("-port", "4445");
+    gridNodeConfig.put("-nodeTimeout", "240");
+    gridNodeConfig.put("-maxSession", "1");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")){

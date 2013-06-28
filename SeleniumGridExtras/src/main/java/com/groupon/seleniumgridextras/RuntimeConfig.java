@@ -45,6 +45,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +74,7 @@ public class RuntimeConfig {
     }
   }
 
-  public static void setConfig(String file){
+  public static void setConfig(String file) {
     configFile = file;
   }
 
@@ -132,16 +134,26 @@ public class RuntimeConfig {
     }
   }
 
-  public static String getSeleniumGridExtrasJarFile(){
+  public static String getSeleniumGridExtrasJarFile() {
     return SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
   }
 
+  public static String getCurrentHostIP() {
+    try {
+      InetAddress addr = InetAddress.getLocalHost();
+      return addr.getHostAddress();
+    } catch (UnknownHostException error) {
+      System.out.println(error);
+      return "";
+    }
+  }
 
-  public static String getSeleniungGridExtrasHomePath(){
+
+  public static String getSeleniungGridExtrasHomePath() {
     String path = getSeleniumGridExtrasJarFile();
     path = path.replaceAll("[\\w-\\d\\.]*\\.jar", "");
 
-    if (OSChecker.isWindows()){
+    if (OSChecker.isWindows()) {
       path = OSChecker.toWindowsPath(path);
     }
 
