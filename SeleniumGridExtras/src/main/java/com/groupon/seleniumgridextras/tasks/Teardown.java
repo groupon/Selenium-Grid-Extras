@@ -37,13 +37,17 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Teardown extends ExecuteOSTask {
+
+  private List<ExecuteOSTask> teardownTasks;
 
   public Teardown() {
     setEndpoint("/teardown");
@@ -56,32 +60,52 @@ public class Teardown extends ExecuteOSTask {
     setCssClass("btn-info");
     setButtonText("Teardown");
     setEnabledInGui(false);
+
+    addResponseDescription("classes_to_execute",
+                           "List of full canonical classes to execute on Tear-Down");
+    addResponseDescription("results", "Hash object of tasks ran and their results");
+  }
+
+  private List<String> getClassesToRun() {
+    List<String> listOfTasks = new LinkedList<String>();
+    for (ExecuteOSTask task : teardownTasks) {
+      listOfTasks.add(task.getClass().getSimpleName());
+    }
+
+    return listOfTasks;
   }
 
   @Override
-  public String getWindowsCommand() {
-    return "";
+  public String execute(String param) {
+
+    try {
+      Map<String, Object> results = new HashMap<String, Object>();
+
+      for (ExecuteOSTask task : teardownTasks) {
+        results.put(task.getClass().getSimpleName(), JsonWrapper.parseJson(task.execute()));
+      }
+
+      getJsonResponse().addKeyValues("results", results);
+
+      return getJsonResponse().toString();
+    } catch (Exception error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
+    }
   }
 
-  @Override
-  public String getLinuxCommand() {
-    return "ls";
-  }
-
-  @Override
-  public String getMacCommand(){
-    return "ls";
-  }
 
   @Override
   public boolean initialize() {
     Boolean initialized = true;
-    System.out.println("Teardown Tasks");
+    System.out.println("Tear-Down Tasks");
+    teardownTasks = new LinkedList<ExecuteOSTask>();
 
     for (String module : RuntimeConfig.getTeardownModules()) {
       try {
-        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
-        System.out.println("    " + foo.getClass().getSimpleName());
+        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
+        teardownTasks.add(task);
+        System.out.println("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {
         System.out.println(module + "   " + error);
         initialized = false;
@@ -99,6 +123,8 @@ public class Teardown extends ExecuteOSTask {
       System.exit(1);
     }
 
+
+    getJsonResponse().addKeyValues("classes_to_execute", getClassesToRun());
     return true;
 
   }

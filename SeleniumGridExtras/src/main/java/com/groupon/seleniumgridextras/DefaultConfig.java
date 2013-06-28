@@ -89,6 +89,7 @@ public class DefaultConfig {
 
   private static void loadTeardownConfig() {
     teardownTask.add("com.groupon.seleniumgridextras.tasks.KillAllIE");
+    teardownTask.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
     defaultConfig.put("teardown", teardownTask);
   }
 
