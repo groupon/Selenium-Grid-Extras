@@ -54,7 +54,6 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
       notImplementedError =
       "This task was not implemented on " + OSChecker.getOSName();
   public boolean waitToFinishTask = true;
-  protected JsonResponseBuilder jsonResponse;
 
   public String execute() {
     return execute("");
@@ -68,13 +67,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
     }
   }
 
-  public JsonResponseBuilder getJsonResponse() {
 
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-    }
-    return jsonResponse;
-  }
 
   public String execute(String parameter) {
 
@@ -86,10 +79,6 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
-
-//  public abstract String getEndpoint();
-
-//  public abstract String getDescription();
 
   public String getWindowsCommand(String parameter) {
 

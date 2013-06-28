@@ -11,7 +11,6 @@ public class ExtrasEndPoint {
   private String request_type;
   private Map<String, String> accepted_params;
   private String description;
-  private Map<String, String> response_description;
   @SerializedName("class")
   private String klass;
   private String http_type;
@@ -19,6 +18,7 @@ public class ExtrasEndPoint {
   private String button_text;
   private String css_class;
   private Boolean enabled_in_gui;
+  protected JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
 
   public String getResponseType() {
     return response_type;
@@ -45,11 +45,11 @@ public class ExtrasEndPoint {
   }
 
   public Map<String, String> getResponseDescription() {
-    return response_description;
+    return getJsonResponse().getKeyDescriptions();
   }
 
-  public void setResponseDescription(Map<String, String> response_description) {
-    this.response_description = response_description;
+  public void addResponseDescription(String key, String description){
+    getJsonResponse().addKeyDescriptions(key, description);
   }
 
   public String getClassname() {
@@ -108,7 +108,18 @@ public class ExtrasEndPoint {
     this.request_type = request_type;
   }
 
+  public JsonResponseBuilder getJsonResponse() {
+
+    if (this.jsonResponse == null) {
+      this.jsonResponse = new JsonResponseBuilder();
+    }
+    return jsonResponse;
+  }
+
   public void registerApi() {
+
+    this.getJsonResponse();
+
     Map apiDescription = new HashMap();
     apiDescription.put("endpoint", getEndpoint());
     apiDescription.put("description", getDescription());
