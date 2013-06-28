@@ -37,11 +37,14 @@
 
 package com.groupon.seleniumgridextras;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
+
+import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
@@ -51,9 +54,16 @@ public class DownloadWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
+    RuntimeConfig.setConfig("download_test.json");
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     task = new DownloadWebdriver();
+  }
+
+  @After
+  public void tearDown() throws Exception{
+    File config = new File(RuntimeConfig.getConfigFile());
+    config.delete();
   }
 
 

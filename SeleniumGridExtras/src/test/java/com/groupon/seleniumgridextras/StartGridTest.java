@@ -64,6 +64,7 @@ public class StartGridTest {
 
   @Before
   public void setUp() throws Exception {
+    RuntimeConfig.setConfig("starg_grid_test.json");
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     task = new com.groupon.seleniumgridextras.tasks.StartGrid();
@@ -81,6 +82,9 @@ public class StartGridTest {
     if (file2.exists()) {
       file.delete();
     }
+
+    File config = new File(RuntimeConfig.getConfigFile());
+    config.delete();
   }
 
 

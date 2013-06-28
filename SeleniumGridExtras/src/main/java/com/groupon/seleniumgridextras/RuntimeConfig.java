@@ -53,7 +53,7 @@ import java.util.Map;
 public class RuntimeConfig {
 
   private static Map config;
-  private static final String configFile = "selenium_grid_extras_config.json";
+  private static String configFile = "selenium_grid_extras_config.json";
 
   public static Map getConfig() {
     return config;
@@ -70,6 +70,10 @@ public class RuntimeConfig {
     if (configString != "") {
       setFullConfig(JsonWrapper.parseJson(configString));
     }
+  }
+
+  public static void setConfig(String file){
+    configFile = file;
   }
 
 

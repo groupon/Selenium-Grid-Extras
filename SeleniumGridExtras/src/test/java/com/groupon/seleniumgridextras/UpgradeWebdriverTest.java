@@ -41,9 +41,11 @@ import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +58,16 @@ public class UpgradeWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
+    RuntimeConfig.setConfig("upgrade_test.json");
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     task = new UpgradeWebdriver();
+  }
+
+  @After
+  public void tearDown() throws Exception{
+    File config = new File(RuntimeConfig.getConfigFile());
+    config.delete();
   }
 
   @Test

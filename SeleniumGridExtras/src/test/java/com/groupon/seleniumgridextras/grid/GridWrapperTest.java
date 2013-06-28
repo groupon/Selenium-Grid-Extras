@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.grid;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,7 @@ import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,6 +61,7 @@ public class GridWrapperTest {
 
   @Before
   public void setUp() throws Exception {
+    RuntimeConfig.setConfig("grid_wrapper_test.json");
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
     gridConfig = RuntimeConfig.getGridConfig();
@@ -66,6 +69,12 @@ public class GridWrapperTest {
     wdVersion = RuntimeConfig.getWebdriverConfig().get("version").toString();
     wdHome = "webdriver";
 
+  }
+
+  @After
+  public void tearDown() throws Exception{
+    File config = new File(RuntimeConfig.getConfigFile());
+    config.delete();
   }
 
   private String getNodeStartCommand(Boolean windows) {

@@ -79,7 +79,8 @@ public class GetConfigTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":0,\"error\":[],\"filename\":[\"selenium_grid_extras_config.json\"],\"config_runtime\":[\"\"],\"config_file\":[\"\"],\"out\":[]}",
+        "{\"exit_code\":0,\"error\":[],\"filename\":[\"" + RuntimeConfig.getConfigFile()
+        + "\"],\"config_runtime\":[\"\"],\"config_file\":[\"\"],\"out\":[]}",
         task.getJsonResponse().toString());
   }
 }
