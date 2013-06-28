@@ -34,72 +34,57 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
-package com.groupon.seleniumgridextras;
-
-import com.groupon.seleniumgridextras.grid.GridWrapper;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
+package com.groupon.seleniumgridextras.tasks;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 
-public class UpgradeWebdriverTest {
+
+public class GridStatusTest {
 
   public ExecuteOSTask task;
 
   @Before
   public void setUp() throws Exception {
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
-    task = new UpgradeWebdriver();
+    task = new GridStatus();
   }
 
   @Test
   public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+    assertEquals("/grid_status", task.getEndpoint());
   }
 
   @Test
   public void testGetDescription() throws Exception {
-    assertEquals(
-        "Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart",
-        task.getDescription());
-  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
-  }
-
-  @Test
-  public void testResponseDescriptions() throws Exception {
-    Map<String, String> descriptions = task.getResponseDescription();
-    assertEquals("New version downloaded and reconfigured", descriptions.get("new_version"));
-    assertEquals("Old version of the jar that got replaced", descriptions.get("old_version"));
-    assertEquals(5, descriptions.keySet().size());
-  }
-
-
-    @Test
-  public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"new_version\":[\"\"],\"exit_code\":0,\"error\":[],\"old_version\":[\"" + GridWrapper
-            .getWebdriverVersion() + "\"],\"out\":[]}", task.getJsonResponse().toString());
+    assertEquals("Returns status of the Selenium Grid hub/node. If currently running and what is the PID",
+                 task.getDescription());
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    assertEquals(0, task.getAcceptedParams().keySet().size());
   }
+
+  @Test
+  public void testGetResponseDescription() throws Exception {
+    assertEquals("Boolean if hub is running on given port", task.getResponseDescription().get(
+        "hub_running"));
+    assertEquals("Boolean if node is running on given port", task.getResponseDescription().get("node_running"));
+    assertEquals("Hash object describing the Hub Process", task.getResponseDescription().get("hub_info"));
+    assertEquals("Hash object describing the Node Process", task.getResponseDescription().get("node_info"));
+    assertEquals(7, task.getResponseDescription().keySet().size());
+  }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+      assertEquals(
+          "{\"node_running\":[\"\"],\"exit_code\":0,\"node_info\":[\"\"],\"hub_running\":[\"\"],\"error\":[],\"hub_info\":[\"\"],\"out\":[]}",
+          task.getJsonResponse().toString());
+    }
+  }
+
+
 }

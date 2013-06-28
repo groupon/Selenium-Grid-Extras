@@ -62,20 +62,14 @@ public class GetConfig extends ExecuteOSTask {
     setCssClass("btn-success");
     setButtonText("Get Config");
     setEnabledInGui(true);
+
+    addResponseDescription("config_file", "Config that currently lives saved on file");
+    addResponseDescription("config_runtime", "Runtime config that currently set in memory");
+    addResponseDescription("filename", "Filename from which the config was read");
+
+    getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
   }
 
-  @Override
-  public JsonResponseBuilder getJsonResponse() {
-
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-      jsonResponse.addKeyDescriptions("config_file", "Config that currently lives saved on file");
-      jsonResponse
-          .addKeyDescriptions("config_runtime", "Runtime config that currently set in memory");
-      jsonResponse.addKeyValues("filename", "Filename from which the config was read");
-    }
-    return jsonResponse;
-  }
 
   @Override
   public String execute(String param) {

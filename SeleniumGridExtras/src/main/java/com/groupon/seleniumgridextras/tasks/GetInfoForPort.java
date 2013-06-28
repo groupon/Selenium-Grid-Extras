@@ -59,20 +59,11 @@ public class GetInfoForPort extends ExecuteOSTask {
     setCssClass("btn-success");
     setButtonText("Get Info for Port");
     setEnabledInGui(true);
-  }
 
-  @Override
-  public JsonResponseBuilder getJsonResponse() {
-
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-
-      jsonResponse.addKeyDescriptions("process_name", "Process name/type (ie java, ruby, etc..)");
-      jsonResponse.addKeyDescriptions("pid", "Process ID");
-      jsonResponse.addKeyDescriptions("user", "User who is running process");
-      jsonResponse.addKeyDescriptions("port", "Port searched for");
-    }
-    return jsonResponse;
+    addResponseDescription("process_name", "Process name/type (ie java, ruby, etc..)");
+    addResponseDescription("pid", "Process ID");
+    addResponseDescription("user", "User who is running process");
+    addResponseDescription("port", "Port searched for");
   }
 
 

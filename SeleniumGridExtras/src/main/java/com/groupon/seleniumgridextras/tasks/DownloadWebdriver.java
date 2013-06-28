@@ -39,7 +39,6 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.groupon.seleniumgridextras.grid.GridWrapper;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
 import org.apache.commons.io.FileUtils;
@@ -65,6 +64,16 @@ public class DownloadWebdriver extends ExecuteOSTask {
     setCssClass("btn-success");
     setButtonText("Download WebDriver");
     setEnabledInGui(true);
+
+
+    addResponseDescription("root_dir", "Directory to which JAR file was saved to");
+    addResponseDescription("file", "Filename on node's computer");
+    addResponseDescription("source_url",
+                                    "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
+
+    getJsonResponse().addKeyValues("root_dir", GridWrapper.getWebdriverHome());
+
+
   }
 
   @Override
@@ -85,21 +94,6 @@ public class DownloadWebdriver extends ExecuteOSTask {
     } else {
       return execute(parameter.get("version").toString());
     }
-  }
-
-
-  @Override
-  public JsonResponseBuilder getJsonResponse() {
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-      jsonResponse.addKeyDescriptions("root_dir", "Directory to which JAR file was saved to");
-      jsonResponse.addKeyDescriptions("file", "Filename on node's computer");
-      jsonResponse.addKeyDescriptions("source_url",
-                                      "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
-
-      jsonResponse.addKeyValues("root_dir", GridWrapper.getWebdriverHome());
-    }
-    return jsonResponse;
   }
 
   private String downloadWebdriverVersion(String version) {

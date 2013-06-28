@@ -58,19 +58,14 @@ public class GridStatus extends ExecuteOSTask {
     setCssClass("btn-success");
     setButtonText("Grid Status");
     setEnabledInGui(true);
+
+    addResponseDescription("hub_running", "Boolean if hub is running on given port");
+    addResponseDescription("node_running", "Boolean if node is running on given port");
+    addResponseDescription("hub_info", "Hash object describing the Hub Process");
+    addResponseDescription("node_info", "Hash object describing the Node Process");
+
   }
 
-  @Override
-  public Map getResponseDescription() {
-
-    jsonResponse = new JsonResponseBuilder();
-    jsonResponse.addKeyDescriptions("hub_running", "Boolean if hub is running on given port");
-    jsonResponse.addKeyDescriptions("node_running", "Boolean if node is running on given port");
-    jsonResponse.addKeyDescriptions("hub_info", "Hash object describing the Hub Process");
-    jsonResponse.addKeyDescriptions("node_info", "Hash object describing the Node Process");
-
-    return jsonResponse.getKeyDescriptions();
-  }
 
   @Override
   public String execute() {
@@ -81,15 +76,15 @@ public class GridStatus extends ExecuteOSTask {
       Map<String, String> hubInfo = PortChecker.getParsedPortInfo(hubPort);
       Map<String, String> nodeInfo = PortChecker.getParsedPortInfo(nodePort);
 
-      jsonResponse.addKeyValues("hub_running", hubInfo.isEmpty() ? false : true);
-      jsonResponse.addKeyValues("node_running", nodeInfo.isEmpty() ? false : true);
-      jsonResponse.addKeyValues("hub_info", hubInfo);
-      jsonResponse.addKeyValues("node_info", nodeInfo);
+      getJsonResponse().addKeyValues("hub_running", hubInfo.isEmpty() ? false : true);
+      getJsonResponse().addKeyValues("node_running", nodeInfo.isEmpty() ? false : true);
+      getJsonResponse().addKeyValues("hub_info", hubInfo);
+      getJsonResponse().addKeyValues("node_info", nodeInfo);
 
-      return jsonResponse.toString();
+      return getJsonResponse().toString();
     } catch (Exception error) {
-      jsonResponse.addKeyValues("error", error.toString());
-      return jsonResponse.toString();
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
     }
   }
 

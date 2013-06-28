@@ -35,71 +35,57 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.grid.GridWrapper;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 
-public class UpgradeWebdriverTest {
+public class GetInfoForPortTest {
 
   public ExecuteOSTask task;
 
   @Before
   public void setUp() throws Exception {
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
-    task = new UpgradeWebdriver();
+    task = new GetInfoForPort();
   }
+
 
   @Test
   public void testGetEndpoint() throws Exception {
-    assertEquals("/upgrade_webdriver", task.getEndpoint());
+    assertEquals("/port_info", task.getEndpoint());
   }
 
   @Test
   public void testGetDescription() throws Exception {
-    assertEquals(
-        "Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart",
-        task.getDescription());
-  }
-
-  @Test
-  public void testGetDependencies() throws Exception {
-    List<String> expected = new LinkedList();
-    expected.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    assertEquals(expected, task.getDependencies());
-  }
-
-  @Test
-  public void testResponseDescriptions() throws Exception {
-    Map<String, String> descriptions = task.getResponseDescription();
-    assertEquals("New version downloaded and reconfigured", descriptions.get("new_version"));
-    assertEquals("Old version of the jar that got replaced", descriptions.get("old_version"));
-    assertEquals(5, descriptions.keySet().size());
-  }
-
-
-    @Test
-  public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"new_version\":[\"\"],\"exit_code\":0,\"error\":[],\"old_version\":[\"" + GridWrapper
-            .getWebdriverVersion() + "\"],\"out\":[]}", task.getJsonResponse().toString());
+    assertEquals("Returns parsed information on a PID occupying a given port",
+                 task.getDescription());
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
+    assertEquals("(Required) Port to be used", task.getAcceptedParams().get("port"));
     assertEquals(1, task.getAcceptedParams().keySet().size());
+  }
+
+  @Test
+  public void testGetResponseDescription() throws Exception {
+    assertEquals("Process name/type (ie java, ruby, etc..)", task.getResponseDescription().get(
+        "process_name"));
+    assertEquals("Process ID", task.getResponseDescription().get("pid"));
+    assertEquals("User who is running process", task.getResponseDescription().get("user"));
+    assertEquals("Port searched for", task.getResponseDescription().get("port"));
+    assertEquals(7, task.getResponseDescription().keySet().size());
+  }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+      assertEquals(
+          "{\"port\":[\"\"],\"exit_code\":0,\"error\":[],\"process_name\":[\"\"],\"pid\":[\"\"],\"user\":[\"\"],\"out\":[]}",
+          task.getJsonResponse().toString());
+    }
   }
 }

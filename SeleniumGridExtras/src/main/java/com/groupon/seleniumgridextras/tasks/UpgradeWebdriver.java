@@ -62,6 +62,12 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     setCssClass("btn-warning");
     setButtonText("Upgrade WebDriver");
     setEnabledInGui(true);
+
+
+    addResponseDescription("old_version", "Old version of the jar that got replaced");
+    addResponseDescription("new_version", "New version downloaded and reconfigured");
+
+    getJsonResponse().addKeyValues("old_version", RuntimeConfig.getWebdriverVersion());
   }
 
   @Override
@@ -107,23 +113,6 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     List<String> dependencies = new LinkedList();
     dependencies.add("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
     return dependencies;
-  }
-
-  @Override
-  public JsonResponseBuilder getJsonResponse() {
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-
-      jsonResponse.addKeyDescriptions("exit_code", "Record if upgrade was successful or not");
-      jsonResponse.addKeyDescriptions("old_version", "Old version of the jar that got replaced");
-      jsonResponse.addKeyDescriptions("new_version", "New version downloaded and reconfigured");
-      jsonResponse.addKeyDescriptions("error", "Any error returned from.");
-
-      jsonResponse.addKeyValues("exit_code", 0);
-      jsonResponse.addKeyValues("old_version", RuntimeConfig.getWebdriverVersion());
-    }
-
-    return jsonResponse;
   }
 
 }

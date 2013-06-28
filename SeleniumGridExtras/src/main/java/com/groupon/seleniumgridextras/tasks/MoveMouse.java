@@ -58,6 +58,10 @@ public class MoveMouse extends ExecuteOSTask {
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-succes");
     setButtonText("Move mouse");
+
+    addResponseDescription("x", "Current X postion of the mouse");
+    addResponseDescription("y", "Current Y postion of the mouse");
+
     setEnabledInGui(true);
   }
 
@@ -79,17 +83,6 @@ public class MoveMouse extends ExecuteOSTask {
   @Override
   public String execute() {
     return execute(new HashMap<String, String>());
-  }
-
-  @Override
-  public JsonResponseBuilder getJsonResponse() {
-
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-      jsonResponse.addKeyDescriptions("x", "Current X postion of the mouse");
-      jsonResponse.addKeyDescriptions("y", "Current Y postion of the mouse");
-    }
-    return jsonResponse;
   }
 
   private String moveMouse(Integer x, Integer y) {

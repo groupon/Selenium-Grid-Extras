@@ -37,7 +37,6 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import org.apache.commons.codec.binary.Base64;
 
@@ -69,6 +68,11 @@ public class Screenshot extends ExecuteOSTask {
     setCssClass("btn-info");
     setButtonText("screenshot");
     setEnabledInGui(true);
+
+    addResponseDescription("file_type", "Type of file returned (PNG/JPG/GIF)");
+    addResponseDescription("file", "Name of the file saved on the Node's HD");
+    addResponseDescription("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
+
   }
 
   @Override
@@ -168,18 +172,6 @@ public class Screenshot extends ExecuteOSTask {
     g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
     g.dispose();
     return scaledBI;
-  }
-
-  @Override
-  public JsonResponseBuilder getJsonResponse() {
-    if (jsonResponse == null) {
-      jsonResponse = new JsonResponseBuilder();
-      jsonResponse.addKeyDescriptions("file_type", "Type of file returned (PNG/JPG/GIF)");
-      jsonResponse.addKeyDescriptions("file", "Name of the file saved on the Node's HD");
-      jsonResponse
-          .addKeyDescriptions("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
-    }
-    return jsonResponse;
   }
 
   @Override

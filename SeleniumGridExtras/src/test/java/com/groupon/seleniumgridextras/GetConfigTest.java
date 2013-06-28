@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras;
 
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.GetConfig;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,6 +62,24 @@ public class GetConfigTest {
 
   @Test
   public void testGetDescription() throws Exception {
-    assertEquals("Returns JSON view of the full configuration of the Selenium Grid Extras", task.getDescription());
+    assertEquals("Returns JSON view of the full configuration of the Selenium Grid Extras",
+                 task.getDescription());
+  }
+
+  @Test
+  public void testGetResponseDescription() throws Exception {
+    assertEquals("Config that currently lives saved on file",
+                 task.getResponseDescription().get("config_file"));
+    assertEquals("Runtime config that currently set in memory",
+                 task.getResponseDescription().get("config_runtime"));
+    assertEquals("Filename from which the config was read",
+                 task.getResponseDescription().get("filename"));
+  }
+
+  @Test
+  public void testGetJsonResponse() throws Exception {
+    assertEquals(
+        "{\"exit_code\":0,\"error\":[],\"filename\":[\"selenium_grid_extras_config.json\"],\"config_runtime\":[\"\"],\"config_file\":[\"\"],\"out\":[]}",
+        task.getJsonResponse().toString());
   }
 }
