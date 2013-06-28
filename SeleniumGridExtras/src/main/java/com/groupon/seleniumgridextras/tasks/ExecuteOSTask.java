@@ -39,7 +39,6 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
