@@ -145,7 +145,13 @@ public class DefaultConfig {
     gridHubConfig.put("-role", "hub");
     gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
-    gridHubConfig.put("-host", "http://127.0.0.1");
+
+    String hostIp = RuntimeConfig.getCurrentHostIP();
+    if (!hostIp.equals("")){
+      gridHubConfig.put("-host", hostIp);
+    }
+
+
     return gridHubConfig;
   }
 
@@ -155,8 +161,14 @@ public class DefaultConfig {
     gridNodeConfig.put("-host", "http://127.0.0.1");
     gridNodeConfig.put("-role", "wd");
     gridNodeConfig.put("-hub", "http://localhost:4444");
-    gridNodeConfig.put("-port", "5555");
-    gridNodeConfig.put("-host", "http://127.0.0.1");
+    gridNodeConfig.put("-port", "4445");
+
+    String hostIp = RuntimeConfig.getCurrentHostIP();
+    if (!hostIp.equals("")){
+      gridNodeConfig.put("-host", hostIp);
+    }
+
+    gridNodeConfig.put("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
 
     return gridNodeConfig;
   }
