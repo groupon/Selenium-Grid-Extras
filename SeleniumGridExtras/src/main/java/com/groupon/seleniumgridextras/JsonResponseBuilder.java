@@ -81,6 +81,7 @@ public class JsonResponseBuilder {
   }
 
   public void addKeyValues(String key, String value, Boolean splitLineToArray) {
+    checkIfKeyDescriptionExist(key);
     List<String> valueArray;
     if (splitLineToArray) {
       valueArray = convertLineToArray(value);
@@ -102,18 +103,22 @@ public class JsonResponseBuilder {
 
 
   public void addKeyValues(String key, Boolean value) {
+    checkIfKeyDescriptionExist(key);
     keyValues.put(key, value);
   }
 
   public void addKeyValues(String key, Map value) {
+    checkIfKeyDescriptionExist(key);
     keyValues.put(key, value);
   }
 
   public void addKeyValues(String key, int value) {
+    checkIfKeyDescriptionExist(key);
     keyValues.put(key, value);
   }
 
   public void addKeyValues(String key, List value) {
+    checkIfKeyDescriptionExist(key);
     keyValues.put(key, value);
   }
 
@@ -125,6 +130,13 @@ public class JsonResponseBuilder {
 
   public Map<String, String> getKeyDescriptions() {
     return keyDescriptions;
+  }
+
+  private void checkIfKeyDescriptionExist(String key) {
+    if (!keyDescriptions.containsKey(key)) {
+      throw new RuntimeException(
+          "You cannot add an entry to Json Response without adding description for it first");
+    }
   }
 
   private List<String> convertLineToArray(String input) {

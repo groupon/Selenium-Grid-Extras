@@ -72,8 +72,36 @@ public class JsonResponseBuilderTest {
                  jsonResponseObject.toString());
   }
 
+  @Test(expected = RuntimeException.class)
+  public void testExceptionOnKeyNotExistingForString() throws Exception {
+    jsonResponseObject.addKeyValues("foo", "bar");
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testExceptionOnKeyNotExistingForBoolean() throws Exception {
+    jsonResponseObject.addKeyValues("foo", true);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testExceptionOnKeyNotExistingForMap() throws Exception {
+    Map foo = new HashMap();
+    jsonResponseObject.addKeyValues("foo", foo);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testExceptionOnKeyNotExistingForInt() throws Exception {
+    jsonResponseObject.addKeyValues("foo", 1);
+  }
+
+  @Test(expected = RuntimeException.class)
+  public void testExceptionOnKeyNotExistingForList() throws Exception {
+    List foo = new LinkedList();
+    jsonResponseObject.addKeyValues("foo", foo);
+  }
+
   @Test
   public void testAddKeyValuesString() throws Exception {
+    jsonResponseObject.addKeyDescriptions("foo", "test");
     jsonResponseObject.addKeyValues("foo", "bar");
     assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":[\"bar\"],\"out\":[]}",
                  jsonResponseObject.toString());
@@ -81,6 +109,7 @@ public class JsonResponseBuilderTest {
 
   @Test
   public void testAddKeyValuesBoolean() throws Exception {
+    jsonResponseObject.addKeyDescriptions("foo", "test");
     jsonResponseObject.addKeyValues("foo", true);
     assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":true,\"out\":[]}",
                  jsonResponseObject.toString());
@@ -92,6 +121,7 @@ public class JsonResponseBuilderTest {
 
   @Test
   public void testAddKeyValuesMap() throws Exception {
+    jsonResponseObject.addKeyDescriptions("foo", "test");
     Map<String, String> bar = new HashMap<String, String>();
     jsonResponseObject.addKeyValues("foo", bar);
     assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":{},\"out\":[]}",
@@ -100,6 +130,7 @@ public class JsonResponseBuilderTest {
 
   @Test
   public void testAddKeyValuesInt() throws Exception {
+    jsonResponseObject.addKeyDescriptions("foo", "test");
     jsonResponseObject.addKeyValues("foo", 1);
     assertEquals("{\"exit_code\":0,\"error\":[],\"foo\":1,\"out\":[]}",
                  jsonResponseObject.toString());
@@ -111,6 +142,7 @@ public class JsonResponseBuilderTest {
 
   @Test
   public void testAddKeyValuesArray() throws Exception {
+    jsonResponseObject.addKeyDescriptions("foo", "test");
     List foo = new LinkedList<String>();
     foo.add("a");
     foo.add("b");
@@ -126,16 +158,19 @@ public class JsonResponseBuilderTest {
 
   @Test
   public void testStringValueWithAndWithoutLineSplit() throws Exception {
+    jsonResponseObject.addKeyDescriptions("no_split", "test");
     jsonResponseObject.addKeyValues("no_split", "all\none\nline\nplease", false);
     assertEquals(
         "{\"exit_code\":0,\"error\":[],\"no_split\":[\"all\\none\\nline\\nplease\"],\"out\":[]}",
         jsonResponseObject.toString());
 
+    jsonResponseObject.addKeyDescriptions("with_split", "test");
     jsonResponseObject.addKeyValues("with_split", "all\non\nnew\nlines\nplease", true);
     assertEquals(
         "{\"exit_code\":0,\"error\":[],\"with_split\":[\"all\",\"on\",\"new\",\"lines\",\"please\"],\"out\":[]}",
         jsonResponseObject.toString());
 
+    jsonResponseObject.addKeyDescriptions("with_split_default", "test");
     jsonResponseObject.addKeyValues("with_split_default", "all\non\nnew\nlines\nplease", true);
     assertEquals(
         "{\"exit_code\":0,\"with_split_default\":[\"all\",\"on\",\"new\",\"lines\",\"please\"],\"error\":[],\"out\":[]}",
