@@ -42,13 +42,13 @@ import org.json.simple.JSONObject;
 
 public class DefaultConfig {
 
-  private static JSONObject defaultConfig = new JSONObject();
-  private static JSONArray enabledPlugins = new JSONArray();
-  private static JSONArray disabledPlugins = new JSONArray();
-  private static JSONArray setupTask = new JSONArray();
-  private static JSONArray teardownTask = new JSONArray();
-  private static JSONObject gridConfig = new JSONObject();
-  private static JSONObject webdriverConfig = new JSONObject();
+  private static JSONObject defaultConfig;
+  private static JSONArray enabledPlugins;
+  private static JSONArray disabledPlugins;
+  private static JSONArray setupTask;
+  private static JSONArray teardownTask;
+  private static JSONObject gridConfig;
+  private static JSONObject webdriverConfig;
 
 
   public static String toJsonString(){
@@ -56,6 +56,15 @@ public class DefaultConfig {
   }
 
   public static JSONObject getDefaultConfig() {
+    defaultConfig = new JSONObject();
+    enabledPlugins = new JSONArray();
+    disabledPlugins = new JSONArray();
+    setupTask = new JSONArray();
+    teardownTask = new JSONArray();
+    gridConfig = new JSONObject();
+    webdriverConfig = new JSONObject();
+
+
     loadDisabledPlugins();
     loadEnabledPlugins();
     loadSetupConfig();
