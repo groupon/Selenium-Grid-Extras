@@ -28,38 +28,26 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-require 'rubygems'
-require 'net/http'
-require 'json'
-require 'fileutils'
+require File.expand_path('spec_helper', File.dirname(__FILE__))
 
-require 'rbconfig'
-
-def is_windows?
-  (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
-end
-
-def get(endpoint)
-  url = URI.parse("http://localhost:3000/#{endpoint}")
-  Net::HTTP.get(url)
-end
-
-def get_json(endpoint)
-  JSON.parse(get(endpoint))
-end
-
-def get_local_config
-  JSON.parse(File.open("selenium_grid_extras_config.json", "r").read)
-end
-
-shared_examples "No Errors" do
-  it "should return 0 exit code" do
-    @response["exit_code"].should == 0
+describe "Setup.java" do
+  
+  before(:all) do  
+    @response = get_json "setup"
   end
   
-  it "should not have any errors in error stream" do
-    @response["error"].should == []
+  it "should move mouse without errors" do
+    @response["results"]["MoveMouse"].should == {"exit_code"=>0, "error"=>[], "y"=>0, "out"=>[], "x"=>0}
   end
   
+  it "should act properly with KillIE" do
+    if is_windows?
+      @response["results"]["KillAllIE"]["exit_code"].should == 0
+    else
+      @response["results"]["KillAllIE"]["error"].should == ["Kill IE command is only implemented in Windows"]
+      @response["results"]["KillAllIE"]["exit_code"].should == 1
+    end
+  end
+  
+  it_behaves_like "No Errors"
 end
-

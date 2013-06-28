@@ -35,29 +35,41 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+
+package com.groupon.seleniumgridextras.tasks;
+
+import com.groupon.seleniumgridextras.JsonWrapper;
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.WriteDefaultConfigs;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.Setup;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
-
 import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 
 import static org.junit.Assert.assertEquals;
 
-public class DownloadWebdriverTest {
+
+public class SetupTest {
 
   public ExecuteOSTask task;
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("download_test.json");
+    RuntimeConfig.setConfig("setup_test.json");
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
-    task = new DownloadWebdriver();
+
+    task = new Setup();
+    Boolean initilized = task.initialize();
   }
 
   @After
@@ -66,30 +78,54 @@ public class DownloadWebdriverTest {
     config.delete();
   }
 
+  @Test
+  public void testExecute() {
+    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+      String result = task.execute();
+      Map<String, HashMap> parsedResult = JsonWrapper.parseJson(result);
+      Long exitCode = new Long(0);
+      List<String> expecteClasses = new LinkedList<String>();
+      expecteClasses.add("KillAllIE");
+      expecteClasses.add("MoveMouse");
+
+      assertEquals(exitCode, parsedResult.get("exit_code"));
+      assertEquals(expecteClasses, parsedResult.get("classes_to_execute"));
+    }
+  }
 
   @Test
   public void testGetEndpoint() throws Exception {
-    assertEquals("/download_webdriver", task.getEndpoint());
+    assertEquals("/setup", task.getEndpoint());
   }
 
   @Test
   public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to local machine", task.getDescription());
+    assertEquals("Calls several pre-defined tasks to act as setup before build",
+                 task.getDescription());
   }
-
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"source_url\":[\"\"],\"root_dir\":[\"webdriver\"],\"out\":[]}",
-        task.getJsonResponse().toString());
+    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+
+      assertEquals(
+          "{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"KillAllIE\",\"MoveMouse\"],\"out\":[]}",
+          task.getJsonResponse().toString());
+
+      assertEquals("List of full canonical classes to execute on Setup",
+                   task.getJsonResponse().getKeyDescriptions().get("classes_to_execute"));
+
+      assertEquals("Hash object of tasks ran and their results",
+                   task.getJsonResponse().getKeyDescriptions().get("results"));
+
+      assertEquals(5, task.getResponseDescription().keySet().size());
+    }
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
-
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    assertEquals(0, task.getAcceptedParams().keySet().size());
   }
+
+
 }

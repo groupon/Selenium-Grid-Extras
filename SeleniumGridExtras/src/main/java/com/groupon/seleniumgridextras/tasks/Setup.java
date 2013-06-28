@@ -37,17 +37,27 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Setup extends ExecuteOSTask {
 
+  private List<ExecuteOSTask> setupTasks;
+  private final
+  String
+      shortDescription =
+      "Calls several pre-defined tasks to act as setup before build";
+
   public Setup() {
     setEndpoint("/setup");
-    setDescription("Calls several pre-defined tasks to act as setup before build");
+    setDescription(shortDescription);
     Map<String, String> params = new HashMap();
     setAcceptedParams(params);
     setRequestType("GET");
@@ -56,45 +66,54 @@ public class Setup extends ExecuteOSTask {
     setCssClass("btn");
     setButtonText("setup");
     setEnabledInGui(false);
+
+    addResponseDescription("classes_to_execute",
+                           "List of full canonical classes to execute on Setup");
+    addResponseDescription("results", "Hash object of tasks ran and their results");
+
   }
 
-  @Override
-  public String getWindowsCommand() {
-    return "";
+
+  private List<String> getClassesToRun() {
+    List<String> listOfTasks = new LinkedList<String>();
+    for (ExecuteOSTask task : setupTasks) {
+      listOfTasks.add(task.getClass().getSimpleName());
+    }
+
+    return listOfTasks;
   }
 
-  @Override
-  public String getLinuxCommand() {
-    return "ls";
-  }
 
   @Override
-  public String execute() {
-    String message = "";
+  public String execute(String param) {
 
-//    //OS specific setup
-//    if (OSChecker.isWindows()) {
-//
-//      message = KillAllIE.execute();
-//    } else {
-//      message = "On non windows box";
-//    }
-//
-//    //Global setup
-//    message = message + MoveMouse.execute();
+    try {
+      Map<String, Object> results = new HashMap<String, Object>();
 
-    return message;
+      for (ExecuteOSTask task : setupTasks) {
+        results.put(task.getClass().getSimpleName(), JsonWrapper.parseJson(task.execute()));
+      }
+
+      getJsonResponse().addKeyValues("results", results);
+
+      return getJsonResponse().toString();
+    } catch (Exception error) {
+      getJsonResponse().addKeyValues("error", error.toString());
+      return getJsonResponse().toString();
+    }
   }
 
   @Override
   public boolean initialize() {
     Boolean initialized = true;
     System.out.println("Setup Tasks");
+    setupTasks = new LinkedList<ExecuteOSTask>();
 
     for (String module : RuntimeConfig.getSetupModules()) {
       try {
-        ExecuteOSTask foo = (ExecuteOSTask) Class.forName(module).newInstance();
-        System.out.println("    " + foo.getClass().getSimpleName());
+        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
+        setupTasks.add(task);
+        System.out.println("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {
         System.out.println(module + "   " + error);
         initialized = false;
@@ -112,6 +131,7 @@ public class Setup extends ExecuteOSTask {
       System.exit(1);
     }
 
+    getJsonResponse().addKeyValues("classes_to_execute", getClassesToRun());
     return true;
 
   }
