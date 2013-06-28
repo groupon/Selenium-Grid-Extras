@@ -7,7 +7,7 @@ public class Demo {
   public static void main(String[] args) throws Exception {
     String[] a = {"-port", "4444",
         "-role", "hub",
-        "-servlets", "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet"};
+        "-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet"};
     GridLauncher.main(a);
   }
 }

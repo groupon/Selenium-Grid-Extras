@@ -36,7 +36,7 @@
  */
 
 
-package com.groupon.seleniumgridextras.grid;
+package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import org.openqa.grid.common.RegistrationRequest;

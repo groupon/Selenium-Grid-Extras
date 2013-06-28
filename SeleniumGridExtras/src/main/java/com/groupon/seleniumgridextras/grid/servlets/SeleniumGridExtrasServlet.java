@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.grid;
+package com.groupon.seleniumgridextras.grid.servlets;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

@@ -111,7 +111,7 @@ public class StartGridTest {
     String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
                              "-host http://127.0.0.1 -role hub -servlets " +
-                             "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet &";
+                             "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet &";
 
     String modifiedActual = task.getLinuxCommand("hub");
 
@@ -144,7 +144,7 @@ public class StartGridTest {
         "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
         "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
         "-host http://127.0.0.1 -role hub -servlets " +
-        "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet";
+        "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet";
 
     assertEquals("powershell.exe /c \"Start-Process " + hubBatch + "\"",
                  task.getWindowsCommand("hub"));

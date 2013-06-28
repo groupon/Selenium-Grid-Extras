@@ -161,7 +161,7 @@ public class GridWrapperTest {
     expectedConfig.put("-host", "http://127.0.0.1");
     expectedConfig.put("-role", "hub");
     expectedConfig
-        .put("-servlets", "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet");
+        .put("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
 
     assertEquals(expectedConfig, GridWrapper.getGridConfig("hub"));
   }

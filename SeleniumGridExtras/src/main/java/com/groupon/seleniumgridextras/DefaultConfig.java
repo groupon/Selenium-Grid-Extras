@@ -143,7 +143,7 @@ public class DefaultConfig {
   private static JSONObject getGridHubConfig() {
     JSONObject gridHubConfig = new JSONObject();
     gridHubConfig.put("-role", "hub");
-    gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.grid.SeleniumGridExtrasServlet");
+    gridHubConfig.put("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
     gridHubConfig.put("-port", "4444");
     gridHubConfig.put("-host", "http://127.0.0.1");
     return gridHubConfig;
