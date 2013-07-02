@@ -103,7 +103,7 @@ public class GridWrapperTest {
     command =
         command + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
         + "-hub http://localhost:4444 " +
-        "-host " + RuntimeConfig.getCurrentHostIP() + " -role wd";
+        "-maxSession 1 -host " + RuntimeConfig.getCurrentHostIP() + " -nodeTimeout 240 -role wd";
 
     return command;
   }
@@ -154,6 +154,8 @@ public class GridWrapperTest {
     expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
     expectedConfig.put("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
     expectedConfig.put("-role", "wd");
+    expectedConfig.put("-maxSession", "1");
+    expectedConfig.put("-nodeTimeout", "240");
 
     assertEquals(expectedConfig, GridWrapper.getGridConfig("node"));
   }

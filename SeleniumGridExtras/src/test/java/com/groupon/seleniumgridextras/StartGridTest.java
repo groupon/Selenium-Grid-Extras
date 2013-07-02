@@ -128,7 +128,8 @@ public class StartGridTest {
                              "org.openqa.grid.selenium.GridLauncher  -port 4445 " +
                              "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
                              +
-                             "-hub http://localhost:4444 -host " + RuntimeConfig.getCurrentHostIP() + " -role wd &";
+                             "-hub http://localhost:4444 -maxSession 1 -host " + RuntimeConfig
+        .getCurrentHostIP() + " -nodeTimeout 240 -role wd &";
 
     String modifiedActual = task.getLinuxCommand("node");
 
@@ -175,7 +176,8 @@ public class StartGridTest {
         "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
         "org.openqa.grid.selenium.GridLauncher  -port 4445 " +
         "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy " +
-        "-hub http://localhost:4444 -host " + RuntimeConfig.getCurrentHostIP() + " -role wd";
+        "-hub http://localhost:4444 -maxSession 1 -host " + RuntimeConfig.getCurrentHostIP()
+        + " -nodeTimeout 240 -role wd";
 
     assertEquals("powershell.exe /c \"Start-Process " + nodeBatch + "\"",
                  task.getWindowsCommand("node"));
