@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.groupon.seleniumgridextras.FileDownloader;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
@@ -67,10 +68,12 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
 
     addResponseDescription("root_dir", "Directory to which JAR file was saved to");
-    addResponseDescription("file", "Filename on node's computer");
+    addResponseDescription("file", "Relative path to file on the node");
+    addResponseDescription("file_full_path", "Full path to file on node");
     addResponseDescription("source_url",
-                                    "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
+                           "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
 
+    getJsonResponse().addKeyValues("file_full_path", RuntimeConfig.getSeleniungGridExtrasHomePath());
     getJsonResponse().addKeyValues("root_dir", GridWrapper.getWebdriverHome());
 
 
@@ -78,12 +81,23 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
   @Override
   public String execute() {
-    return downloadWebdriverVersion(RuntimeConfig.getWebdriverVersion());
+    return execute(RuntimeConfig.getWebdriverVersion());
   }
 
   @Override
   public String execute(String version) {
-    return downloadWebdriverVersion(version);
+    Map<String, String> downloadResult = FileDownloader.downloadWebdriverVersion(version);
+
+
+    if(downloadResult.get("error").equals("")){
+      getJsonResponse().addKeyValues("file", downloadResult.get("file"));
+      getJsonResponse().addKeyValues("out", downloadResult.get("out"));
+      getJsonResponse().addKeyValues("source_url", downloadResult.get("source_url"));
+    } else {
+      getJsonResponse().addKeyValues("error", downloadResult.get("error"));
+    }
+
+    return getJsonResponse().toString();
   }
 
   @Override
@@ -96,64 +110,8 @@ public class DownloadWebdriver extends ExecuteOSTask {
     }
   }
 
-  private String downloadWebdriverVersion(String version) {
-
-    String webdriverDir = GridWrapper.getWebdriverHome();
-    System.out.println("Downloading Driver to " + webdriverDir);
-    createWebdriverDir(webdriverDir);
-
-    try {
-      URL url = new URL(getUrl(version));
-      System.out.println("Source URL: " + url);
-      String jarFile = webdriverDir + "/" + version + ".jar";
-      System.out.println("Target file: " + jarFile);
-      File destination = new File(jarFile);
-
-      if (destination.exists()) {
-        System.out.println("File already exists, will not download");
-        getJsonResponse().addKeyValues("file", jarFile);
-        getJsonResponse().addKeyValues("out", "File already exist, no need to download again.");
-        return getJsonResponse().toString();
-      } else {
-        System.out.println("File does not exist, will download");
-        FileUtils.copyURLToFile(url, destination);
-        System.out.println("Download complete from " + url);
-
-        getJsonResponse().addKeyValues("file", jarFile);
-        getJsonResponse().addKeyValues("source_url", url.toString());
-
-        return getJsonResponse().toString();
-      }
 
 
-    } catch (MalformedURLException error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
-    } catch (IOException error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
-    }
-  }
-
-  private void createWebdriverDir(String dirString) {
-    File dir = new File(dirString);
-
-    if (dir.exists()) {
-      System.out.println(dirString + " already exists");
-      //Do nothing, it's already there
-    } else {
-      System.out.println(dirString + " does not yet exist. Creating it");
-      dir.mkdir();
-    }
-  }
-
-  private String getUrl(String version) {
-    String
-        fullUrl =
-        "http://selenium.googlecode.com/files/selenium-server-standalone-" + version + ".jar";
-    System.out.println("Will download from " + fullUrl);
-    return fullUrl;
-  }
 
   @Override
   public boolean initialize() {
@@ -167,7 +125,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
       }
 
       if (!webdriverJar.exists()) {
-        downloadWebdriverVersion(GridWrapper.getWebdriverVersion());
+        FileDownloader.downloadWebdriverVersion(GridWrapper.getWebdriverVersion());
       }
 
 

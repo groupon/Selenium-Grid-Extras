@@ -42,7 +42,7 @@ describe "DownloadWebdriver.java" do
   
   it "should default to config version if version is not provided" do
     response = get_json "download_webdriver"
-    response["file"].first.should == "webdriver/#{@wd_default_version}.jar"
+    response["file"].first.should == "#{@wd_default_version}.jar"
   end
   
   it "should have the downloaded version on file system" do
@@ -53,13 +53,13 @@ describe "DownloadWebdriver.java" do
     response = get_json "download_webdriver?version=#{@wd_version}"
     # response["source_url"].should == [""]
     response["out"].should == ["File already exist, no need to download again."]
-    response["file"].should == [@wd_jar]
+    response["file"].should == ["#{@wd_version}.jar"]
   end
   
   it_behaves_like "No Errors"  
   
   it "should have file param in return" do
-    @response["file"].should == [@wd_jar]
+    @response["file"].should == ["#{@wd_version}.jar"]
   end
   
   it "should have source url in response" do
