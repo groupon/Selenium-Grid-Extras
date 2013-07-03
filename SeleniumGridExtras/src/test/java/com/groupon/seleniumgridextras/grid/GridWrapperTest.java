@@ -67,7 +67,7 @@ public class GridWrapperTest {
     gridConfig = RuntimeConfig.getGridConfig();
     wdConfig = RuntimeConfig.getWebdriverConfig();
     wdVersion = RuntimeConfig.getWebdriverConfig().get("version").toString();
-    wdHome = "webdriver";
+    wdHome = RuntimeConfig.getOSTempDir() + "/webdriver";
 
   }
 
@@ -89,15 +89,15 @@ public class GridWrapperTest {
     command = command + RuntimeConfig.getSeleniungGridExtrasHomePath();
 
     String
-        stuff =
-        colon + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion
+        wdJarPath =
+        colon + wdHome + "/" + wdVersion
         + ".jar  ";
     if (windows) {
-      stuff = OSChecker.toWindowsPath(stuff);
+      wdJarPath = OSChecker.toWindowsPath(wdJarPath);
     }
 
     command =
-        command + stuff;
+        command + wdJarPath;
 
     command = command + "org.openqa.grid.selenium.GridLauncher  -port 4445 ";
     command =
@@ -110,8 +110,7 @@ public class GridWrapperTest {
 
   @Test
   public void testGetCurrentJarPath() throws Exception {
-    assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar",
-                 GridWrapper.getCurrentWebDriverJarPath());
+    assertEquals(wdHome + "/" + wdVersion + ".jar", GridWrapper.getCurrentWebDriverJarPath());
   }
 
   @Test

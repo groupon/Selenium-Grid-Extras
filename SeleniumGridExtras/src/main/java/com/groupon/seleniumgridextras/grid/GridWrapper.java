@@ -47,8 +47,7 @@ import java.util.Map;
 public class GridWrapper {
 
   public static String getCurrentWebDriverJarPath() {
-    return RuntimeConfig.getSeleniungGridExtrasHomePath() + getWebdriverHome() + "/" + getWebdriverVersion()
-           + ".jar";
+    return getWebdriverHome() + "/" + getWebdriverVersion() + ".jar";
   }
 
   public static String getWebdriverVersion() {
@@ -59,7 +58,7 @@ public class GridWrapper {
     return RuntimeConfig.getSeleniungGridExtrasHomePath();
   }
 
-  public static String getGridExtrasJarFilePath(){
+  public static String getGridExtrasJarFilePath() {
     return RuntimeConfig.getSeleniumGridExtrasJarFile();
   }
 
@@ -82,7 +81,6 @@ public class GridWrapper {
     if (windows){
       colon = ";";
     }
-
 
     command = command + getGridExtrasJarFilePath();
 

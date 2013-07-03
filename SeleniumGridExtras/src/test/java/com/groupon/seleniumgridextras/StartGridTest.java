@@ -108,7 +108,7 @@ public class StartGridTest {
 
   @Test
   public void testGetLinuxHubCommand() throws Exception {
-    String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
+    String expectedCommand = "java -cp replaced/for/now/:/tmp/webdriver/2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
                              "-host " + RuntimeConfig.getCurrentHostIP() + " -role hub -servlets " +
                              "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet &";
@@ -124,7 +124,7 @@ public class StartGridTest {
   @Test
   public void testGetLinuxNodeCommand() throws Exception {
 
-    String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
+    String expectedCommand = "java -cp replaced/for/now/:/tmp/webdriver/2.33.0.jar  " +
                              "org.openqa.grid.selenium.GridLauncher  -port 4445 " +
                              "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
                              +
@@ -144,7 +144,7 @@ public class StartGridTest {
   public void testGetWindowsHubCommand() throws Exception {
     String
         expectedCommand =
-        "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
+        "java -cp replaced-for-now-;\\tmp\\webdriver\\2.33.0.jar  " +
         "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
         "-host " + RuntimeConfig.getCurrentHostIP() + " -role hub -servlets " +
         "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet";
@@ -173,7 +173,7 @@ public class StartGridTest {
   public void testGetWindowsNodeCommand() throws Exception {
     String
         expectedCommand =
-        "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
+        "java -cp replaced-for-now-;\\tmp\\webdriver\\2.33.0.jar  " +
         "org.openqa.grid.selenium.GridLauncher  -port 4445 " +
         "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy " +
         "-hub http://localhost:4444 -maxSession 1 -host " + RuntimeConfig.getCurrentHostIP()

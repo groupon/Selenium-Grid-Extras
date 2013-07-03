@@ -178,6 +178,14 @@ public class RuntimeConfig {
     FileUtils.writeStringToFile(new File(configFile), jsonText);
   }
 
+  public static File getOSTempDir(){
+    if(OSChecker.isWindows()){
+      return new File("\\");
+    } else {
+      return new File("/tmp");
+    }
+  }
+
   private static void setFullConfig(Map configHash) {
     if (!configHash.isEmpty()) {
       config = configHash;
@@ -206,5 +214,7 @@ public class RuntimeConfig {
 
     return returnString;
   }
+
+
 
 }

@@ -95,7 +95,7 @@ public class DefaultConfig {
 
 
   private static void loadWebDriverInfo() {
-    webdriverConfig.put("directory", "webdriver");
+    webdriverConfig.put("directory", RuntimeConfig.getOSTempDir() + "/" + "webdriver");
     webdriverConfig.put("version", "2.33.0");
     defaultConfig.put("webdriver", webdriverConfig);
   }
