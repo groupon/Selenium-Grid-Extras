@@ -116,7 +116,7 @@ public class TeardownTest {
       assertEquals("Hash object of tasks ran and their results",
                    task.getJsonResponse().getKeyDescriptions().get("results"));
 
-      assertEquals(5, task.getResponseDescription().keySet().size());
+      assertEquals(5, task.getResponseDescription().entrySet().size());
     }
   }
 

@@ -77,7 +77,7 @@ public class GetInfoForPortTest {
     assertEquals("Process ID", task.getResponseDescription().get("pid"));
     assertEquals("User who is running process", task.getResponseDescription().get("user"));
     assertEquals("Port searched for", task.getResponseDescription().get("port"));
-    assertEquals(7, task.getResponseDescription().keySet().size());
+    assertEquals(7, task.getResponseDescription().entrySet().size());
   }
 
   @Test

@@ -1,6 +1,8 @@
 package com.groupon.seleniumgridextras.grid.servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import org.apache.commons.io.IOUtils;
@@ -9,9 +11,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpRequest;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.simple.JSONArray;
 import org.openqa.grid.internal.ProxySet;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.RemoteProxy;
@@ -43,7 +42,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     super(null);
   }
 
-  private static String extractMessage(HttpResponse resp) throws IOException, JSONException {
+  private static String extractMessage(HttpResponse resp) throws IOException {
     BufferedReader rd = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
     StringBuilder s = new StringBuilder();
     String line;
@@ -62,11 +61,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     response.setCharacterEncoding("UTF-8");
     response.setStatus(200);
 
-    try {
-      response.getWriter().write(getHtml());
-    } catch (JSONException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
+    response.getWriter().write(getHtml());
     response.getWriter().close();
 
   }
@@ -84,7 +79,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     return s;
   }
 
-  private List<ExtrasEndPoint> getAvailableEndpoints(RemoteProxy proxy) throws IOException, JSONException {
+  private List<ExtrasEndPoint> getAvailableEndpoints(RemoteProxy proxy) throws IOException {
     URL apiURL = new URL("http://" + proxy.getRemoteHost().getHost() + ":3000/api");
     String json = getJSON(apiURL);
     if (json == "")
@@ -96,7 +91,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     return endpoints;
   }
 
-  private String getJSON(URL url) throws IOException, JSONException {
+  private String getJSON(URL url) throws IOException {
     try {
       HttpClient client = new DefaultHttpClient();
 
@@ -110,7 +105,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     }
   }
 
-  protected String getHtml() throws IOException, JSONException {
+  protected String getHtml() throws IOException {
 
     StringBuilder html = new StringBuilder();
     String spinnerBase64 = getSpinnerBase64String();
@@ -124,29 +119,29 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     html.append("var spinnerBase64 ='" + spinnerBase64 + "';");
     html.append("var nodes = new Array();");
 
-    JSONArray nodes = new JSONArray();
+    JsonArray nodes = new JsonArray();
     for (RemoteProxy p : proxies) {
-      JSONObject node = new JSONObject();
-      node.put("host", p.getRemoteHost().getHost());
-      node.put("platform", p.getOriginalRegistrationRequest().getCapabilities().get(0).getPlatform());
-      node.put("status", getTestSlots(p));
+      JsonObject node = new JsonObject();
+      node.addProperty("host", p.getRemoteHost().getHost());
+      node.addProperty("platform", p.getOriginalRegistrationRequest().getCapabilities().get(0).getPlatform().toString());
+      node.addProperty("status", getTestSlots(p));
 
 
       List<ExtrasEndPoint> availableEndpoints = getAvailableEndpoints(p);
-      JSONArray endpoints = new JSONArray();
+      JsonArray endpoints = new JsonArray();
       for (ExtrasEndPoint e : availableEndpoints) {
         if(!e.getEnabledInGui())
           continue;
-        JSONObject endpoint = new JSONObject();
-        endpoint.put("endpoint", e.getEndpoint());
-        endpoint.put("css", e.getCssClass());
-        endpoint.put("button_text", e.getButtonText());
-        endpoint.put("endpoint", e.getEndpoint());
-        endpoint.put("description", e.getDescription());
+        JsonObject endpoint = new JsonObject();
+        endpoint.addProperty("endpoint", e.getEndpoint());
+        endpoint.addProperty("css", e.getCssClass());
+        endpoint.addProperty("button_text", e.getButtonText());
+        endpoint.addProperty("endpoint", e.getEndpoint());
+        endpoint.addProperty("description", e.getDescription());
         endpoints.add(endpoint);
       }
-      if (!endpoints.isEmpty()) {
-        node.put("endpoints", endpoints);
+      if (!endpoints.isJsonNull()) {
+        node.add("endpoints", endpoints);
         nodes.add(node);
         html.append("nodes.push(\"" + p.getRemoteHost().getHost() + "\");");
       }

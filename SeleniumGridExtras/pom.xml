@@ -34,11 +34,11 @@
             <artifactId>gson</artifactId>
             <version>2.2.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.googlecode.json-simple</groupId>
-            <artifactId>json-simple</artifactId>
-            <version>1.1.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.googlecode.json-simple</groupId>-->
+            <!--<artifactId>json-simple</artifactId>-->
+            <!--<version>1.1.1</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <build>
@@ -67,18 +67,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>test</id>-->
-            <!--<phase>test</phase>-->
-            <!--<goals>-->
-            <!--<goal>spec</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 </project>

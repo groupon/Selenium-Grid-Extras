@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras.grid;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,8 +56,8 @@ import static org.junit.Assert.assertEquals;
 
 public class GridWrapperTest {
 
-  public static Map gridConfig;
-  public static Map wdConfig;
+  public static JsonObject gridConfig;
+  public static JsonElement wdConfig;
   public static String wdVersion;
   public static String wdHome;
 
@@ -66,7 +68,7 @@ public class GridWrapperTest {
     RuntimeConfig.loadConfig();
     gridConfig = RuntimeConfig.getGridConfig();
     wdConfig = RuntimeConfig.getWebdriverConfig();
-    wdVersion = RuntimeConfig.getWebdriverConfig().get("version").toString();
+    wdVersion = RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").toString();
     wdHome = "webdriver";
 
   }

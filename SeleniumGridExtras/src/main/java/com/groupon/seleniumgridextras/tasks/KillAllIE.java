@@ -38,7 +38,6 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonArrayBuilder;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 

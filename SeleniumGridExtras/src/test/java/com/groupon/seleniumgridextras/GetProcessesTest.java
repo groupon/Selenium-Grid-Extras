@@ -81,7 +81,7 @@ public class GetProcessesTest {
     assertEquals("{\"exit_code\":0,\"error\":[],\"out\":[]}",
                  task.getJsonResponse().toString());
 
-    assertEquals(3, task.getJsonResponse().getKeyDescriptions().keySet().size());
+    assertEquals(3, task.getJsonResponse().getKeyDescriptions().entrySet().size());
 
   }
 

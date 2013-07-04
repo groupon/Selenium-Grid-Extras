@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -81,8 +83,8 @@ public class DownloadWebdriverTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"source_url\":[\"\"],\"root_dir\":[\"webdriver\"],\"out\":[]}",
-        task.getJsonResponse().toString());
+        new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"source_url\":[\"\"],\"root_dir\":[\"webdriver\"],\"out\":[]}"),
+        task.getJsonResponse().getJson());
   }
 
   @Test

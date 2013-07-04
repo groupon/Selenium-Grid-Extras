@@ -34,13 +34,9 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
 package com.groupon.seleniumgridextras.tasks;
 
-
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -76,7 +72,7 @@ public class GetConfig extends ExecuteOSTask {
 
     readConfigFile(RuntimeConfig.getConfigFile());
 
-    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig());
+    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig().toString());
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
 
     return getJsonResponse().toString();

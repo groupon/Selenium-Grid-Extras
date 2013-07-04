@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
@@ -91,10 +92,10 @@ public class UpgradeWebdriverTest {
 
   @Test
   public void testResponseDescriptions() throws Exception {
-    Map<String, String> descriptions = task.getResponseDescription();
+    JsonObject descriptions = task.getResponseDescription();
     assertEquals("New version downloaded and reconfigured", descriptions.get("new_version"));
     assertEquals("Old version of the jar that got replaced", descriptions.get("old_version"));
-    assertEquals(5, descriptions.keySet().size());
+    assertEquals(5, descriptions.entrySet().size());
   }
 
 

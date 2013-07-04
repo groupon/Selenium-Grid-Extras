@@ -1,5 +1,6 @@
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class ExtrasEndPoint {
     this.description = description;
   }
 
-  public Map<String, String> getResponseDescription() {
+  public JsonObject getResponseDescription() {
     return getJsonResponse().getKeyDescriptions();
   }
 

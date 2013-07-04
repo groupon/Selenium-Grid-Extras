@@ -92,7 +92,7 @@ public class ScreenshotTest {
                  task.getJsonResponse().getKeyDescriptions().get("file_type"));
     assertEquals("Name of the file saved on the Node's HD",
                  task.getJsonResponse().getKeyDescriptions().get("file"));
-    assertEquals(6, task.getJsonResponse().getKeyDescriptions().keySet().size());
+    assertEquals(6, task.getJsonResponse().getKeyDescriptions().entrySet().size());
   }
 
 }

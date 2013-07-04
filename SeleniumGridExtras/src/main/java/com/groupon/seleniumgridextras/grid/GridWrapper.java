@@ -38,6 +38,10 @@
 
 package com.groupon.seleniumgridextras.grid;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
@@ -103,32 +107,25 @@ public class GridWrapper {
 
 
   public static String getGridConfigPortForRole(String role) {
-    Map<String, String> config = getGridConfig(role);
-    return config.get("-port");
+    JsonElement config = getGridConfig(role);
+    return config.getAsJsonObject().get("-port").toString();
   }
 
-  public static Map<String, String> getGridConfig(String role) {
-    Map grid = RuntimeConfig.getGridConfig();
-    Map config = (HashMap<String, String>) grid.get(role);
-
-    return config;
+  public static JsonElement getGridConfig(String role) {
+    JsonObject grid = RuntimeConfig.getGridConfig();
+    return grid.get(role);
   }
 
   public static String getDefaultRole() {
-    Map grid = RuntimeConfig.getGridConfig();
+    JsonObject grid = RuntimeConfig.getGridConfig();
     return grid.get("default_role").toString();
   }
 
   private static String getFormattedConfig(String role) {
-    Map<String, String> config = getGridConfig(role);
-    StringBuilder commandLineParam = new StringBuilder();
+    JsonElement config = getGridConfig(role);
 
-    for (Map.Entry<String, String> entry : config.entrySet()) {
-      commandLineParam.append(" " + entry.getKey());
-      commandLineParam.append(" " + entry.getValue());
-    }
-
-    return commandLineParam.toString();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    return gson.toJson(config);
   }
 
 

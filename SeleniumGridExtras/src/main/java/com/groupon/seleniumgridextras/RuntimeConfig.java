@@ -37,8 +37,11 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONValue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -47,17 +50,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class RuntimeConfig {
 
-  private static Map config;
+  private static JsonObject config;
   private static String configFile = "selenium_grid_extras_config.json";
 
-  public static Map getConfig() {
+  public static JsonObject getConfig() {
     return config;
   }
 
@@ -84,7 +86,7 @@ public class RuntimeConfig {
   }
 
   public static String getExposedDirectory() {
-    return (String) config.get("expose_directory");
+    return config.get("expose_directory").toString();
   }
 
   public static List<String> getTeardownModules() {
@@ -103,18 +105,18 @@ public class RuntimeConfig {
     return getActivatedModules().contains(module);
   }
 
-  public static Map getWebdriverConfig() {
-    return (HashMap<String, HashMap>) config.get("webdriver");
+  public static JsonElement getWebdriverConfig() {
+    return config.get("webdriver");
   }
 
-  public static Map<String, HashMap> getGridConfig() {
-    return (HashMap<String, HashMap>) config.get("grid");
+  public static JsonObject getGridConfig() {
+    return (JsonObject) config.get("grid");
   }
 
   public static Boolean autoStartHub() {
-    Map grid = getGridConfig();
+    JsonElement grid = getGridConfig();
 
-    String value = (String) grid.get("auto_start_hub");
+    String value = grid.getAsJsonObject().get("auto_start_hub").toString();
 
     if (value.equals("1")) {
       return true;
@@ -124,8 +126,9 @@ public class RuntimeConfig {
   }
 
   public static Boolean autoStartNode() {
-    Map grid = getGridConfig();
-    String value = (String) grid.get("auto_start_node");
+    JsonElement grid = getGridConfig();
+
+    String value = grid.getAsJsonObject().get("auto_start_node").toString();
 
     if (value.equals("1")) {
       return true;
@@ -162,27 +165,27 @@ public class RuntimeConfig {
 
 
   public static String getWebdriverParentDir() {
-    return RuntimeConfig.getWebdriverConfig().get("directory").toString();
+    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("directory").toString();
   }
 
   public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverConfig().get("version").toString();
+    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").toString();
   }
 
   public static void setWebdriverVersion(String newVersion) {
-    getWebdriverConfig().put("version", newVersion);
+    getWebdriverConfig().getAsJsonObject().addProperty("version", newVersion);
   }
 
   public static void saveConfigToFile() throws IOException {
-    String jsonText = JSONValue.toJSONString(config);
+    String jsonText = new Gson().toJson(config);
     FileUtils.writeStringToFile(new File(configFile), jsonText);
   }
 
   private static void setFullConfig(Map configHash) {
     if (!configHash.isEmpty()) {
-      config = configHash;
+      JsonParser parser = new JsonParser();
+      config = (JsonObject)parser.parse(new Gson().toJson(configHash));
     }
-
   }
 
   private static String readConfigFile(String filePath) {

@@ -34,51 +34,20 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
 package com.groupon.seleniumgridextras;
 
-import org.json.simple.parser.ContainerFactory;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.google.gson.Gson;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class JsonWrapper {
 
-
   public static Map parseJson(String inputString) {
-    Map returnHash = new HashMap();
 
-    JSONParser parser = new JSONParser();
-    ContainerFactory containerFactory = new ContainerFactory() {
-      public List creatArrayContainer() {
-        return new LinkedList();
-      }
+    Map<String, Object> map = new HashMap<String, Object>();
+    map = (Map<String, Object>) new Gson().fromJson(inputString, map.getClass());
 
-      public Map createObjectContainer() {
-        return new LinkedHashMap();
-      }
-
-    };
-
-    try {
-      Map json = (Map) parser.parse(inputString, containerFactory);
-      Iterator iter = json.entrySet().iterator();
-      while (iter.hasNext()) {
-        Map.Entry entry = (Map.Entry) iter.next();
-        returnHash.put(entry.getKey(), entry.getValue());
-      }
-
-    } catch (ParseException error) {
-      System.out.println("position: " + error.getPosition());
-      System.out.println(error);
-    }
-
-    return returnHash;
+    return map;
   }
 }
