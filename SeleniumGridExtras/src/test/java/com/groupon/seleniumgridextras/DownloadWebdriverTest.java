@@ -37,14 +37,12 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
 
 import java.io.File;
 
@@ -90,7 +88,7 @@ public class DownloadWebdriverTest {
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
+        task.getAcceptedParams().get("version"));
 
     assertEquals(1, task.getAcceptedParams().keySet().size());
   }

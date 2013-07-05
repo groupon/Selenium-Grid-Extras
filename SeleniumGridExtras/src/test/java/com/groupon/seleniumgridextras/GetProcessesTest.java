@@ -80,7 +80,7 @@ public class GetProcessesTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"out\":[]}"),
-                 task.getJsonResponse().getJson());
+        task.getJsonResponse().getJson());
 
     assertEquals(3, task.getJsonResponse().getKeyDescriptions().entrySet().size());
 

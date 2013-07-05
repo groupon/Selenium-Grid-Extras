@@ -51,8 +51,6 @@ import static org.junit.Assert.assertEquals;
 
 public class StartGridTest {
 
-  public com.groupon.seleniumgridextras.tasks.ExecuteOSTask task;
-
   public static final
   String
       hubBatch =
@@ -61,6 +59,7 @@ public class StartGridTest {
   String
       nodeBatch =
       RuntimeConfig.getSeleniungGridExtrasHomePath() + "start_node.bat";
+  public com.groupon.seleniumgridextras.tasks.ExecuteOSTask task;
 
   @Before
   public void setUp() throws Exception {
@@ -87,7 +86,6 @@ public class StartGridTest {
     config.delete();
   }
 
-
   public void testGetEndpoint() throws Exception {
     assertEquals("/start_grid", task.getEndpoint());
   }
@@ -95,23 +93,22 @@ public class StartGridTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Starts an instance of Selenium Grid Hub or Node",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("hub|node - defaults to 'default_role' param in config file",
-                 task.getAcceptedParams().get("role"));
+        task.getAcceptedParams().get("role"));
     assertEquals(1, task.getAcceptedParams().keySet().size());
   }
-
 
   @Test
   public void testGetLinuxHubCommand() throws Exception {
     String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
-                             "org.openqa.grid.selenium.GridLauncher  -port 4444 " +
-                             "-host " + RuntimeConfig.getCurrentHostIP() + " -role hub -servlets " +
-                             "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet &";
+        "org.openqa.grid.selenium.GridLauncher -role hub " +
+        "-servlets com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet -port 4444 " +
+        "-host " + RuntimeConfig.getCurrentHostIP() + "  &";
 
     String modifiedActual = task.getLinuxCommand("hub");
 
@@ -125,10 +122,10 @@ public class StartGridTest {
   public void testGetLinuxNodeCommand() throws Exception {
 
     String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
-                             "org.openqa.grid.selenium.GridLauncher  -port 4445 " +
-                             "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
-                             +
-                             "-hub http://localhost:4444 -host " + RuntimeConfig.getCurrentHostIP() + " -role wd &";
+        "org.openqa.grid.selenium.GridLauncher -role wd " +
+        "-hub http://localhost:4444 -port 4445 -nodeTimeout 240 -maxSession 1 " +
+        "-host " + RuntimeConfig.getCurrentHostIP() +
+        " -proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy  &";
 
     String modifiedActual = task.getLinuxCommand("node");
 
@@ -138,18 +135,17 @@ public class StartGridTest {
     assertEquals(expectedCommand, modifiedActual);
   }
 
-
   @Test
   public void testGetWindowsHubCommand() throws Exception {
     String
         expectedCommand =
         "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
-        "org.openqa.grid.selenium.GridLauncher -role hub " +
-        "-servlets com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet " +
-        "-port 4444 -host " + RuntimeConfig.getCurrentHostIP();
+            "org.openqa.grid.selenium.GridLauncher -role hub " +
+            "-servlets com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet -port 4444 " +
+            "-host " + RuntimeConfig.getCurrentHostIP() + " ";
 
     assertEquals("powershell.exe /c \"Start-Process " + hubBatch + "\"",
-                 task.getWindowsCommand("hub"));
+        task.getWindowsCommand("hub"));
 
     File batch = new File(hubBatch);
     assertEquals(true, batch.exists());
@@ -163,7 +159,7 @@ public class StartGridTest {
     modifiedActual =
         modifiedActual
             .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
-                     "replaced-for-now-");
+                "replaced-for-now-");
 
     assertEquals(expectedCommand, modifiedActual);
   }
@@ -173,12 +169,13 @@ public class StartGridTest {
     String
         expectedCommand =
         "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
-        "org.openqa.grid.selenium.GridLauncher  -role hub " +
-        "-servlets com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet " +
-        "-port 4444 -host " + RuntimeConfig.getCurrentHostIP() + " -role wd";
+            "org.openqa.grid.selenium.GridLauncher -role wd " +
+            "-hub http://localhost:4444 -port 4445 -nodeTimeout 240 -maxSession 1 " +
+            "-host " + RuntimeConfig.getCurrentHostIP() + " " +
+            "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy ";
 
     assertEquals("powershell.exe /c \"Start-Process " + nodeBatch + "\"",
-                 task.getWindowsCommand("node"));
+        task.getWindowsCommand("node"));
 
     File batch = new File(nodeBatch);
     assertEquals(true, batch.exists());
@@ -190,7 +187,7 @@ public class StartGridTest {
     modifiedActual =
         modifiedActual
             .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
-                     "replaced-for-now-");
+                "replaced-for-now-");
 
     assertEquals(expectedCommand, modifiedActual);
 

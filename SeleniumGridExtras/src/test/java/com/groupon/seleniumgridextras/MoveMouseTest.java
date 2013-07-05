@@ -46,7 +46,6 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import static org.junit.Assert.assertEquals;
 
 public class MoveMouseTest {
@@ -66,7 +65,7 @@ public class MoveMouseTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Moves the computers mouse to x and y location. (Default 0,0)",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test
@@ -79,7 +78,7 @@ public class MoveMouseTest {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
 
       assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":20,\"x\":20,\"out\":[]}"),
-                    task.execute(foo));
+          task.execute(foo));
     }
   }
 
@@ -94,13 +93,13 @@ public class MoveMouseTest {
   public void testGetJsonResponse() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
       assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":[\"\"],\"x\":[\"\"],\"out\":[]}"),
-                   task.getJsonResponse().getJson());
+          task.getJsonResponse().getJson());
 
       assertEquals("Current Y postion of the mouse",
 
-                   task.getJsonResponse().getKeyDescriptions().get("y").getAsString());
+          task.getJsonResponse().getKeyDescriptions().get("y").getAsString());
       assertEquals("Current X postion of the mouse",
-                   task.getJsonResponse().getKeyDescriptions().get("x").getAsString());
+          task.getJsonResponse().getKeyDescriptions().get("x").getAsString());
 
     }
   }

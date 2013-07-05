@@ -60,7 +60,7 @@ public class GridStatusTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Returns status of the Selenium Grid hub/node. If currently running and what is the PID",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test

@@ -42,20 +42,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.WriteDefaultConfigs;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 
 import static org.junit.Assert.assertEquals;
 
@@ -102,7 +95,7 @@ public class TeardownTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Calls several pre-defined tasks to act as teardown after build",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test
@@ -114,10 +107,10 @@ public class TeardownTest {
           task.getJsonResponse().getJson());
 
       assertEquals("List of full canonical classes to execute on Tear-Down",
-                   task.getJsonResponse().getKeyDescriptions().get("classes_to_execute").getAsString());
+          task.getJsonResponse().getKeyDescriptions().get("classes_to_execute").getAsString());
 
       assertEquals("Hash object of tasks ran and their results",
-                   task.getJsonResponse().getKeyDescriptions().get("results").getAsString());
+          task.getJsonResponse().getKeyDescriptions().get("results").getAsString());
 
       assertEquals(5, task.getResponseDescription().entrySet().size());
     }

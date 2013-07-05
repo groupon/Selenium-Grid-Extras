@@ -73,7 +73,7 @@ public class JsonResponseBuilderTest {
     defaultDescriptions.addProperty("new", "key");
     assertEquals(defaultDescriptions, jsonResponseObject.getKeyDescriptions());
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"new\":[\"\"],\"error\":[],\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test(expected = RuntimeException.class)
@@ -108,7 +108,7 @@ public class JsonResponseBuilderTest {
     jsonResponseObject.addKeyDescriptions("foo", "test");
     jsonResponseObject.addKeyValues("foo", "bar");
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":[\"bar\"],\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test
@@ -116,11 +116,11 @@ public class JsonResponseBuilderTest {
     jsonResponseObject.addKeyDescriptions("foo", "test");
     jsonResponseObject.addKeyValues("foo", true);
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":true,\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
 
     jsonResponseObject.addKeyValues("foo", "true");
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":[\"true\"],\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test
@@ -129,7 +129,7 @@ public class JsonResponseBuilderTest {
     Map<String, String> bar = new HashMap<String, String>();
     jsonResponseObject.addKeyValues("foo", bar);
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":\"{}\",\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test
@@ -137,11 +137,11 @@ public class JsonResponseBuilderTest {
     jsonResponseObject.addKeyDescriptions("foo", "test");
     jsonResponseObject.addKeyValues("foo", 1);
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":1,\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
 
     jsonResponseObject.addKeyValues("foo", "1");
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":[\"1\"],\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test
@@ -152,7 +152,7 @@ public class JsonResponseBuilderTest {
     foo.add(new JsonPrimitive("b"));
     jsonResponseObject.addKeyValues("foo", foo);
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":[\"a\",\"b\"],\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test
@@ -197,7 +197,7 @@ public class JsonResponseBuilderTest {
     assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"out\":[]}"), jsonResponseObject.getJson());
     jsonResponseObject.addKeyValues("error", "this is an error");
     assertEquals(new JsonParser().parse("{\"exit_code\":1,\"error\":[\"this is an error\"],\"out\":[]}"),
-                 jsonResponseObject.getJson());
+        jsonResponseObject.getJson());
   }
 
   @Test

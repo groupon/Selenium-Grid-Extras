@@ -62,7 +62,7 @@ public class GetInfoForPortTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Returns parsed information on a PID occupying a given port",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test

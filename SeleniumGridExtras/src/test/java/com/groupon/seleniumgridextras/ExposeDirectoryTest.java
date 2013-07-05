@@ -93,7 +93,7 @@ public class ExposeDirectoryTest {
         task.getJsonResponse().getJson());
 
     assertEquals("Array list of files in the shared directory",
-                 task.getJsonResponse().getKeyDescriptions().get("files").getAsString());
+        task.getJsonResponse().getKeyDescriptions().get("files").getAsString());
     assertEquals(4, task.getJsonResponse().getKeyDescriptions().entrySet().size());
 
   }

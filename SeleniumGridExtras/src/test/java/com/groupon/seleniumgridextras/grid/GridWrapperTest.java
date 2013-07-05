@@ -39,18 +39,14 @@ package com.groupon.seleniumgridextras.grid;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
-
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -94,7 +90,7 @@ public class GridWrapperTest {
     String
         stuff =
         colon + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion
-        + ".jar  ";
+            + ".jar  ";
     if (windows) {
       stuff = OSChecker.toWindowsPath(stuff);
     }
@@ -102,11 +98,11 @@ public class GridWrapperTest {
     command =
         command + stuff;
 
-    command = command + "org.openqa.grid.selenium.GridLauncher  -port 4445 ";
+    command = command + "org.openqa.grid.selenium.GridLauncher -role wd ";
     command =
-        command + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
-        + "-hub http://localhost:4444 " +
-        "-host " + RuntimeConfig.getCurrentHostIP() + " -role wd";
+        command + "-hub http://localhost:4444 -port 4445 -nodeTimeout 240 -maxSession 1 "
+            + "-host " + RuntimeConfig.getCurrentHostIP() + " "
+            + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy ";
 
     return command;
   }
@@ -114,7 +110,7 @@ public class GridWrapperTest {
   @Test
   public void testGetCurrentJarPath() throws Exception {
     assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar",
-                 GridWrapper.getCurrentWebDriverJarPath());
+        GridWrapper.getCurrentWebDriverJarPath());
   }
 
   @Test
@@ -125,7 +121,7 @@ public class GridWrapperTest {
   @Test
   public void testGetSeleniumGridExtrasPath() throws Exception {
     assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath(),
-                 GridWrapper.getSeleniumGridExtrasPath());
+        GridWrapper.getSeleniumGridExtrasPath());
   }
 
   @Test
