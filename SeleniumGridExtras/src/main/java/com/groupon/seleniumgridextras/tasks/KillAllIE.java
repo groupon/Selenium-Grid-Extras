@@ -40,12 +40,9 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class KillAllIE extends KillAllByName {

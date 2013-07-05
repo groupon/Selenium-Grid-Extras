@@ -37,15 +37,11 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.util.HashMap;
 import java.util.LinkedList;

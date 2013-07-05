@@ -38,10 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.io.IOException;
 import java.util.HashMap;
