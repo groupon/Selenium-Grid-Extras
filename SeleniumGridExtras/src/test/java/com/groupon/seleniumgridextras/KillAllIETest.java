@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.KillAllIE;
 import org.junit.Before;
@@ -72,7 +73,7 @@ public class KillAllIETest {
 
     if(!OSChecker.isWindows()){
     assertEquals(
-        "{\"exit_code\":1,\"error\":[\"Kill IE command is only implemented in Windows\"],\"out\":[]}",
+        new JsonParser().parse("{\"exit_code\":1,\"error\":[\"Kill IE command is only implemented in Windows\"],\"out\":[]}"),
         task.execute());
     }
   }

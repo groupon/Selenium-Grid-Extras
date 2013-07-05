@@ -37,6 +37,9 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.util.HashMap;
@@ -61,8 +64,8 @@ public class GetFile extends ExecuteOSTask {
 
 
   @Override
-  public String execute(){
-    return "{\"exit\": 1, \"error\": \"Not yet implemented\"}";
+  public JsonObject execute(){
+    return new JsonParser().parse("{\"exit\": 1, \"error\": \"Not yet implemented\"}").getAsJsonObject();
   }
 
   @Override

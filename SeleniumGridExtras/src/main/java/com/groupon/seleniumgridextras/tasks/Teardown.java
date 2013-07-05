@@ -37,6 +37,10 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
@@ -66,31 +70,31 @@ public class Teardown extends ExecuteOSTask {
     addResponseDescription("results", "Hash object of tasks ran and their results");
   }
 
-  private List<String> getClassesToRun() {
-    List<String> listOfTasks = new LinkedList<String>();
+  private JsonArray getClassesToRun() {
+    JsonArray listOfTasks = new JsonArray();
     for (ExecuteOSTask task : teardownTasks) {
-      listOfTasks.add(task.getClass().getSimpleName());
+      listOfTasks.add(new JsonPrimitive(task.getClass().getSimpleName()));
     }
 
     return listOfTasks;
   }
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     try {
       Map<String, Object> results = new HashMap<String, Object>();
 
       for (ExecuteOSTask task : teardownTasks) {
-        results.put(task.getClass().getSimpleName(), JsonWrapper.parseJson(task.execute()));
+        results.put(task.getClass().getSimpleName(), task.execute());
       }
 
       getJsonResponse().addKeyValues("results", results);
 
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
@@ -100,10 +104,10 @@ public class Teardown extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Tear-Down Tasks");
     teardownTasks = new LinkedList<ExecuteOSTask>();
-
-    for (String module : RuntimeConfig.getTeardownModules()) {
+    JsonArray array = RuntimeConfig.getTeardownModules();
+    for (JsonElement module : RuntimeConfig.getTeardownModules()) {
       try {
-        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
+        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module.getAsString()).newInstance();
         teardownTasks.add(task);
         System.out.println("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {

@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.MoveMouse;
 import org.junit.Before;
@@ -77,29 +78,29 @@ public class MoveMouseTest {
 
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
 
-      assertEquals("{\"exit_code\":0,\"error\":[],\"y\":20,\"x\":20,\"out\":[]}",
-                   task.execute(foo));
+      assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":20,\"x\":20,\"out\":[]}"),
+                    task.execute(foo));
     }
   }
 
   @Test
   public void testExecuteNoParam() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
-      assertEquals("{\"exit_code\":0,\"error\":[],\"y\":0,\"x\":0,\"out\":[]}", task.execute());
+      assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":0,\"x\":0,\"out\":[]}"), task.execute());
     }
   }
 
   @Test
   public void testGetJsonResponse() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
-      assertEquals("{\"exit_code\":0,\"error\":[],\"y\":[\"\"],\"x\":[\"\"],\"out\":[]}",
-                   task.getJsonResponse().toString());
+      assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":[\"\"],\"x\":[\"\"],\"out\":[]}"),
+                   task.getJsonResponse().getJson());
 
       assertEquals("Current Y postion of the mouse",
 
-                   task.getJsonResponse().getKeyDescriptions().get("y"));
+                   task.getJsonResponse().getKeyDescriptions().get("y").getAsString());
       assertEquals("Current X postion of the mouse",
-                   task.getJsonResponse().getKeyDescriptions().get("x"));
+                   task.getJsonResponse().getKeyDescriptions().get("x").getAsString());
 
     }
   }

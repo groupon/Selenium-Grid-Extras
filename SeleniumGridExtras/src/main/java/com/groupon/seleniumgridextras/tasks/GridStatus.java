@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
@@ -68,23 +69,23 @@ public class GridStatus extends ExecuteOSTask {
 
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     try {
       String hubPort = GridWrapper.getGridConfigPortForRole("hub");
       String nodePort = GridWrapper.getGridConfigPortForRole("node");
 
-      Map<String, String> hubInfo = PortChecker.getParsedPortInfo(hubPort);
-      Map<String, String> nodeInfo = PortChecker.getParsedPortInfo(nodePort);
+      JsonObject hubInfo = PortChecker.getParsedPortInfo(hubPort);
+      JsonObject nodeInfo = PortChecker.getParsedPortInfo(nodePort);
 
-      getJsonResponse().addKeyValues("hub_running", hubInfo.isEmpty() ? false : true);
-      getJsonResponse().addKeyValues("node_running", nodeInfo.isEmpty() ? false : true);
+      getJsonResponse().addKeyValues("hub_running", hubInfo.isJsonNull() ? false : true);
+      getJsonResponse().addKeyValues("node_running", nodeInfo.isJsonNull() ? false : true);
       getJsonResponse().addKeyValues("hub_info", hubInfo);
       getJsonResponse().addKeyValues("node_info", nodeInfo);
 
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 

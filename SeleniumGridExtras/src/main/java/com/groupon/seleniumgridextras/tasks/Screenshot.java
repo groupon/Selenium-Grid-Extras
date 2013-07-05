@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import org.apache.commons.codec.binary.Base64;
 
@@ -76,12 +77,12 @@ public class Screenshot extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     return execute(new HashMap<String, String>());
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
 
     int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
     int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
@@ -89,7 +90,7 @@ public class Screenshot extends ExecuteOSTask {
     return createScreenshot(width, height);
   }
 
-  private String createScreenshot(int width, int height) {
+  private JsonObject createScreenshot(int width, int height) {
     String filename;
     String encodedImage;
     try {
@@ -108,16 +109,16 @@ public class Screenshot extends ExecuteOSTask {
 
       } catch (IOException e) {
         getJsonResponse().addKeyValues("error", "Error Saving image to file\n " + e);
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       }
       getJsonResponse().addKeyValues("file_type", "PNG");
       getJsonResponse().addKeyValues("file",
           RuntimeConfig.getExposedDirectory() + "/" + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (AWTException error) {
       getJsonResponse().addKeyValues("error", "Error with AWT Robot\n" + error);
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
@@ -142,6 +143,7 @@ public class Screenshot extends ExecuteOSTask {
     filename = createTimestampFilename();
     String fullPath = directory + "/" + filename;
     File outputFile = new File(fullPath);
+    outputFile.mkdirs();
     ImageIO.write(screenshot, "png", outputFile);
     return filename;
   }

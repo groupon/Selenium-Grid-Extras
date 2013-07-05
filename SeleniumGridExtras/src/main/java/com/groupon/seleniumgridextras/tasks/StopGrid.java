@@ -39,6 +39,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
@@ -63,25 +64,25 @@ public class StopGrid extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     return execute(GridWrapper.getDefaultRole());
   }
 
   @Override
-  public String execute(String role) {
+  public JsonObject execute(String role) {
     try {
       String servicePort = GridWrapper.getGridConfigPortForRole(role);
-      Map<String, String> processInfo = PortChecker.getParsedPortInfo(servicePort);
+      JsonObject processInfo = PortChecker.getParsedPortInfo(servicePort);
       ExecuteOSTask killer = new KillPid();
-      return killer.execute(processInfo.get("pid"));
+      return killer.execute(processInfo.get("pid").getAsString());
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (parameter.isEmpty() || !parameter.containsKey("role")) {
       return execute();
     } else {

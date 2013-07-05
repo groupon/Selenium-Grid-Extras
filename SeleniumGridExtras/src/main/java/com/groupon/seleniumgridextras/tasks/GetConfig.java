@@ -36,6 +36,7 @@
  */
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
 import java.io.BufferedReader;
@@ -68,14 +69,14 @@ public class GetConfig extends ExecuteOSTask {
 
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     readConfigFile(RuntimeConfig.getConfigFile());
 
     getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig().toString());
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
 
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   private void readConfigFile(String filename) {

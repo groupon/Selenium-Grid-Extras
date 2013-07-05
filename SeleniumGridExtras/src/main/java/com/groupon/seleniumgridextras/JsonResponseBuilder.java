@@ -111,6 +111,11 @@ public class JsonResponseBuilder {
     keyValues.add(key, value);
   }
 
+  public void addKeyValues(String key, JsonObject value) {
+    checkIfKeyDescriptionExist(key);
+    keyValues.add(key, value);
+  }
+
   public void addKeyValues(String key, Map value) {
     checkIfKeyDescriptionExist(key);
     keyValues.addProperty(key, new Gson().toJson(value));
@@ -127,13 +132,15 @@ public class JsonResponseBuilder {
   }
 
   public String toString() {
-//    clearValues();
-    return keyValues.toString();
+    String values = keyValues.toString();
+    clearValues();
+    return values;
   }
 
   public JsonObject getJson(){
-//    clearValues();
-    return keyValues;
+    JsonObject values = keyValues;
+    clearValues();
+    return values;
   }
 
   public JsonObject getKeyDescriptions() {

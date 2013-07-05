@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras;
 
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.GetProcesses;
 import org.junit.Before;
@@ -78,8 +79,8 @@ public class GetProcessesTest {
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    assertEquals("{\"exit_code\":0,\"error\":[],\"out\":[]}",
-                 task.getJsonResponse().toString());
+    assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"out\":[]}"),
+                 task.getJsonResponse().getJson());
 
     assertEquals(3, task.getJsonResponse().getKeyDescriptions().entrySet().size());
 

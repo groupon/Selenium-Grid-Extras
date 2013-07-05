@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
@@ -60,12 +61,12 @@ public class Netstat extends ExecuteOSTask {
   }
 
   @Override
-  public String execute(){
+  public JsonObject execute(){
     return PortChecker.getPortInfo("");
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     return execute();
   }
 

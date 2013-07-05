@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
@@ -70,24 +71,23 @@ public class DownloadWebdriver extends ExecuteOSTask {
     addResponseDescription("file", "Filename on node's computer");
     addResponseDescription("source_url",
                                     "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
-
     getJsonResponse().addKeyValues("root_dir", GridWrapper.getWebdriverHome());
 
 
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     return downloadWebdriverVersion(RuntimeConfig.getWebdriverVersion());
   }
 
   @Override
-  public String execute(String version) {
+  public JsonObject execute(String version) {
     return downloadWebdriverVersion(version);
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
 
     if (parameter.isEmpty() || !parameter.containsKey("version")) {
       return execute();
@@ -96,7 +96,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
     }
   }
 
-  private String downloadWebdriverVersion(String version) {
+  private JsonObject downloadWebdriverVersion(String version) {
 
     String webdriverDir = GridWrapper.getWebdriverHome();
     System.out.println("Downloading Driver to " + webdriverDir);
@@ -113,7 +113,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
         System.out.println("File already exists, will not download");
         getJsonResponse().addKeyValues("file", jarFile);
         getJsonResponse().addKeyValues("out", "File already exist, no need to download again.");
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       } else {
         System.out.println("File does not exist, will download");
         FileUtils.copyURLToFile(url, destination);
@@ -122,16 +122,16 @@ public class DownloadWebdriver extends ExecuteOSTask {
         getJsonResponse().addKeyValues("file", jarFile);
         getJsonResponse().addKeyValues("source_url", url.toString());
 
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       }
 
 
     } catch (MalformedURLException error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (IOException error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 

@@ -38,6 +38,10 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.WriteDefaultConfigs;
@@ -79,15 +83,14 @@ public class TeardownTest {
   @Test
   public void testExecute() {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
-      String result = task.execute();
-      Map<String, HashMap> parsedResult = JsonWrapper.parseJson(result);
+      JsonObject result = task.execute();
       Long exitCode = new Long(0);
-      List<String> expecteClasses = new LinkedList<String>();
-      expecteClasses.add("KillAllIE");
-      expecteClasses.add("MoveMouse");
+      JsonArray expectedClasses = new JsonArray();
+      expectedClasses.add(new JsonPrimitive("KillAllIE"));
+      expectedClasses.add(new JsonPrimitive("MoveMouse"));
 
-      assertEquals(exitCode, parsedResult.get("exit_code"));
-      assertEquals(expecteClasses, parsedResult.get("classes_to_execute"));
+      assertEquals((Object) exitCode, result.get("exit_code").getAsLong());
+      assertEquals(expectedClasses, result.get("classes_to_execute"));
     }
   }
 
@@ -107,14 +110,14 @@ public class TeardownTest {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
 
       assertEquals(
-          "{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"KillAllIE\",\"MoveMouse\"],\"out\":[]}",
-          task.getJsonResponse().toString());
+          new JsonParser().parse("{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"KillAllIE\",\"MoveMouse\"],\"out\":[]}"),
+          task.getJsonResponse().getJson());
 
       assertEquals("List of full canonical classes to execute on Tear-Down",
-                   task.getJsonResponse().getKeyDescriptions().get("classes_to_execute"));
+                   task.getJsonResponse().getKeyDescriptions().get("classes_to_execute").getAsString());
 
       assertEquals("Hash object of tasks ran and their results",
-                   task.getJsonResponse().getKeyDescriptions().get("results"));
+                   task.getJsonResponse().getKeyDescriptions().get("results").getAsString());
 
       assertEquals(5, task.getResponseDescription().entrySet().size());
     }

@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +70,7 @@ public class KillAllByName extends ExecuteOSTask {
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey("name")) {
       return execute(parameter.get("name").toString());
     }

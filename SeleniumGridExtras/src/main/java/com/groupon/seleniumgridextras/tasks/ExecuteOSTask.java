@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import com.groupon.seleniumgridextras.OSChecker;
@@ -54,11 +55,11 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
       "This task was not implemented on " + OSChecker.getOSName();
   public boolean waitToFinishTask = true;
 
-  public String execute() {
+  public JsonObject execute() {
     return execute("");
   }
 
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey("parameter")) {
       return execute(parameter.get("parameter").toString());
     } else {
@@ -68,12 +69,9 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
 
 
-  public String execute(String parameter) {
+  public JsonObject execute(String parameter) {
 
-    String
-
-        command =
-        OSChecker.isWindows() ? getWindowsCommand()
+    String command = OSChecker.isWindows() ? getWindowsCommand()
                               : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);

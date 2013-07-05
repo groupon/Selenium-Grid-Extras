@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
@@ -72,27 +74,24 @@ public class KillAllIE extends KillAllByName {
   }
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     if (OSChecker.isWindows()) {
       return killIEAndIEDriver();
     } else {
       getJsonResponse().addKeyValues("error", "Kill IE command is only implemented in Windows");
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
 
-  private String killIEAndIEDriver() {
+  private JsonObject killIEAndIEDriver() {
 
-    Map<String, Object> killBrowserResult = JsonWrapper.parseJson(
-        ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe")));
+    JsonObject killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe"));
 
-    Map<String, Object> killDriverResult = JsonWrapper.parseJson(ExecuteCommand.execRuntime(
-        getWindowsKillCommand("IEDriverServer.exe")));
+    JsonObject killDriverResult = ExecuteCommand.execRuntime(getWindowsKillCommand("IEDriverServer.exe"));
 
-
-    List<Map> response = new LinkedList<Map>();
+    JsonArray response = new JsonArray();
     response.add(killBrowserResult);
     response.add(killDriverResult);
 
@@ -103,7 +102,7 @@ public class KillAllIE extends KillAllByName {
       getJsonResponse().addKeyValues("error", response);
     }
 
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
 
   }
 

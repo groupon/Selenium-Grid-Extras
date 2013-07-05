@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.grid;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,7 +69,7 @@ public class GridWrapperTest {
     RuntimeConfig.loadConfig();
     gridConfig = RuntimeConfig.getGridConfig();
     wdConfig = RuntimeConfig.getWebdriverConfig();
-    wdVersion = RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").toString();
+    wdVersion = RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").getAsString();
     wdHome = "webdriver";
 
   }
@@ -150,24 +151,27 @@ public class GridWrapperTest {
 
   @Test
   public void testGetGridNodeConfig() throws Exception {
-    Map<String, String> expectedConfig = new HashMap<String, String>();
-    expectedConfig.put("-port", "4445");
-    expectedConfig.put("-hub", "http://localhost:4444");
-    expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
-    expectedConfig.put("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
-    expectedConfig.put("-role", "wd");
+    JsonObject expectedConfig = new JsonObject();
+    expectedConfig.addProperty("-port", "4445");
+    expectedConfig.addProperty("-hub", "http://localhost:4444");
+    expectedConfig.addProperty("-host", RuntimeConfig.getCurrentHostIP());
+    expectedConfig.addProperty("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
+    expectedConfig.addProperty("-role", "wd");
+    expectedConfig.addProperty("-nodeTimeout", "240");
+    expectedConfig.addProperty("-maxSession", "1");
+
 
     assertEquals(expectedConfig, GridWrapper.getGridConfig("node"));
   }
 
   @Test
   public void testGetGridHubConfig() throws Exception {
-    Map<String, String> expectedConfig = new HashMap<String, String>();
-    expectedConfig.put("-port", "4444");
-    expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
-    expectedConfig.put("-role", "hub");
+    JsonObject expectedConfig = new JsonObject();
+    expectedConfig.addProperty("-port", "4444");
+    expectedConfig.addProperty("-host", RuntimeConfig.getCurrentHostIP());
+    expectedConfig.addProperty("-role", "hub");
     expectedConfig
-        .put("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
+        .addProperty("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
 
     assertEquals(expectedConfig, GridWrapper.getGridConfig("hub"));
   }

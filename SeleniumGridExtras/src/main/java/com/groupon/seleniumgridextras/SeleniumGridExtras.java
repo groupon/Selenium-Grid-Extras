@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonElement;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
@@ -56,8 +57,8 @@ public class SeleniumGridExtras {
     HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
 
     List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getActivatedModules()) {
-      tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
+    for (JsonElement module : RuntimeConfig.getActivatedModules()) {
+      tasks.add((ExecuteOSTask) Class.forName(module.getAsString()).newInstance());
     }
 
     System.out.println(RuntimeConfig.getSeleniungGridExtrasHomePath());
@@ -73,7 +74,7 @@ public class SeleniumGridExtras {
             System.out.println(
                 "End-point " + task.getEndpoint() + " was called with HTTP params " + params
                     .toString());
-            return task.execute(params);
+            return task.execute(params).getAsString();
           }
         });
 
@@ -97,13 +98,13 @@ public class SeleniumGridExtras {
     if (RuntimeConfig.autoStartHub()) {
       System.out.println("=== Grid Hub was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
-      String value = grid.execute("hub");
+      String value = grid.execute("hub").getAsString();
     }
 
     if (RuntimeConfig.autoStartNode()) {
       System.out.println("=== Grid Node was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
-      String value = grid.execute("node");
+      String value = grid.execute("node").getAsString();
     }
 
     context.getFilters().add(new ParameterFilter());

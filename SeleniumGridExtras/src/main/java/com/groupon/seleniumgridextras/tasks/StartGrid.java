@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
@@ -69,23 +70,23 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     return execute(GridWrapper.getDefaultRole());
   }
 
   @Override
-  public String execute(String role) {
+  public JsonObject execute(String role) {
     try {
       String servicePort = GridWrapper.getGridConfigPortForRole(role);
-      Map<String, String> occupiedPid = PortChecker.getParsedPortInfo(servicePort);
+      JsonObject occupiedPid = PortChecker.getParsedPortInfo(servicePort);
 
-      if (!occupiedPid.isEmpty()) {
+      if (!occupiedPid.isJsonNull()) {
         System.out.println(servicePort + " port is busy, won't try to start a service");
         getJsonResponse().addKeyValues("error", "Port: " + servicePort
                                                 + " is occupied by some other process: "
                                                 + occupiedPid);
 
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       }
 
       String
@@ -94,14 +95,12 @@ public class StartGrid extends ExecuteOSTask {
           OSChecker.isWindows() ? getWindowsCommand(role)
                                 : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-      String serviceStartResponse = ExecuteCommand.execRuntime(command, false);
+      JsonObject serviceStartResponse = ExecuteCommand.execRuntime(command, false);
 
-      Map result = JsonWrapper.parseJson(serviceStartResponse);
-
-      if (result.get("exit_code").toString().equals("0")) {
+      if (serviceStartResponse.get("exit_code").toString().equals("0")) {
         getJsonResponse().addKeyValues("out",
                                        "Service start command sent, might take as long as 10 seconds to spin up");
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       } else {
         System.out.println("Something didn't go right in launching service");
         System.out.println(serviceStartResponse);
@@ -109,12 +108,12 @@ public class StartGrid extends ExecuteOSTask {
       }
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (parameter.isEmpty() || !parameter.containsKey("role")) {
       return execute();
     } else {

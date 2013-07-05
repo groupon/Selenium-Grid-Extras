@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -51,7 +52,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Map;
 
 
 public class RuntimeConfig {
@@ -63,6 +63,10 @@ public class RuntimeConfig {
     return config;
   }
 
+  public static void setConfig(String file) {
+    configFile = file;
+  }
+
   public static String getConfigFile() {
     return configFile;
   }
@@ -72,37 +76,32 @@ public class RuntimeConfig {
     String configString = readConfigFile(configFile);
 
     if (configString != "") {
-      setFullConfig(JsonWrapper.parseJson(configString));
+      setFullConfig(new JsonParser().parse(configString).getAsJsonObject());
     }
   }
 
-  public static void setConfig(String file) {
-    configFile = file;
-  }
-
-
-  public static List<String> getSetupModules() {
-    return (List<String>) config.get("setup");
+  public static JsonArray getSetupModules() {
+    return config.get("setup").getAsJsonArray();
   }
 
   public static String getExposedDirectory() {
     return config.get("expose_directory").toString();
   }
 
-  public static List<String> getTeardownModules() {
-    return (List<String>) config.get("teardown");
+  public static JsonArray getTeardownModules() {
+    return config.get("teardown").getAsJsonArray();
   }
 
-  public static List<String> getActivatedModules() {
-    return (List<String>) config.get("activated_modules");
+  public static JsonArray getActivatedModules() {
+    return config.get("activated_modules").getAsJsonArray();
   }
 
-  public static List<String> getDeactivatedModules() {
-    return (List<String>) config.get("deactivated_modules");
+  public static JsonObject getDeactivatedModules() {
+    return config.get("deactivated_modules").getAsJsonObject();
   }
 
   public static Boolean checkIfModuleEnabled(String module) {
-    return getActivatedModules().contains(module);
+    return getActivatedModules().getAsJsonObject().has(module);
   }
 
   public static JsonElement getWebdriverConfig() {
@@ -116,7 +115,7 @@ public class RuntimeConfig {
   public static Boolean autoStartHub() {
     JsonElement grid = getGridConfig();
 
-    String value = grid.getAsJsonObject().get("auto_start_hub").toString();
+    String value = grid.getAsJsonObject().get("auto_start_hub").getAsString();
 
     if (value.equals("1")) {
       return true;
@@ -128,7 +127,7 @@ public class RuntimeConfig {
   public static Boolean autoStartNode() {
     JsonElement grid = getGridConfig();
 
-    String value = grid.getAsJsonObject().get("auto_start_node").toString();
+    String value = grid.getAsJsonObject().get("auto_start_node").getAsString();
 
     if (value.equals("1")) {
       return true;
@@ -151,7 +150,6 @@ public class RuntimeConfig {
     }
   }
 
-
   public static String getSeleniungGridExtrasHomePath() {
     String path = getSeleniumGridExtrasJarFile();
     path = path.replaceAll("[\\w-\\d\\.]*\\.jar", "");
@@ -163,13 +161,12 @@ public class RuntimeConfig {
     return path;
   }
 
-
   public static String getWebdriverParentDir() {
-    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("directory").toString();
+    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("directory").getAsString();
   }
 
   public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").toString();
+    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").getAsString();
   }
 
   public static void setWebdriverVersion(String newVersion) {
@@ -181,10 +178,9 @@ public class RuntimeConfig {
     FileUtils.writeStringToFile(new File(configFile), jsonText);
   }
 
-  private static void setFullConfig(Map configHash) {
-    if (!configHash.isEmpty()) {
-      JsonParser parser = new JsonParser();
-      config = (JsonObject)parser.parse(new Gson().toJson(configHash));
+  private static void setFullConfig(JsonObject configHash) {
+    if (!configHash.isJsonNull()) {
+      config = configHash;
     }
   }
 

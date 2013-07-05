@@ -37,6 +37,11 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
@@ -74,32 +79,31 @@ public class Setup extends ExecuteOSTask {
   }
 
 
-  private List<String> getClassesToRun() {
-    List<String> listOfTasks = new LinkedList<String>();
+  private JsonArray getClassesToRun() {
+    JsonArray listOfTasks = new JsonArray();
     for (ExecuteOSTask task : setupTasks) {
-      listOfTasks.add(task.getClass().getSimpleName());
+      listOfTasks.add(new JsonPrimitive(task.getClass().getSimpleName()));
     }
-
     return listOfTasks;
   }
 
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     try {
-      Map<String, Object> results = new HashMap<String, Object>();
+      JsonObject results = new JsonObject();
 
       for (ExecuteOSTask task : setupTasks) {
-        results.put(task.getClass().getSimpleName(), JsonWrapper.parseJson(task.execute()));
+        results.add(task.getClass().getSimpleName(), task.execute());
       }
 
       getJsonResponse().addKeyValues("results", results);
 
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
@@ -109,9 +113,9 @@ public class Setup extends ExecuteOSTask {
     System.out.println("Setup Tasks");
     setupTasks = new LinkedList<ExecuteOSTask>();
 
-    for (String module : RuntimeConfig.getSetupModules()) {
+    for (JsonElement module : RuntimeConfig.getSetupModules()) {
       try {
-        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
+        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module.getAsString()).newInstance();
         setupTasks.add(task);
         System.out.println("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {

@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.GetConfig;
 
@@ -69,18 +70,18 @@ public class GetConfigTest {
   @Test
   public void testGetResponseDescription() throws Exception {
     assertEquals("Config that currently lives saved on file",
-                 task.getResponseDescription().get("config_file"));
+                 task.getResponseDescription().get("config_file").getAsString());
     assertEquals("Runtime config that currently set in memory",
-                 task.getResponseDescription().get("config_runtime"));
+                 task.getResponseDescription().get("config_runtime").getAsString());
     assertEquals("Filename from which the config was read",
-                 task.getResponseDescription().get("filename"));
+                 task.getResponseDescription().get("filename").getAsString());
   }
 
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":0,\"error\":[],\"filename\":[\"" + RuntimeConfig.getConfigFile()
-        + "\"],\"config_runtime\":[\"\"],\"config_file\":[\"\"],\"out\":[]}",
-        task.getJsonResponse().toString());
+        new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"filename\":[\"" + RuntimeConfig.getConfigFile()
+        + "\"],\"config_runtime\":[\"\"],\"config_file\":[\"\"],\"out\":[]}"),
+        task.getJsonResponse().getJson());
   }
 }

@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import org.apache.commons.io.FileUtils;
 
@@ -66,7 +67,7 @@ public class ExposeDirectory extends ExecuteOSTask {
 
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     File[] files = sharedDir.listFiles();
     List<String> filesToString = new LinkedList<String>();
 
@@ -74,7 +75,7 @@ public class ExposeDirectory extends ExecuteOSTask {
       filesToString.add(f.toString());
     }
     getJsonResponse().addKeyValues("files", filesToString);
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   public File getExposedDirectory() {

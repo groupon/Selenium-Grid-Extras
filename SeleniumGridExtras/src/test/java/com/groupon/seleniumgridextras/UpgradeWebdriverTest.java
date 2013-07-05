@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
@@ -93,8 +94,8 @@ public class UpgradeWebdriverTest {
   @Test
   public void testResponseDescriptions() throws Exception {
     JsonObject descriptions = task.getResponseDescription();
-    assertEquals("New version downloaded and reconfigured", descriptions.get("new_version"));
-    assertEquals("Old version of the jar that got replaced", descriptions.get("old_version"));
+    assertEquals("New version downloaded and reconfigured", descriptions.get("new_version").getAsString());
+    assertEquals("Old version of the jar that got replaced", descriptions.get("old_version").getAsString());
     assertEquals(5, descriptions.entrySet().size());
   }
 
@@ -102,8 +103,8 @@ public class UpgradeWebdriverTest {
     @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"new_version\":[\"\"],\"exit_code\":0,\"error\":[],\"old_version\":[\"" + GridWrapper
-            .getWebdriverVersion() + "\"],\"out\":[]}", task.getJsonResponse().toString());
+        new JsonParser().parse("{\"new_version\":[\"\"],\"exit_code\":0,\"error\":[],\"old_version\":[\"" + GridWrapper
+            .getWebdriverVersion() + "\"],\"out\":[]}"), task.getJsonResponse().getJson());
   }
 
   @Test

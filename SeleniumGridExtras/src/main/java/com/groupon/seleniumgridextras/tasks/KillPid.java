@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
@@ -61,14 +62,14 @@ public class KillPid extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
 
     getJsonResponse().addKeyValues("error", "ID is a required parameter");
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
 
     if (parameter.isEmpty() || !parameter.containsKey("id")) {
 

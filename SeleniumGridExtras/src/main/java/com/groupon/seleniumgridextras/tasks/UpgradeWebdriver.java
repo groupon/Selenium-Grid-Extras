@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
@@ -71,36 +72,35 @@ public class UpgradeWebdriver extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     getJsonResponse().addKeyValues("error", "version parameter is required");
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   @Override
-  public String execute(String version) {
+  public JsonObject execute(String version) {
 
     DownloadWebdriver downloader = new DownloadWebdriver();
-    Map<String, String> result = JsonWrapper.parseJson(downloader.execute(version));
+    JsonObject result = downloader.execute(version);
 
-    if (result.get("error").isEmpty()) {
+    if (result.get("error").isJsonNull()) {
       RuntimeConfig.setWebdriverVersion(version);
       try {
         RuntimeConfig.saveConfigToFile();
         getJsonResponse().addKeyValues("new_version", version);
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       } catch (IOException error) {
         getJsonResponse().addKeyValues("error", error.toString());
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       }
     } else {
       getJsonResponse().addKeyValues("error", result.get("error").toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
-
+  public JsonObject execute(Map<String, String> parameter) {
     if (parameter.isEmpty() || !parameter.containsKey("version")) {
       return execute();
     } else {

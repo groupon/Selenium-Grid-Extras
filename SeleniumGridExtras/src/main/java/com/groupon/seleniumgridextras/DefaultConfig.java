@@ -95,7 +95,7 @@ public class DefaultConfig {
 
 
   private static void loadWebDriverInfo() {
-    webdriverConfig.addProperty("directory", "webdriver");
+    webdriverConfig.add("directory", new JsonPrimitive("webdriver"));
     webdriverConfig.addProperty("version", "2.33.0");
     defaultConfig.add("webdriver", webdriverConfig);
   }

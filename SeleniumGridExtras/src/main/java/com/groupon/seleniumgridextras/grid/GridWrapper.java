@@ -38,21 +38,18 @@
 
 package com.groupon.seleniumgridextras.grid;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class GridWrapper {
 
   public static String getCurrentWebDriverJarPath() {
     return RuntimeConfig.getSeleniungGridExtrasHomePath() + getWebdriverHome() + "/" + getWebdriverVersion()
-           + ".jar";
+        + ".jar";
   }
 
   public static String getWebdriverVersion() {
@@ -63,7 +60,7 @@ public class GridWrapper {
     return RuntimeConfig.getSeleniungGridExtrasHomePath();
   }
 
-  public static String getGridExtrasJarFilePath(){
+  public static String getGridExtrasJarFilePath() {
     return RuntimeConfig.getSeleniumGridExtrasJarFile();
   }
 
@@ -80,35 +77,27 @@ public class GridWrapper {
   }
 
   private static String getOsSpecificStartCommand(String role, Boolean windows) {
-    String command = "java -cp ";
-    String colon = ":";
+    String colon = windows ? ";" : ":";
 
-    if (windows){
-      colon = ";";
-    }
+    StringBuilder command = new StringBuilder();
+    command.append("java -cp ");
+    command.append(getGridExtrasJarFilePath());
 
-
-    command = command + getGridExtrasJarFilePath();
-
-    String stuff = colon + getCurrentWebDriverJarPath() + " ";
-
+    String jarPath = colon + getCurrentWebDriverJarPath() + " ";
     if (windows) {
-      stuff = OSChecker.toWindowsPath(stuff);
+      jarPath = OSChecker.toWindowsPath(jarPath);
     }
 
-    command = command + stuff;
+    command.append(jarPath);
+    command.append(" org.openqa.grid.selenium.GridLauncher ");
+    command.append(getFormattedConfig(role));
 
-    command = command + " org.openqa.grid.selenium.GridLauncher ";
-
-    command = command + getFormattedConfig(role);
-
-    return command.toString();
+    return String.valueOf(command);
   }
-
 
   public static String getGridConfigPortForRole(String role) {
     JsonElement config = getGridConfig(role);
-    return config.getAsJsonObject().get("-port").toString();
+    return config.getAsJsonObject().get("-port").getAsString();
   }
 
   public static JsonElement getGridConfig(String role) {
@@ -118,14 +107,16 @@ public class GridWrapper {
 
   public static String getDefaultRole() {
     JsonObject grid = RuntimeConfig.getGridConfig();
-    return grid.get("default_role").toString();
+    return grid.get("default_role").getAsString();
   }
 
   private static String getFormattedConfig(String role) {
-    JsonElement config = getGridConfig(role);
-
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    return gson.toJson(config);
+    StringBuilder response = new StringBuilder();
+    JsonObject config = getGridConfig(role).getAsJsonObject();
+    for (Map.Entry<String, JsonElement> entry : config.entrySet()) {
+      response.append(entry.getKey()).append(" ").append(entry.getValue().getAsString()).append(" ");
+    }
+    return response.toString();
   }
 
 

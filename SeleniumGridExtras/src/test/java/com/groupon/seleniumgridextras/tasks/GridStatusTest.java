@@ -36,6 +36,7 @@
  */
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -70,10 +71,10 @@ public class GridStatusTest {
   @Test
   public void testGetResponseDescription() throws Exception {
     assertEquals("Boolean if hub is running on given port", task.getResponseDescription().get(
-        "hub_running"));
-    assertEquals("Boolean if node is running on given port", task.getResponseDescription().get("node_running"));
-    assertEquals("Hash object describing the Hub Process", task.getResponseDescription().get("hub_info"));
-    assertEquals("Hash object describing the Node Process", task.getResponseDescription().get("node_info"));
+        "hub_running").getAsString());
+    assertEquals("Boolean if node is running on given port", task.getResponseDescription().get("node_running").getAsString());
+    assertEquals("Hash object describing the Hub Process", task.getResponseDescription().get("hub_info").getAsString());
+    assertEquals("Hash object describing the Node Process", task.getResponseDescription().get("node_info").getAsString());
     assertEquals(7, task.getResponseDescription().entrySet().size());
   }
 
@@ -81,8 +82,8 @@ public class GridStatusTest {
   public void testGetJsonResponse() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
       assertEquals(
-          "{\"node_running\":[\"\"],\"exit_code\":0,\"node_info\":[\"\"],\"hub_running\":[\"\"],\"error\":[],\"hub_info\":[\"\"],\"out\":[]}",
-          task.getJsonResponse().toString());
+          new JsonParser().parse("{\"node_running\":[\"\"],\"exit_code\":0,\"node_info\":[\"\"],\"hub_running\":[\"\"],\"error\":[],\"hub_info\":[\"\"],\"out\":[]}"),
+          task.getJsonResponse().getJson());
     }
   }
 
