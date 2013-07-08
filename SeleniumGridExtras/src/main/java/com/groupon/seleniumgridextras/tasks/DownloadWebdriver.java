@@ -83,14 +83,19 @@ public class DownloadWebdriver extends ExecuteOSTask {
   @Override
   public String execute(String version) {
     Downloader downloader = new WdDownloader(version);
-    Boolean downloaded = downloader.download();
 
-    if(downloaded){
-      getJsonResponse().addKeyValues("file", downloader.getDestinationFile());
+    getJsonResponse().addKeyValues("file", downloader.getDestinationFile());
+    getJsonResponse().addKeyValues("file_full_path", downloader.getDestinationFileFullPath().getAbsolutePath());
+
+    if(!downloader.getDestinationFileFullPath().exists()){
+      Boolean downloaded = downloader.download();
       getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
-      getJsonResponse().addKeyValues("file_full_path", downloader.getDestinationFileFullPath().getAbsolutePath());
+
+      if(!downloaded){
+        getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
+      }
     } else {
-      getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
+      getJsonResponse().addKeyValues("out", "File already downloaded, will not download again");
     }
 
     return getJsonResponse().toString();

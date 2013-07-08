@@ -37,7 +37,7 @@ describe "DownloadWebdriver.java" do
     @wd_version = "2.30.0"
     @wd_jar = "webdriver/#{@wd_version}.jar"
     @wd_jar_full_path = "/tmp/#{@wd_jar}"
-    FileUtils.rm @wd_jar if File.exist? @wd_jar
+    FileUtils.rm @wd_jar_full_path if File.exist? @wd_jar_full_path
     @response = get_json "download_webdriver?version=#{@wd_version}"
   end
   
@@ -52,8 +52,8 @@ describe "DownloadWebdriver.java" do
   
   it "should not download file again if it already exists" do
     response = get_json "download_webdriver?version=#{@wd_version}"
-    response["source_url"].should == ["http://selenium.googlecode.com/files/selenium-server-standalone-#{@wd_version}.jar"]
-    response["out"].should == []
+    response["source_url"].should == nil
+    response["out"].should == ["File already downloaded, will not download again"]
     response["file"].should == ["#{@wd_version}.jar"]
   end
   
