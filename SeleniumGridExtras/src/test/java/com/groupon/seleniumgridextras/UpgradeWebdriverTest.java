@@ -59,9 +59,8 @@ public class UpgradeWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("upgrade_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
+    RuntimeConfig.setConfigFile("upgrade_test.json");
+    RuntimeConfig.loadDefaults();
     task = new UpgradeWebdriver();
   }
 
@@ -97,7 +96,6 @@ public class UpgradeWebdriverTest {
     assertEquals("Old version of the jar that got replaced", descriptions.get("old_version").getAsString());
     assertEquals(5, descriptions.entrySet().size());
   }
-
 
   @Test
   public void testGetJsonResponse() throws Exception {

@@ -38,86 +38,51 @@
 package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
-import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
 
 
 public class RuntimeConfig {
 
   private static String configFile = "selenium_grid_extras_config.json";
-  private static Config config;
+  private static Config config = null;
 
   public RuntimeConfig() {
     config = new Config();
-  }
-
-  public static void setConfig(String file) {
-    configFile = file;
   }
 
   public static String getConfigFile() {
     return configFile;
   }
 
-  public static void loadConfig() {
+  public static void setConfigFile(String file) {
+    configFile = file;
+  }
+
+  public static Config load() {
 
     String configString = readConfigFile(configFile);
-
     if (configString != "") {
       config = new Gson().fromJson(configString, Config.class);
+    } else {
+      // first time runner
+      Config defaultConfig = DefaultConfig.getDefaultConfig();
+      config = FirstTimeRunConfig.customiseConfig(defaultConfig);
+      config.writeToDisk(configFile);
     }
+    return config;
   }
 
-  public static List<String> getSetupModules() {
-    return config.getSetup();
-  }
-
-  public static String getExposedDirectory() {
-    return config.getExposeDirectory();
-  }
-
-  public static List<String> getTeardownModules() {
-    return config.getTeardown();
-  }
-
-  public static List<String> getActivatedModules() {
-    return config.getActivatedModules();
-  }
-
-  public static List<String> getDeactivatedModules() {
-    return config.getDisabledModules();
-  }
-
-  public static Boolean checkIfModuleEnabled(String module) {
-    return getActivatedModules().contains(module);
-  }
-
-  public static Config.WebDriver getWebdriverConfig() {
-    return config.getWebdriver();
-  }
-
-  public static Config.GridInfo getGridConfig() {
-    return config.getGrid();
-  }
-
-  public static Boolean autoStartHub() {
-    return getGridConfig().getAutoStartHub();
-  }
-
-  public static Boolean autoStartNode() {
-    return getGridConfig().getAutoStartNode();
+  public static Config loadDefaults() {
+    DefaultConfig.getDefaultConfig().writeToDisk(configFile);
+    return load();
   }
 
   public static String getSeleniumGridExtrasJarFile() {
@@ -145,27 +110,6 @@ public class RuntimeConfig {
     return path;
   }
 
-  public static String getWebdriverParentDir() {
-    return RuntimeConfig.getWebdriverConfig().getDirectory();
-  }
-
-  public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverConfig().getVersion();
-  }
-
-  public static void setWebdriverVersion(String newVersion) {
-    getWebdriverConfig().setVersion(newVersion);
-  }
-
-  public static void saveConfigToFile() throws IOException {
-    String jsonText = new GsonBuilder().setPrettyPrinting().create().toJson(config);
-    FileUtils.writeStringToFile(new File(configFile), jsonText);
-  }
-
-  public static String getJsonString() {
-    return new GsonBuilder().setPrettyPrinting().create().toJson(config);
-  }
-
   private static String readConfigFile(String filePath) {
     String returnString = "";
     try {
@@ -176,16 +120,14 @@ public class RuntimeConfig {
       }
     } catch (FileNotFoundException error) {
       System.out.println("File " + filePath + " does not exist, going to use default configs");
-      WriteDefaultConfigs.writeConfig(filePath);
-      return readConfigFile(filePath);
-
     } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
-      WriteDefaultConfigs.writeConfig(filePath);
-      return readConfigFile(filePath);
     }
-
     return returnString;
+  }
+
+  public static Config getConfig() {
+    return config;
   }
 
 }

@@ -64,9 +64,8 @@ public class StartGridTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("starg_grid_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
+    RuntimeConfig.setConfigFile("starg_grid_test.json");
+    RuntimeConfig.loadDefaults();
     task = new com.groupon.seleniumgridextras.tasks.StartGrid();
 
   }

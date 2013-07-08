@@ -113,7 +113,7 @@ public class Screenshot extends ExecuteOSTask {
       }
       getJsonResponse().addKeyValues("file_type", "PNG");
       getJsonResponse().addKeyValues("file",
-          RuntimeConfig.getExposedDirectory() + "/" + filename);
+          RuntimeConfig.getConfig().getExposedDirectory() + "/" + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
       return getJsonResponse().getJson();
     } catch (AWTException error) {
@@ -139,7 +139,7 @@ public class Screenshot extends ExecuteOSTask {
 
   private String writeImageToDisk(BufferedImage screenshot) throws IOException {
     String filename;
-    String directory = RuntimeConfig.getExposedDirectory();
+    String directory = RuntimeConfig.getConfig().getExposedDirectory();
     filename = createTimestampFilename();
     String fullPath = directory + "/" + filename;
     File outputFile = new File(fullPath);

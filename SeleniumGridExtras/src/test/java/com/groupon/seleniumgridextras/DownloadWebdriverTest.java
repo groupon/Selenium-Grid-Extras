@@ -55,9 +55,8 @@ public class DownloadWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("download_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
+    RuntimeConfig.setConfigFile("download_test.json");
+    RuntimeConfig.loadDefaults();
     task = new DownloadWebdriver();
   }
 
@@ -66,7 +65,6 @@ public class DownloadWebdriverTest {
     File config = new File(RuntimeConfig.getConfigFile());
     config.delete();
   }
-
 
   @Test
   public void testGetEndpoint() throws Exception {
@@ -77,7 +75,6 @@ public class DownloadWebdriverTest {
   public void testGetDescription() throws Exception {
     assertEquals("Downloads a version of WebDriver jar to local machine", task.getDescription());
   }
-
 
   @Test
   public void testGetJsonResponse() throws Exception {

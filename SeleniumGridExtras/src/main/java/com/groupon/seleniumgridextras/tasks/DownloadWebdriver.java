@@ -76,7 +76,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    return downloadWebdriverVersion(RuntimeConfig.getWebdriverVersion());
+    return downloadWebdriverVersion(RuntimeConfig.getConfig().getWebdriver().getVersion());
   }
 
   @Override
@@ -158,7 +158,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
     try {
       File webdriverJar = new File(GridWrapper.getCurrentWebDriverJarPath());
-      File webdriverHome = new File(RuntimeConfig.getWebdriverParentDir());
+      File webdriverHome = new File(RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
       if (!webdriverHome.exists()) {
         webdriverHome.mkdir();

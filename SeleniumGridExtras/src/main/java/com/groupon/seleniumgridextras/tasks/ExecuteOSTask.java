@@ -137,7 +137,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
     Boolean returnValue = true;
 
     for (String module : getDependencies()) {
-      if (RuntimeConfig.checkIfModuleEnabled(module) && returnValue) {
+      if (RuntimeConfig.getConfig().checkIfModuleEnabled(module) && returnValue) {
 
       } else {
         System.out.println("  " + this.getClass().getSimpleName() + " depends on " + module

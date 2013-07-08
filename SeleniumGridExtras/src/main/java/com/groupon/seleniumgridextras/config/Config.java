@@ -3,7 +3,9 @@ package com.groupon.seleniumgridextras.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +61,18 @@ public class Config {
     return config_version;
   }
 
+  public void writeToDisk(String file) {
+    try {
+      File f = new File(file);
+      String config = this.toPrettyJsonString();
+      FileUtils.writeStringToFile(f, config);
+    } catch (Exception error) {
+      System.out
+          .println("Could not write default config file, exit with error " + error.toString());
+      System.exit(1);
+    }
+  }
+
   public void setConfigVersion(String config_version) {
     this.config_version = config_version;
   }
@@ -80,7 +94,7 @@ public class Config {
   }
 
   public void setSharedDir(String sharedDir) {
-    this.expose_directory = sharedDir;
+    expose_directory = sharedDir;
   }
 
   public String toJsonString() {
@@ -89,6 +103,14 @@ public class Config {
 
   public String toPrettyJsonString() {
     return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+  }
+
+  public boolean checkIfModuleEnabled(String module) {
+    return activated_modules.contains(module);
+  }
+
+  public String getExposedDirectory() {
+    return expose_directory;
   }
 
   public class GridInfo {

@@ -34,15 +34,11 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
-
 package com.groupon.seleniumgridextras.grid;
 
-import com.google.gson.Gson;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridRole;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class GridWrapper {
 
@@ -52,7 +48,7 @@ public class GridWrapper {
   }
 
   public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverVersion();
+    return RuntimeConfig.getConfig().getWebdriver().getVersion();
   }
 
   public static String getSeleniumGridExtrasPath() {
@@ -64,7 +60,7 @@ public class GridWrapper {
   }
 
   public static String getWebdriverHome() {
-    return RuntimeConfig.getWebdriverParentDir();
+    return RuntimeConfig.getConfig().getWebdriver().getDirectory();
   }
 
   public static String getStartCommand(String role) {
@@ -89,7 +85,7 @@ public class GridWrapper {
 
     command.append(jarPath);
     command.append(" org.openqa.grid.selenium.GridLauncher ");
-    command.append(getFormattedConfig(role));
+    command.append(getGridRole(role).getStartCommand());
 
     return String.valueOf(command);
   }
@@ -100,26 +96,15 @@ public class GridWrapper {
   }
 
   public static String getDefaultRole() {
-    return RuntimeConfig.getGridConfig().getDefaultRole();
+    return RuntimeConfig.getConfig().getGrid().getDefaultRole();
   }
 
-  private static String getFormattedConfig(String role) {
-    GridRole config = getGridRole(role);
-    return config.getStartCommand();
-  }
-
-//  public static String getGridConfig(String role){
-//    GridRole config = getGridRole(role);
-//    return new Gson().toJson(config);
-//  }
-
-  private static GridRole getGridRole(String role){
+  private static GridRole getGridRole(String role) {
     GridRole config = null;
-    if(role.equals("hub")){
-      config = RuntimeConfig.getGridConfig().getHub();
-    }
-    else if(role.equals("node")){
-      config = RuntimeConfig.getGridConfig().getNode();
+    if (role.equals("hub")) {
+      config = RuntimeConfig.getConfig().getGrid().getHub();
+    } else if (role.equals("node")) {
+      config = RuntimeConfig.getConfig().getGrid().getNode();
     }
     return config;
   }

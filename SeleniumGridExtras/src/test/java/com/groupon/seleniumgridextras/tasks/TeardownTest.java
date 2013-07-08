@@ -43,7 +43,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,10 +58,8 @@ public class TeardownTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("teardown_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
-
+    RuntimeConfig.setConfigFile("teardown_test.json");
+    RuntimeConfig.loadDefaults();
     task = new Teardown();
     Boolean initilized = task.initialize();
   }

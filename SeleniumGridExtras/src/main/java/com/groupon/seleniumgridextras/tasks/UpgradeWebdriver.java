@@ -64,7 +64,7 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     addResponseDescription("old_version", "Old version of the jar that got replaced");
     addResponseDescription("new_version", "New version downloaded and reconfigured");
 
-    getJsonResponse().addKeyValues("old_version", RuntimeConfig.getWebdriverVersion());
+    getJsonResponse().addKeyValues("old_version", RuntimeConfig.getConfig().getWebdriver().getVersion());
   }
 
   @Override
@@ -80,15 +80,10 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     JsonObject result = downloader.execute(version);
 
     if (result.get("error").isJsonNull()) {
-      RuntimeConfig.setWebdriverVersion(version);
-      try {
-        RuntimeConfig.saveConfigToFile();
-        getJsonResponse().addKeyValues("new_version", version);
-        return getJsonResponse().getJson();
-      } catch (IOException error) {
-        getJsonResponse().addKeyValues("error", error.toString());
-        return getJsonResponse().getJson();
-      }
+      RuntimeConfig.getConfig().getWebdriver().setVersion(version);
+      RuntimeConfig.getConfig().writeToDisk(RuntimeConfig.getConfigFile());
+      getJsonResponse().addKeyValues("new_version", version);
+      return getJsonResponse().getJson();
     } else {
       getJsonResponse().addKeyValues("error", result.get("error").toString());
       return getJsonResponse().getJson();

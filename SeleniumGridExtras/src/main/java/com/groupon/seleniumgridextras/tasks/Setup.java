@@ -105,7 +105,7 @@ public class Setup extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Setup Tasks");
     setupTasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getSetupModules()) {
+    for (String module : RuntimeConfig.getConfig().getSetup()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         setupTasks.add(task);

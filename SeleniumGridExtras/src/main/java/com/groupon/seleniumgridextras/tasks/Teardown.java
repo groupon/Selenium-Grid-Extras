@@ -102,7 +102,7 @@ public class Teardown extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Tear-Down Tasks");
     teardownTasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getTeardownModules()) {
+    for (String module : RuntimeConfig.getConfig().getTeardown()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         teardownTasks.add(task);

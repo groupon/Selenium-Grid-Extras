@@ -38,13 +38,11 @@
 package com.groupon.seleniumgridextras.grid;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -63,12 +61,12 @@ public class GridWrapperTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("grid_wrapper_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
-    gridConfig = RuntimeConfig.getGridConfig();
-    wdConfig = RuntimeConfig.getWebdriverConfig();
-    wdVersion = RuntimeConfig.getWebdriverConfig().getVersion();
+    RuntimeConfig.setConfigFile("grid_wrapper_test.json");
+    RuntimeConfig.loadDefaults();
+    RuntimeConfig.load();
+    gridConfig = RuntimeConfig.getConfig().getGrid();
+    wdConfig = RuntimeConfig.getConfig().getWebdriver();
+    wdVersion = wdConfig.getVersion();
     wdHome = "webdriver";
 
   }

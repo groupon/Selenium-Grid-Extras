@@ -43,7 +43,7 @@ import java.io.InputStreamReader;
 public class FirstTimeRunConfig {
 
 
-  public static String toJsonString(Config defaultConfig) {
+  public static Config customiseConfig(Config defaultConfig) {
     System.out.println(
         "\n\n\n\nWe noticed this is a first time running, we will ask some configuration settings\n\n");
 
@@ -56,7 +56,7 @@ public class FirstTimeRunConfig {
     System.out
         .println("Thank you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
     System.out.println("You can modify this file directly to tweak more options");
-    return defaultConfig.toPrettyJsonString();
+    return defaultConfig;
   }
 
   private static void setGridHubAutostart(Config defaultConfig) {
