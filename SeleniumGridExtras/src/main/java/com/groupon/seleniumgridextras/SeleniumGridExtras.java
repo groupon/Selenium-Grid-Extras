@@ -74,7 +74,8 @@ public class SeleniumGridExtras {
             System.out.println(
                 "End-point " + task.getEndpoint() + " was called with HTTP params " + params
                     .toString());
-            return task.execute(params).getAsString();
+            String result = task.execute(params).toString();
+            return result;
           }
         });
 

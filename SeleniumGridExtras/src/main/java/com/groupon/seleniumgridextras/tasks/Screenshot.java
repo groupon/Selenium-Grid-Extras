@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
@@ -86,7 +87,6 @@ public class Screenshot extends ExecuteOSTask {
 
     int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
     int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
-
     return createScreenshot(width, height);
   }
 
@@ -96,7 +96,8 @@ public class Screenshot extends ExecuteOSTask {
     try {
       BufferedImage screenshot = takeScreenshot();
       if (width > 0 || height > 0) {
-        screenshot = createResizedCopy(screenshot, width, height, true);
+        screenshot = createThumbnail(screenshot, width, height);
+//        screenshot = createResizedCopy(screenshot, width, height, true);
       }
       try {
         filename = writeImageToDisk(screenshot);
@@ -161,6 +162,18 @@ public class Screenshot extends ExecuteOSTask {
     Robot robot = new Robot();
     Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
     return robot.createScreenCapture(captureSize);
+  }
+
+  private BufferedImage createThumbnail(BufferedImage originalImage, int width, int height) {
+    BufferedImage thumbnail = null;
+    try {
+      thumbnail = Thumbnails.of(originalImage)
+          .size(width, height)
+          .asBufferedImage();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return thumbnail;
   }
 
   private BufferedImage createResizedCopy(Image originalImage,
