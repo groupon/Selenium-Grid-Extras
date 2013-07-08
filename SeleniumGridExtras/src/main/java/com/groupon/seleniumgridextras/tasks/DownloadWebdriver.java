@@ -38,16 +38,12 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-import com.groupon.seleniumgridextras.FileDownloader;
+import com.groupon.seleniumgridextras.Downloader;
+import com.groupon.seleniumgridextras.WebdriverDownloader;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,15 +82,15 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
   @Override
   public String execute(String version) {
-    Map<String, String> downloadResult = FileDownloader.downloadWebdriverVersion(version);
+    Downloader downloader = new WebdriverDownloader(version);
+    Boolean downloaded = downloader.download();
 
-
-    if(downloadResult.get("error").equals("")){
-      getJsonResponse().addKeyValues("file", downloadResult.get("file"));
-      getJsonResponse().addKeyValues("out", downloadResult.get("out"));
-      getJsonResponse().addKeyValues("source_url", downloadResult.get("source_url"));
+    if(downloaded){
+      getJsonResponse().addKeyValues("file", downloader.getDestinationFile());
+      getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
+      getJsonResponse().addKeyValues("file_full_path", downloader.getDestinationFileFullPath().getAbsolutePath());
     } else {
-      getJsonResponse().addKeyValues("error", downloadResult.get("error"));
+      getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
     }
 
     return getJsonResponse().toString();
@@ -117,15 +113,21 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public boolean initialize() {
 
     try {
+      System.out.println(GridWrapper.getCurrentWebDriverJarPath());
+      System.out.println(RuntimeConfig.getWebdriverParentDir());
       File webdriverJar = new File(GridWrapper.getCurrentWebDriverJarPath());
       File webdriverHome = new File(RuntimeConfig.getWebdriverParentDir());
 
       if (!webdriverHome.exists()) {
+        System.out.println("no home");
          webdriverHome.mkdir();
+
+        System.out.println(webdriverHome.getPath());
       }
 
       if (!webdriverJar.exists()) {
-        FileDownloader.downloadWebdriverVersion(GridWrapper.getWebdriverVersion());
+        System.out.println("no jar");
+        execute();
       }
 
 

@@ -36,6 +36,7 @@ describe "DownloadWebdriver.java" do
     @wd_default_version = get_local_config["webdriver"]["version"]  
     @wd_version = "2.30.0"
     @wd_jar = "webdriver/#{@wd_version}.jar"
+    @wd_jar_full_path = "/tmp/#{@wd_jar}"
     FileUtils.rm @wd_jar if File.exist? @wd_jar
     @response = get_json "download_webdriver?version=#{@wd_version}"
   end
@@ -46,14 +47,18 @@ describe "DownloadWebdriver.java" do
   end
   
   it "should have the downloaded version on file system" do
-    File.exist?(@wd_jar).should == true
+    File.exist?(@wd_jar_full_path).should == true
   end
   
   it "should not download file again if it already exists" do
     response = get_json "download_webdriver?version=#{@wd_version}"
-    # response["source_url"].should == [""]
-    response["out"].should == ["File already exist, no need to download again."]
+    response["source_url"].should == ["http://selenium.googlecode.com/files/selenium-server-standalone-#{@wd_version}.jar"]
+    response["out"].should == []
     response["file"].should == ["#{@wd_version}.jar"]
+  end
+  
+  it "should have a full path to the jar file" do
+    @response["file_full_path"].should == [@wd_jar_full_path]
   end
   
   it_behaves_like "No Errors"  
