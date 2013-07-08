@@ -38,8 +38,6 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -50,9 +48,9 @@ public class MoveMouse extends ExecuteOSTask {
   public MoveMouse() {
     setEndpoint("/move_mouse");
     setDescription("Moves the computers mouse to x and y location. (Default 0,0)");
-    Map<String, String> params = new HashMap();
-    params.put("x", "X - Coordinate");
-    params.put("y", "Y - Coordinate");
+    JsonObject params = new JsonObject();
+    params.addProperty("x", "X - Coordinate");
+    params.addProperty("y", "Y - Coordinate");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -72,12 +70,12 @@ public class MoveMouse extends ExecuteOSTask {
     int x = 0;
     int y = 0;
 
-    if(!parameter.isEmpty() && parameter.containsKey("x") && parameter.containsKey("y")){
+    if (!parameter.isEmpty() && parameter.containsKey("x") && parameter.containsKey("y")) {
       x = Integer.parseInt(parameter.get("x"));
       y = Integer.parseInt(parameter.get("y"));
     }
 
-    return moveMouse(x,y);
+    return moveMouse(x, y);
   }
 
 

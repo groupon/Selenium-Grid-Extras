@@ -55,7 +55,7 @@ public class Teardown extends ExecuteOSTask {
   public Teardown() {
     setEndpoint("/teardown");
     setDescription("Calls several pre-defined tasks to act as teardown after build");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -65,7 +65,7 @@ public class Teardown extends ExecuteOSTask {
     setEnabledInGui(false);
 
     addResponseDescription("classes_to_execute",
-                           "List of full canonical classes to execute on Tear-Down");
+        "List of full canonical classes to execute on Tear-Down");
     addResponseDescription("results", "Hash object of tasks ran and their results");
   }
 

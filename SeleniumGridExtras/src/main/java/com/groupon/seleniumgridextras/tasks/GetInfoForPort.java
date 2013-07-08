@@ -39,20 +39,17 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
-  public GetInfoForPort(){
+  public GetInfoForPort() {
     setEndpoint("/port_info");
     setDescription("Returns parsed information on a PID occupying a given port");
-    Map<String, String> params = new HashMap();
-    params.put("port", "(Required) Port to be used");
+    JsonObject params = new JsonObject();
+    params.addProperty("port", "(Required) Port to be used");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -69,9 +66,9 @@ public class GetInfoForPort extends ExecuteOSTask {
 
 
   @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("port", "(Required) Port to be used");
+  public JsonObject getAcceptedParams() {
+    JsonObject params = new JsonObject();
+    params.addProperty("port", "(Required) Port to be used");
     return params;
   }
 
@@ -84,7 +81,7 @@ public class GetInfoForPort extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if(!parameter.isEmpty() && parameter.containsKey("port")){
+    if (!parameter.isEmpty() && parameter.containsKey("port")) {
       return execute(parameter.get("port").toString());
     } else {
       return execute();

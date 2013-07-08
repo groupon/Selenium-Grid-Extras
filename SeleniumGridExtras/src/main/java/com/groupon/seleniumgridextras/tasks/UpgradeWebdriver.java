@@ -41,7 +41,6 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +50,8 @@ public class UpgradeWebdriver extends ExecuteOSTask {
   public UpgradeWebdriver() {
     setEndpoint("/upgrade_webdriver");
     setDescription("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart");
-    Map<String, String> params = new HashMap();
-    params.put("version", "(Required) - Version of WebDriver to download, such as 2.33.0");
+    JsonObject params = new JsonObject();
+    params.addProperty("version", "(Required) - Version of WebDriver to download, such as 2.33.0");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");

@@ -42,15 +42,12 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OSChecker;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class KillAllIE extends KillAllByName {
 
   public KillAllIE() {
     setEndpoint("/kill_ie");
     setDescription("Executes os level kill command on all instance of Internet Explorer");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");

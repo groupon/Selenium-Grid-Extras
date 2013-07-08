@@ -65,7 +65,7 @@ public class GridStatusTest {
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals(0, task.getAcceptedParams().keySet().size());
+    assertEquals(0, task.getAcceptedParams().entrySet().size());
   }
 
   @Test

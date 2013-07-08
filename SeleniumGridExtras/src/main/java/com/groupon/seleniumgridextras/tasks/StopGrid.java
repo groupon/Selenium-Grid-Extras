@@ -40,11 +40,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class StopGrid extends ExecuteOSTask {
@@ -52,8 +50,8 @@ public class StopGrid extends ExecuteOSTask {
   public StopGrid() {
     setEndpoint("/stop_grid");
     setDescription("Stops grid or node process");
-    Map<String, String> params = new HashMap();
-    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    JsonObject params = new JsonObject();
+    params.addProperty("role", "hub|node - defaults to 'default_role' param in config file");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");

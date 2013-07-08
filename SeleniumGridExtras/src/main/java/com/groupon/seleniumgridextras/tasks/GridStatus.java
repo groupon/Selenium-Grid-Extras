@@ -38,20 +38,15 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
 
 public class GridStatus extends ExecuteOSTask {
 
-  public GridStatus(){
+  public GridStatus() {
     setEndpoint("/grid_status");
     setDescription("Returns status of the Selenium Grid hub/node. If currently running and what is the PID");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");

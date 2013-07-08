@@ -43,10 +43,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Setup extends ExecuteOSTask {
 
@@ -59,7 +57,7 @@ public class Setup extends ExecuteOSTask {
   public Setup() {
     setEndpoint("/setup");
     setDescription(shortDescription);
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -69,7 +67,7 @@ public class Setup extends ExecuteOSTask {
     setEnabledInGui(false);
 
     addResponseDescription("classes_to_execute",
-                           "List of full canonical classes to execute on Setup");
+        "List of full canonical classes to execute on Setup");
     addResponseDescription("results", "Hash object of tasks ran and their results");
 
   }

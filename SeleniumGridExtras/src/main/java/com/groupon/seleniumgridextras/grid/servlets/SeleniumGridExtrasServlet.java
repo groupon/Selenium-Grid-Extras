@@ -130,7 +130,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
       List<ExtrasEndPoint> availableEndpoints = getAvailableEndpoints(p);
       JsonArray endpoints = new JsonArray();
       for (ExtrasEndPoint e : availableEndpoints) {
-        if(!e.getEnabledInGui())
+        if (!e.getEnabledInGui())
           continue;
         JsonObject endpoint = new JsonObject();
         endpoint.addProperty("endpoint", e.getEndpoint());

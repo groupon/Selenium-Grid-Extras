@@ -49,10 +49,10 @@ import java.util.Map;
 abstract class HttpExecutor implements HttpHandler {
 
   public void handle(HttpExchange t) throws IOException {
-    Map params = (Map)t.getAttribute("parameters");
+    Map params = (Map) t.getAttribute("parameters");
     String response = execute(params);
 
-    if (params.containsKey("callback")){
+    if (params.containsKey("callback")) {
       response = params.get("callback") + "(" + response + ")";
     }
     System.out.println(response);

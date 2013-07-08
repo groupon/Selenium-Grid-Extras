@@ -38,7 +38,6 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 import org.apache.commons.io.FileUtils;
@@ -52,7 +51,7 @@ public class ExposeDirectory extends ExecuteOSTask {
 
   public File sharedDir;
 
-  public ExposeDirectory(){
+  public ExposeDirectory() {
     setEndpoint("/dir");
     setDescription("Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.");
     setRequestType("GET");

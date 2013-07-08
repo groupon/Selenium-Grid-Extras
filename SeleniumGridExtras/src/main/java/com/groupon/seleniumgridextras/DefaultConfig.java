@@ -51,7 +51,7 @@ public class DefaultConfig {
   private static JsonObject webdriverConfig;
 
 
-  public static String toJsonString(){
+  public static String toJsonString() {
     return getDefaultConfig().toString();
   }
 
@@ -77,7 +77,7 @@ public class DefaultConfig {
     return defaultConfig;
   }
 
-  public static void loadConfigVersion(){
+  public static void loadConfigVersion() {
     defaultConfig.addProperty("config_version", "1.0");
   }
 
@@ -147,7 +147,7 @@ public class DefaultConfig {
     gridHubConfig.addProperty("-port", "4444");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
-    if (!hostIp.equals("")){
+    if (!hostIp.equals("")) {
       gridHubConfig.addProperty("-host", hostIp);
     }
     return gridHubConfig;
@@ -163,7 +163,7 @@ public class DefaultConfig {
     gridNodeConfig.addProperty("-maxSession", "1");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
-    if (!hostIp.equals("")){
+    if (!hostIp.equals("")) {
       gridNodeConfig.addProperty("-host", hostIp);
     }
 

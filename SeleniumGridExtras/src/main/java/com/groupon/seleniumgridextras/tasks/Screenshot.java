@@ -59,9 +59,9 @@ public class Screenshot extends ExecuteOSTask {
   public Screenshot() {
     setEndpoint("/screenshot");
     setDescription("Take a full OS screen Screen Shot of the node");
-    Map<String, String> params = new HashMap();
-    params.put("width", "width");
-    params.put("height", "height");
+    JsonObject params = new JsonObject();
+    params.addProperty("width", "width");
+    params.addProperty("height", "height");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -95,7 +95,7 @@ public class Screenshot extends ExecuteOSTask {
     String encodedImage;
     try {
       BufferedImage screenshot = takeScreenshot();
-      if(width > 0 || height >0){
+      if (width > 0 || height > 0) {
         screenshot = createResizedCopy(screenshot, width, height, true);
       }
       try {
@@ -149,7 +149,8 @@ public class Screenshot extends ExecuteOSTask {
   }
 
   private String createTimestampFilename() {
-    String filename;Date date = new Date();
+    String filename;
+    Date date = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
     String formattedTimestamp = sdf.format(date);
     filename = "screenshot_" + formattedTimestamp + ".png";

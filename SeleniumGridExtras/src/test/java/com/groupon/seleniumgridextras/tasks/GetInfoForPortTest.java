@@ -67,8 +67,8 @@ public class GetInfoForPortTest {
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) Port to be used", task.getAcceptedParams().get("port"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    assertEquals("(Required) Port to be used", task.getAcceptedParams().get("port").getAsString());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 
   @Test

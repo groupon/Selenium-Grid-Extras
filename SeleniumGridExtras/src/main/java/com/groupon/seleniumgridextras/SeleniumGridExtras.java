@@ -39,9 +39,9 @@ package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonElement;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
-import com.groupon.seleniumgridextras.tasks.StartGrid;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;

@@ -38,20 +38,16 @@ package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.util.Map;
 
 public class ApiDocumentation {
 
   private static JsonArray apiSpec = new JsonArray();
 
-  public static void registerApiEndPoint(Map endPoint){
-    JsonObject o = new JsonParser().parse(String.valueOf(endPoint)).getAsJsonObject();
-    apiSpec.add(o);
+  public static void registerApiEndPoint(JsonObject endPoint) {
+    apiSpec.add(endPoint);
   }
 
-  public static String getApiDocumentation(){
+  public static String getApiDocumentation() {
     return apiSpec.toString();
   }
 }

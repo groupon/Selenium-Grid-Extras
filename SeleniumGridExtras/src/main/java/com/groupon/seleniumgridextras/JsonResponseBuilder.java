@@ -42,7 +42,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -137,7 +136,7 @@ public class JsonResponseBuilder {
     return values;
   }
 
-  public JsonObject getJson(){
+  public JsonObject getJson() {
     JsonObject values = keyValues;
     clearValues();
     return values;

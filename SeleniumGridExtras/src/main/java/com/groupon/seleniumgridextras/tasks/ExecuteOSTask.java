@@ -47,7 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ExecuteOSTask extends ExtrasEndPoint{
+public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   final private
   String
@@ -68,11 +68,10 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
   }
 
 
-
   public JsonObject execute(String parameter) {
 
     String command = OSChecker.isWindows() ? getWindowsCommand()
-                              : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
+        : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
@@ -80,7 +79,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
   public String getWindowsCommand(String parameter) {
 
     getJsonResponse().addKeyValues("error",
-                                   notImplementedError + " " + this.getClass().getCanonicalName());
+        notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -92,7 +91,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
   public String getLinuxCommand(String parameter) {
     getJsonResponse().addKeyValues("error",
-                                   notImplementedError + " " + this.getClass().getCanonicalName());
+        notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -142,7 +141,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
       } else {
         System.out.println("  " + this.getClass().getSimpleName() + " depends on " + module
-                           + " but it is not activated");
+            + " but it is not activated");
         returnValue = false;
       }
     }

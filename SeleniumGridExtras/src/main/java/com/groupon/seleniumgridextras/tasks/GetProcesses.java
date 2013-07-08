@@ -38,15 +38,14 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.JsonObject;
 
 public class GetProcesses extends ExecuteOSTask {
 
-  public GetProcesses(){
+  public GetProcesses() {
     setEndpoint("/ps");
     setDescription("Gets a list of currently running processes");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");

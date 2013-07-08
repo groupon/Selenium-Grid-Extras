@@ -108,7 +108,7 @@ public class UpgradeWebdriverTest {
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+        task.getAcceptedParams().get("version").getAsString());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 }

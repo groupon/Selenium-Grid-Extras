@@ -99,8 +99,8 @@ public class StartGridTest {
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("hub|node - defaults to 'default_role' param in config file",
-        task.getAcceptedParams().get("role"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+        task.getAcceptedParams().get("role").getAsString());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 
   @Test

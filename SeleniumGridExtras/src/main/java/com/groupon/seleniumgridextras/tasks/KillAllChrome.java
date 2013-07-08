@@ -42,15 +42,12 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OSChecker;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class KillAllChrome extends KillAllByName {
 
   public KillAllChrome() {
     setEndpoint("/kill_chrome");
     setDescription("Executes os level kill command on all instance of Google Chrome");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -72,11 +69,11 @@ public class KillAllChrome extends KillAllByName {
   }
 
 
-  private JsonObject killChromeOnLinux(){
+  private JsonObject killChromeOnLinux() {
     return ExecuteCommand.execRuntime(getLinuxCommand("[Cc]hrome"));
   }
 
-  private JsonObject killChromeOnWindows(){
+  private JsonObject killChromeOnWindows() {
 
     JsonObject killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe"));
 

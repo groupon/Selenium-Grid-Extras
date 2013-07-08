@@ -43,15 +43,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 public class GetConfig extends ExecuteOSTask {
 
-  public GetConfig(){
+  public GetConfig() {
     setEndpoint("/config");
     setDescription("Returns JSON view of the full configuration of the Selenium Grid Extras");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -66,7 +64,6 @@ public class GetConfig extends ExecuteOSTask {
 
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
   }
-
 
   @Override
   public JsonObject execute(String param) {

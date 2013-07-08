@@ -88,8 +88,8 @@ public class DownloadWebdriverTest {
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version"));
+        task.getAcceptedParams().get("version").getAsString());
 
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 }

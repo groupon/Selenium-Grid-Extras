@@ -39,25 +39,23 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
-
+import com.groupon.seleniumgridextras.grid.GridWrapper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 public class DownloadWebdriver extends ExecuteOSTask {
 
-  public DownloadWebdriver(){
+  public DownloadWebdriver() {
     setEndpoint("/download_webdriver");
     setDescription("Downloads a version of WebDriver jar to local machine");
-    Map<String, String> params = new HashMap();
-    params.put("version", "Version of WebDriver to download, such as 2.33.0");
+    JsonObject params = new JsonObject();
+    params.addProperty("version", "Version of WebDriver to download, such as 2.33.0");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -70,7 +68,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
     addResponseDescription("root_dir", "Directory to which JAR file was saved to");
     addResponseDescription("file", "Filename on node's computer");
     addResponseDescription("source_url",
-                                    "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
+        "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
     getJsonResponse().addKeyValues("root_dir", GridWrapper.getWebdriverHome());
 
 
@@ -163,7 +161,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
       File webdriverHome = new File(RuntimeConfig.getWebdriverParentDir());
 
       if (!webdriverHome.exists()) {
-         webdriverHome.mkdir();
+        webdriverHome.mkdir();
       }
 
       if (!webdriverJar.exists()) {

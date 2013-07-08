@@ -106,8 +106,8 @@ public class MoveMouseTest {
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("X - Coordinate", task.getAcceptedParams().get("x"));
-    assertEquals("Y - Coordinate", task.getAcceptedParams().get("y"));
-    assertEquals(2, task.getAcceptedParams().keySet().size());
+    assertEquals("X - Coordinate", task.getAcceptedParams().get("x").getAsString());
+    assertEquals("Y - Coordinate", task.getAcceptedParams().get("y").getAsString());
+    assertEquals(2, task.getAcceptedParams().entrySet().size());
   }
 }
