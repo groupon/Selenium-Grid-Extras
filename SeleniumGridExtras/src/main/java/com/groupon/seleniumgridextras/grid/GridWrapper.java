@@ -38,12 +38,11 @@
 
 package com.groupon.seleniumgridextras.grid;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.Gson;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-
-import java.util.Map;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.GridRole;
 
 public class GridWrapper {
 
@@ -96,28 +95,33 @@ public class GridWrapper {
   }
 
   public static String getGridConfigPortForRole(String role) {
-    JsonElement config = getGridConfig(role);
-    return config.getAsJsonObject().get("-port").getAsString();
-  }
-
-  public static JsonElement getGridConfig(String role) {
-    JsonObject grid = RuntimeConfig.getGridConfig();
-    return grid.get(role);
+    GridRole config = getGridRole(role);
+    return config.getPort();
   }
 
   public static String getDefaultRole() {
-    JsonObject grid = RuntimeConfig.getGridConfig();
-    return grid.get("default_role").getAsString();
+    return RuntimeConfig.getGridConfig().getDefaultRole();
   }
 
   private static String getFormattedConfig(String role) {
-    StringBuilder response = new StringBuilder();
-    JsonObject config = getGridConfig(role).getAsJsonObject();
-    for (Map.Entry<String, JsonElement> entry : config.entrySet()) {
-      response.append(entry.getKey()).append(" ").append(entry.getValue().getAsString()).append(" ");
-    }
-    return response.toString();
+    GridRole config = getGridRole(role);
+    return config.getStartCommand();
   }
 
+//  public static String getGridConfig(String role){
+//    GridRole config = getGridRole(role);
+//    return new Gson().toJson(config);
+//  }
+
+  private static GridRole getGridRole(String role){
+    GridRole config = null;
+    if(role.equals("hub")){
+      config = RuntimeConfig.getGridConfig().getHub();
+    }
+    else if(role.equals("node")){
+      config = RuntimeConfig.getGridConfig().getNode();
+    }
+    return config;
+  }
 
 }

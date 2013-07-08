@@ -42,7 +42,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 import org.junit.After;
 import org.junit.Before;

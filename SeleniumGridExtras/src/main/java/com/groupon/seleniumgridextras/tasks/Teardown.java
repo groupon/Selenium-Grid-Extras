@@ -38,10 +38,9 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -103,10 +102,9 @@ public class Teardown extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Tear-Down Tasks");
     teardownTasks = new LinkedList<ExecuteOSTask>();
-    JsonArray array = RuntimeConfig.getTeardownModules();
-    for (JsonElement module : RuntimeConfig.getTeardownModules()) {
+    for (String module : RuntimeConfig.getTeardownModules()) {
       try {
-        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module.getAsString()).newInstance();
+        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         teardownTasks.add(task);
         System.out.println("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {

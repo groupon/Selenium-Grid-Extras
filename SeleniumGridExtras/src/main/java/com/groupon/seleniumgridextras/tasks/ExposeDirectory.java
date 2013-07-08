@@ -39,7 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

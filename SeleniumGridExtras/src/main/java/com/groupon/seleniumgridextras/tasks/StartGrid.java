@@ -41,7 +41,7 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import org.apache.commons.io.FileUtils;
 

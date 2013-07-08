@@ -35,13 +35,13 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.GsonBuilder;
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.SeleniumGridExtras;
+import com.groupon.seleniumgridextras.WriteDefaultConfigs;
 import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
@@ -51,15 +51,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 
 public class RuntimeConfig {
 
-  private static JsonObject config;
   private static String configFile = "selenium_grid_extras_config.json";
+  private static Config config;
 
-  public static JsonObject getConfig() {
-    return config;
+  public RuntimeConfig() {
+    config = new Config();
   }
 
   public static void setConfig(String file) {
@@ -75,64 +76,48 @@ public class RuntimeConfig {
     String configString = readConfigFile(configFile);
 
     if (configString != "") {
-      setFullConfig(new JsonParser().parse(configString).getAsJsonObject());
+      config = new Gson().fromJson(configString, Config.class);
     }
   }
 
-  public static JsonArray getSetupModules() {
-    return config.get("setup").getAsJsonArray();
+  public static List<String> getSetupModules() {
+    return config.getSetup();
   }
 
   public static String getExposedDirectory() {
-    return config.get("expose_directory").toString();
+    return config.getExposeDirectory();
   }
 
-  public static JsonArray getTeardownModules() {
-    return config.get("teardown").getAsJsonArray();
+  public static List<String> getTeardownModules() {
+    return config.getTeardown();
   }
 
-  public static JsonArray getActivatedModules() {
-    return config.get("activated_modules").getAsJsonArray();
+  public static List<String> getActivatedModules() {
+    return config.getActivatedModules();
   }
 
-  public static JsonObject getDeactivatedModules() {
-    return config.get("deactivated_modules").getAsJsonObject();
+  public static List<String> getDeactivatedModules() {
+    return config.getDisabledModules();
   }
 
   public static Boolean checkIfModuleEnabled(String module) {
-    return getActivatedModules().getAsJsonObject().has(module);
+    return getActivatedModules().contains(module);
   }
 
-  public static JsonElement getWebdriverConfig() {
-    return config.get("webdriver");
+  public static Config.WebDriver getWebdriverConfig() {
+    return config.getWebdriver();
   }
 
-  public static JsonObject getGridConfig() {
-    return (JsonObject) config.get("grid");
+  public static Config.GridInfo getGridConfig() {
+    return config.getGrid();
   }
 
   public static Boolean autoStartHub() {
-    JsonElement grid = getGridConfig();
-
-    String value = grid.getAsJsonObject().get("auto_start_hub").getAsString();
-
-    if (value.equals("1")) {
-      return true;
-    } else {
-      return false;
-    }
+    return getGridConfig().getAutoStartHub();
   }
 
   public static Boolean autoStartNode() {
-    JsonElement grid = getGridConfig();
-
-    String value = grid.getAsJsonObject().get("auto_start_node").getAsString();
-
-    if (value.equals("1")) {
-      return true;
-    } else {
-      return false;
-    }
+    return getGridConfig().getAutoStartNode();
   }
 
   public static String getSeleniumGridExtrasJarFile() {
@@ -161,26 +146,24 @@ public class RuntimeConfig {
   }
 
   public static String getWebdriverParentDir() {
-    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("directory").getAsString();
+    return RuntimeConfig.getWebdriverConfig().getDirectory();
   }
 
   public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").getAsString();
+    return RuntimeConfig.getWebdriverConfig().getVersion();
   }
 
   public static void setWebdriverVersion(String newVersion) {
-    getWebdriverConfig().getAsJsonObject().addProperty("version", newVersion);
+    getWebdriverConfig().setVersion(newVersion);
   }
 
   public static void saveConfigToFile() throws IOException {
-    String jsonText = new Gson().toJson(config);
+    String jsonText = new GsonBuilder().setPrettyPrinting().create().toJson(config);
     FileUtils.writeStringToFile(new File(configFile), jsonText);
   }
 
-  private static void setFullConfig(JsonObject configHash) {
-    if (!configHash.isJsonNull()) {
-      config = configHash;
-    }
+  public static String getJsonString() {
+    return new GsonBuilder().setPrettyPrinting().create().toJson(config);
   }
 
   private static String readConfigFile(String filePath) {

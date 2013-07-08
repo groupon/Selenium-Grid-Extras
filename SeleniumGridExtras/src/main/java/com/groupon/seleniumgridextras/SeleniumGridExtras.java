@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonElement;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.sun.net.httpserver.HttpContext;
@@ -57,8 +58,8 @@ public class SeleniumGridExtras {
     HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
 
     List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
-    for (JsonElement module : RuntimeConfig.getActivatedModules()) {
-      tasks.add((ExecuteOSTask) Class.forName(module.getAsString()).newInstance());
+    for (String module : RuntimeConfig.getActivatedModules()) {
+      tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
     }
 
     System.out.println(RuntimeConfig.getSeleniungGridExtrasHomePath());

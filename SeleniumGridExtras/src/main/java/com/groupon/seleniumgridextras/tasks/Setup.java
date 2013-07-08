@@ -38,10 +38,9 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -106,10 +105,9 @@ public class Setup extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Setup Tasks");
     setupTasks = new LinkedList<ExecuteOSTask>();
-
-    for (JsonElement module : RuntimeConfig.getSetupModules()) {
+    for (String module : RuntimeConfig.getSetupModules()) {
       try {
-        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module.getAsString()).newInstance();
+        ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         setupTasks.add(task);
         System.out.println("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {

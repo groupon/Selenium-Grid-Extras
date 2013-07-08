@@ -37,12 +37,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class GetConfig extends ExecuteOSTask {
 
@@ -68,31 +63,9 @@ public class GetConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(String param) {
 
-    readConfigFile(RuntimeConfig.getConfigFile());
-
-    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig().toString());
+    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getJsonString());
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
 
     return getJsonResponse().getJson();
   }
-
-  private void readConfigFile(String filename) {
-    String returnString = "";
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(filename));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        returnString = returnString + line;
-      }
-
-      getJsonResponse().addKeyValues("config_file", returnString, false);
-
-    } catch (FileNotFoundException error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-    } catch (IOException error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-    }
-
-  }
-
 }

@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.config.DefaultConfig;
+import com.groupon.seleniumgridextras.config.FirstTimeRunConfig;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -54,7 +56,7 @@ public class WriteDefaultConfigs {
       if (askForInput) {
         config = FirstTimeRunConfig.toJsonString(DefaultConfig.getDefaultConfig());
       } else {
-        config = DefaultConfig.toJsonString();
+        config = DefaultConfig.getDefaultConfig().toPrettyJsonString();
       }
 
       FileUtils.writeStringToFile(f, config);

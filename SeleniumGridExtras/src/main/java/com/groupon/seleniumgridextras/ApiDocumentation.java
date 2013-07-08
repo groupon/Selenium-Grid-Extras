@@ -36,6 +36,7 @@
  */
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -48,6 +49,6 @@ public class ApiDocumentation {
   }
 
   public static String getApiDocumentation() {
-    return apiSpec.toString();
+    return new GsonBuilder().setPrettyPrinting().create().toJson(apiSpec);
   }
 }

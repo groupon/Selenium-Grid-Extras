@@ -34,9 +34,7 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-package com.groupon.seleniumgridextras;
-
-import com.google.gson.JsonObject;
+package com.groupon.seleniumgridextras.config;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +43,7 @@ import java.io.InputStreamReader;
 public class FirstTimeRunConfig {
 
 
-  public static String toJsonString(JsonObject defaultConfig) {
+  public static String toJsonString(Config defaultConfig) {
     System.out.println(
         "\n\n\n\nWe noticed this is a first time running, we will ask some configuration settings\n\n");
 
@@ -56,60 +54,35 @@ public class FirstTimeRunConfig {
     setGridNodeAutostart(defaultConfig);
 
     System.out
-        .println("Than you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
+        .println("Thank you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
     System.out.println("You can modify this file directly to tweak more options");
-    return defaultConfig.toString();
+    return defaultConfig.toPrettyJsonString();
   }
 
-
-  private static JsonObject setGridHubAutostart(JsonObject defaultConfig) {
+  private static void setGridHubAutostart(Config defaultConfig) {
     String value = askQuestion("Do you want Grid Hub to be auto started? (1-yes/0-no)", "0");
-    JsonObject grid = (JsonObject) defaultConfig.get("grid");
-    grid.addProperty("auto_start_hub", value);
-    return defaultConfig;
+    defaultConfig.getGrid().setAutoStartHub(Integer.valueOf(value));
   }
 
-  private static JsonObject setGridNodeAutostart(JsonObject defaultConfig) {
+  private static void setGridNodeAutostart(Config defaultConfig) {
     String value = askQuestion("Do you want Grid Node to be auto started? (1-yes/0-no)", "1");
-    JsonObject grid = (JsonObject) defaultConfig.get("grid");
-    grid.addProperty("auto_start_node", value);
-    return defaultConfig;
+    defaultConfig.getGrid().setAutoStartNode(Integer.valueOf(value));
   }
 
-  private static JsonObject setWebDriverVersion(JsonObject defaultConfig) {
-    JsonObject webdriver = (JsonObject) defaultConfig.get("webdriver");
-    String currentVersion = webdriver.get("version").toString();
-
-    String newVersion = askQuestion("What version of webdriver JAR should we use?", currentVersion);
-
-    webdriver.addProperty("version", newVersion);
-
-    return defaultConfig;
+  private static void setWebDriverVersion(Config defaultConfig) {
+    String newVersion = askQuestion("What version of webdriver JAR should we use?", defaultConfig.getWebdriver().getVersion());
+    defaultConfig.getWebdriver().setVersion(newVersion);
   }
 
-  private static JsonObject setGridHubUrl(JsonObject defaultConfig) {
-
-    JsonObject grid = (JsonObject) defaultConfig.get("grid");
-    JsonObject nodeConfig = (JsonObject) grid.get("node");
-
+  private static void setGridHubUrl(Config defaultConfig) {
     String url = askQuestion("What is the url for the Selenium Grid Hub?", "http://localhost:4444");
-
-    nodeConfig.addProperty("-hub", url);
-
-    return defaultConfig;
+    defaultConfig.getGrid().getNode().setHub(url);
   }
 
-
-  private static JsonObject setDefaultService(JsonObject defaultConfig) {
-    JsonObject grid = (JsonObject) defaultConfig.get("grid");
-
+  private static void setDefaultService(Config defaultConfig) {
     String role = askQuestion("What is the default Role of this computer? (hub|node)", "node");
-
-    grid.addProperty("default_role", role);
-
-    return defaultConfig;
+    defaultConfig.getGrid().setDefaultRole(role);
   }
-
 
   private static String askQuestion(String question, String defaultValue) {
 

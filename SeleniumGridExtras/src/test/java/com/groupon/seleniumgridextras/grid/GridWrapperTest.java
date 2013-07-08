@@ -37,11 +37,14 @@
 
 package com.groupon.seleniumgridextras.grid;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.WriteDefaultConfigs;
+import com.groupon.seleniumgridextras.config.Config;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +56,8 @@ import static org.junit.Assert.assertEquals;
 
 public class GridWrapperTest {
 
-  public static JsonObject gridConfig;
-  public static JsonElement wdConfig;
+  public static Config.GridInfo gridConfig;
+  public static Config.WebDriver wdConfig;
   public static String wdVersion;
   public static String wdHome;
 
@@ -65,7 +68,7 @@ public class GridWrapperTest {
     RuntimeConfig.loadConfig();
     gridConfig = RuntimeConfig.getGridConfig();
     wdConfig = RuntimeConfig.getWebdriverConfig();
-    wdVersion = RuntimeConfig.getWebdriverConfig().getAsJsonObject().get("version").getAsString();
+    wdVersion = RuntimeConfig.getWebdriverConfig().getVersion();
     wdHome = "webdriver";
 
   }
@@ -100,9 +103,9 @@ public class GridWrapperTest {
 
     command = command + "org.openqa.grid.selenium.GridLauncher -role wd ";
     command =
-        command + "-hub http://localhost:4444 -port 4445 -nodeTimeout 240 -maxSession 1 "
-            + "-host " + RuntimeConfig.getCurrentHostIP() + " "
-            + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy ";
+        command + "-port 4445 "
+            + "-host " + RuntimeConfig.getCurrentHostIP() + " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1 "
+            + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
 
     return command;
   }
@@ -154,10 +157,10 @@ public class GridWrapperTest {
     expectedConfig.addProperty("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
     expectedConfig.addProperty("-role", "wd");
     expectedConfig.addProperty("-nodeTimeout", "240");
-    expectedConfig.addProperty("-maxSession", "1");
+    expectedConfig.addProperty("-maxSession", 1);
 
 
-    assertEquals(expectedConfig, GridWrapper.getGridConfig("node"));
+    assertEquals(expectedConfig, new JsonParser().parse(new Gson().toJson(gridConfig.getNode())));
   }
 
   @Test
@@ -169,7 +172,7 @@ public class GridWrapperTest {
     expectedConfig
         .addProperty("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
 
-    assertEquals(expectedConfig, GridWrapper.getGridConfig("hub"));
+    assertEquals(expectedConfig, new JsonParser().parse(new Gson().toJson(gridConfig.getHub())));
   }
 
   @Test
