@@ -39,7 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.groupon.seleniumgridextras.Downloader;
-import com.groupon.seleniumgridextras.WebdriverDownloader;
+import com.groupon.seleniumgridextras.WdDownloader;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.RuntimeConfig;
 
@@ -82,7 +82,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
 
   @Override
   public String execute(String version) {
-    Downloader downloader = new WebdriverDownloader(version);
+    Downloader downloader = new WdDownloader(version);
     Boolean downloaded = downloader.download();
 
     if(downloaded){

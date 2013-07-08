@@ -39,9 +39,9 @@ package com.groupon.seleniumgridextras;
 
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 
-public class WebdriverDownloader extends Downloader {
+public class WdDownloader extends Downloader {
 
-  public WebdriverDownloader(String version) {
+  public WdDownloader(String version) {
     setDestinationDir(GridWrapper.getWebdriverHome());
     setDestinationFile(version + ".jar");
 

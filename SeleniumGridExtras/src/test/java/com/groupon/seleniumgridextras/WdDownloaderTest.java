@@ -48,7 +48,7 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-public class WebdriverDownloaderTest {
+public class WdDownloaderTest {
 
   public Downloader downloader;
   public String version = "2.31.0";
@@ -58,7 +58,7 @@ public class WebdriverDownloaderTest {
     RuntimeConfig.setConfig("downloader_test.json");
     WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
     RuntimeConfig.loadConfig();
-    downloader = new WebdriverDownloader(version);
+    downloader = new WdDownloader(version);
   }
 
   @After
@@ -85,7 +85,7 @@ public class WebdriverDownloaderTest {
 
   @Test
   public void testSetMalformedUrl() throws Exception{
-    Downloader temp = new WebdriverDownloader(version);
+    Downloader temp = new WdDownloader(version);
 
     temp.setSourceURL("httpSSSSS://google.com");
     Boolean result = temp.download();
@@ -96,7 +96,7 @@ public class WebdriverDownloaderTest {
 
   @Test
   public void test404Url() throws Exception{
-    Downloader temp = new WebdriverDownloader(version);
+    Downloader temp = new WdDownloader(version);
 
     temp.setSourceURL("https://www.google.com/images/srpr/logo33333w.png");
     Boolean result = temp.download();
