@@ -63,7 +63,7 @@ public class GetConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(String param) {
 
-    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig().toPrettyJsonString());
+    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig().asJsonObject());
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
 
     return getJsonResponse().getJson();

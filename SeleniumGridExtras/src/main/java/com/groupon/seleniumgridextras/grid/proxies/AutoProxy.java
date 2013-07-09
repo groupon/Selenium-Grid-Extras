@@ -14,8 +14,12 @@ import java.util.Map;
 
 public class AutoProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
+  private final int DEFAULT_SESSIONS_SERVED_BEFORE_TEARDOWN = 10;
+  private final int DEFAULT_TIME_SERVED_BEFORE_TEARDOWN = 1800;   // [30 minutes] 60 * 30 = 1800
   private boolean restarting;
   private boolean available;
+  private int sessionsToServe;
+  private int timeToServe;
   private int numberOfSessionsServed;
   private Date startTime;
   private HtmlRenderer renderer = new ExtrasHtmlRenderer(this);
@@ -26,6 +30,9 @@ public class AutoProxy extends DefaultRemoteProxy implements SelfHealingProxy {
     new Thread(nodeManager).start();
     numberOfSessionsServed = 0;
     startTime = new Date();
+    // TODO: check to see if config has been sent to override defaults
+    setSessionsToServe(DEFAULT_SESSIONS_SERVED_BEFORE_TEARDOWN);
+    setTimeToServe(DEFAULT_TIME_SERVED_BEFORE_TEARDOWN);
   }
 
   @Override
@@ -40,7 +47,7 @@ public class AutoProxy extends DefaultRemoteProxy implements SelfHealingProxy {
         return null;
       }
       TestSession session = super.getNewSession(requestedCapability);
-      if(session != null){
+      if (session != null) {
         numberOfSessionsServed++;
       }
       return session;
@@ -65,5 +72,21 @@ public class AutoProxy extends DefaultRemoteProxy implements SelfHealingProxy {
 
   public void unregister() {
     addNewEvent(new RemoteUnregisterException("Unregistering the node."));
+  }
+
+  public int getSessionsToServe() {
+    return sessionsToServe;
+  }
+
+  public void setSessionsToServe(int sessionsToServe) {
+    this.sessionsToServe = sessionsToServe;
+  }
+
+  public int getTimeToServe() {
+    return timeToServe;
+  }
+
+  public void setTimeToServe(int timeToServe) {
+    this.timeToServe = timeToServe;
   }
 }
