@@ -87,21 +87,24 @@ public class Screenshot extends ExecuteOSTask {
 
     int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
     int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
-    return createScreenshot(width, height);
+    boolean keepFile = parameter.containsKey("keep") ? Boolean.parseBoolean(parameter.get("keep")) : true;
+    return createScreenshot(width, height, keepFile);
   }
 
-  private JsonObject createScreenshot(int width, int height) {
+  private JsonObject createScreenshot(int width, int height, boolean keepFile) {
     String filename;
     String encodedImage;
     try {
       BufferedImage screenshot = takeScreenshot();
       if (width > 0 || height > 0) {
         screenshot = createThumbnail(screenshot, width, height);
-//        screenshot = createResizedCopy(screenshot, width, height, true);
       }
       try {
-        filename = writeImageToDisk(screenshot);
-
+        if (keepFile) {
+          filename = writeImageToDisk(screenshot);
+        } else {
+          filename = "not_saved";
+        }
         ByteArrayOutputStream baos = writeImageToStream(screenshot);
 
         encodedImage = encodeStreamToBase64(baos);
@@ -174,20 +177,6 @@ public class Screenshot extends ExecuteOSTask {
       e.printStackTrace();
     }
     return thumbnail;
-  }
-
-  private BufferedImage createResizedCopy(Image originalImage,
-                                          int scaledWidth, int scaledHeight,
-                                          boolean preserveAlpha) {
-    int imageType = preserveAlpha ? BufferedImage.TYPE_INT_RGB : BufferedImage.TYPE_INT_ARGB;
-    BufferedImage scaledBI = new BufferedImage(scaledWidth, scaledHeight, imageType);
-    Graphics2D g = scaledBI.createGraphics();
-    if (preserveAlpha) {
-      g.setComposite(AlphaComposite.Src);
-    }
-    g.drawImage(originalImage, 0, 0, scaledWidth, scaledHeight, null);
-    g.dispose();
-    return scaledBI;
   }
 
   @Override
