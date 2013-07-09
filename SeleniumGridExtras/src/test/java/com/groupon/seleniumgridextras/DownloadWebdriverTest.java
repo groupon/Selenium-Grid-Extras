@@ -79,7 +79,9 @@ public class DownloadWebdriverTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"/Users/dima/projects/grid/Selenium-Grid-Extras/SeleniumGridExtras/target/classes/\"],\"source_url\":[\"\"]}",
+        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"" +
+          RuntimeConfig.getSeleniungGridExtrasHomePath()
+        + "\"],\"source_url\":[\"\"]}",
         task.getJsonResponse().toString());
   }
 
