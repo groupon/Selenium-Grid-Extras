@@ -37,6 +37,17 @@
 
 package com.groupon.seleniumgridextras.config.driver;
 
+import com.groupon.seleniumgridextras.OSChecker;
+
 public class IEDriver extends DriverInfo {
 
+  @Override
+  public String getExecutablePath() {
+    String seporator = "/";
+    if (OSChecker.isWindows()){
+      seporator = "\\";
+    }
+
+    return this.directory + seporator + this.version + ".exe";
+  }
 }

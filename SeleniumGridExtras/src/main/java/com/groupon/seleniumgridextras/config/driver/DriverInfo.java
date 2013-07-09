@@ -37,7 +37,7 @@
 
 package com.groupon.seleniumgridextras.config.driver;
 
-public class DriverInfo implements Driver{
+public abstract class DriverInfo implements Driver{
 
   protected String directory;
   protected String version;
@@ -52,6 +52,8 @@ public class DriverInfo implements Driver{
   public String getVersion() {
     return version;
   }
+
+  public abstract String getExecutablePath();
 
   public void setVersion(String version) {
     this.version = version;

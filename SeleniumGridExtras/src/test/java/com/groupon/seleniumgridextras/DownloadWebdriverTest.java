@@ -79,7 +79,7 @@ public class DownloadWebdriverTest {
   public void testGetJsonResponse() throws Exception {
     assertEquals(
         "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"" +
-          RuntimeConfig.getSeleniungGridExtrasHomePath()
+          RuntimeConfig.getConfig().getWebdriver().getExecutablePath()
         + "\"],\"source_url\":[\"\"]}",
         task.getJsonResponse().toString());
   }

@@ -69,7 +69,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
                            "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
 
     getJsonResponse()
-        .addKeyValues("file_full_path", RuntimeConfig.getSeleniungGridExtrasHomePath());
+        .addKeyValues("file_full_path", RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
 
     getJsonResponse().addKeyValues("root_dir", GridWrapper.getWebdriverHome());
 
