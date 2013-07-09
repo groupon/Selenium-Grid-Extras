@@ -97,6 +97,7 @@ public class DefaultConfig {
 
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
     config.getIEdriver().setVersion("2.33.0");
+    config.getIEdriver().setBit("Win32");
   }
 
 

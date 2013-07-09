@@ -41,6 +41,7 @@ public abstract class DriverInfo implements Driver{
 
   protected String directory;
   protected String version;
+  protected String bit;
 
   public String getDirectory() {
     return directory;
@@ -54,6 +55,14 @@ public abstract class DriverInfo implements Driver{
   }
 
   public abstract String getExecutablePath();
+
+  public String getBit(){
+    return bit;
+  }
+
+  public void setBit(String bitVersion){
+    this.bit = bitVersion;
+  }
 
   public void setVersion(String version) {
     this.version = version;

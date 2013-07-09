@@ -42,4 +42,6 @@ public interface Driver{
   public void setDirectory(String directory);
   public String getVersion();
   public void setVersion(String version);
+  public String getBit();
+  public String setBit();
 }
