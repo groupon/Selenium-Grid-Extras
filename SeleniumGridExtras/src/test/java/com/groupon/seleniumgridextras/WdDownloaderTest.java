@@ -35,12 +35,12 @@
  * Time: 4:06 PM
  */
 
+
 package com.groupon.seleniumgridextras;
 
-import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,15 +49,16 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-public class DownloadWebdriverTest {
+public class WdDownloaderTest {
 
-  public ExecuteOSTask task;
+  public Downloader downloader;
+  public String version = "2.31.0";
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfigFile("download_test.json");
+    RuntimeConfig.setConfigFile("downloader_test.json");
     RuntimeConfig.loadDefaults();
-    task = new DownloadWebdriver();
+    downloader = new WdDownloader(version);
   }
 
   @After
@@ -67,27 +68,42 @@ public class DownloadWebdriverTest {
   }
 
   @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/download_webdriver", task.getEndpoint());
+  public void testSetSourceURL() throws Exception {
+    assertEquals("http://selenium.googlecode.com/files/selenium-server-standalone-2.31.0.jar",
+                 downloader.getSourceURL());
   }
 
   @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to local machine", task.getDescription());
+  public void testSetDestinationFile() throws Exception {
+    assertEquals(version + ".jar", downloader.getDestinationFile());
   }
 
   @Test
-  public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"/Users/dima/projects/grid/Selenium-Grid-Extras/SeleniumGridExtras/target/classes/\"],\"source_url\":[\"\"]}",
-        task.getJsonResponse().toString());
+  public void testSetDestinationDir() throws Exception {
+    assertEquals(GridWrapper.getWebdriverHome(), downloader.getDestinationDir());
   }
 
   @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version").getAsString());
+  public void testSetMalformedUrl() throws Exception{
+    Downloader temp = new WdDownloader(version);
 
-    assertEquals(1, task.getAcceptedParams().entrySet().size());
+    temp.setSourceURL("httpSSSSS://google.com");
+    Boolean result = temp.download();
+
+    assertEquals(false, result);
+    assertEquals("java.net.MalformedURLException: unknown protocol: httpsssss", temp.getErrorMessage());
   }
+
+  @Test
+  public void test404Url() throws Exception{
+    Downloader temp = new WdDownloader(version);
+
+    temp.setSourceURL("https://www.google.com/images/srpr/logo33333w.png");
+    Boolean result = temp.download();
+
+    assertEquals(false, result);
+    assertEquals("java.io.FileNotFoundException: https://www.google.com/images/srpr/logo33333w.png", temp.getErrorMessage());
+  }
+
+
 }

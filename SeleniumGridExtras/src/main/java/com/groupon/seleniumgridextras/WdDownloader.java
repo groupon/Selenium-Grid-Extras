@@ -37,57 +37,31 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.google.gson.JsonParser;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
 
-import java.io.File;
+public class WdDownloader extends Downloader {
 
-import static org.junit.Assert.assertEquals;
+  public WdDownloader(String version) {
+    setDestinationDir(GridWrapper.getWebdriverHome());
+    setDestinationFile(version + ".jar");
 
-public class DownloadWebdriverTest {
-
-  public ExecuteOSTask task;
-
-  @Before
-  public void setUp() throws Exception {
-    RuntimeConfig.setConfigFile("download_test.json");
-    RuntimeConfig.loadDefaults();
-    task = new DownloadWebdriver();
+    setSourceURL(
+        "http://selenium.googlecode.com/files/selenium-server-standalone-" + destinationFile);
   }
 
-  @After
-  public void tearDown() throws Exception {
-    File config = new File(RuntimeConfig.getConfigFile());
-    config.delete();
+  @Override
+  public void setSourceURL(String source) {
+    sourceURL = source;
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/download_webdriver", task.getEndpoint());
+  @Override
+  public void setDestinationFile(String destination) {
+    destinationFile = destination;
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to local machine", task.getDescription());
+  @Override
+  public void setDestinationDir(String dir) {
+    destinationDir = dir;
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"/Users/dima/projects/grid/Selenium-Grid-Extras/SeleniumGridExtras/target/classes/\"],\"source_url\":[\"\"]}",
-        task.getJsonResponse().toString());
-  }
-
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version").getAsString());
-
-    assertEquals(1, task.getAcceptedParams().entrySet().size());
-  }
 }

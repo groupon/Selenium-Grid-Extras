@@ -37,57 +37,60 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.google.gson.JsonParser;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import static org.junit.Assert.assertEquals;
+public abstract class Downloader {
 
-public class DownloadWebdriverTest {
+  protected String errorMessage = "";
+  protected String sourceURL;
+  protected String destinationFile;
+  protected String destinationDir;
 
-  public ExecuteOSTask task;
 
-  @Before
-  public void setUp() throws Exception {
-    RuntimeConfig.setConfigFile("download_test.json");
-    RuntimeConfig.loadDefaults();
-    task = new DownloadWebdriver();
+  public boolean download(){
+    try {
+      URL url = new URL(sourceURL);
+      FileUtils.copyURLToFile(url, getDestinationFileFullPath());
+      return true;
+    } catch (MalformedURLException error){
+      errorMessage = error.toString();
+    } catch (IOException error) {
+      errorMessage = error.toString();
+    }
+    return false;
   }
 
-  @After
-  public void tearDown() throws Exception {
-    File config = new File(RuntimeConfig.getConfigFile());
-    config.delete();
+  public File getDestinationFileFullPath(){
+    File dir = new File(getDestinationDir());
+    File file = new File(getDestinationFile());
+    File combined = new File(dir.getAbsolutePath() + "/" + file.getName());
+    return combined;
   }
 
-  @Test
-  public void testGetEndpoint() throws Exception {
-    assertEquals("/download_webdriver", task.getEndpoint());
+  public String getDestinationFile(){
+    return destinationFile;
   }
 
-  @Test
-  public void testGetDescription() throws Exception {
-    assertEquals("Downloads a version of WebDriver jar to local machine", task.getDescription());
+  public String getSourceURL(){
+    return sourceURL;
   }
 
-  @Test
-  public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"/Users/dima/projects/grid/Selenium-Grid-Extras/SeleniumGridExtras/target/classes/\"],\"source_url\":[\"\"]}",
-        task.getJsonResponse().toString());
+
+  public String getDestinationDir(){
+    return destinationDir;
   }
 
-  @Test
-  public void testGetAcceptedParams() throws Exception {
-    assertEquals("Version of WebDriver to download, such as 2.33.0",
-        task.getAcceptedParams().get("version").getAsString());
-
-    assertEquals(1, task.getAcceptedParams().entrySet().size());
+  public String getErrorMessage(){
+    return errorMessage;
   }
+
+  public abstract void setSourceURL(String source);
+  public abstract void setDestinationFile(String destination);
+  public abstract void setDestinationDir(String dir);
+
 }

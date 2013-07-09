@@ -36,6 +36,8 @@
  */
 package com.groupon.seleniumgridextras.config;
 
+import com.groupon.seleniumgridextras.OSChecker;
+
 public class DefaultConfig {
   private static Config config;
 
@@ -70,7 +72,15 @@ public class DefaultConfig {
 
 
   private static void loadWebDriverInfo() {
-    config.getWebdriver().setDirectory("webdriver");
+    String tmpDir;
+
+    if (OSChecker.isWindows()){
+      tmpDir = "\\";
+    } else {
+      tmpDir = "/tmp/";
+    }
+
+    config.getWebdriver().setDirectory(tmpDir + "webdriver");
     config.getWebdriver().setVersion("2.33.0");
   }
 

@@ -67,7 +67,7 @@ public class GridWrapperTest {
     gridConfig = RuntimeConfig.getConfig().getGrid();
     wdConfig = RuntimeConfig.getConfig().getWebdriver();
     wdVersion = wdConfig.getVersion();
-    wdHome = "webdriver";
+    wdHome = "/tmp/webdriver";
 
   }
 
@@ -89,29 +89,28 @@ public class GridWrapperTest {
     command = command + RuntimeConfig.getSeleniungGridExtrasHomePath();
 
     String
-        stuff =
-        colon + RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion
-            + ".jar  ";
+        wdJarPath =
+        colon + wdHome + "/" + wdVersion
+        + ".jar  ";
     if (windows) {
-      stuff = OSChecker.toWindowsPath(stuff);
+      wdJarPath = OSChecker.toWindowsPath(wdJarPath);
     }
 
     command =
-        command + stuff;
+        command + wdJarPath;
 
-    command = command + "org.openqa.grid.selenium.GridLauncher -role wd ";
+    command = command + "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 ";
+    command = command + "-host " + RuntimeConfig.getCurrentHostIP() ;
     command =
-        command + "-port 4445 "
-            + "-host " + RuntimeConfig.getCurrentHostIP() + " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1 "
-            + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
+        command + " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1" +
+        " -proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
 
     return command;
   }
 
   @Test
   public void testGetCurrentJarPath() throws Exception {
-    assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath() + wdHome + "/" + wdVersion + ".jar",
-        GridWrapper.getCurrentWebDriverJarPath());
+    assertEquals(wdHome + "/" + wdVersion + ".jar", GridWrapper.getCurrentWebDriverJarPath());
   }
 
   @Test

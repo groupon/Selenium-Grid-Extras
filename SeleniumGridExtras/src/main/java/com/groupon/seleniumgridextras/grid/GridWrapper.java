@@ -43,8 +43,7 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 public class GridWrapper {
 
   public static String getCurrentWebDriverJarPath() {
-    return RuntimeConfig.getSeleniungGridExtrasHomePath() + getWebdriverHome() + "/" + getWebdriverVersion()
-        + ".jar";
+    return getWebdriverHome() + "/" + getWebdriverVersion() + ".jar";
   }
 
   public static String getWebdriverVersion() {
@@ -79,6 +78,7 @@ public class GridWrapper {
     command.append(getGridExtrasJarFilePath());
 
     String jarPath = colon + getCurrentWebDriverJarPath() + " ";
+
     if (windows) {
       jarPath = OSChecker.toWindowsPath(jarPath);
     }

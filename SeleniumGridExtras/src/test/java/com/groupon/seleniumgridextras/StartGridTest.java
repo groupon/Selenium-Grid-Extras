@@ -105,10 +105,10 @@ public class StartGridTest {
 
   @Test
   public void testGetLinuxHubCommand() throws Exception {
-    String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
-        "org.openqa.grid.selenium.GridLauncher -role hub -port 4444 " +
-        "-host " + RuntimeConfig.getCurrentHostIP() +
-        " -servlets com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet &";
+    String expectedCommand = "java -cp replaced/for/now/:/tmp/webdriver/2.33.0.jar  " +
+                             "org.openqa.grid.selenium.GridLauncher -role hub -port 4444 " +
+                             "-host " + RuntimeConfig.getCurrentHostIP() + " -servlets " +
+                             "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet &";
 
     String modifiedActual = task.getLinuxCommand("hub");
 
@@ -121,11 +121,11 @@ public class StartGridTest {
   @Test
   public void testGetLinuxNodeCommand() throws Exception {
 
-    String expectedCommand = "java -cp replaced/for/now/:replaced/for/now/webdriver/2.33.0.jar  " +
-        "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 " +
-        "-host " + RuntimeConfig.getCurrentHostIP() +
-        " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1 " +
-        "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy &";
+    String expectedCommand = "java -cp replaced/for/now/:/tmp/webdriver/2.33.0.jar  " +
+                             "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 -host " +
+                              RuntimeConfig.getCurrentHostIP() +
+                              " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1" +
+                             " -proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy &";
 
     String modifiedActual = task.getLinuxCommand("node");
 
@@ -139,10 +139,10 @@ public class StartGridTest {
   public void testGetWindowsHubCommand() throws Exception {
     String
         expectedCommand =
-        "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
-            "org.openqa.grid.selenium.GridLauncher -role hub " +
-            "-port 4444 -host " + RuntimeConfig.getCurrentHostIP() +
-            " -servlets com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet";
+        "java -cp replaced-for-now-;\\tmp\\webdriver\\2.33.0.jar  " +
+        "org.openqa.grid.selenium.GridLauncher -role hub -port 4444 " +
+        "-host " + RuntimeConfig.getCurrentHostIP() + " -servlets " +
+        "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet";
 
     assertEquals("powershell.exe /c \"Start-Process " + hubBatch + "\"",
         task.getWindowsCommand("hub"));
@@ -168,11 +168,11 @@ public class StartGridTest {
   public void testGetWindowsNodeCommand() throws Exception {
     String
         expectedCommand =
-        "java -cp replaced-for-now-;\\replaced-for-now-webdriver\\2.33.0.jar  " +
-            "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 " +
-            "-host " + RuntimeConfig.getCurrentHostIP() + " " +
-            "-hub http://localhost:4444 -nodeTimeout 240 -maxSession 1 " +
-            "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
+        "java -cp replaced-for-now-;\\tmp\\webdriver\\2.33.0.jar  " +
+        "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 " +
+        "-host " + RuntimeConfig.getCurrentHostIP()
+        + " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1 " +
+        "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
 
     assertEquals("powershell.exe /c \"Start-Process " + nodeBatch + "\"",
         task.getWindowsCommand("node"));

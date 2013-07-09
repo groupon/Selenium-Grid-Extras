@@ -36,30 +36,35 @@ describe "DownloadWebdriver.java" do
     @wd_default_version = get_local_config["webdriver"]["version"]  
     @wd_version = "2.30.0"
     @wd_jar = "webdriver/#{@wd_version}.jar"
-    FileUtils.rm @wd_jar if File.exist? @wd_jar
+    @wd_jar_full_path = "/tmp/#{@wd_jar}"
+    FileUtils.rm @wd_jar_full_path if File.exist? @wd_jar_full_path
     @response = get_json "download_webdriver?version=#{@wd_version}"
   end
   
   it "should default to config version if version is not provided" do
     response = get_json "download_webdriver"
-    response["file"].first.should == "webdriver/#{@wd_default_version}.jar"
+    response["file"].first.should == "#{@wd_default_version}.jar"
   end
   
   it "should have the downloaded version on file system" do
-    File.exist?(@wd_jar).should == true
+    File.exist?(@wd_jar_full_path).should == true
   end
   
   it "should not download file again if it already exists" do
     response = get_json "download_webdriver?version=#{@wd_version}"
-    # response["source_url"].should == [""]
-    response["out"].should == ["File already exist, no need to download again."]
-    response["file"].should == [@wd_jar]
+    response["source_url"].should == nil
+    response["out"].should == ["File already downloaded, will not download again"]
+    response["file"].should == ["#{@wd_version}.jar"]
+  end
+  
+  it "should have a full path to the jar file" do
+    @response["file_full_path"].should == [@wd_jar_full_path]
   end
   
   it_behaves_like "No Errors"  
   
   it "should have file param in return" do
-    @response["file"].should == [@wd_jar]
+    @response["file"].should == ["#{@wd_version}.jar"]
   end
   
   it "should have source url in response" do
