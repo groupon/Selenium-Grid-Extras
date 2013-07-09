@@ -43,5 +43,5 @@ public interface Driver{
   public String getVersion();
   public void setVersion(String version);
   public String getBit();
-  public String setBit();
+  public void setBit(String bitVersion);
 }
