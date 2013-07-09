@@ -33,7 +33,6 @@ require File.expand_path('spec_helper', File.dirname(__FILE__))
 describe "ExposeDirectory.java" do
   
   before(:all) do  
-
     @shared_dir = "shared"
     FileUtils.rm_rf @shared_dir
     FileUtils.mkdir @shared_dir

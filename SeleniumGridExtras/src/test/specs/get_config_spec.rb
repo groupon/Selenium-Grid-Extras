@@ -36,17 +36,12 @@ describe "GetConfig.java" do
   before(:all) do  
     @response = get_json "config"
     @expected_from_file = get_local_config
-    @actual_from_file   = JSON.parse(@response["config_file"].first)
-
   end
   
   it "should have the config file path correctly named" do
     File.exist?(@response["filename"].first).should == true
   end
 
-  it "should have accurante json from file" do
-    @expected_from_file.should == @actual_from_file
-  end
   
   it "should have file match current runtime config" do
     @expected_from_file.should == @response["config_runtime"]
