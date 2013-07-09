@@ -125,9 +125,14 @@ public class JsonResponseBuilder {
     keyValues.addProperty(key, value);
   }
 
-  public void addKeyValues(String key, List value) {
+  public void addKeyValues(String key, List<String> value) {
     checkIfKeyDescriptionExist(key);
-    keyValues.addProperty(key, new Gson().toJson(value));
+
+    JsonArray valueArray = new JsonArray();
+    for (String item : value){
+      valueArray.add(new JsonPrimitive(item));
+    }
+    keyValues.add(key, valueArray);
   }
 
   public String toString() {
