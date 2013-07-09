@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -xl
 
 curl http://localhost:3000/stop_extras?confirm=true
 
