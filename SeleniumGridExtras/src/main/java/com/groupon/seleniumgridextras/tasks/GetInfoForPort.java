@@ -39,6 +39,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.PortChecker;
 
 import java.util.Map;
@@ -99,6 +100,7 @@ public class GetInfoForPort extends ExecuteOSTask {
       String process = "";
       String pid = "";
       String user = "";
+      String out = "";
 
       try {
         process = portInfo.get("process").getAsString();
@@ -113,11 +115,16 @@ public class GetInfoForPort extends ExecuteOSTask {
       } catch (NullPointerException error) {
       }
 
+      try {
+        out = portInfo.get("out").getAsString();
+      } catch (NullPointerException error) {
+      }
 
       getJsonResponse().addKeyValues("process_name", process);
       getJsonResponse().addKeyValues("pid", pid);
       getJsonResponse().addKeyValues("user", user);
       getJsonResponse().addKeyValues("port", port);
+      getJsonResponse().addKeyValues("out", out);
       return getJsonResponse().getJson();
 
     } catch (Exception error) {

@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -48,7 +50,7 @@ public class PortChecker {
   public static JsonObject getParsedPortInfo(String port) {
 
     JsonObject status = getPortInfo(port);
-    List<String> standardOut = (List<String>) status.get("out");
+    JsonArray standardOut = (JsonArray) status.get("out");
 
     return parseLinuxInfo(standardOut);
 
@@ -75,17 +77,18 @@ public class PortChecker {
     return "";
   }
 
-  private static JsonObject parseLinuxInfo(List<String> status) {
-
+  private static JsonObject parseLinuxInfo(JsonArray status) {
     JsonObject info = new JsonObject();
+    info.addProperty("out", status.toString());
 
-    for (String line : status) {
-      Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(line);
+    for (JsonElement line : status) {
+      System.out.println(line.toString());
+      Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(line.getAsString());
       if (m.find()) {
         info.addProperty("process", m.group(1));
         info.addProperty("pid", m.group(2));
         info.addProperty("user", m.group(3));
-        return info;
+        break;
       }
     }
     return info;
