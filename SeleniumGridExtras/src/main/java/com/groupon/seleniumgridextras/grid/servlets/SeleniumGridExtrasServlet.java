@@ -123,7 +123,9 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
     for (RemoteProxy p : proxies) {
       JsonObject node = new JsonObject();
       node.addProperty("host", p.getRemoteHost().getHost());
-      node.addProperty("platform", p.getOriginalRegistrationRequest().getCapabilities().get(0).getPlatform().toString());
+      String platform = p.getOriginalRegistrationRequest().getCapabilities().get(0).getPlatform() != null ?
+          p.getOriginalRegistrationRequest().getCapabilities().get(0).getPlatform().toString() : "";
+      node.addProperty("platform", platform);
       node.addProperty("status", getTestSlots(p));
 
 
