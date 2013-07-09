@@ -2,6 +2,8 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import org.apache.commons.io.FileUtils;
 
@@ -311,6 +313,10 @@ public class Config {
     public void setVersion(String version) {
       this.version = version;
     }
+  }
+
+  public JsonObject asJsonObject(){
+    return (JsonObject) new JsonParser().parse(this.toJsonString());
   }
 
 }

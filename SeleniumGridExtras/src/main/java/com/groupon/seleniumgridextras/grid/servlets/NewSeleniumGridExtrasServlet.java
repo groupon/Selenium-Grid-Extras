@@ -28,17 +28,24 @@ import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.logging.Logger;
 
-public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
+public class NewSeleniumGridExtrasServlet extends RegistryBasedServlet {
 
+  private static final long serialVersionUID = 8484071790930378855L;
+  private static final Logger log = Logger.getLogger(NewSeleniumGridExtrasServlet.class.getName());
+  private static String coreVersion;
+  private static String coreRevision;
   private Registry internalRegistry;
 
-  public SeleniumGridExtrasServlet(Registry registry) {
+  public NewSeleniumGridExtrasServlet(Registry registry) {
     super(registry);
+    getVersion();
   }
 
 
-  public SeleniumGridExtrasServlet() {
+  public NewSeleniumGridExtrasServlet() {
     super(null);
   }
 
@@ -208,6 +215,27 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
         "ABPAQyElpUqnqzaciSoVkXVUMFaFSwlpOCcMYlErAavhOMnNLNo8KsZsMZItJEIDIFSkLGQoQTNhIsFehRww2CQLKF0tYGKYSg+ygsZIuNqJksKgbfgIGepN" +
         "o2cIUB3V1B3IvNiBYNQaDSTtfhhx0CwVPI0UJe0+bm4g5VgcGoqOcnjmjqDSdnhgEoamcsZuXO1aWQy8KAwOAuTYYGwi7w5h+Kr0SJ8MFihpNbx+4Erq7BYB" +
         "uzsdiH1jCAzoSfl0rVirNbRXlBBlLX+BP0XJLAPGzTkAuAOqb0WT5AH7OcdCm5B8TgRwSRKIHQtaLCwg1RAAAOwAAAAAAAAAAAA==";
+  }
+
+  private void getVersion() {
+    final Properties p = new Properties();
+
+    InputStream stream =
+        Thread.currentThread().getContextClassLoader().getResourceAsStream("VERSION.txt");
+    if (stream == null) {
+      log.severe("Couldn't determine version number");
+      return;
+    }
+    try {
+      p.load(stream);
+    } catch (IOException e) {
+      log.severe("Cannot load version from VERSION.txt" + e.getMessage());
+    }
+    coreVersion = p.getProperty("selenium.core.version");
+    coreRevision = p.getProperty("selenium.core.revision");
+    if (coreVersion == null) {
+      log.severe("Cannot load selenium.core.version from VERSION.txt");
+    }
   }
 
 }

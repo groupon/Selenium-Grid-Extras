@@ -42,10 +42,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Teardown extends ExecuteOSTask {
 
@@ -81,13 +79,12 @@ public class Teardown extends ExecuteOSTask {
   public JsonObject execute(String param) {
 
     try {
-      Map<String, Object> results = new HashMap<String, Object>();
-
+      JsonObject r = new JsonObject();
       for (ExecuteOSTask task : teardownTasks) {
-        results.put(task.getClass().getSimpleName(), task.execute());
+        r.add(task.getClass().getSimpleName(), task.execute());
       }
 
-      getJsonResponse().addKeyValues("results", results);
+      getJsonResponse().addKeyValues("results", r);
 
       return getJsonResponse().getJson();
     } catch (Exception error) {
