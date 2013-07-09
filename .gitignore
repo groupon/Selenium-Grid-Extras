@@ -9,3 +9,4 @@ selenium_grid_extras_config.json
 webdriver/*
 SeleniumGridExtras/SeleniumGridExtras.iml
 SeleniumGridExtras/target/
+tmp
