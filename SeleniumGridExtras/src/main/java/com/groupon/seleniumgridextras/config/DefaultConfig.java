@@ -105,6 +105,7 @@ public class DefaultConfig {
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.KillAllByName");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGrid");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetConfig");
+    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGridExtras");
   }
 
   private static void loadDisabledPlugins() {
