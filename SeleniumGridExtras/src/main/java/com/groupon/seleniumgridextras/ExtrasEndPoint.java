@@ -1,15 +1,13 @@
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ExtrasEndPoint {
 
   private String response_type;
   private String request_type;
-  private Map<String, String> accepted_params;
+  private JsonObject accepted_params;
   private String description;
   @SerializedName("class")
   private String klass;
@@ -28,11 +26,11 @@ public class ExtrasEndPoint {
     this.response_type = response_type;
   }
 
-  public Map<String, String> getAcceptedParams() {
+  public JsonObject getAcceptedParams() {
     return accepted_params;
   }
 
-  public void setAcceptedParams(Map<String, String> accepted_params) {
+  public void setAcceptedParams(JsonObject accepted_params) {
     this.accepted_params = accepted_params;
   }
 
@@ -44,11 +42,11 @@ public class ExtrasEndPoint {
     this.description = description;
   }
 
-  public Map<String, String> getResponseDescription() {
+  public JsonObject getResponseDescription() {
     return getJsonResponse().getKeyDescriptions();
   }
 
-  public void addResponseDescription(String key, String description){
+  public void addResponseDescription(String key, String description) {
     getJsonResponse().addKeyDescriptions(key, description);
   }
 
@@ -120,17 +118,17 @@ public class ExtrasEndPoint {
 
     this.getJsonResponse();
 
-    Map apiDescription = new HashMap();
-    apiDescription.put("endpoint", getEndpoint());
-    apiDescription.put("description", getDescription());
-    apiDescription.put("class", getClassname());
-    apiDescription.put("accepted_params", getAcceptedParams());
-    apiDescription.put("http_type", getRequestType());
-    apiDescription.put("response_type", getResponseType());
-    apiDescription.put("response_description", getResponseDescription());
-    apiDescription.put("css_class", getCssClass());
-    apiDescription.put("enabled_in_gui", getEnabledInGui());
-    apiDescription.put("button_text", getButtonText());
+    JsonObject apiDescription = new JsonObject();
+    apiDescription.addProperty("endpoint", getEndpoint());
+    apiDescription.addProperty("description", getDescription());
+    apiDescription.addProperty("class", getClassname());
+    apiDescription.add("accepted_params", getAcceptedParams());
+    apiDescription.addProperty("http_type", getRequestType());
+    apiDescription.addProperty("response_type", getResponseType());
+    apiDescription.add("response_description", getResponseDescription());
+    apiDescription.addProperty("css_class", getCssClass());
+    apiDescription.addProperty("enabled_in_gui", getEnabledInGui());
+    apiDescription.addProperty("button_text", getButtonText());
 
     ApiDocumentation.registerApiEndPoint(apiDescription);
   }

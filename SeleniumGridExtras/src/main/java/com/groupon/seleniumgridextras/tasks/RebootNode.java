@@ -36,15 +36,14 @@
  */
 package com.groupon.seleniumgridextras.tasks;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.JsonObject;
 
 public class RebootNode extends ExecuteOSTask {
 
   public RebootNode() {
     setEndpoint("/reboot");
     setDescription("Restart the host node");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");

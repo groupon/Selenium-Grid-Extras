@@ -41,19 +41,19 @@ package com.groupon.seleniumgridextras;
 public class OSChecker {
 
 
-  public static boolean isWindows(){
+  public static boolean isWindows() {
     return getOSName().startsWith("Windows");
   }
 
-  public static boolean isMac(){
+  public static boolean isMac() {
     return getOSName().startsWith("Mac");
   }
 
-  public static String getOSName(){
+  public static String getOSName() {
     return System.getProperty("os.name");
   }
 
-  public static String toWindowsPath(String path){
+  public static String toWindowsPath(String path) {
     String windowsPath = path;
     windowsPath = windowsPath.replaceAll("^/", "");
     windowsPath = windowsPath.replaceAll("[\\/]", "\\\\");

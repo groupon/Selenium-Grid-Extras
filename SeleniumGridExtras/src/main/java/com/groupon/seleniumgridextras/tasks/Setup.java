@@ -37,15 +37,13 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonWrapper;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class Setup extends ExecuteOSTask {
 
@@ -58,7 +56,7 @@ public class Setup extends ExecuteOSTask {
   public Setup() {
     setEndpoint("/setup");
     setDescription(shortDescription);
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -68,38 +66,37 @@ public class Setup extends ExecuteOSTask {
     setEnabledInGui(false);
 
     addResponseDescription("classes_to_execute",
-                           "List of full canonical classes to execute on Setup");
+        "List of full canonical classes to execute on Setup");
     addResponseDescription("results", "Hash object of tasks ran and their results");
 
   }
 
 
-  private List<String> getClassesToRun() {
-    List<String> listOfTasks = new LinkedList<String>();
+  private JsonArray getClassesToRun() {
+    JsonArray listOfTasks = new JsonArray();
     for (ExecuteOSTask task : setupTasks) {
-      listOfTasks.add(task.getClass().getSimpleName());
+      listOfTasks.add(new JsonPrimitive(task.getClass().getSimpleName()));
     }
-
     return listOfTasks;
   }
 
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     try {
-      Map<String, Object> results = new HashMap<String, Object>();
+      JsonObject results = new JsonObject();
 
       for (ExecuteOSTask task : setupTasks) {
-        results.put(task.getClass().getSimpleName(), JsonWrapper.parseJson(task.execute()));
+        results.add(task.getClass().getSimpleName(), task.execute());
       }
 
       getJsonResponse().addKeyValues("results", results);
 
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
@@ -108,8 +105,7 @@ public class Setup extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Setup Tasks");
     setupTasks = new LinkedList<ExecuteOSTask>();
-
-    for (String module : RuntimeConfig.getSetupModules()) {
+    for (String module : RuntimeConfig.getConfig().getSetup()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         setupTasks.add(task);

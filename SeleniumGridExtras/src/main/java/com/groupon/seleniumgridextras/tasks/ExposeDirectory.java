@@ -38,8 +38,8 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.google.gson.JsonObject;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -51,7 +51,7 @@ public class ExposeDirectory extends ExecuteOSTask {
 
   public File sharedDir;
 
-  public ExposeDirectory(){
+  public ExposeDirectory() {
     setEndpoint("/dir");
     setDescription("Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.");
     setRequestType("GET");
@@ -66,7 +66,7 @@ public class ExposeDirectory extends ExecuteOSTask {
 
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     File[] files = sharedDir.listFiles();
     List<String> filesToString = new LinkedList<String>();
 
@@ -74,7 +74,7 @@ public class ExposeDirectory extends ExecuteOSTask {
       filesToString.add(f.toString());
     }
     getJsonResponse().addKeyValues("files", filesToString);
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   public File getExposedDirectory() {
@@ -93,7 +93,7 @@ public class ExposeDirectory extends ExecuteOSTask {
       return true;
 
     } catch (IOException error) {
-      System.out.println("Attempt to delete " + RuntimeConfig.getExposedDirectory() + " FAILED!!!");
+      System.out.println("Attempt to delete " + RuntimeConfig.getConfig().getExposedDirectory() + " FAILED!!!");
       return false;
     }
   }
@@ -103,7 +103,7 @@ public class ExposeDirectory extends ExecuteOSTask {
   public boolean initialize() {
 
     try {
-      sharedDir = new File(RuntimeConfig.getExposedDirectory());
+      sharedDir = new File(RuntimeConfig.getConfig().getExposedDirectory());
 
       if (sharedDir.exists()) {
         cleanUpExposedDirectory();

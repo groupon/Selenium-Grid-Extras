@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras;
 
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.Screenshot;
 import org.junit.Before;
@@ -80,19 +81,19 @@ public class ScreenshotTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"image\":[\"\"],\"file_type\":[\"\"],\"out\":[]}",
-        task.getJsonResponse().toString());
+        new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"image\":[\"\"],\"file_type\":[\"\"],\"out\":[]}"),
+        task.getJsonResponse().getJson());
   }
 
   @Test
   public void testAPIDescription() throws Exception {
     assertEquals("Base64 URL Encoded (ISO-8859-1) string of the image",
-                 task.getJsonResponse().getKeyDescriptions().get("image"));
+        task.getJsonResponse().getKeyDescriptions().get("image").getAsString());
     assertEquals("Type of file returned (PNG/JPG/GIF)",
-                 task.getJsonResponse().getKeyDescriptions().get("file_type"));
+        task.getJsonResponse().getKeyDescriptions().get("file_type").getAsString());
     assertEquals("Name of the file saved on the Node's HD",
-                 task.getJsonResponse().getKeyDescriptions().get("file"));
-    assertEquals(6, task.getJsonResponse().getKeyDescriptions().keySet().size());
+        task.getJsonResponse().getKeyDescriptions().get("file").getAsString());
+    assertEquals(6, task.getJsonResponse().getKeyDescriptions().entrySet().size());
   }
 
 }

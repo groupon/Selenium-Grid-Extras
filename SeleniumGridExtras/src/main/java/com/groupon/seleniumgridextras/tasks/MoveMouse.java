@@ -37,8 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.google.gson.JsonObject;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -49,9 +48,9 @@ public class MoveMouse extends ExecuteOSTask {
   public MoveMouse() {
     setEndpoint("/move_mouse");
     setDescription("Moves the computers mouse to x and y location. (Default 0,0)");
-    Map<String, String> params = new HashMap();
-    params.put("x", "X - Coordinate");
-    params.put("y", "Y - Coordinate");
+    JsonObject params = new JsonObject();
+    params.addProperty("x", "X - Coordinate");
+    params.addProperty("y", "Y - Coordinate");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -66,43 +65,40 @@ public class MoveMouse extends ExecuteOSTask {
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
 
     int x = 0;
     int y = 0;
 
-    if(!parameter.isEmpty() && parameter.containsKey("x") && parameter.containsKey("y")){
+    if (!parameter.isEmpty() && parameter.containsKey("x") && parameter.containsKey("y")) {
       x = Integer.parseInt(parameter.get("x"));
       y = Integer.parseInt(parameter.get("y"));
     }
 
-    return moveMouse(x,y);
+    return moveMouse(x, y);
   }
 
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     return execute(new HashMap<String, String>());
   }
 
-  private String moveMouse(Integer x, Integer y) {
-    String message;
+  private JsonObject moveMouse(Integer x, Integer y) {
     try {
       Robot moveMouse = new Robot();
       moveMouse.mouseMove(x, y);
       getJsonResponse().addKeyValues("x", x);
       getJsonResponse().addKeyValues("y", y);
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (AWTException error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
-
   }
 
   @Override
   public boolean initialize() {
-
     if (allDependenciesLoaded() && !java.awt.GraphicsEnvironment.isHeadless()) {
       printInitilizedSuccessAndRegisterWithAPI();
       return true;
@@ -110,7 +106,6 @@ public class MoveMouse extends ExecuteOSTask {
       printInitilizedFailure();
       return false;
     }
-
   }
 
 }

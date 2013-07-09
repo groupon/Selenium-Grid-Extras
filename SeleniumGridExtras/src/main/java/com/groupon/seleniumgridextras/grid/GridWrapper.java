@@ -34,15 +34,11 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
-
 package com.groupon.seleniumgridextras.grid;
 
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.groupon.seleniumgridextras.config.GridRole;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class GridWrapper {
 
@@ -51,7 +47,7 @@ public class GridWrapper {
   }
 
   public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverVersion();
+    return RuntimeConfig.getConfig().getWebdriver().getVersion();
   }
 
   public static String getSeleniumGridExtrasPath() {
@@ -63,7 +59,7 @@ public class GridWrapper {
   }
 
   public static String getWebdriverHome() {
-    return RuntimeConfig.getWebdriverParentDir();
+    return RuntimeConfig.getConfig().getWebdriver().getDirectory();
   }
 
   public static String getStartCommand(String role) {
@@ -75,59 +71,42 @@ public class GridWrapper {
   }
 
   private static String getOsSpecificStartCommand(String role, Boolean windows) {
-    String command = "java -cp ";
-    String colon = ":";
+    String colon = windows ? ";" : ":";
 
-    if (windows){
-      colon = ";";
-    }
+    StringBuilder command = new StringBuilder();
+    command.append("java -cp ");
+    command.append(getGridExtrasJarFilePath());
 
-    command = command + getGridExtrasJarFilePath();
-
-    String stuff = colon + getCurrentWebDriverJarPath() + " ";
+    String jarPath = colon + getCurrentWebDriverJarPath() + " ";
 
     if (windows) {
-      stuff = OSChecker.toWindowsPath(stuff);
+      jarPath = OSChecker.toWindowsPath(jarPath);
     }
 
-    command = command + stuff;
+    command.append(jarPath);
+    command.append(" org.openqa.grid.selenium.GridLauncher ");
+    command.append(getGridRole(role).getStartCommand());
 
-    command = command + " org.openqa.grid.selenium.GridLauncher ";
-
-    command = command + getFormattedConfig(role);
-
-    return command.toString();
+    return String.valueOf(command);
   }
-
 
   public static String getGridConfigPortForRole(String role) {
-    Map<String, String> config = getGridConfig(role);
-    return config.get("-port");
-  }
-
-  public static Map<String, String> getGridConfig(String role) {
-    Map grid = RuntimeConfig.getGridConfig();
-    Map config = (HashMap<String, String>) grid.get(role);
-
-    return config;
+    GridRole config = getGridRole(role);
+    return config.getPort();
   }
 
   public static String getDefaultRole() {
-    Map grid = RuntimeConfig.getGridConfig();
-    return grid.get("default_role").toString();
+    return RuntimeConfig.getConfig().getGrid().getDefaultRole();
   }
 
-  private static String getFormattedConfig(String role) {
-    Map<String, String> config = getGridConfig(role);
-    StringBuilder commandLineParam = new StringBuilder();
-
-    for (Map.Entry<String, String> entry : config.entrySet()) {
-      commandLineParam.append(" " + entry.getKey());
-      commandLineParam.append(" " + entry.getValue());
+  private static GridRole getGridRole(String role) {
+    GridRole config = null;
+    if (role.equals("hub")) {
+      config = RuntimeConfig.getConfig().getGrid().getHub();
+    } else if (role.equals("node")) {
+      config = RuntimeConfig.getConfig().getGrid().getNode();
     }
-
-    return commandLineParam.toString();
+    return config;
   }
-
 
 }

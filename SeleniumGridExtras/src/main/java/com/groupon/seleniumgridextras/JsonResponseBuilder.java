@@ -37,42 +37,42 @@
 
 package com.groupon.seleniumgridextras;
 
-import org.json.simple.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class JsonResponseBuilder {
 
 
-  private Map<String, String> keyDescriptions;
-  private JSONObject keyValues;
+  private JsonObject keyDescriptions;
+  private JsonObject keyValues;
 
   public JsonResponseBuilder() {
-    keyDescriptions = new HashMap<String, String>();
-    keyDescriptions.put("error", "Error recived during execution of command");
-    keyDescriptions.put("exit_code", "Exit code for operation");
-    keyDescriptions.put("out", "All of the StandardOut received from the system");
+    keyDescriptions = new JsonObject();
+    keyDescriptions.addProperty("error", "Error received during execution of command");
+    keyDescriptions.addProperty("exit_code", "Exit code for operation");
+    keyDescriptions.addProperty("out", "All of the StandardOut received from the system");
     clearValues();
   }
 
   private void clearValues() {
 
-    keyValues = new JSONObject();
+    keyValues = new JsonObject();
 
-    List<String> out = new LinkedList();
-    List<String> error = new LinkedList();
+    JsonArray out = new JsonArray();
+    JsonArray error = new JsonArray();
 
     addKeyValues("exit_code", 0);
     addKeyValues("out", out);
     addKeyValues("error", error);
   }
 
-
   public void addKeyDescriptions(String key, String description) {
-    keyDescriptions.put(key, description);
+    keyDescriptions.addProperty(key, description);
     addKeyValues(key, "");
   }
 
@@ -82,12 +82,11 @@ public class JsonResponseBuilder {
 
   public void addKeyValues(String key, String value, Boolean splitLineToArray) {
     checkIfKeyDescriptionExist(key);
-    List<String> valueArray;
+    JsonArray valueArray = new JsonArray();
     if (splitLineToArray) {
       valueArray = convertLineToArray(value);
     } else {
-      valueArray = new LinkedList<String>();
-      valueArray.add(value);
+      valueArray.add(new JsonPrimitive(value));
     }
 
     if (key.equals("out")) {
@@ -96,57 +95,71 @@ public class JsonResponseBuilder {
       addKeyValues("exit_code", 1);
       addKeyValues(key, valueArray);
     } else {
-      keyValues.put(key, valueArray);
+      keyValues.add(key, valueArray);
     }
 
   }
 
-
   public void addKeyValues(String key, Boolean value) {
     checkIfKeyDescriptionExist(key);
-    keyValues.put(key, value);
+    keyValues.addProperty(key, value);
+  }
+
+  public void addKeyValues(String key, JsonArray value) {
+    checkIfKeyDescriptionExist(key);
+    keyValues.add(key, value);
+  }
+
+  public void addKeyValues(String key, JsonObject value) {
+    checkIfKeyDescriptionExist(key);
+    keyValues.add(key, value);
   }
 
   public void addKeyValues(String key, Map value) {
     checkIfKeyDescriptionExist(key);
-    keyValues.put(key, value);
+    keyValues.addProperty(key, new Gson().toJson(value));
   }
 
   public void addKeyValues(String key, int value) {
     checkIfKeyDescriptionExist(key);
-    keyValues.put(key, value);
+    keyValues.addProperty(key, value);
   }
 
   public void addKeyValues(String key, List value) {
     checkIfKeyDescriptionExist(key);
-    keyValues.put(key, value);
+    keyValues.addProperty(key, new Gson().toJson(value));
   }
 
   public String toString() {
-    String tempString = keyValues.toJSONString();
+    String values = keyValues.toString();
     clearValues();
-    return tempString;
+    return values;
   }
 
-  public Map<String, String> getKeyDescriptions() {
+  public JsonObject getJson() {
+    JsonObject values = keyValues;
+    clearValues();
+    return values;
+  }
+
+  public JsonObject getKeyDescriptions() {
     return keyDescriptions;
   }
 
   private void checkIfKeyDescriptionExist(String key) {
-    if (!keyDescriptions.containsKey(key)) {
+    if (!keyDescriptions.has(key)) {
       throw new RuntimeException(
           "You cannot add an entry to Json Response without adding description for it first");
     }
   }
 
-  private List<String> convertLineToArray(String input) {
-    List output = new LinkedList<String>();
+  private JsonArray convertLineToArray(String input) {
+    JsonArray output = new JsonArray();
 
     String stdOutLines[] = input.split("\n");
     for (String line : stdOutLines) {
-      output.add(line);
+      output.add(new JsonPrimitive(line));
     }
-
     return output;
   }
 

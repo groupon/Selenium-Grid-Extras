@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2013, Groupon, Inc.
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of GROUPON nor the names of its contributors may be
  * used to endorse or promote products derived from this software without
  * specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
  * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
@@ -54,50 +54,47 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
 
-    private Pattern urlPattern = Pattern.compile("http://([^:/]+)");
+  private Pattern urlPattern = Pattern.compile("http://([^:/]+)");
 
-    public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
-        super(request, registry);
-        System.out.println("Attaching a node with " + getClass().getSimpleName());
+  public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
+    super(request, registry);
+    System.out.println("Attaching a node with " + getClass().getSimpleName());
+  }
+
+  @Override
+  public void beforeSession(TestSession session) {
+    super.beforeSession(session);
+    callAction(session, "setup");
+  }
+
+  @Override
+  public void afterSession(TestSession session) {
+    super.afterSession(session);
+    callAction(session, "teardown");
+  }
+
+  synchronized private void callAction(TestSession session, String action) {
+    try {
+      String nodeAddress = session.getSlot().getProxy().getRemoteHost().toString();
+      Matcher matcher = urlPattern.matcher(nodeAddress);
+      String cleanAddress = "";
+      while (matcher.find()) {
+        cleanAddress = matcher.group();
+      }
+      URL url = new URL(cleanAddress + ":3000/" + action);
+      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+      conn.setRequestMethod("GET");
+      System.out.println(ExecuteCommand.inputStreamToString(conn.getInputStream()));
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    } catch (ProtocolException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
     }
-
-    @Override
-    public void beforeSession(TestSession session) {
-        super.beforeSession(session);
-        callAction(session, "setup");
-    }
-
-    @Override
-    public void afterSession(TestSession session){
-        super.afterSession(session);
-        callAction(session, "teardown");
-    }
-
-    synchronized private void callAction(TestSession session, String action) {
-        try {
-            String nodeAddress = session.getSlot().getProxy().getRemoteHost().toString();
-            Matcher matcher = urlPattern.matcher(nodeAddress);
-            String cleanAddress = "";
-            while (matcher.find()) {
-                cleanAddress = matcher.group();
-            }
-            URL url = new URL(cleanAddress + ":3000/" + action);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setRequestMethod("GET");
-            System.out.println(ExecuteCommand.inputStreamToString(conn.getInputStream()));
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
+  }
 
 
 }

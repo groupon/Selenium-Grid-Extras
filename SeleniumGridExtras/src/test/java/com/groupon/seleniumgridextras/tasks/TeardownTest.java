@@ -38,20 +38,16 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.JsonWrapper;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
 
 import static org.junit.Assert.assertEquals;
 
@@ -62,10 +58,8 @@ public class TeardownTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("teardown_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
-
+    RuntimeConfig.setConfigFile("teardown_test.json");
+    RuntimeConfig.loadDefaults();
     task = new Teardown();
     Boolean initilized = task.initialize();
   }
@@ -79,15 +73,14 @@ public class TeardownTest {
   @Test
   public void testExecute() {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
-      String result = task.execute();
-      Map<String, HashMap> parsedResult = JsonWrapper.parseJson(result);
+      JsonObject result = task.execute();
       Long exitCode = new Long(0);
-      List<String> expecteClasses = new LinkedList<String>();
-      expecteClasses.add("KillAllIE");
-      expecteClasses.add("MoveMouse");
+      JsonArray expectedClasses = new JsonArray();
+      expectedClasses.add(new JsonPrimitive("KillAllIE"));
+      expectedClasses.add(new JsonPrimitive("MoveMouse"));
 
-      assertEquals(exitCode, parsedResult.get("exit_code"));
-      assertEquals(expecteClasses, parsedResult.get("classes_to_execute"));
+      assertEquals((Object) exitCode, result.get("exit_code").getAsLong());
+      assertEquals(expectedClasses, result.get("classes_to_execute"));
     }
   }
 
@@ -99,7 +92,7 @@ public class TeardownTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Calls several pre-defined tasks to act as teardown after build",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test
@@ -107,22 +100,22 @@ public class TeardownTest {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
 
       assertEquals(
-          "{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"KillAllIE\",\"MoveMouse\"],\"out\":[]}",
-          task.getJsonResponse().toString());
+          new JsonParser().parse("{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"KillAllIE\",\"MoveMouse\"],\"out\":[]}"),
+          task.getJsonResponse().getJson());
 
       assertEquals("List of full canonical classes to execute on Tear-Down",
-                   task.getJsonResponse().getKeyDescriptions().get("classes_to_execute"));
+          task.getJsonResponse().getKeyDescriptions().get("classes_to_execute").getAsString());
 
       assertEquals("Hash object of tasks ran and their results",
-                   task.getJsonResponse().getKeyDescriptions().get("results"));
+          task.getJsonResponse().getKeyDescriptions().get("results").getAsString());
 
-      assertEquals(5, task.getResponseDescription().keySet().size());
+      assertEquals(5, task.getResponseDescription().entrySet().size());
     }
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals(0, task.getAcceptedParams().keySet().size());
+    assertEquals(0, task.getAcceptedParams().entrySet().size());
   }
 
 

@@ -36,6 +36,7 @@
  */
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.ExposeDirectory;
 import org.junit.Before;
@@ -88,12 +89,12 @@ public class ExposeDirectoryTest {
   @Test
   public void testGetJsonResponse() throws Exception {
 
-    assertEquals("{\"files\":[\"\"],\"exit_code\":0,\"error\":[],\"out\":[]}",
-                 task.getJsonResponse().toString());
+    assertEquals(new JsonParser().parse("{\"files\":[\"\"],\"exit_code\":0,\"error\":[],\"out\":[]}"),
+        task.getJsonResponse().getJson());
 
     assertEquals("Array list of files in the shared directory",
-                 task.getJsonResponse().getKeyDescriptions().get("files"));
-    assertEquals(4, task.getJsonResponse().getKeyDescriptions().keySet().size());
+        task.getJsonResponse().getKeyDescriptions().get("files").getAsString());
+    assertEquals(4, task.getJsonResponse().getKeyDescriptions().entrySet().size());
 
   }
 

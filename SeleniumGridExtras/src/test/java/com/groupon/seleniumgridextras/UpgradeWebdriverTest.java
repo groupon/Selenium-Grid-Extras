@@ -37,10 +37,12 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.UpgradeWebdriver;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +50,6 @@ import org.junit.Test;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -58,14 +59,13 @@ public class UpgradeWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("upgrade_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
+    RuntimeConfig.setConfigFile("upgrade_test.json");
+    RuntimeConfig.loadDefaults();
     task = new UpgradeWebdriver();
   }
 
   @After
-  public void tearDown() throws Exception{
+  public void tearDown() throws Exception {
     File config = new File(RuntimeConfig.getConfigFile());
     config.delete();
   }
@@ -91,24 +91,23 @@ public class UpgradeWebdriverTest {
 
   @Test
   public void testResponseDescriptions() throws Exception {
-    Map<String, String> descriptions = task.getResponseDescription();
-    assertEquals("New version downloaded and reconfigured", descriptions.get("new_version"));
-    assertEquals("Old version of the jar that got replaced", descriptions.get("old_version"));
-    assertEquals(5, descriptions.keySet().size());
+    JsonObject descriptions = task.getResponseDescription();
+    assertEquals("New version downloaded and reconfigured", descriptions.get("new_version").getAsString());
+    assertEquals("Old version of the jar that got replaced", descriptions.get("old_version").getAsString());
+    assertEquals(5, descriptions.entrySet().size());
   }
 
-
-    @Test
+  @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"new_version\":[\"\"],\"exit_code\":0,\"error\":[],\"old_version\":[\"" + GridWrapper
-            .getWebdriverVersion() + "\"],\"out\":[]}", task.getJsonResponse().toString());
+        new JsonParser().parse("{\"new_version\":[\"\"],\"exit_code\":0,\"error\":[],\"old_version\":[\"" + GridWrapper
+            .getWebdriverVersion() + "\"],\"out\":[]}"), task.getJsonResponse().getJson());
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("(Required) - Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+        task.getAcceptedParams().get("version").getAsString());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 }

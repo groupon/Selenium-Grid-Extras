@@ -37,10 +37,11 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
-import com.groupon.seleniumgridextras.tasks.StartGrid;
 
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
@@ -51,12 +52,12 @@ public class SeleniumGridExtras {
 
   public static void main(String[] args) throws Exception {
 
-    RuntimeConfig.loadConfig();
+    RuntimeConfig.load();
 
     HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
 
     List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getActivatedModules()) {
+    for (String module : RuntimeConfig.getConfig().getActivatedModules()) {
       tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
     }
 
@@ -73,7 +74,8 @@ public class SeleniumGridExtras {
             System.out.println(
                 "End-point " + task.getEndpoint() + " was called with HTTP params " + params
                     .toString());
-            return task.execute(params);
+            String result = task.execute(params).toString();
+            return result;
           }
         });
 
@@ -94,16 +96,16 @@ public class SeleniumGridExtras {
       }
     });
 
-    if (RuntimeConfig.autoStartHub()) {
+    if (RuntimeConfig.getConfig().getGrid().getAutoStartHub()) {
       System.out.println("=== Grid Hub was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
-      String value = grid.execute("hub");
+      String value = grid.execute("hub").getAsString();
     }
 
-    if (RuntimeConfig.autoStartNode()) {
+    if (RuntimeConfig.getConfig().getGrid().getAutoStartNode()) {
       System.out.println("=== Grid Node was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
-      String value = grid.execute("node");
+      String value = grid.execute("node").getAsString();
     }
 
     context.getFilters().add(new ParameterFilter());

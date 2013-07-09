@@ -38,10 +38,9 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class Netstat extends ExecuteOSTask {
@@ -49,7 +48,7 @@ public class Netstat extends ExecuteOSTask {
   public Netstat() {
     setEndpoint("/netstat");
     setDescription("Returns a system call for all ports. Use /port_info to get parsed details");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -60,12 +59,12 @@ public class Netstat extends ExecuteOSTask {
   }
 
   @Override
-  public String execute(){
+  public JsonObject execute() {
     return PortChecker.getPortInfo("");
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     return execute();
   }
 

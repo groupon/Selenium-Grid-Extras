@@ -37,8 +37,10 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.JsonWrapper;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -52,7 +54,7 @@ public class Teardown extends ExecuteOSTask {
   public Teardown() {
     setEndpoint("/teardown");
     setDescription("Calls several pre-defined tasks to act as teardown after build");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -62,35 +64,35 @@ public class Teardown extends ExecuteOSTask {
     setEnabledInGui(false);
 
     addResponseDescription("classes_to_execute",
-                           "List of full canonical classes to execute on Tear-Down");
+        "List of full canonical classes to execute on Tear-Down");
     addResponseDescription("results", "Hash object of tasks ran and their results");
   }
 
-  private List<String> getClassesToRun() {
-    List<String> listOfTasks = new LinkedList<String>();
+  private JsonArray getClassesToRun() {
+    JsonArray listOfTasks = new JsonArray();
     for (ExecuteOSTask task : teardownTasks) {
-      listOfTasks.add(task.getClass().getSimpleName());
+      listOfTasks.add(new JsonPrimitive(task.getClass().getSimpleName()));
     }
 
     return listOfTasks;
   }
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     try {
       Map<String, Object> results = new HashMap<String, Object>();
 
       for (ExecuteOSTask task : teardownTasks) {
-        results.put(task.getClass().getSimpleName(), JsonWrapper.parseJson(task.execute()));
+        results.put(task.getClass().getSimpleName(), task.execute());
       }
 
       getJsonResponse().addKeyValues("results", results);
 
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
@@ -100,8 +102,7 @@ public class Teardown extends ExecuteOSTask {
     Boolean initialized = true;
     System.out.println("Tear-Down Tasks");
     teardownTasks = new LinkedList<ExecuteOSTask>();
-
-    for (String module : RuntimeConfig.getTeardownModules()) {
+    for (String module : RuntimeConfig.getConfig().getTeardown()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         teardownTasks.add(task);

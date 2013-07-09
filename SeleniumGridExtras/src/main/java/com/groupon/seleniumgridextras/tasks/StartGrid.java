@@ -37,17 +37,15 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
-import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.PortChecker;
-
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.grid.GridWrapper;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
@@ -57,8 +55,8 @@ public class StartGrid extends ExecuteOSTask {
 
     setEndpoint("/start_grid");
     setDescription("Starts an instance of Selenium Grid Hub or Node");
-    Map<String, String> params = new HashMap();
-    params.put("role", "hub|node - defaults to 'default_role' param in config file");
+    JsonObject params = new JsonObject();
+    params.addProperty("role", "hub|node - defaults to 'default_role' param in config file");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -69,39 +67,37 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     return execute(GridWrapper.getDefaultRole());
   }
 
   @Override
-  public String execute(String role) {
+  public JsonObject execute(String role) {
     try {
       String servicePort = GridWrapper.getGridConfigPortForRole(role);
-      Map<String, String> occupiedPid = PortChecker.getParsedPortInfo(servicePort);
+      JsonObject occupiedPid = PortChecker.getParsedPortInfo(servicePort);
 
-      if (!occupiedPid.isEmpty()) {
+      if (!occupiedPid.isJsonNull()) {
         System.out.println(servicePort + " port is busy, won't try to start a service");
         getJsonResponse().addKeyValues("error", "Port: " + servicePort
-                                                + " is occupied by some other process: "
-                                                + occupiedPid);
+            + " is occupied by some other process: "
+            + occupiedPid);
 
-        return getJsonResponse().toString();
+        return getJsonResponse().getJson();
       }
 
       String
 
           command =
           OSChecker.isWindows() ? getWindowsCommand(role)
-                                : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
+              : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
 
-      String serviceStartResponse = ExecuteCommand.execRuntime(command, false);
+      JsonObject serviceStartResponse = ExecuteCommand.execRuntime(command, false);
 
-      Map result = JsonWrapper.parseJson(serviceStartResponse);
-
-      if (result.get("exit_code").toString().equals("0")) {
+      if (serviceStartResponse.get("exit_code").toString().equals("0")) {
         getJsonResponse().addKeyValues("out",
-                                       "Service start command sent, might take as long as 10 seconds to spin up");
-        return getJsonResponse().toString();
+            "Service start command sent, might take as long as 10 seconds to spin up");
+        return getJsonResponse().getJson();
       } else {
         System.out.println("Something didn't go right in launching service");
         System.out.println(serviceStartResponse);
@@ -109,12 +105,12 @@ public class StartGrid extends ExecuteOSTask {
       }
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (parameter.isEmpty() || !parameter.containsKey("role")) {
       return execute();
     } else {
@@ -133,7 +129,7 @@ public class StartGrid extends ExecuteOSTask {
 
     writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
 
-    return "powershell.exe /c \"Start-Process " + batchFile +  "\"";
+    return "powershell.exe /c \"Start-Process " + batchFile + "\"";
   }
 
   private void writeBatchFile(String filename, String input) {

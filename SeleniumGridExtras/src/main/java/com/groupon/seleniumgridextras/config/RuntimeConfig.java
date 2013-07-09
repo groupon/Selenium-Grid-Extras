@@ -35,103 +35,54 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.config;
 
-import org.apache.commons.io.FileUtils;
-import org.json.simple.JSONValue;
+import com.google.gson.Gson;
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.SeleniumGridExtras;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class RuntimeConfig {
 
-  private static Map config;
   private static String configFile = "selenium_grid_extras_config.json";
+  private static Config config = null;
 
-  public static Map getConfig() {
-    return config;
+  public RuntimeConfig() {
+    config = new Config();
   }
 
   public static String getConfigFile() {
     return configFile;
   }
 
-  public static void loadConfig() {
-
-    String configString = readConfigFile(configFile);
-
-    if (configString != "") {
-      setFullConfig(JsonWrapper.parseJson(configString));
-    }
-  }
-
-  public static void setConfig(String file) {
+  public static void setConfigFile(String file) {
     configFile = file;
   }
 
+  public static Config load() {
 
-  public static List<String> getSetupModules() {
-    return (List<String>) config.get("setup");
-  }
-
-  public static String getExposedDirectory() {
-    return (String) config.get("expose_directory");
-  }
-
-  public static List<String> getTeardownModules() {
-    return (List<String>) config.get("teardown");
-  }
-
-  public static List<String> getActivatedModules() {
-    return (List<String>) config.get("activated_modules");
-  }
-
-  public static List<String> getDeactivatedModules() {
-    return (List<String>) config.get("deactivated_modules");
-  }
-
-  public static Boolean checkIfModuleEnabled(String module) {
-    return getActivatedModules().contains(module);
-  }
-
-  public static Map getWebdriverConfig() {
-    return (HashMap<String, HashMap>) config.get("webdriver");
-  }
-
-  public static Map<String, HashMap> getGridConfig() {
-    return (HashMap<String, HashMap>) config.get("grid");
-  }
-
-  public static Boolean autoStartHub() {
-    Map grid = getGridConfig();
-
-    String value = (String) grid.get("auto_start_hub");
-
-    if (value.equals("1")) {
-      return true;
+    String configString = readConfigFile(configFile);
+    if (configString != "") {
+      config = new Gson().fromJson(configString, Config.class);
     } else {
-      return false;
+      // first time runner
+      Config defaultConfig = DefaultConfig.getDefaultConfig();
+      config = FirstTimeRunConfig.customiseConfig(defaultConfig);
+      config.writeToDisk(configFile);
     }
+    return config;
   }
 
-  public static Boolean autoStartNode() {
-    Map grid = getGridConfig();
-    String value = (String) grid.get("auto_start_node");
-
-    if (value.equals("1")) {
-      return true;
-    } else {
-      return false;
-    }
+  public static Config loadDefaults() {
+    DefaultConfig.getDefaultConfig().writeToDisk(configFile);
+    return load();
   }
 
   public static String getSeleniumGridExtrasJarFile() {
@@ -148,7 +99,6 @@ public class RuntimeConfig {
     }
   }
 
-
   public static String getSeleniungGridExtrasHomePath() {
     String path = getSeleniumGridExtrasJarFile();
     path = path.replaceAll("[\\w-\\d\\.]*\\.jar", "");
@@ -158,39 +108,6 @@ public class RuntimeConfig {
     }
 
     return path;
-  }
-
-
-  public static String getWebdriverParentDir() {
-    return RuntimeConfig.getWebdriverConfig().get("directory").toString();
-  }
-
-  public static String getWebdriverVersion() {
-    return RuntimeConfig.getWebdriverConfig().get("version").toString();
-  }
-
-  public static void setWebdriverVersion(String newVersion) {
-    getWebdriverConfig().put("version", newVersion);
-  }
-
-  public static void saveConfigToFile() throws IOException {
-    String jsonText = JSONValue.toJSONString(config);
-    FileUtils.writeStringToFile(new File(configFile), jsonText);
-  }
-
-  public static File getOSTempDir(){
-    if(OSChecker.isWindows()){
-      return new File("\\");
-    } else {
-      return new File("/tmp");
-    }
-  }
-
-  private static void setFullConfig(Map configHash) {
-    if (!configHash.isEmpty()) {
-      config = configHash;
-    }
-
   }
 
   private static String readConfigFile(String filePath) {
@@ -203,18 +120,14 @@ public class RuntimeConfig {
       }
     } catch (FileNotFoundException error) {
       System.out.println("File " + filePath + " does not exist, going to use default configs");
-      WriteDefaultConfigs.writeConfig(filePath);
-      return readConfigFile(filePath);
-
     } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
-      WriteDefaultConfigs.writeConfig(filePath);
-      return readConfigFile(filePath);
     }
-
     return returnString;
   }
 
-
+  public static Config getConfig() {
+    return config;
+  }
 
 }

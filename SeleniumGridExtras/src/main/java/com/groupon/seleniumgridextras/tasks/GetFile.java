@@ -37,19 +37,18 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class GetFile extends ExecuteOSTask {
 
-  public GetFile(){
+  public GetFile() {
     setEndpoint("/get_file");
     setDescription("(Not yet implemented) - Retrives a file from shared Directory");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -59,14 +58,13 @@ public class GetFile extends ExecuteOSTask {
     setEnabledInGui(true);
   }
 
-
   @Override
-  public String execute(){
-    return "{\"exit\": 1, \"error\": \"Not yet implemented\"}";
+  public JsonObject execute() {
+    return new JsonParser().parse("{\"exit\": 1, \"error\": \"Not yet implemented\"}").getAsJsonObject();
   }
 
   @Override
-  public List<String> getDependencies(){
+  public List<String> getDependencies() {
     List<String> localDependencies = new LinkedList<String>();
 
     localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");

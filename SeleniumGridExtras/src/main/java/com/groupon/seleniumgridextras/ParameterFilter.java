@@ -81,9 +81,9 @@ public class ParameterFilter extends Filter {
     if ("post".equalsIgnoreCase(exchange.getRequestMethod())) {
       @SuppressWarnings("unchecked")
       Map parameters =
-          (Map)exchange.getAttribute("parameters");
+          (Map) exchange.getAttribute("parameters");
       InputStreamReader isr =
-          new InputStreamReader(exchange.getRequestBody(),"utf-8");
+          new InputStreamReader(exchange.getRequestBody(), "utf-8");
       BufferedReader br = new BufferedReader(isr);
       String query = br.readLine();
       parseQuery(query, parameters);
@@ -104,22 +104,22 @@ public class ParameterFilter extends Filter {
         String value = null;
         if (param.length > 0) {
           key = URLDecoder.decode(param[0],
-                                  System.getProperty("file.encoding"));
+              System.getProperty("file.encoding"));
         }
 
         if (param.length > 1) {
           value = URLDecoder.decode(param[1],
-                                    System.getProperty("file.encoding"));
+              System.getProperty("file.encoding"));
         }
 
         if (parameters.containsKey(key)) {
           Object obj = parameters.get(key);
-          if(obj instanceof List) {
-            List values = (List)obj;
+          if (obj instanceof List) {
+            List values = (List) obj;
             values.add(value);
-          } else if(obj instanceof String) {
+          } else if (obj instanceof String) {
             List values = new ArrayList();
-            values.add((String)obj);
+            values.add((String) obj);
             values.add(value);
             parameters.put(key, values);
           }

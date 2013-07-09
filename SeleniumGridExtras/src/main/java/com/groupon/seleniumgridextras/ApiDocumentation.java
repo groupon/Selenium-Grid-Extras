@@ -36,19 +36,19 @@
  */
 package com.groupon.seleniumgridextras;
 
-import org.json.simple.JSONArray;
-
-import java.util.Map;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class ApiDocumentation {
 
-  private static JSONArray apiSpec = new JSONArray();
+  private static JsonArray apiSpec = new JsonArray();
 
-  public static void registerApiEndPoint(Map endPoint){
+  public static void registerApiEndPoint(JsonObject endPoint) {
     apiSpec.add(endPoint);
   }
 
-  public static String getApiDocumentation(){
-    return apiSpec.toString();
+  public static String getApiDocumentation() {
+    return new GsonBuilder().setPrettyPrinting().create().toJson(apiSpec);
   }
 }

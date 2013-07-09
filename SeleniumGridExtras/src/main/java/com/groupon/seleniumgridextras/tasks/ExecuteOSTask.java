@@ -37,16 +37,17 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ExecuteOSTask extends ExtrasEndPoint{
+public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   final private
   String
@@ -54,11 +55,11 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
       "This task was not implemented on " + OSChecker.getOSName();
   public boolean waitToFinishTask = true;
 
-  public String execute() {
+  public JsonObject execute() {
     return execute("");
   }
 
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey("parameter")) {
       return execute(parameter.get("parameter").toString());
     } else {
@@ -67,14 +68,10 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
   }
 
 
+  public JsonObject execute(String parameter) {
 
-  public String execute(String parameter) {
-
-    String
-
-        command =
-        OSChecker.isWindows() ? getWindowsCommand()
-                              : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
+    String command = OSChecker.isWindows() ? getWindowsCommand()
+        : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
@@ -82,7 +79,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
   public String getWindowsCommand(String parameter) {
 
     getJsonResponse().addKeyValues("error",
-                                   notImplementedError + " " + this.getClass().getCanonicalName());
+        notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -94,7 +91,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
 
   public String getLinuxCommand(String parameter) {
     getJsonResponse().addKeyValues("error",
-                                   notImplementedError + " " + this.getClass().getCanonicalName());
+        notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -140,11 +137,11 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint{
     Boolean returnValue = true;
 
     for (String module : getDependencies()) {
-      if (RuntimeConfig.checkIfModuleEnabled(module) && returnValue) {
+      if (RuntimeConfig.getConfig().checkIfModuleEnabled(module) && returnValue) {
 
       } else {
         System.out.println("  " + this.getClass().getSimpleName() + " depends on " + module
-                           + " but it is not activated");
+            + " but it is not activated");
         returnValue = false;
       }
     }

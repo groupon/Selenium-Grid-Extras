@@ -37,37 +37,37 @@
 
 package com.groupon.seleniumgridextras.grid;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.WriteDefaultConfigs;
-
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 
 public class GridWrapperTest {
 
-  public static Map gridConfig;
-  public static Map wdConfig;
+  public static Config.GridInfo gridConfig;
+  public static Config.WebDriver wdConfig;
   public static String wdVersion;
   public static String wdHome;
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("grid_wrapper_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
-    gridConfig = RuntimeConfig.getGridConfig();
-    wdConfig = RuntimeConfig.getWebdriverConfig();
-    wdVersion = RuntimeConfig.getWebdriverConfig().get("version").toString();
-    wdHome = RuntimeConfig.getOSTempDir() + "/webdriver";
+    RuntimeConfig.setConfigFile("grid_wrapper_test.json");
+    RuntimeConfig.loadDefaults();
+    RuntimeConfig.load();
+    gridConfig = RuntimeConfig.getConfig().getGrid();
+    wdConfig = RuntimeConfig.getConfig().getWebdriver();
+    wdVersion = wdConfig.getVersion();
+    wdHome = "/tmp/webdriver";
 
   }
 
@@ -99,11 +99,11 @@ public class GridWrapperTest {
     command =
         command + wdJarPath;
 
-    command = command + "org.openqa.grid.selenium.GridLauncher  -port 4445 ";
+    command = command + "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 ";
+    command = command + "-host " + RuntimeConfig.getCurrentHostIP() ;
     command =
-        command + "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy "
-        + "-hub http://localhost:4444 " +
-        "-maxSession 1 -host " + RuntimeConfig.getCurrentHostIP() + " -nodeTimeout 240 -role wd";
+        command + " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1" +
+        " -proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
 
     return command;
   }
@@ -121,7 +121,7 @@ public class GridWrapperTest {
   @Test
   public void testGetSeleniumGridExtrasPath() throws Exception {
     assertEquals(RuntimeConfig.getSeleniungGridExtrasHomePath(),
-                 GridWrapper.getSeleniumGridExtrasPath());
+        GridWrapper.getSeleniumGridExtrasPath());
   }
 
   @Test
@@ -147,28 +147,29 @@ public class GridWrapperTest {
 
   @Test
   public void testGetGridNodeConfig() throws Exception {
-    Map<String, String> expectedConfig = new HashMap<String, String>();
-    expectedConfig.put("-port", "4445");
-    expectedConfig.put("-hub", "http://localhost:4444");
-    expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
-    expectedConfig.put("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
-    expectedConfig.put("-role", "wd");
-    expectedConfig.put("-maxSession", "1");
-    expectedConfig.put("-nodeTimeout", "240");
+    JsonObject expectedConfig = new JsonObject();
+    expectedConfig.addProperty("-port", "4445");
+    expectedConfig.addProperty("-hub", "http://localhost:4444");
+    expectedConfig.addProperty("-host", RuntimeConfig.getCurrentHostIP());
+    expectedConfig.addProperty("-proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
+    expectedConfig.addProperty("-role", "wd");
+    expectedConfig.addProperty("-nodeTimeout", "240");
+    expectedConfig.addProperty("-maxSession", 1);
 
-    assertEquals(expectedConfig, GridWrapper.getGridConfig("node"));
+
+    assertEquals(expectedConfig, new JsonParser().parse(new Gson().toJson(gridConfig.getNode())));
   }
 
   @Test
   public void testGetGridHubConfig() throws Exception {
-    Map<String, String> expectedConfig = new HashMap<String, String>();
-    expectedConfig.put("-port", "4444");
-    expectedConfig.put("-host", RuntimeConfig.getCurrentHostIP());
-    expectedConfig.put("-role", "hub");
+    JsonObject expectedConfig = new JsonObject();
+    expectedConfig.addProperty("-port", "4444");
+    expectedConfig.addProperty("-host", RuntimeConfig.getCurrentHostIP());
+    expectedConfig.addProperty("-role", "hub");
     expectedConfig
-        .put("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
+        .addProperty("-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
 
-    assertEquals(expectedConfig, GridWrapper.getGridConfig("hub"));
+    assertEquals(expectedConfig, new JsonParser().parse(new Gson().toJson(gridConfig.getHub())));
   }
 
   @Test

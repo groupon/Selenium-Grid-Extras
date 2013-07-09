@@ -37,10 +37,9 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class KillPid extends ExecuteOSTask {
@@ -48,9 +47,9 @@ public class KillPid extends ExecuteOSTask {
   public KillPid() {
     setEndpoint("/kill_pid");
     setDescription("Kills a given process id");
-    Map<String, String> params = new HashMap();
-    params.put("id", "(Required) -  Process ID (PID) to terminate.");
-    params.put("signal", "(unix only) - Signal Term number such as 1, 2...9");
+    JsonObject params = new JsonObject();
+    params.addProperty("id", "(Required) -  Process ID (PID) to terminate.");
+    params.addProperty("signal", "(unix only) - Signal Term number such as 1, 2...9");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -61,14 +60,14 @@ public class KillPid extends ExecuteOSTask {
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
 
     getJsonResponse().addKeyValues("error", "ID is a required parameter");
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
 
     if (parameter.isEmpty() || !parameter.containsKey("id")) {
 

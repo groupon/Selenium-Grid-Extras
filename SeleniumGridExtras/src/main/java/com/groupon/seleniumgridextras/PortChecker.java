@@ -37,17 +37,17 @@
 
 package com.groupon.seleniumgridextras;
 
-import java.util.HashMap;
+import com.google.gson.JsonObject;
+
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PortChecker {
 
-  public static Map<String, String> getParsedPortInfo(String port) {
+  public static JsonObject getParsedPortInfo(String port) {
 
-    Map status = JsonWrapper.parseJson(getPortInfo(port));
+    JsonObject status = getPortInfo(port);
     List<String> standardOut = (List<String>) status.get("out");
 
     return parseLinuxInfo(standardOut);
@@ -55,7 +55,7 @@ public class PortChecker {
   }
 
 
-  public static String getPortInfo(String port) {
+  public static JsonObject getPortInfo(String port) {
     StringBuilder command = new StringBuilder();
 
     command.append(getCommand());
@@ -75,20 +75,19 @@ public class PortChecker {
     return "";
   }
 
-  private static Map<String, String> parseLinuxInfo(List<String> status) {
+  private static JsonObject parseLinuxInfo(List<String> status) {
 
-    Map<String, String> info = new HashMap<String, String>();
+    JsonObject info = new JsonObject();
 
     for (String line : status) {
       Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(line);
       if (m.find()) {
-        info.put("process", m.group(1));
-        info.put("pid", m.group(2));
-        info.put("user", m.group(3));
+        info.addProperty("process", m.group(1));
+        info.addProperty("pid", m.group(2));
+        info.addProperty("user", m.group(3));
         return info;
       }
     }
-
     return info;
   }
 

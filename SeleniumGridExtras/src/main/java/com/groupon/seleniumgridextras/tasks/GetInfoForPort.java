@@ -38,20 +38,18 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
-  public GetInfoForPort(){
+  public GetInfoForPort() {
     setEndpoint("/port_info");
     setDescription("Returns parsed information on a PID occupying a given port");
-    Map<String, String> params = new HashMap();
-    params.put("port", "(Required) Port to be used");
+    JsonObject params = new JsonObject();
+    params.addProperty("port", "(Required) Port to be used");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -68,22 +66,22 @@ public class GetInfoForPort extends ExecuteOSTask {
 
 
   @Override
-  public Map getAcceptedParams() {
-    Map<String, String> params = new HashMap();
-    params.put("port", "(Required) Port to be used");
+  public JsonObject getAcceptedParams() {
+    JsonObject params = new JsonObject();
+    params.addProperty("port", "(Required) Port to be used");
     return params;
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     getJsonResponse().addKeyValues("error", "Port parameter is required");
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
 
-    if(!parameter.isEmpty() && parameter.containsKey("port")){
+    if (!parameter.isEmpty() && parameter.containsKey("port")) {
       return execute(parameter.get("port").toString());
     } else {
       return execute();
@@ -93,25 +91,25 @@ public class GetInfoForPort extends ExecuteOSTask {
 
 
   @Override
-  public String execute(String port) {
+  public JsonObject execute(String port) {
 
     try {
-      Map<String, String> portInfo = PortChecker.getParsedPortInfo(port);
+      JsonObject portInfo = PortChecker.getParsedPortInfo(port);
 
       String process = "";
       String pid = "";
       String user = "";
 
       try {
-        process = portInfo.get("process").toString();
+        process = portInfo.get("process").getAsString();
       } catch (NullPointerException error) {
       }
       try {
-        pid = portInfo.get("pid").toString();
+        pid = portInfo.get("pid").getAsString();
       } catch (NullPointerException error) {
       }
       try {
-        user = portInfo.get("user").toString();
+        user = portInfo.get("user").getAsString();
       } catch (NullPointerException error) {
       }
 
@@ -120,12 +118,12 @@ public class GetInfoForPort extends ExecuteOSTask {
       getJsonResponse().addKeyValues("pid", pid);
       getJsonResponse().addKeyValues("user", user);
       getJsonResponse().addKeyValues("port", port);
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
 
     } catch (Exception error) {
       //Big try catch to see if anything at all went wrong
       getJsonResponse().addKeyValues("error", error.toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
 
   }

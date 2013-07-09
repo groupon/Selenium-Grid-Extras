@@ -10,7 +10,7 @@
             var hostUrl = "http://" + obj.host + ":3000";
 
             $('#nodes').append("<div class='node well well-small span4' id='node" + hostID + "'></div>");
-            $('#node' + hostID).append("<h4>" + obj.host + "</h4><small>" + obj.platform + " - " + obj.status + "</small>");
+            $('#node' + hostID).append("<h4>" + obj.host + " <small> " + obj.platform + " - " + obj.status + "</small></h4>");
             $('#node' + hostID).append("<div class='image text-center' id='image"+ hostID +"'><img src='data:image/gif;base64," + spinnerBase64 + "' style='padding-top: 110px;'/></div>");
             $('#node' + hostID).append("<div class='text-center' id='apilist"+ hostID +"'></div>");
 
@@ -28,7 +28,7 @@
             var currentHostID = hostID;
             var currentScreenShotUrl = screenShotUrl;
 
-            $.getJSON(currentScreenShotUrl, 'width=518&height=350', function (res) {
+            $.getJSON(currentScreenShotUrl, 'width=740&height=500', function (res) {
                 if(fadeOn) {
                     var imgStyle = "display: none;";
                 } else {

@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,31 +62,31 @@ public class GetInfoForPortTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Returns parsed information on a PID occupying a given port",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("(Required) Port to be used", task.getAcceptedParams().get("port"));
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    assertEquals("(Required) Port to be used", task.getAcceptedParams().get("port").getAsString());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 
   @Test
   public void testGetResponseDescription() throws Exception {
     assertEquals("Process name/type (ie java, ruby, etc..)", task.getResponseDescription().get(
-        "process_name"));
-    assertEquals("Process ID", task.getResponseDescription().get("pid"));
-    assertEquals("User who is running process", task.getResponseDescription().get("user"));
-    assertEquals("Port searched for", task.getResponseDescription().get("port"));
-    assertEquals(7, task.getResponseDescription().keySet().size());
+        "process_name").getAsString());
+    assertEquals("Process ID", task.getResponseDescription().get("pid").getAsString());
+    assertEquals("User who is running process", task.getResponseDescription().get("user").getAsString());
+    assertEquals("Port searched for", task.getResponseDescription().get("port").getAsString());
+    assertEquals(7, task.getResponseDescription().entrySet().size());
   }
 
   @Test
   public void testGetJsonResponse() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
       assertEquals(
-          "{\"port\":[\"\"],\"exit_code\":0,\"error\":[],\"process_name\":[\"\"],\"pid\":[\"\"],\"user\":[\"\"],\"out\":[]}",
-          task.getJsonResponse().toString());
+          new JsonParser().parse("{\"port\":[\"\"],\"exit_code\":0,\"error\":[],\"process_name\":[\"\"],\"pid\":[\"\"],\"user\":[\"\"],\"out\":[]}"),
+          task.getJsonResponse().getJson());
     }
   }
 }

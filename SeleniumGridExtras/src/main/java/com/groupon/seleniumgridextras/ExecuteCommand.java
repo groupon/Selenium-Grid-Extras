@@ -37,16 +37,18 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 
 public class ExecuteCommand {
-  public static String execRuntime(String cmd) {
+  public static JsonObject execRuntime(String cmd) {
     return execRuntime(cmd, true);
   }
 
-  public static String execRuntime(String cmd, boolean waitToFinish) {
+  public static JsonObject execRuntime(String cmd, boolean waitToFinish) {
     System.out.println("Starting to execute - " + cmd);
 
     JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
@@ -57,7 +59,7 @@ public class ExecuteCommand {
       process = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
       jsonResponse.addKeyValues("error", "Problems in running " + cmd + "\n" + e.toString());
-      return jsonResponse.toString();
+      return jsonResponse.getJson();
     }
 
     int exitCode;
@@ -69,12 +71,12 @@ public class ExecuteCommand {
       } catch (InterruptedException e) {
 
         jsonResponse.addKeyValues("error", "Interrupted running " + cmd + "\n" + e.toString());
-        return jsonResponse.toString();
+        return jsonResponse.getJson();
       }
     } else {
       System.out.println("Not waiting for finish");
       jsonResponse.addKeyValues("out", "Background process started");
-      return jsonResponse.toString();
+      return jsonResponse.getJson();
     }
 
     try {
@@ -86,11 +88,11 @@ public class ExecuteCommand {
         //Only add error if there is one, this way we have a nice empty array instead of [""]
         jsonResponse.addKeyValues("error", error);
       }
-      return jsonResponse.toString();
+      return jsonResponse.getJson();
     } catch (IOException e) {
       jsonResponse.addKeyValues("error", "Problems reading stdout and stderr from " + cmd + "\n" + e
           .toString());
-      return jsonResponse.toString();
+      return jsonResponse.getJson();
 
     } finally {
       process.destroy();

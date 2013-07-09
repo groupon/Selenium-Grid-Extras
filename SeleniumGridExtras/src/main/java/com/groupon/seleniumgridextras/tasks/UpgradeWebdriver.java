@@ -37,13 +37,10 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.JsonWrapper;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.google.gson.JsonObject;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,8 +50,8 @@ public class UpgradeWebdriver extends ExecuteOSTask {
   public UpgradeWebdriver() {
     setEndpoint("/upgrade_webdriver");
     setDescription("Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart");
-    Map<String, String> params = new HashMap();
-    params.put("version", "(Required) - Version of WebDriver to download, such as 2.33.0");
+    JsonObject params = new JsonObject();
+    params.addProperty("version", "(Required) - Version of WebDriver to download, such as 2.33.0");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -67,40 +64,34 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     addResponseDescription("old_version", "Old version of the jar that got replaced");
     addResponseDescription("new_version", "New version downloaded and reconfigured");
 
-    getJsonResponse().addKeyValues("old_version", RuntimeConfig.getWebdriverVersion());
+    getJsonResponse().addKeyValues("old_version", RuntimeConfig.getConfig().getWebdriver().getVersion());
   }
 
   @Override
-  public String execute() {
+  public JsonObject execute() {
     getJsonResponse().addKeyValues("error", "version parameter is required");
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
 
   @Override
-  public String execute(String version) {
+  public JsonObject execute(String version) {
 
     DownloadWebdriver downloader = new DownloadWebdriver();
-    Map<String, String> result = JsonWrapper.parseJson(downloader.execute(version));
+    JsonObject result = downloader.execute(version);
 
-    if (result.get("error").isEmpty()) {
-      RuntimeConfig.setWebdriverVersion(version);
-      try {
-        RuntimeConfig.saveConfigToFile();
-        getJsonResponse().addKeyValues("new_version", version);
-        return getJsonResponse().toString();
-      } catch (IOException error) {
-        getJsonResponse().addKeyValues("error", error.toString());
-        return getJsonResponse().toString();
-      }
+    if (result.get("error").isJsonNull()) {
+      RuntimeConfig.getConfig().getWebdriver().setVersion(version);
+      RuntimeConfig.getConfig().writeToDisk(RuntimeConfig.getConfigFile());
+      getJsonResponse().addKeyValues("new_version", version);
+      return getJsonResponse().getJson();
     } else {
       getJsonResponse().addKeyValues("error", result.get("error").toString());
-      return getJsonResponse().toString();
+      return getJsonResponse().getJson();
     }
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
-
+  public JsonObject execute(Map<String, String> parameter) {
     if (parameter.isEmpty() || !parameter.containsKey("version")) {
       return execute();
     } else {

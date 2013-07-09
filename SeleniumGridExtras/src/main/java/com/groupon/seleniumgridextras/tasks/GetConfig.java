@@ -34,27 +34,17 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
 package com.groupon.seleniumgridextras.tasks;
 
-
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.RuntimeConfig;
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.google.gson.JsonObject;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class GetConfig extends ExecuteOSTask {
 
-  public GetConfig(){
+  public GetConfig() {
     setEndpoint("/config");
     setDescription("Returns JSON view of the full configuration of the Selenium Grid Extras");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -70,35 +60,12 @@ public class GetConfig extends ExecuteOSTask {
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
   }
 
-
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
-    readConfigFile(RuntimeConfig.getConfigFile());
-
-    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig());
+    getJsonResponse().addKeyValues("config_runtime", RuntimeConfig.getConfig().toPrettyJsonString());
     getJsonResponse().addKeyValues("filename", RuntimeConfig.getConfigFile());
 
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
   }
-
-  private void readConfigFile(String filename) {
-    String returnString = "";
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(filename));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        returnString = returnString + line;
-      }
-
-      getJsonResponse().addKeyValues("config_file", returnString, false);
-
-    } catch (FileNotFoundException error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-    } catch (IOException error) {
-      getJsonResponse().addKeyValues("error", error.toString());
-    }
-
-  }
-
 }

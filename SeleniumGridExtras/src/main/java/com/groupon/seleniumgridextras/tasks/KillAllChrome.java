@@ -37,21 +37,17 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonWrapper;
 import com.groupon.seleniumgridextras.OSChecker;
-
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 public class KillAllChrome extends KillAllByName {
 
   public KillAllChrome() {
     setEndpoint("/kill_chrome");
     setDescription("Executes os level kill command on all instance of Google Chrome");
-    Map<String, String> params = new HashMap();
+    JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -63,7 +59,7 @@ public class KillAllChrome extends KillAllByName {
 
 
   @Override
-  public String execute(String param) {
+  public JsonObject execute(String param) {
 
     if (OSChecker.isWindows()) {
       return killChromeOnWindows();
@@ -73,19 +69,17 @@ public class KillAllChrome extends KillAllByName {
   }
 
 
-  private String killChromeOnLinux(){
+  private JsonObject killChromeOnLinux() {
     return ExecuteCommand.execRuntime(getLinuxCommand("[Cc]hrome"));
   }
 
-  private String killChromeOnWindows(){
+  private JsonObject killChromeOnWindows() {
 
-    Map<String, Object> killBrowserResult = JsonWrapper.parseJson(
-        ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe")));
+    JsonObject killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe"));
 
-    Map<String, Object> killDriverResult = JsonWrapper.parseJson(ExecuteCommand.execRuntime(
-        getWindowsKillCommand("chromedriver.exe")));
+    JsonObject killDriverResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chromedriver.exe"));
 
-    List<Map> response = new LinkedList<Map>();
+    JsonArray response = new JsonArray();
     response.add(killBrowserResult);
     response.add(killDriverResult);
 
@@ -96,7 +90,7 @@ public class KillAllChrome extends KillAllByName {
       getJsonResponse().addKeyValues("error", response);
     }
 
-    return getJsonResponse().toString();
+    return getJsonResponse().getJson();
 
   }
 }

@@ -37,7 +37,8 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import java.util.HashMap;
+import com.google.gson.JsonObject;
+
 import java.util.Map;
 
 public class KillAllByName extends ExecuteOSTask {
@@ -45,8 +46,8 @@ public class KillAllByName extends ExecuteOSTask {
   public KillAllByName() {
     setEndpoint("/kill_all_by_name");
     setDescription("Executes os level kill command on a given PID name");
-    Map<String, String> params = new HashMap();
-    params.put("name", "Name of process");
+    JsonObject params = new JsonObject();
+    params.addProperty("name", "Name of process");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -68,7 +69,7 @@ public class KillAllByName extends ExecuteOSTask {
   }
 
   @Override
-  public String execute(Map<String, String> parameter) {
+  public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey("name")) {
       return execute(parameter.get("name").toString());
     }
@@ -77,11 +78,11 @@ public class KillAllByName extends ExecuteOSTask {
 
 
   protected String getWindowsKillCommand(String parameter) {
-    return "taskkill -F -IM "  + parameter;
+    return "taskkill -F -IM " + parameter;
   }
 
   protected String getLinuxKillCommand(String parameter) {
-    return "killall -v -m "  + parameter;
+    return "killall -v -m " + parameter;
   }
 
 

@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.MoveMouse;
 import org.junit.Before;
@@ -44,7 +45,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-
 
 import static org.junit.Assert.assertEquals;
 
@@ -65,7 +65,7 @@ public class MoveMouseTest {
   @Test
   public void testGetDescription() throws Exception {
     assertEquals("Moves the computers mouse to x and y location. (Default 0,0)",
-                 task.getDescription());
+        task.getDescription());
   }
 
   @Test
@@ -77,37 +77,37 @@ public class MoveMouseTest {
 
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
 
-      assertEquals("{\"exit_code\":0,\"error\":[],\"y\":20,\"x\":20,\"out\":[]}",
-                   task.execute(foo));
+      assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":20,\"x\":20,\"out\":[]}"),
+          task.execute(foo));
     }
   }
 
   @Test
   public void testExecuteNoParam() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
-      assertEquals("{\"exit_code\":0,\"error\":[],\"y\":0,\"x\":0,\"out\":[]}", task.execute());
+      assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":0,\"x\":0,\"out\":[]}"), task.execute());
     }
   }
 
   @Test
   public void testGetJsonResponse() throws Exception {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
-      assertEquals("{\"exit_code\":0,\"error\":[],\"y\":[\"\"],\"x\":[\"\"],\"out\":[]}",
-                   task.getJsonResponse().toString());
+      assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":[\"\"],\"x\":[\"\"],\"out\":[]}"),
+          task.getJsonResponse().getJson());
 
       assertEquals("Current Y postion of the mouse",
 
-                   task.getJsonResponse().getKeyDescriptions().get("y"));
+          task.getJsonResponse().getKeyDescriptions().get("y").getAsString());
       assertEquals("Current X postion of the mouse",
-                   task.getJsonResponse().getKeyDescriptions().get("x"));
+          task.getJsonResponse().getKeyDescriptions().get("x").getAsString());
 
     }
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
-    assertEquals("X - Coordinate", task.getAcceptedParams().get("x"));
-    assertEquals("Y - Coordinate", task.getAcceptedParams().get("y"));
-    assertEquals(2, task.getAcceptedParams().keySet().size());
+    assertEquals("X - Coordinate", task.getAcceptedParams().get("x").getAsString());
+    assertEquals("Y - Coordinate", task.getAcceptedParams().get("y").getAsString());
+    assertEquals(2, task.getAcceptedParams().entrySet().size());
   }
 }

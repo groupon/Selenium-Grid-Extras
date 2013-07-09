@@ -37,12 +37,13 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonParser;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
-import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
 
 import java.io.File;
 
@@ -54,9 +55,8 @@ public class DownloadWebdriverTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfig("download_test.json");
-    WriteDefaultConfigs.writeConfig(RuntimeConfig.getConfigFile(), false);
-    RuntimeConfig.loadConfig();
+    RuntimeConfig.setConfigFile("download_test.json");
+    RuntimeConfig.loadDefaults();
     task = new DownloadWebdriver();
   }
 
@@ -65,7 +65,6 @@ public class DownloadWebdriverTest {
     File config = new File(RuntimeConfig.getConfigFile());
     config.delete();
   }
-
 
   @Test
   public void testGetEndpoint() throws Exception {
@@ -77,20 +76,18 @@ public class DownloadWebdriverTest {
     assertEquals("Downloads a version of WebDriver jar to local machine", task.getDescription());
   }
 
-
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        "{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"source_url\":[\"\"],\"root_dir\":[\"\\/tmp\\/webdriver\"],\"file_full_path\":[\""
-        + RuntimeConfig.getSeleniungGridExtrasHomePath().replaceAll("/", "\\\\/") + "\"],\"out\":[]}",
+        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver\"],\"file\":[\"\"],\"file_full_path\":[\"/Users/dima/projects/grid/Selenium-Grid-Extras/SeleniumGridExtras/target/classes/\"],\"source_url\":[\"\"]}",
         task.getJsonResponse().toString());
   }
 
   @Test
   public void testGetAcceptedParams() throws Exception {
     assertEquals("Version of WebDriver to download, such as 2.33.0",
-                 task.getAcceptedParams().get("version"));
+        task.getAcceptedParams().get("version").getAsString());
 
-    assertEquals(1, task.getAcceptedParams().keySet().size());
+    assertEquals(1, task.getAcceptedParams().entrySet().size());
   }
 }
