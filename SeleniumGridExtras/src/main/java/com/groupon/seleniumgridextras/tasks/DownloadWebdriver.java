@@ -41,18 +41,9 @@ package com.groupon.seleniumgridextras.tasks;
 import com.groupon.seleniumgridextras.Downloader;
 import com.groupon.seleniumgridextras.WdDownloader;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
-
 import java.io.File;
-
 import com.google.gson.JsonObject;
-
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-
-import org.apache.commons.io.FileUtils;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import java.util.Map;
 
@@ -86,7 +77,6 @@ public class DownloadWebdriver extends ExecuteOSTask {
   }
 
   @Override
-
   public JsonObject execute() {
     return execute(RuntimeConfig.getConfig().getWebdriver().getVersion());
   }

@@ -37,7 +37,6 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
