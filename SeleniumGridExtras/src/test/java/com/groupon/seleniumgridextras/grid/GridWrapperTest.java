@@ -43,6 +43,8 @@ import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.driver.DriverInfo;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +57,7 @@ import static org.junit.Assert.assertEquals;
 public class GridWrapperTest {
 
   public static Config.GridInfo gridConfig;
-  public static Config.WebDriver wdConfig;
+  public static DriverInfo wdConfig;
   public static String wdVersion;
   public static String wdHome;
 

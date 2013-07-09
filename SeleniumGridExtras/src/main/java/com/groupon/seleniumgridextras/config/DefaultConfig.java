@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.config;
 import com.groupon.seleniumgridextras.OSChecker;
 
 public class DefaultConfig {
+
   private static Config config;
 
   public static Config getDefaultConfig() {
@@ -51,6 +52,7 @@ public class DefaultConfig {
     loadGridConfig();
     loadSharedDir();
     loadWebDriverInfo();
+    loadIEDriverInfo();
     loadConfigVersion();
 
     return config;
@@ -74,7 +76,7 @@ public class DefaultConfig {
   private static void loadWebDriverInfo() {
     String tmpDir;
 
-    if (OSChecker.isWindows()){
+    if (OSChecker.isWindows()) {
       tmpDir = "\\";
     } else {
       tmpDir = "/tmp/";
@@ -83,6 +85,20 @@ public class DefaultConfig {
     config.getWebdriver().setDirectory(tmpDir + "webdriver");
     config.getWebdriver().setVersion("2.33.0");
   }
+
+  private static void loadIEDriverInfo() {
+    String tmpDir;
+
+    if (OSChecker.isWindows()) {
+      tmpDir = "\\webdriver\\";
+    } else {
+      tmpDir = "/tmp/webdriver/";
+    }
+
+    config.getIEdriver().setDirectory(tmpDir + "iedriver");
+    config.getIEdriver().setVersion("2.33.0");
+  }
+
 
   private static void loadEnabledPlugins() {
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
@@ -125,7 +141,8 @@ public class DefaultConfig {
   private static void setGridHubConfig() {
     config.getGrid().getHub().setRole("hub");
     config.getGrid().getHub().setPort("4444");
-    config.getGrid().getHub().setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
+    config.getGrid().getHub()
+        .setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")) {
@@ -144,7 +161,8 @@ public class DefaultConfig {
     if (!hostIp.equals("")) {
       config.getGrid().getNode().setHost(hostIp);
     }
-    config.getGrid().getNode().setProxy("com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
+    config.getGrid().getNode()
+        .setProxy("com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
   }
 
   private static void loadSharedDir() {

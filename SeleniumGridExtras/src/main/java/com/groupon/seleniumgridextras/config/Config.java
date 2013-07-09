@@ -5,6 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
+
+import com.groupon.seleniumgridextras.config.driver.IEDriver;
+import com.groupon.seleniumgridextras.config.driver.WebDriver;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -20,7 +24,8 @@ public class Config {
   private List<String> setup;
   private List<String> teardown;
   private GridInfo grid;
-  private WebDriver webdriver;
+  private WebDriver webdriver = new WebDriver();
+  private IEDriver iedriver = new IEDriver();
 
   public Config() {
     activated_modules = new ArrayList<String>();
@@ -53,6 +58,10 @@ public class Config {
 
   public GridInfo getGrid() {
     return grid;
+  }
+
+  public IEDriver getIEdriver() {
+    return iedriver;
   }
 
   public WebDriver getWebdriver() {
@@ -116,6 +125,7 @@ public class Config {
   }
 
   public class GridInfo {
+
     private int auto_start_hub;
     private int auto_start_node;
     private String default_role;
@@ -160,6 +170,7 @@ public class Config {
     }
 
     public class Node implements GridRole {
+
       @SerializedName("-port")
       private String port;
       @SerializedName("-hub")
@@ -195,7 +206,8 @@ public class Config {
 
       @Override
       public String getStartCommand() {
-        return "-role " + role + " -port " + port + " -host " + host + " -hub " + hub + " -nodeTimeout " + nodeTimeout + " -maxSession " + maxSession + " -proxy " + proxy;
+        return "-role " + role + " -port " + port + " -host " + host + " -hub " + hub
+               + " -nodeTimeout " + nodeTimeout + " -maxSession " + maxSession + " -proxy " + proxy;
       }
 
       public String getHub() {
@@ -240,6 +252,7 @@ public class Config {
     }
 
     public class Hub implements GridRole {
+
       @SerializedName("-port")
       private String port;
       @SerializedName("-host")
@@ -291,31 +304,8 @@ public class Config {
 
   }
 
-  public class WebDriver {
-    private String directory;
-    private String version;
 
-    public WebDriver() {
-    }
-
-    public String getDirectory() {
-      return directory;
-    }
-
-    public void setDirectory(String directory) {
-      this.directory = directory;
-    }
-
-    public String getVersion() {
-      return version;
-    }
-
-    public void setVersion(String version) {
-      this.version = version;
-    }
-  }
-
-  public JsonObject asJsonObject(){
+  public JsonObject asJsonObject() {
     return (JsonObject) new JsonParser().parse(this.toJsonString());
   }
 
