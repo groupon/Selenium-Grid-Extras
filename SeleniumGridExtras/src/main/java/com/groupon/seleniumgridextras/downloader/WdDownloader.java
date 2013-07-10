@@ -35,14 +35,14 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.downloader;
 
-import com.groupon.seleniumgridextras.grid.GridWrapper;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class WdDownloader extends Downloader {
 
   public WdDownloader(String version) {
-    setDestinationDir(GridWrapper.getWebdriverHome());
+    setDestinationDir(RuntimeConfig.getConfig().getWebdriver().getDirectory());
     setDestinationFile(version + ".jar");
 
     setSourceURL(

@@ -38,8 +38,8 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-import com.groupon.seleniumgridextras.Downloader;
-import com.groupon.seleniumgridextras.WdDownloader;
+import com.groupon.seleniumgridextras.downloader.Downloader;
+import com.groupon.seleniumgridextras.downloader.WdDownloader;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import java.io.File;
 import com.google.gson.JsonObject;

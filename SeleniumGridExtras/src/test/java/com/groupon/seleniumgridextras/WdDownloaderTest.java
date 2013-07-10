@@ -39,6 +39,8 @@
 package com.groupon.seleniumgridextras;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.downloader.Downloader;
+import com.groupon.seleniumgridextras.downloader.WdDownloader;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 
 import org.junit.After;
