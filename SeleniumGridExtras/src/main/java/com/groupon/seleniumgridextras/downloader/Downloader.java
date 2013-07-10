@@ -35,7 +35,7 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.downloader;
 
 import org.apache.commons.io.FileUtils;
 
@@ -53,16 +53,7 @@ public abstract class Downloader {
 
 
   public boolean download(){
-    try {
-      URL url = new URL(sourceURL);
-      FileUtils.copyURLToFile(url, getDestinationFileFullPath());
-      return true;
-    } catch (MalformedURLException error){
-      errorMessage = error.toString();
-    } catch (IOException error) {
-      errorMessage = error.toString();
-    }
-    return false;
+    return startDownload();
   }
 
   public File getDestinationFileFullPath(){
@@ -87,6 +78,19 @@ public abstract class Downloader {
 
   public String getErrorMessage(){
     return errorMessage;
+  }
+
+  protected boolean startDownload(){
+    try {
+      URL url = new URL(sourceURL);
+      FileUtils.copyURLToFile(url, getDestinationFileFullPath());
+      return true;
+    } catch (MalformedURLException error){
+      errorMessage = error.toString();
+    } catch (IOException error) {
+      errorMessage = error.toString();
+    }
+    return false;
   }
 
   public abstract void setSourceURL(String source);
