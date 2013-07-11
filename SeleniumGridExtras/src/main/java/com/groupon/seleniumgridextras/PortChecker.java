@@ -82,8 +82,8 @@ public class PortChecker {
     info.addProperty("out", status.toString());
 
     for (JsonElement line : status) {
-      System.out.println(line.toString());
-      Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(line.getAsString());
+      Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(
+          line.getAsString());
       if (m.find()) {
         info.addProperty("process", m.group(1));
         info.addProperty("pid", m.group(2));

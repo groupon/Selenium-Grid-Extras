@@ -77,7 +77,7 @@ public class StartGrid extends ExecuteOSTask {
       String servicePort = GridWrapper.getGridConfigPortForRole(role);
       JsonObject occupiedPid = PortChecker.getParsedPortInfo(servicePort);
 
-      if (!occupiedPid.isJsonNull()) {
+      if (occupiedPid.has("pid")) {
         System.out.println(servicePort + " port is busy, won't try to start a service");
         getJsonResponse().addKeyValues("error", "Port: " + servicePort
             + " is occupied by some other process: "
