@@ -44,7 +44,7 @@ describe "GetConfig.java" do
 
   
   it "should have file match current runtime config" do
-    @expected_from_file.should == @response["config_runtime"]
+    @response["config_runtime"].should == @expected_from_file
   end
   
 
