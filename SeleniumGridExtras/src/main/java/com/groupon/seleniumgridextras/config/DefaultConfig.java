@@ -45,14 +45,14 @@ public class DefaultConfig {
   public static Config getDefaultConfig() {
     config = new Config();
 
+    loadWebDriverInfo();
+    loadIEDriverInfo();
     loadDisabledPlugins();
     loadEnabledPlugins();
     loadSetupConfig();
     loadTeardownConfig();
     loadGridConfig();
     loadSharedDir();
-    loadWebDriverInfo();
-    loadIEDriverInfo();
     loadConfigVersion();
 
     return config;
