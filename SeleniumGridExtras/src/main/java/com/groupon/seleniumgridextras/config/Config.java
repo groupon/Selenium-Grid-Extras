@@ -185,6 +185,12 @@ public class Config {
       private int maxSession;
       @SerializedName("-proxy")
       private String proxy;
+      @SerializedName("-Dwebdriver.ie.driver")
+      private String ieDriver;
+
+      public void setIeDriver(String ieDriverPath){
+        this.ieDriver = ieDriverPath;
+      }
 
       @Override
       public String getPort() {
@@ -206,8 +212,14 @@ public class Config {
 
       @Override
       public String getStartCommand() {
-        return "-role " + role + " -port " + port + " -host " + host + " -hub " + hub
-               + " -nodeTimeout " + nodeTimeout + " -maxSession " + maxSession + " -proxy " + proxy;
+        String command = "-role " + role + " -port " + port + " -host " + host + " -hub " + hub
+                         + " -nodeTimeout " + nodeTimeout + " -maxSession " + maxSession + " -proxy " + proxy;
+
+        if(ieDriver != null){
+          command = command + " -Dwebdriver.ie.driver=" + ieDriver;
+        }
+
+        return command;
       }
 
       public String getHub() {

@@ -123,6 +123,7 @@ public class DefaultConfig {
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGrid");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetConfig");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGridExtras");
+    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
   }
 
   private static void loadDisabledPlugins() {
@@ -164,6 +165,12 @@ public class DefaultConfig {
     }
     config.getGrid().getNode()
         .setProxy("com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
+
+    if (OSChecker.isWindows()) {
+      config.getGrid().getNode().setIeDriver(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
+    }
+
+
   }
 
   private static void loadSharedDir() {

@@ -166,13 +166,17 @@ public class StartGridTest {
 
   @Test
   public void testGetWindowsNodeCommand() throws Exception {
+
+    RuntimeConfig.getConfig().getGrid().getNode().setIeDriver("\\webdriver\\iedriver\\foo.exe");
+
     String
         expectedCommand =
         "java -cp replaced-for-now-;\\tmp\\webdriver\\2.33.0.jar  " +
         "org.openqa.grid.selenium.GridLauncher -role wd -port 4445 " +
         "-host " + RuntimeConfig.getCurrentHostIP()
         + " -hub http://localhost:4444 -nodeTimeout 240 -maxSession 1 " +
-        "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
+        "-proxy com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy " +
+        "-Dwebdriver.ie.driver=\\webdriver\\iedriver\\foo.exe";
 
     assertEquals("powershell.exe /c \"Start-Process " + nodeBatch + "\"",
         task.getWindowsCommand("node"));
