@@ -41,6 +41,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
+import java.io.File;
 
 public class KillAllIE extends KillAllByName {
 
@@ -83,7 +86,9 @@ public class KillAllIE extends KillAllByName {
 
     JsonObject killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe"));
 
-    JsonObject killDriverResult = ExecuteCommand.execRuntime(getWindowsKillCommand("IEDriverServer.exe"));
+    File ieDriverName = new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
+
+    JsonObject killDriverResult = ExecuteCommand.execRuntime(getWindowsKillCommand(ieDriverName.getName()));
 
     JsonArray response = new JsonArray();
     response.add(killBrowserResult);
