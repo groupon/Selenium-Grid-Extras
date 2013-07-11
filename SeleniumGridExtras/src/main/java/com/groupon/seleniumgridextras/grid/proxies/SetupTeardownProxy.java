@@ -66,12 +66,18 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   @Override
   public void beforeSession(TestSession session) {
     super.beforeSession(session);
+    Map<String,Object> cap =session.getRequestedCapabilities();
+    if(cap.get(CapabilityType.BROWSER_NAME).equals("internet explorer"))
+        callAction(session,"kill_ie"); //kill IE if starting IE
     callAction(session, "setup");
   }
 
   @Override
   public void afterSession(TestSession session) {
     super.afterSession(session);
+    Map<String,Object> cap =session.getRequestedCapabilities();
+    if(cap.get(CapabilityType.BROWSER_NAME).equals("internet explorer"))
+        callAction(session,"kill_ie"); //kill IE if starting IE
     callAction(session, "teardown");
   }
 
