@@ -78,21 +78,28 @@ public class IEDownloader extends Downloader {
 
   @Override
   public boolean download() {
-    Boolean foo = startDownload();
+    Boolean downloaded = startDownload();
+    String zipPath = destinationDir + "/" + destinationFile;
 
-    if (foo) {
-      Boolean bar = Unzipper.unzip(destinationDir + "/" + destinationFile,
-                     RuntimeConfig.getConfig().getIEdriver().getDirectory());
+    if (downloaded) {
+      Boolean unzippied = Unzipper.unzip(zipPath,
+                                         RuntimeConfig.getConfig().getIEdriver().getDirectory());
 
-      if (bar){
+      if (unzippied) {
+
+        File zip = new File(zipPath);
+        zip.delete();
+
         setDestinationFile(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
         File
-            exe = new File(RuntimeConfig.getConfig().getIEdriver().getDirectory() + "/IEDriverServer.exe");
+            exe =
+            new File(
+                RuntimeConfig.getConfig().getIEdriver().getDirectory() + "/IEDriverServer.exe");
         exe.renameTo(new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath()));
+        return true;
       }
     }
-
-    return foo;
+    return false;
   }
 
 }
