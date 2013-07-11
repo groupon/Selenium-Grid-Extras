@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.downloader;
 
+import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.io.File;
@@ -45,17 +46,20 @@ import java.io.File;
 public class IEDownloader extends Downloader {
 
   private String bit;
+  private String version;
 
   public IEDownloader(String version, String bitVersion) {
     setDestinationDir(RuntimeConfig.getConfig().getIEdriver().getDirectory());
-    setDestinationFile(version + bitVersion + ".zip");
 
+    setVersion(version);
     setBitVersion(bitVersion);
 
-    setSourceURL(
-        "https://selenium.googlecode.com/files/IEDriverServer_" + bit + "_" + version + ".zip");
-  }
+    setDestinationFile(getVersion() + getBitVersion() + ".zip");
 
+    setSourceURL(
+        "https://selenium.googlecode.com/files/IEDriverServer_" + getBitVersion() + "_"
+        + getVersion() + ".zip");
+  }
 
   @Override
   public void setSourceURL(String source) {
@@ -76,6 +80,19 @@ public class IEDownloader extends Downloader {
     this.bit = bitVersion;
   }
 
+  public String getBitVersion() {
+    return bit;
+  }
+
+  public void setVersion(String version) {
+    this.version = version;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+
   @Override
   public boolean download() {
     Boolean downloaded = startDownload();
@@ -90,12 +107,23 @@ public class IEDownloader extends Downloader {
         File zip = new File(zipPath);
         zip.delete();
 
-        setDestinationFile(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
+        String slash = "\\";
+
+        if (!OSChecker.isWindows()) {
+          slash = "/";
+        }
+
+        String destinationFilePath = RuntimeConfig.getConfig().getIEdriver().getDirectory();
+
+        destinationFilePath =
+            destinationFilePath + slash + getBitVersion() + "_" + getVersion() + ".exe";
+
+        setDestinationFile(destinationFilePath);
         File
             exe =
             new File(
                 RuntimeConfig.getConfig().getIEdriver().getDirectory() + "/IEDriverServer.exe");
-        exe.renameTo(new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath()));
+        exe.renameTo(new File(destinationFilePath));
         return true;
       }
     }
