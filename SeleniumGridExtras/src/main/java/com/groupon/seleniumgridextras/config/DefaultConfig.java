@@ -167,7 +167,7 @@ public class DefaultConfig {
         .setProxy("com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
 
     if (OSChecker.isWindows()) {
-      config.getGrid().getNode().setIeDriver(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
+      config.getGrid().getNode().setIeDriver(config.getIEdriver().getExecutablePath());
     }
 
 
