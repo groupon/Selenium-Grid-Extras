@@ -100,13 +100,14 @@ public class SeleniumGridExtras {
     if (RuntimeConfig.getConfig().getGrid().getAutoStartHub()) {
       System.out.println("=== Grid Hub was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
-      String value = grid.execute("hub").getAsString();
+      System.out.println(grid.execute("hub").toString().toString());
+
     }
 
     if (RuntimeConfig.getConfig().getGrid().getAutoStartNode()) {
       System.out.println("=== Grid Node was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
-      String value = grid.execute("node").getAsString();
+      System.out.println(grid.execute("node").toString().toString());
     }
 
     context.getFilters().add(new ParameterFilter());
