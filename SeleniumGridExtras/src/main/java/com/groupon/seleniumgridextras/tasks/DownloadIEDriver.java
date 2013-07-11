@@ -42,14 +42,13 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.IEDownloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
 
 import java.io.File;
 import java.util.Map;
 
 public class DownloadIEDriver extends ExecuteOSTask {
 
-  private String bit;
+  private String bit = "Win32";
 
   public DownloadIEDriver() {
     setEndpoint("/download_iedriver");
@@ -79,7 +78,6 @@ public class DownloadIEDriver extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    this.bit = "Win32";
     return execute(RuntimeConfig.getConfig().getIEdriver().getVersion());
   }
 
