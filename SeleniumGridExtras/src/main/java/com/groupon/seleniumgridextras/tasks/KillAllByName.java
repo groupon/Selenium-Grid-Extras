@@ -37,9 +37,9 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.google.gson.JsonObject;
-
 import java.util.Map;
+
+import com.google.gson.JsonObject;
 
 public class KillAllByName extends ExecuteOSTask {
 
@@ -62,6 +62,15 @@ public class KillAllByName extends ExecuteOSTask {
     return getWindowsKillCommand(parameter);
   }
 
+  @Override
+  public String getMacCommand(String parameter) {
+    return getMacKillCommand(parameter);
+  }
+  
+  @Override
+  public String getMacCommand() {
+    return getMacKillCommand("");
+  }  
 
   @Override
   public String getLinuxCommand(String parameter) {
@@ -82,8 +91,11 @@ public class KillAllByName extends ExecuteOSTask {
   }
 
   protected String getLinuxKillCommand(String parameter) {
-    return "killall -v -m " + parameter;
+    return "killall -v -r " + parameter;
   }
 
-
+  protected String getMacKillCommand(String parameter) {
+    return "killall -v -m " + parameter;	  
+  }
+  
 }

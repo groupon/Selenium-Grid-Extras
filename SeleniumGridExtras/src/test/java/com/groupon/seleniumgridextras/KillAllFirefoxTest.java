@@ -55,8 +55,8 @@ public class KillAllFirefoxTest {
   public void setUp() throws Exception {
     task = new KillAllFirefox();
     windowsCommand = "taskkill -F -IM firefox.exe";
-    linuxCommnad = "killall -v -m [Ff]irefox";
-    macCommand = linuxCommnad;
+    linuxCommnad = "killall -v -r [Ff]irefox";
+    macCommand = "killall -v -m [Ff]irefox";
   }
 
   @Test
@@ -78,4 +78,9 @@ public class KillAllFirefoxTest {
   public void testgetLinuxCommand() throws Exception {
     assertEquals(linuxCommnad, task.getLinuxCommand());
   }
+  
+  @Test
+  public void testgetMacCommand() throws Exception {
+    assertEquals(macCommand, task.getMacCommand());
+  } 
 }
