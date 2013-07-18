@@ -56,8 +56,8 @@ public class KillAllByNameTest {
   public void setUp() throws Exception {
     task = new KillAllByName();
     windowsCommand = "taskkill -F -IM test";
-    linuxCommnad = "killall -v -m test";
-    macCommand = linuxCommnad;
+    linuxCommnad = "killall -v -r test";
+    macCommand = "killall -v -m test";
   }
 
   @Test
@@ -101,6 +101,6 @@ public class KillAllByNameTest {
 
   @Test
   public void testGetNotWindowsCommand() throws Exception {
-    assertEquals("killall -v -m test", task.getLinuxCommand("test"));
+    assertEquals("killall -v -r test", task.getLinuxCommand("test"));
   }
 }
