@@ -1,3 +1,5 @@
+1.1.9 - Auto download IEDriver.exe
+      - Allow user to change Protected mode for IE via end-point
 1.1.8 - Nodes started from withing Grid now auto kill IE and move mouse
 1.1.7 - Killing IE and Chrome now also kills respective driver.exe
 1.1.6 - Fix the bug with path to SE Extras not being properly printed in -cp
