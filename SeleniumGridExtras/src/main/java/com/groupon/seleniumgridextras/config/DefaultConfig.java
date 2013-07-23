@@ -122,6 +122,7 @@ public class DefaultConfig {
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetConfig");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGridExtras");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
+    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
   }
 
   private static void loadDisabledPlugins() {

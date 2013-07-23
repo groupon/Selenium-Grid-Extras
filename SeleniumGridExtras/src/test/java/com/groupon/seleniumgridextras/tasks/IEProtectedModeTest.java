@@ -41,8 +41,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
 
 
 public class IEProtectedModeTest {
@@ -60,13 +61,32 @@ public class IEProtectedModeTest {
   }
 
   @Test
-  public void testGetGetPropertyCommand(){
-    assertEquals("powershell.exe /c \"Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%03d' -Name 2500 | %{ Write-Host $_.'2500' }\"", task.getGetPropertyCommand());
+  public void testZonesHashMap() {
+    HashMap<String, String> expected = new HashMap<String, String>() {
+      {
+        put("1", "Internet");
+        put("2", "Local Intranet");
+        put("3", "Trusted Sites");
+        put("4", "Restricted Sites");
+      }
+    };
+    assertEquals(expected, task.getZones());
+  }
+
+
+  @Test
+  public void testGetCurrentStateCommand() {
+    assertEquals(
+        "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\500",
+        task.getCurrentSettingForZone("500"));
   }
 
   @Test
-  public void testGetSetPropertyCommand(){
-    assertEquals("powershell.exe /c \"Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%03d' -Name 2500 -Value %03d \"", task.getSetPropertyCommand());
+  public void testSetCurrentStateCommand() {
+    assertEquals(
+        "powershell.exe /c \"Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\5' -Name 2500 -Value 3",
+        task.setCurrentSettingForZone("5", "3"));
   }
+
 
 }
