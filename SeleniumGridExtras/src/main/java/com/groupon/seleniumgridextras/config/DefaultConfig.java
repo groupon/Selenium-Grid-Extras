@@ -144,7 +144,7 @@ public class DefaultConfig {
     config.getGrid().getHub().setRole("hub");
     config.getGrid().getHub().setPort("4444");
     config.getGrid().getHub()
-        .setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
+        .setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet,com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")) {
