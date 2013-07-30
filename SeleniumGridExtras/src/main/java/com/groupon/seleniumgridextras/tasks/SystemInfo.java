@@ -41,8 +41,10 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.PortChecker;
-import com.groupon.seleniumgridextras.windows.WindowsSystemInfo;
+import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
+import com.groupon.seleniumgridextras.os.MacSystemInfo;
+import com.groupon.seleniumgridextras.os.OSInfo;
+import com.groupon.seleniumgridextras.os.WindowsSystemInfo;
 
 import java.util.Map;
 
@@ -71,7 +73,15 @@ public class SystemInfo extends ExecuteOSTask {
   public JsonObject execute() {
 
     try {
-      WindowsSystemInfo info = new WindowsSystemInfo();
+      OSInfo info;
+
+      if (OSChecker.isWindows()) {
+        info = new WindowsSystemInfo();
+      } else if (OSChecker.isMac()) {
+         info = new MacSystemInfo();
+      } else {
+        info = new LinuxSystemInfo();
+      }
 
       getJsonResponse().addListOfHashes("drives", info.getDiskInfo());
       getJsonResponse().addKeyValues("processor", info.getProcessorInfo());

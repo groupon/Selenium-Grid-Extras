@@ -35,38 +35,72 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras.tasks;
-
+package com.groupon.seleniumgridextras.os;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.ExecuteCommand;
 
+import java.util.List;
 import java.util.Map;
 
-public class Netstat extends ExecuteOSTask {
+public class MacSystemInfo implements OSInfo {
 
-  public Netstat() {
-    setEndpoint("/netstat");
-    setDescription("Returns a system call for all ports. Use /port_info to get parsed details");
-    JsonObject params = new JsonObject();
-    setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-info");
-    setButtonText("netstat");
-    setEnabledInGui(true);
+  private String memoryLine;
+  private String cpuLine;
+  private String[] lines;
+  private String top;
+  private String df;
+
+  public MacSystemInfo() {
+    top = ExecuteCommand.execRuntime("top -l 1").get("out").toString();
+    lines = top.split("\",\"");
+    memoryLine = lines[6];
+    cpuLine = lines[3];
+
+
+
+  }
+
+  public String[] foo() {
+    return lines;
+  }
+
+
+  @Override
+  public List<Map<String, String>> getDiskInfo() throws Exception {
+    return UnixDFParser.getSystemDrives().toPreJsonArray();
   }
 
   @Override
-  public JsonObject execute() {
-    return PortChecker.getPortInfo("");
+  public Map<String, String> getProcessorInfo() throws Exception {
+    String
+        coreCount =
+        ExecuteCommand.execRuntime("sysctl hw.ncpu").get("out").toString()
+            .replaceAll("hw.ncpu:\\s*", "");
+    Float idle = Float.parseFloat(cpuLine.split(" ")[6].replaceAll("\\%", ""));
+
+    Processor processor = new Processor();
+    processor.setCoreCount(coreCount);
+    processor.setLoad(Float.toString(100 - idle));
+
+    return processor.toHash();
   }
 
   @Override
-  public JsonObject execute(Map<String, String> parameter) {
-    return execute();
+  public Map<String, String> getMemoryInfo() throws Exception {
+//    top -l 1? | grep PhysMem | awk '{print $8}' -- used
+    //top -l 1 | grep PhysMem | awk '{print $10}'
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
+  @Override
+  public String getSystemUptime() throws Exception {
+
+    JsonObject val = ExecuteCommand.execRuntime("sysctl -n kern.boottime | cut -c14-18");
+
+    String[] foo = val.toString().split(" ");
+
+    return foo[3].replaceAll(",", "");
+  }
 }

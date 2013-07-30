@@ -34,39 +34,46 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
+package com.groupon.seleniumgridextras.os;
 
-package com.groupon.seleniumgridextras.tasks;
+import org.junit.Test;
+
+import org.junit.Before;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import com.groupon.seleniumgridextras.os.MacSystemInfo;
 
 
-import com.google.gson.JsonObject;
+public class MacSystemInfoTest {
 
-import com.groupon.seleniumgridextras.PortChecker;
+  public OSInfo info;
 
-import java.util.Map;
-
-public class Netstat extends ExecuteOSTask {
-
-  public Netstat() {
-    setEndpoint("/netstat");
-    setDescription("Returns a system call for all ports. Use /port_info to get parsed details");
-    JsonObject params = new JsonObject();
-    setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-info");
-    setButtonText("netstat");
-    setEnabledInGui(true);
+  @Before
+  public void setUp() throws Exception {
+    info = new MacSystemInfo();
   }
 
-  @Override
-  public JsonObject execute() {
-    return PortChecker.getPortInfo("");
+  @Test
+  public void testGetDiskInfo() throws Exception {
+
   }
 
-  @Override
-  public JsonObject execute(Map<String, String> parameter) {
-    return execute();
+  @Test
+  public void testGetProcessorInfo() throws Exception {
+    assertNotEquals("", info.getProcessorInfo().get("cores"));
+    assertEquals("N/A", info.getProcessorInfo().get("processors"));
+    assertNotEquals("", info.getProcessorInfo().get("load"));
   }
 
+  @Test
+  public void testGetMemoryInfo() throws Exception {
+//     assertEquals("", info.getDiskInfo());
+  }
+
+  @Test
+  public void testGetSystemUptime() throws Exception {
+    assertNotEquals("", info.getSystemUptime());
+  }
 }

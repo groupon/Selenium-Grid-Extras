@@ -35,17 +35,13 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras.windows;
-
-import com.groupon.seleniumgridextras.os.AllDiskDrives;
-import com.groupon.seleniumgridextras.os.DiskDrive;
-import com.groupon.seleniumgridextras.os.Processor;
-import com.groupon.seleniumgridextras.os.RAM;
+package com.groupon.seleniumgridextras.os;
+import com.groupon.seleniumgridextras.windows.jWMI;
 
 import java.util.List;
 import java.util.Map;
 
-public class WindowsSystemInfo {
+public class WindowsSystemInfo implements OSInfo {
 
   public String getSystemUptime() throws Exception {
     return jWMI.getWMIValue("Select SystemUpTime From Win32_PerfFormattedData_PerfOS_System",

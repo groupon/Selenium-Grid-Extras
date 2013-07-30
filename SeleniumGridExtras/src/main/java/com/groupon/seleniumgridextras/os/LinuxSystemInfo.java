@@ -35,38 +35,35 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras.tasks;
+package com.groupon.seleniumgridextras.os;
 
-
-import com.google.gson.JsonObject;
-
-import com.groupon.seleniumgridextras.PortChecker;
-
+import java.util.List;
 import java.util.Map;
 
-public class Netstat extends ExecuteOSTask {
+public class LinuxSystemInfo implements OSInfo{
 
-  public Netstat() {
-    setEndpoint("/netstat");
-    setDescription("Returns a system call for all ports. Use /port_info to get parsed details");
-    JsonObject params = new JsonObject();
-    setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-info");
-    setButtonText("netstat");
-    setEnabledInGui(true);
+  @Override
+  public List<Map<String, String>> getDiskInfo() throws Exception {
+//    df -h
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
-  public JsonObject execute() {
-    return PortChecker.getPortInfo("");
+  public Map<String, String> getProcessorInfo() throws Exception {
+    //cat /proc/cpuinfo | grep -i 'processor' | wc -l
+    //mpstat | awk '$3 ~ /CPU/ { for(i=1;i<=NF;i++) { if ($i ~ /%idle/) field=i } } $3 ~ /all/ { print 100 - $field }'
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
   @Override
-  public JsonObject execute(Map<String, String> parameter) {
-    return execute();
+  public Map<String, String> getMemoryInfo() throws Exception {
+//    free -m
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
   }
 
+  @Override
+  public String getSystemUptime() throws Exception {
+//    cat /proc/uptime | awk '{print $1}'
+    return null;  //To change body of implemented methods use File | Settings | File Templates.
+  }
 }

@@ -37,22 +37,18 @@
 
 package com.groupon.seleniumgridextras.os;
 
-import com.google.gson.JsonObject;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public abstract class OSInfo {
+public interface OSInfo {
 
+  public abstract List<Map<String, String>> getDiskInfo() throws Exception;
 
-  public Map toHash(){
-   return new HashMap();
-  };
+  public abstract Map<String, String> getProcessorInfo() throws Exception;
 
+  public abstract Map<String, String> getMemoryInfo() throws Exception;
 
-//  public JsonObject toJson(){
-//
-//  };
-
+  public abstract String getSystemUptime() throws Exception;
 
 }
