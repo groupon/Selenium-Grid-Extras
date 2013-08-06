@@ -315,7 +315,7 @@ public class jWMI
   public static final String CLASS_Win32_OperatingSystem = "Win32_OperatingSystem";
   public static final String CLASS_Win32_OperatingSystemAutochkSetting = "Win32_OperatingSystemAutochkSetting";
   public static final String CLASS_Win32_OperatingSystemQFE = "Win32_OperatingSystemQFE";
-  public static final String CLASS_Win32_OSRecoveryConfiguración = "Win32_OSRecoveryConfiguración";
+//  public static final String CLASS_Win32_OSRecoveryConfiguración = "Win32_OSRecoveryConfiguración";
   public static final String CLASS_Win32_PageFile = "Win32_PageFile";
   public static final String CLASS_Win32_PageFileElementSetting = "Win32_PageFileElementSetting";
   public static final String CLASS_Win32_PageFileSetting = "Win32_PageFileSetting";
