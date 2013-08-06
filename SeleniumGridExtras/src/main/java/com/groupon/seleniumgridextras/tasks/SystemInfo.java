@@ -46,6 +46,10 @@ import com.groupon.seleniumgridextras.os.MacSystemInfo;
 import com.groupon.seleniumgridextras.os.OSInfo;
 import com.groupon.seleniumgridextras.os.WindowsSystemInfo;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class SystemInfo extends ExecuteOSTask {
@@ -67,6 +71,9 @@ public class SystemInfo extends ExecuteOSTask {
     addResponseDescription("ram", "Info in bytes on how much RAM machine has/uses");
     addResponseDescription("uptime", "System uptime since last reboot in seconds");
 
+    addResponseDescription("hostname", "Host name");
+    addResponseDescription("ip", "Host ip");
+
   }
 
   @Override
@@ -78,7 +85,7 @@ public class SystemInfo extends ExecuteOSTask {
       if (OSChecker.isWindows()) {
         info = new WindowsSystemInfo();
       } else if (OSChecker.isMac()) {
-         info = new MacSystemInfo();
+        info = new MacSystemInfo();
       } else {
         info = new LinuxSystemInfo();
       }
@@ -90,6 +97,11 @@ public class SystemInfo extends ExecuteOSTask {
     } catch (Exception e) {
       getJsonResponse().addKeyValues("error", e.toString());
     }
+
+    List<String> hostNetworking = getComputerNetworkInfo();
+    getJsonResponse().addKeyValues("hostname", hostNetworking.get(0));
+    getJsonResponse().addKeyValues("ip", hostNetworking.get(1));
+
     return getJsonResponse().getJson();
   }
 
@@ -97,5 +109,23 @@ public class SystemInfo extends ExecuteOSTask {
   public JsonObject execute(Map<String, String> parameter) {
     return execute();
   }
+
+  private List<String> getComputerNetworkInfo() {
+    List<String> host = new LinkedList<String>();
+
+    try {
+      InetAddress addr;
+      addr = InetAddress.getLocalHost();
+      host.add(addr.getHostName());
+      host.add(addr.getHostAddress());
+    } catch (UnknownHostException ex) {
+      System.out.println("Hostname can not be resolved");
+      host.add("N/A");
+      host.add("N/A");
+    }
+
+    return host;
+  }
+
 
 }
