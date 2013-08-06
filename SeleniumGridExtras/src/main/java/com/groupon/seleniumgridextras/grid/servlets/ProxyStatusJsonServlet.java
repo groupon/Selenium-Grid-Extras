@@ -13,7 +13,9 @@ import org.openqa.grid.web.servlet.RegistryBasedServlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
+import java.net.URL;
 import java.util.Iterator;
 
 public class ProxyStatusJsonServlet extends RegistryBasedServlet {
@@ -69,18 +71,25 @@ public class ProxyStatusJsonServlet extends RegistryBasedServlet {
       while (proxyIterator.hasNext()) {
         JSONObject TestMachine = new JSONObject();
         TestSlot eachSlot = proxyIterator.next();
-        //getSession is null if not being used
-        if (eachSlot.getSession() == null) {
-          //System.out.println(eachSlot.getCapabilities().get("browserName").toString());
-          TestMachine.put("browserName", eachSlot.getCapabilities().get("browserName").toString());
+        TestMachine.put("browserName", eachSlot.getCapabilities().get("browserName").toString());
 
-          String version = "null";
-          if (eachSlot.getCapabilities().containsKey("version")) {
-            version = eachSlot.getCapabilities().get("version").toString();
-          }
-
-          TestMachine.put("version", version);
+        String version = "null";
+        if (eachSlot.getCapabilities().containsKey("version")) {
+          version = eachSlot.getCapabilities().get("version").toString();
         }
+
+        TestMachine.put("version", version);
+
+        TestMachine.put("session", "");
+
+        if (eachSlot.getSession() != null) {
+          TestMachine.put("session", eachSlot.getSession().getExternalKey().getKey());
+        }
+
+        URL host = eachProxy.getRemoteHost();
+        String hostName = host.getHost();
+        TestMachine.put("host", hostName);
+
         ProxyStatus.put(TestMachine);
       }
 
