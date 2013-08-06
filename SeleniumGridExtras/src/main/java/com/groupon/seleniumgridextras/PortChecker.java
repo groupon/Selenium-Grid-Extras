@@ -52,6 +52,8 @@ public class PortChecker {
     JsonObject status = getPortInfo(port);
     JsonArray standardOut = (JsonArray) status.get("out");
 
+    if(OSChecker.isWindows())
+        return parseWindowsInfo(standardOut);
     return parseLinuxInfo(standardOut);
 
   }
@@ -93,6 +95,21 @@ public class PortChecker {
     }
     return info;
   }
+  
+    private static JsonObject parseWindowsInfo(JsonArray status) {
+
+        JsonObject info = new JsonObject();
+
+        for (String line : status) {
+            Matcher m = Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(ESTABLISHED)\\s*(\\d*)").matcher(line.getAsString());
+            if (m.find()) {
+                info.addProperty("pid", m.group(5));
+                break;
+            }
+        }
+
+        return info;
+    }
 
 
   private static String getCommand() {
