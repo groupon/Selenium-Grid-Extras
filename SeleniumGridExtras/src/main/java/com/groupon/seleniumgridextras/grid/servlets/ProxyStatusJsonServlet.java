@@ -73,7 +73,7 @@ public class ProxyStatusJsonServlet extends RegistryBasedServlet {
         TestSlot eachSlot = proxyIterator.next();
         TestMachine.put("browserName", eachSlot.getCapabilities().get("browserName").toString());
 
-        String version = "null";
+        String version = "";
         if (eachSlot.getCapabilities().containsKey("version")) {
           version = eachSlot.getCapabilities().get("version").toString();
         }
