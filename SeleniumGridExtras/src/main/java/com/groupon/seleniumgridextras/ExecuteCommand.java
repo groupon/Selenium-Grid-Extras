@@ -56,6 +56,8 @@ public class ExecuteCommand {
     Process process;
 
     try {
+      if(OSChecker.isWindows())
+        process = Runtime.getRuntime().exec("cmd /C "+cmd);
       process = Runtime.getRuntime().exec(cmd);
     } catch (IOException e) {
       jsonResponse.addKeyValues("error", "Problems in running " + cmd + "\n" + e.toString());
