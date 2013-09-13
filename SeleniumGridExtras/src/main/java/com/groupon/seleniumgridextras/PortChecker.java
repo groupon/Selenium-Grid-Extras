@@ -101,7 +101,7 @@ public class PortChecker {
         JsonObject info = new JsonObject();
 
         for (String line : status) {
-            Matcher m = Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(ESTABLISHED)\\s*(\\d*)").matcher(line.getAsString());
+            Matcher m = Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(LISTENING)\\s*(\\d*)").matcher(line.getAsString());
             if (m.find()) {
                 info.addProperty("pid", m.group(5));
                 break;
