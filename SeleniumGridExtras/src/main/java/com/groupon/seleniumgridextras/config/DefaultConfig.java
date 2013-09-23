@@ -157,6 +157,7 @@ public class DefaultConfig {
     config.getGrid().getNode().setPort("4445");
     config.getGrid().getNode().setHub("http://localhost:4444");
     config.getGrid().getNode().setNodeTimeout("240");
+    config.getGrid().getNode().setMaxSession(1);
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")) {
