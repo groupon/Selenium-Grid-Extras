@@ -53,14 +53,10 @@ public class DefaultConfig {
     loadTeardownConfig();
     loadGridConfig();
     loadSharedDir();
-    loadConfigVersion();
 
     return config;
   }
 
-  private static void loadConfigVersion() {
-    config.setConfigVersion("1.0");
-  }
 
   private static void loadSetupConfig() {
     config.addSetupTask("com.groupon.seleniumgridextras.tasks.MoveMouse");
