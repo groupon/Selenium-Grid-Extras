@@ -68,15 +68,20 @@ public class RuntimeConfig {
 
   public static Config load() {
 
+    Config defaultConfig = DefaultConfig.getDefaultConfig();
+
     String configString = readConfigFile(configFile);
     if (configString != "") {
       config = new Gson().fromJson(configString, Config.class);
     } else {
       // first time runner
-      Config defaultConfig = DefaultConfig.getDefaultConfig();
-      config = FirstTimeRunConfig.customiseConfig(defaultConfig);
+      Config config = new Config(false);
+      config = FirstTimeRunConfig.customiseConfig(config);
       config.writeToDisk(configFile);
     }
+
+    defaultConfig.mergeConfig(config);
+
     return config;
   }
 
