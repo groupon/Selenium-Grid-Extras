@@ -75,12 +75,12 @@ public class RuntimeConfig {
       config = new Gson().fromJson(configString, Config.class);
     } else {
       // first time runner
-      Config config = new Config(false);
+      Config config = new Config();
       config = FirstTimeRunConfig.customiseConfig(config);
       config.writeToDisk(configFile);
     }
 
-    defaultConfig.mergeConfig(config);
+//    defaultConfig.mergeConfig(config);
 
     return config;
   }

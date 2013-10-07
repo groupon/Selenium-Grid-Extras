@@ -74,7 +74,7 @@ public class GridStatusTest {
         "hub_running").getAsString());
     assertEquals("Boolean if node is running on given port", task.getResponseDescription().get("node_running").getAsString());
     assertEquals("Hash object describing the Hub Process", task.getResponseDescription().get("hub_info").getAsString());
-    assertEquals("Hash object describing the Node Process", task.getResponseDescription().get("node_info").getAsString());
+    assertEquals("Hash object describing the NodeConfig Process", task.getResponseDescription().get("node_info").getAsString());
     assertEquals(7, task.getResponseDescription().entrySet().size());
   }
 

@@ -105,7 +105,7 @@ public class SeleniumGridExtras {
     }
 
     if (RuntimeConfig.getConfig().getGrid().getAutoStartNode()) {
-      System.out.println("=== Grid Node was set to Autostart ===");
+      System.out.println("=== Grid NodeConfig was set to Autostart ===");
       ExecuteOSTask grid = new StartGrid();
       System.out.println(grid.execute("node").toString().toString());
     }

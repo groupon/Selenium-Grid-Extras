@@ -92,7 +92,7 @@ public class StartGridTest {
 
   @Test
   public void testGetDescription() throws Exception {
-    assertEquals("Starts an instance of Selenium Grid Hub or Node",
+    assertEquals("Starts an instance of Selenium Grid Hub or NodeConfig",
         task.getDescription());
   }
 

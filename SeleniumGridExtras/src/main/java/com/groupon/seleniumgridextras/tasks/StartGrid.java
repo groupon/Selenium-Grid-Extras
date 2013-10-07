@@ -54,7 +54,7 @@ public class StartGrid extends ExecuteOSTask {
     waitToFinishTask = false;
 
     setEndpoint("/start_grid");
-    setDescription("Starts an instance of Selenium Grid Hub or Node");
+    setDescription("Starts an instance of Selenium Grid Hub or NodeConfig");
     JsonObject params = new JsonObject();
     params.addProperty("role", "hub|node - defaults to 'default_role' param in config file");
     setAcceptedParams(params);

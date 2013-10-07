@@ -65,7 +65,7 @@ public class FirstTimeRunConfig {
   }
 
   private static void setGridNodeAutostart(Config defaultConfig) {
-    String value = askQuestion("Do you want Grid Node to be auto started? (1-yes/0-no)", "1");
+    String value = askQuestion("Do you want Grid NodeConfig to be auto started? (1-yes/0-no)", "1");
     defaultConfig.getGrid().setAutoStartNode(Integer.valueOf(value));
   }
 

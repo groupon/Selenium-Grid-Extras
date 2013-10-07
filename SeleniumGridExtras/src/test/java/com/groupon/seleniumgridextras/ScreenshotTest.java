@@ -91,7 +91,7 @@ public class ScreenshotTest {
         task.getJsonResponse().getKeyDescriptions().get("image").getAsString());
     assertEquals("Type of file returned (PNG/JPG/GIF)",
         task.getJsonResponse().getKeyDescriptions().get("file_type").getAsString());
-    assertEquals("Name of the file saved on the Node's HD",
+    assertEquals("Name of the file saved on the NodeConfig's HD",
         task.getJsonResponse().getKeyDescriptions().get("file").getAsString());
     assertEquals(6, task.getJsonResponse().getKeyDescriptions().entrySet().size());
   }

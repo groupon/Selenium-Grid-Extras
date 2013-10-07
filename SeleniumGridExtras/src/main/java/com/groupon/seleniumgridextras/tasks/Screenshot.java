@@ -72,7 +72,7 @@ public class Screenshot extends ExecuteOSTask {
     setEnabledInGui(true);
 
     addResponseDescription("file_type", "Type of file returned (PNG/JPG/GIF)");
-    addResponseDescription("file", "Name of the file saved on the Node's HD");
+    addResponseDescription("file", "Name of the file saved on the NodeConfig's HD");
     addResponseDescription("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
 
   }

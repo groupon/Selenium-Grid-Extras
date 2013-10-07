@@ -58,7 +58,7 @@ public class GridStatus extends ExecuteOSTask {
     addResponseDescription("hub_running", "Boolean if hub is running on given port");
     addResponseDescription("node_running", "Boolean if node is running on given port");
     addResponseDescription("hub_info", "Hash object describing the Hub Process");
-    addResponseDescription("node_info", "Hash object describing the Node Process");
+    addResponseDescription("node_info", "Hash object describing the NodeConfig Process");
 
   }
 
