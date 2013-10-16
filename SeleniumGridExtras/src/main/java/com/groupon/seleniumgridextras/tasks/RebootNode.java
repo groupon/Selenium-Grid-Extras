@@ -60,7 +60,6 @@ public class RebootNode extends ExecuteOSTask {
 
   @Override
   public String getMacCommand() {
-    // using osascript to avoid sudo requirement for shutdown -r
-    return "osascript -e 'tell application \"System Events\" to restart'";
+    return "shutdown -r now";
   }
 }
