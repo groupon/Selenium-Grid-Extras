@@ -122,6 +122,8 @@ public class DefaultConfig {
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetConfig");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGridExtras");
     config.addEnabledModule("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
+    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
+    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.SystemInfo");
   }
 
   private static void loadDisabledPlugins() {
@@ -142,7 +144,7 @@ public class DefaultConfig {
     config.getGrid().getHub().setRole("hub");
     config.getGrid().getHub().setPort("4444");
     config.getGrid().getHub()
-        .setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet");
+        .setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet,com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")) {
@@ -155,7 +157,6 @@ public class DefaultConfig {
     config.getGrid().getNode().setPort("4445");
     config.getGrid().getNode().setHub("http://localhost:4444");
     config.getGrid().getNode().setNodeTimeout("240");
-    config.getGrid().getNode().setMaxSession(1);
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")) {

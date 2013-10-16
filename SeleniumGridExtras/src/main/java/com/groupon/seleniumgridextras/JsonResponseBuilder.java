@@ -115,14 +115,34 @@ public class JsonResponseBuilder {
     keyValues.add(key, value);
   }
 
-  public void addKeyValues(String key, Map value) {
+  public void addKeyValues(String key, Map<String, String> value) {
     checkIfKeyDescriptionExist(key);
-    keyValues.addProperty(key, new Gson().toJson(value));
+
+    keyValues.add(key, hashMapToJsonObject(value));
   }
 
   public void addKeyValues(String key, int value) {
     checkIfKeyDescriptionExist(key);
     keyValues.addProperty(key, value);
+  }
+
+  private JsonObject hashMapToJsonObject(Map<String, String> hashMap){
+    JsonObject hashToJsonObjectConverter = new JsonObject();
+    for (String hashKey : hashMap.keySet()){
+      hashToJsonObjectConverter.addProperty(hashKey, hashMap.get(hashKey));
+    }
+
+    return hashToJsonObjectConverter;
+  }
+
+  public void addListOfHashes(String key, List<Map<String, String>> value) {
+    checkIfKeyDescriptionExist(key);
+
+    JsonArray valueArray = new JsonArray();
+    for (Map<String, String> hashMap : value){
+      valueArray.add(hashMapToJsonObject(hashMap));
+    }
+    keyValues.add(key, valueArray);
   }
 
   public void addKeyValues(String key, List<String> value) {

@@ -41,14 +41,21 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.jna.platform.win32.Advapi32Util;
+import com.sun.jna.platform.win32.WinReg;
+
 public class IEProtectedMode extends ExecuteOSTask {
+
   public IEProtectedMode() {
     setEndpoint("/ie_protected_mode");
-    setDescription("Changes protected mode for Internet Explorer on/off. No param for current status");
+    setDescription(
+        "Changes protected mode for Internet Explorer on/off. No param for current status");
     JsonObject params = new JsonObject();
-    params.addProperty("enabled", "(Optional)1 for enabling protected mode for all zones, 0 for disabling");
+    params.addProperty("enabled",
+                       "(Optional)1 for enabling protected mode for all zones, 0 for disabling");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -56,31 +63,48 @@ public class IEProtectedMode extends ExecuteOSTask {
     setCssClass("btn-danger");
     setButtonText("Enanble/Disable Protected Mode");
     setEnabledInGui(true);
-  }
 
-  public final String getPropertyCommand = "powershell.exe /c \"Get-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%03d' -Name 2500 | %{ Write-Host $_.'2500' }\"";
-  public final String getSetPropertyCommand = "powershell.exe /c \"Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%03d' -Name 2500 -Value %03d \"";
-
-
-  public String getSetPropertyCommand(){
-    return getSetPropertyCommand;
-  }
-
-  public String getGetPropertyCommand(){
-    return getPropertyCommand;
+    getJsonResponse().addKeyDescriptions("Internet", "Current setting for Internet");
+    getJsonResponse().addKeyDescriptions("Local Intranet", "Current setting for Local Intranet");
+    getJsonResponse().addKeyDescriptions("Trusted Sites", "Current setting for Trusted Sites");
+    getJsonResponse()
+        .addKeyDescriptions("Restricted Sites", "Current setting for Restricted Sites");
   }
 
 
-  @Override
-  public String getWindowsCommand(String parameter) {
-    return getWindowsKillCommand(parameter);
+  public String
+      regLocation =
+      "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%s";
+
+
+  public final HashMap<String, String> zone = new HashMap<String, String>() {
+    {
+      put("1", "Internet");
+      put("2", "Local Intranet");
+      put("3", "Trusted Sites");
+      put("4", "Restricted Sites");
+    }
+  };
+
+
+  public HashMap<String, String> getZones() {
+    return zone;
   }
 
 
-  @Override
-  public String getLinuxCommand(String parameter) {
-    return getLinuxKillCommand(parameter);
+  public String setCurrentSettingForZone(String zoneId, String newValue) {
+    String
+        foo =
+        "powershell.exe /c \"Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%s' -Name 2500 -Value %s";
+    return String.format(foo, zoneId, newValue);
   }
+
+  public String getCurrentSettingForZone(String zoneId) {
+    return String.format(regLocation, zoneId);
+  }
+
+  ;
+
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
@@ -91,22 +115,56 @@ public class IEProtectedMode extends ExecuteOSTask {
   }
 
   @Override
-  public JsonObject execute(){
-    return ExecuteCommand.execRuntime("");
+  public JsonObject execute() {
+    return getAllProtectedStatus();
   }
 
   @Override
-  public JsonObject execute(String status){
-    return ExecuteCommand.execRuntime("");
+  public JsonObject execute(String status) {
+    setAllProtectedStatuses(status.equals("1") ? true : false);
+    getJsonResponse().addKeyValues("out", "IE needs to restart before you see the changes");
+    return getAllProtectedStatus();
+  }
+
+  private void setAllProtectedStatuses(boolean value) {
+    int enable = value ? 0 : 1;
+    try {
+      for (String key : getZones().keySet()) {
+        Advapi32Util
+            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), "2500",
+                                 enable);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  ;
+
+
+  private Boolean getProtectedEnabledForZone(String zone) {
+    int enabled =
+        Advapi32Util
+            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), "2500");
+
+    if (enabled == 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
 
-  protected String getWindowsKillCommand(String parameter) {
-    return "taskkill -F -IM " + parameter;
-  }
+  private JsonObject getAllProtectedStatus() {
+    for (String key : getZones().keySet()) {
+      boolean enabled = getProtectedEnabledForZone(key);
 
-  protected String getLinuxKillCommand(String parameter) {
-    return "killall -v -m " + parameter;
+      System.out.println("Zone " + key + " is set to " + enabled);
+      getJsonResponse().addKeyValues(getZones().get(key), enabled);
+
+    }
+
+    return getJsonResponse().getJson();
   }
 
 }

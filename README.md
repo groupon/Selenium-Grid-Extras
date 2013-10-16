@@ -7,8 +7,7 @@ This project is designed to help you manage your Selenium Grid installation by g
 Setup Instructions
 ------------------
 
-Compiled Jars:
-The current version of compiled jars lives in the current directory at the root of directory
+[Compiled Jars](https://github.com/groupon/Selenium-Grid-Extras/releases)
 
 
 Compile from source:
@@ -18,13 +17,13 @@ git clone https://github.com/groupon/Selenium-Grid-Extras.git
 cd Selenium-Grid-Extras
 mvn package
 ```
-
-Starting Serivces
--------------------
-
 After all the tests are finished running and all dependencies are downloaded, you will find 2 JAR files in SeleniumGridExtras/target/
 * SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
 * SeleniumGridExtras-X.X.X-SNAPSHOT.jar
+
+
+Starting Serivces
+-------------------
 
 The JAR file with "-jar-with-dependencies.jar" extension has all of the dependencies pre-packed into itself. You can use it but it's larger in size. If you want to add all dependencies to CLASSPATH yourself, you can use the smaller JAR
 
@@ -74,3 +73,8 @@ Contributing
 For This project, add functionality, make sure all tests pass, send pull request.
 
 Note: This product exposes your machine to the whole network, anyone on the network will be able to perform OS level task by simply hitting an HTTP url. There are no security measures at the moment, and at the moment no plans to add any security. You have been warned!
+
+
+Link Backs
+==========
+This project uses jWMI.java which was taken from www.henryranch.net

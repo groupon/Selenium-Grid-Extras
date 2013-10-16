@@ -63,6 +63,8 @@ public class KillAllChrome extends KillAllByName {
 
     if (OSChecker.isWindows()) {
       return killChromeOnWindows();
+    } else if (OSChecker.isMac()) {
+      return killChromeOnMac();
     } else {
       return killChromeOnLinux();
     }
@@ -71,6 +73,10 @@ public class KillAllChrome extends KillAllByName {
 
   private JsonObject killChromeOnLinux() {
     return ExecuteCommand.execRuntime(getLinuxCommand("[Cc]hrome"));
+  }
+
+  private JsonObject killChromeOnMac() {
+    return ExecuteCommand.execRuntime(getMacCommand("[Cc]hrome"));
   }
 
   private JsonObject killChromeOnWindows() {

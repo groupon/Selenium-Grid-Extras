@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.PortChecker;
 
 import java.util.Map;

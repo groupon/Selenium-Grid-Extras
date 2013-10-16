@@ -127,8 +127,10 @@ public class JsonResponseBuilderTest {
   public void testAddKeyValuesMap() throws Exception {
     jsonResponseObject.addKeyDescriptions("foo", "test");
     Map<String, String> bar = new HashMap<String, String>();
+    bar.put("a", "b");
+    bar.put("c", "d");
     jsonResponseObject.addKeyValues("foo", bar);
-    assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"foo\":\"{}\",\"out\":[]}"),
+    assertEquals(new JsonParser().parse("{\"exit_code\":0,\"out\":[],\"error\":[],\"foo\":{\"c\":\"d\",\"a\":\"b\"}}"),
         jsonResponseObject.getJson());
   }
 
