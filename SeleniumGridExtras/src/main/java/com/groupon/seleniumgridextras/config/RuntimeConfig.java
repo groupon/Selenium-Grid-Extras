@@ -61,6 +61,10 @@ public class RuntimeConfig {
     config = new Config();
   }
 
+  protected static void clearConfig(){
+    config = null;
+  }
+
   public static String getConfigFile() {
     return configFile;
   }
