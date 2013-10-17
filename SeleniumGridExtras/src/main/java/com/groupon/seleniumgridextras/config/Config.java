@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
@@ -13,64 +13,110 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Config {
 
-  private String config_version;
-  private List<String> activated_modules;
-  private List<String> disabled_modules;
-  private String expose_directory;
-  private List<String> setup;
-  private List<String> teardown;
-  private GridInfo grid;
-  private WebDriver webdriver = new WebDriver();
-  private IEDriver iedriver = new IEDriver();
+  public static final String ACTIVATE_MODULES = "ACTIVATE_MODULES";
+  public static final String DISABLED_MODULES = "DISABLED_MODULES";
+  public static final String SETUP = "SETUP";
+  public static final String TEAR_DOWN = "TEAR_DOWN";
+  public static final String GRID = "GRID";
+  public static final String WEBDRIVER = "WEBDRIVER";
+  public static final String IEDRIVER = "IEDRIVER";
+  public static final String EXPOSE_DIRECTORY = "EXPOSE_DIRECTORY";
+
+  public static final String AUTO_START_NODE = "auto_start_node";
+  public static final String AUTO_START_HUB = "auto_start_hub";
+  public static final String DEFAULT_ROLE = "default_role";
+  public static final String NODE_CONFIG = "node_config";
+  public static final String HUB_CONFIG = "hub_config";
+
+
+  protected Map theConfigMap;
 
   public Config() {
-    activated_modules = new ArrayList<String>();
-    disabled_modules = new ArrayList<String>();
-    setup = new ArrayList<String>();
-    teardown = new ArrayList<String>();
-    grid = new GridInfo();
-    webdriver = new WebDriver();
+    theConfigMap = new HashMap();
+    theConfigMap.put(ACTIVATE_MODULES, new ArrayList<String>());
+    theConfigMap.put(DISABLED_MODULES, new ArrayList<String>());
+    theConfigMap.put(SETUP, new ArrayList<String>());
+    theConfigMap.put(TEAR_DOWN, new ArrayList<String>());
+
+    theConfigMap.put(GRID, new StringMap());
+    theConfigMap.put(WEBDRIVER, new WebDriver());
+    theConfigMap.put(IEDRIVER, new IEDriver());
+
+    theConfigMap.put(HUB_CONFIG, new Hub());
+    theConfigMap.put(NODE_CONFIG, new NodeConfig());
+
+
   }
 
+
   public List<String> getActivatedModules() {
-    return activated_modules;
+    return (List<String>) theConfigMap.get(ACTIVATE_MODULES);
   }
 
   public List<String> getDisabledModules() {
-    return disabled_modules;
+    return (List<String>) theConfigMap.get(DISABLED_MODULES);
   }
 
-  public String getExposeDirectory() {
-    return expose_directory;
+  public String getExposedDirectory() {
+    return (String) theConfigMap.get(EXPOSE_DIRECTORY);
   }
 
   public List<String> getSetup() {
-    return setup;
+    return (List<String>) theConfigMap.get(SETUP);
   }
 
   public List<String> getTeardown() {
-    return teardown;
+    return (List<String>) theConfigMap.get(TEAR_DOWN);
   }
 
-  public GridInfo getGrid() {
-    return grid;
+  public StringMap getGrid() {
+    return (StringMap) theConfigMap.get(GRID);
+  }
+
+  public void setIEdriver() {
+//    this.put(IEDRIVERz)
   }
 
   public IEDriver getIEdriver() {
-    return iedriver;
+    try {
+      return (IEDriver) theConfigMap.get(IEDRIVER);
+    } catch (ClassCastException e) {
+      StringMap
+          stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+          (StringMap) theConfigMap.get(IEDRIVER);
+      IEDriver ieDriver = new IEDriver();
+
+      ieDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+      theConfigMap.put(IEDRIVER, ieDriver);
+
+      return ieDriver;
+    }
   }
 
   public WebDriver getWebdriver() {
-    return webdriver;
+    try {
+      return (WebDriver) theConfigMap.get(WEBDRIVER);
+    } catch (ClassCastException e) {
+      StringMap
+          stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+          (StringMap) theConfigMap.get(WEBDRIVER);
+      WebDriver webDriver = new WebDriver();
+
+      webDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+      theConfigMap.put(WEBDRIVER, webDriver);
+
+      return webDriver;
+    }
   }
 
-  public String getConfigVersion() {
-    return config_version;
-  }
 
   public void writeToDisk(String file) {
     try {
@@ -84,28 +130,24 @@ public class Config {
     }
   }
 
-  public void setConfigVersion(String config_version) {
-    this.config_version = config_version;
-  }
-
   public void addSetupTask(String task) {
-    setup.add(task);
+    getSetup().add(task);
   }
 
   public void addTeardownTask(String task) {
-    teardown.add(task);
+    getTeardown().add(task);
   }
 
-  public void addEnabledModule(String module) {
-    activated_modules.add(module);
+  public void addActivatedModules(String module) {
+    getActivatedModules().add(module);
   }
 
   public void addDisabledModule(String module) {
-    disabled_modules.add(module);
+    getDisabledModules().add(module);
   }
 
   public void setSharedDir(String sharedDir) {
-    expose_directory = sharedDir;
+    theConfigMap.put(EXPOSE_DIRECTORY, sharedDir);
   }
 
   public String toJsonString() {
@@ -117,58 +159,7 @@ public class Config {
   }
 
   public boolean checkIfModuleEnabled(String module) {
-    return activated_modules.contains(module);
-  }
-
-  public String getExposedDirectory() {
-    return expose_directory;
-  }
-
-  public class GridInfo {
-
-    private int auto_start_hub;
-    private int auto_start_node;
-    private String default_role;
-    private NodeConfig node;
-    private Hub hub;
-
-    public GridInfo() {
-      node = new NodeConfig();
-      hub = new Hub();
-    }
-
-    public boolean getAutoStartHub() {
-      return auto_start_hub == 1 ? true : false;
-    }
-
-    public void setAutoStartHub(int autoStartHub) {
-      this.auto_start_hub = autoStartHub;
-    }
-
-    public boolean getAutoStartNode() {
-      return auto_start_node == 1 ? true : false;
-    }
-
-    public void setAutoStartNode(int autoStartNode) {
-      this.auto_start_node = autoStartNode;
-    }
-
-    public String getDefaultRole() {
-      return default_role;
-    }
-
-    public void setDefaultRole(String defaultRole) {
-      this.default_role = defaultRole;
-    }
-
-    public NodeConfig getNode() {
-      return node;
-    }
-
-    public Hub getHub() {
-      return hub;
-    }
-
+    return getActivatedModules().contains(module);
   }
 
 
@@ -176,4 +167,68 @@ public class Config {
     return (JsonObject) new JsonParser().parse(this.toJsonString());
   }
 
+  public boolean getAutoStartNode() {
+    return theConfigMap.get(AUTO_START_HUB).equals("1") ? true : false;
+  }
+
+  public boolean getAutoStartHub() {
+    return theConfigMap.get(AUTO_START_NODE).equals("1") ? true : false;
+  }
+
+  public void setDefaultRole(String defaultRole) {
+    theConfigMap.put(DEFAULT_ROLE, defaultRole);
+  }
+
+  public void setAutoStartHub(String autoStartHub) {
+    theConfigMap.put(AUTO_START_HUB, autoStartHub);
+  }
+
+  public void setAutoStartNode(String autoStartNode) {
+    theConfigMap.put(AUTO_START_NODE, autoStartNode);
+  }
+
+  public Hub getHub() {
+
+    try {
+      return (Hub) theConfigMap.get(HUB_CONFIG);
+    } catch (ClassCastException e) {
+      StringMap
+          stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+          (StringMap) theConfigMap.get(HUB_CONFIG);
+      Hub hubConfig = new Hub();
+
+      hubConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+      theConfigMap.put(HUB_CONFIG, hubConfig);
+
+      return hubConfig;
+    }
+  }
+
+  public void setHub(Hub hub) {
+    theConfigMap.put(HUB_CONFIG, hub);
+  }
+
+
+  public NodeConfig getNode() {
+    try {
+      return (NodeConfig) theConfigMap.get(NODE_CONFIG);
+    } catch (ClassCastException e) {
+      StringMap
+          stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+          (StringMap) theConfigMap.get(NODE_CONFIG);
+      NodeConfig nodeConfig = new NodeConfig();
+
+      nodeConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+      theConfigMap.put(NODE_CONFIG, nodeConfig);
+
+      return nodeConfig;
+    }
+
+  }
+
+  public String getDefaultRole() {
+    return (String) theConfigMap.get(DEFAULT_ROLE);
+  }
 }

@@ -96,15 +96,15 @@ public class GridWrapper {
   }
 
   public static String getDefaultRole() {
-    return RuntimeConfig.getConfig().getGrid().getDefaultRole();
+    return RuntimeConfig.getConfig().getDefaultRole();
   }
 
   private static GridRole getGridRole(String role) {
     GridRole config = null;
     if (role.equals("hub")) {
-      config = RuntimeConfig.getConfig().getGrid().getHub();
+      config = RuntimeConfig.getConfig().getHub();
     } else if (role.equals("node")) {
-      config = RuntimeConfig.getConfig().getGrid().getNode();
+      config = RuntimeConfig.getConfig().getNode();
     }
     return config;
   }

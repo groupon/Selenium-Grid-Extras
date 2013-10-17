@@ -61,12 +61,12 @@ public class FirstTimeRunConfig {
 
   private static void setGridHubAutostart(Config defaultConfig) {
     String value = askQuestion("Do you want Grid Hub to be auto started? (1-yes/0-no)", "0");
-    defaultConfig.getGrid().setAutoStartHub(Integer.valueOf(value));
+    defaultConfig.setAutoStartHub(value);
   }
 
   private static void setGridNodeAutostart(Config defaultConfig) {
     String value = askQuestion("Do you want Grid NodeConfig to be auto started? (1-yes/0-no)", "1");
-    defaultConfig.getGrid().setAutoStartNode(Integer.valueOf(value));
+    defaultConfig.setAutoStartNode(value);
   }
 
   private static void setWebDriverVersion(Config defaultConfig) {
@@ -76,12 +76,12 @@ public class FirstTimeRunConfig {
 
   private static void setGridHubUrl(Config defaultConfig) {
     String url = askQuestion("What is the url for the Selenium Grid Hub?", "http://localhost:4444");
-    defaultConfig.getGrid().getNode().setHub(url);
+    defaultConfig.getNode().setHub(url);
   }
 
   private static void setDefaultService(Config defaultConfig) {
     String role = askQuestion("What is the default Role of this computer? (hub|node)", "node");
-    defaultConfig.getGrid().setDefaultRole(role);
+    defaultConfig.setDefaultRole(role);
   }
 
   private static String askQuestion(String question, String defaultValue) {

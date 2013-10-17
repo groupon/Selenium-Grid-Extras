@@ -37,34 +37,37 @@
 
 package com.groupon.seleniumgridextras.config.driver;
 
-public abstract class DriverInfo implements Driver{
+import java.util.HashMap;
 
-  protected String directory;
-  protected String version;
-  protected String bit;
+public abstract class DriverInfo extends HashMap<String, String> implements Driver{
+
+  public static final String BIT = "bit";
+  public static final String VERSION = "version";
+  public static final String DIRECTORY = "directory";
 
   public String getDirectory() {
-    return directory;
+    return this.get(DIRECTORY);
   }
   public void setDirectory(String directory) {
-    this.directory = directory;
-  }
-
-  public String getVersion() {
-    return version;
+    this.put(DIRECTORY, directory);
   }
 
   public abstract String getExecutablePath();
 
   public String getBit(){
-    return bit;
+    return this.get(BIT);
   }
 
   public void setBit(String bitVersion){
-    this.bit = bitVersion;
+    this.put(BIT, bitVersion);
   }
 
   public void setVersion(String version) {
-    this.version = version;
+    this.put(VERSION, version);
   }
+
+  public String getVersion() {
+    return this.get(VERSION);
+  }
+
 }

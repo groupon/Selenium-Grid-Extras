@@ -77,7 +77,8 @@ public class DefaultConfig {
     }
 
     config.getWebdriver().setDirectory(tmpDir + "webdriver");
-    config.getWebdriver().setVersion("2.33.0");
+    config.getWebdriver().setVersion("2.35.3");
+
   }
 
   private static void loadIEDriverInfo() {
@@ -90,36 +91,36 @@ public class DefaultConfig {
     }
 
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
-    config.getIEdriver().setVersion("2.33.0");
+    config.getIEdriver().setVersion("2.35.3");
     config.getIEdriver().setBit("Win32");
   }
 
 
   private static void loadEnabledPlugins() {
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.UpgradeWebdriver");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.Setup");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.Teardown");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.MoveMouse");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.RebootNode");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.KillAllIE");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.KillAllFirefox");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.KillAllChrome");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetProcesses");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.KillPid");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.Netstat");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.Screenshot");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StartGrid");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetInfoForPort");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GridStatus");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.KillAllByName");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGrid");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.GetConfig");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.StopGridExtras");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
-    config.addEnabledModule("com.groupon.seleniumgridextras.tasks.SystemInfo");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.UpgradeWebdriver");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Setup");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Teardown");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.MoveMouse");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.RebootNode");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllIE");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllFirefox");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllChrome");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetProcesses");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillPid");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Netstat");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Screenshot");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StartGrid");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetInfoForPort");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GridStatus");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllByName");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGrid");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetConfig");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGridExtras");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.SystemInfo");
   }
 
   private static void loadDisabledPlugins() {
@@ -127,9 +128,9 @@ public class DefaultConfig {
   }
 
   private static void loadGridConfig() {
-    config.getGrid().setDefaultRole("hub");
-    config.getGrid().setAutoStartHub(0);
-    config.getGrid().setAutoStartNode(1);
+    config.setDefaultRole("hub");
+    config.setAutoStartHub("0");
+    config.setAutoStartNode("1");
 
     setGridHubConfig();
     setGridNodeConfig();
@@ -137,33 +138,32 @@ public class DefaultConfig {
   }
 
   private static void setGridHubConfig() {
-    config.getGrid().getHub().setRole("hub");
-    config.getGrid().getHub().setPort("4444");
-    config.getGrid().getHub()
-        .setServlets("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet,com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
+    config.getHub().setRole("hub");
+    config.getHub().setPort("4444");
+    config.getHub()
+        .setServlets(
+            "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet,com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
     if (!hostIp.equals("")) {
-      config.getGrid().getHub().setHost(hostIp);
+      config.getHub().setHost(hostIp);
     }
   }
 
   private static void setGridNodeConfig() {
-    config.getGrid().getNode().setRole("wd");
-    config.getGrid().getNode().setPort("4445");
-    config.getGrid().getNode().setHub("http://localhost:4444");
-    config.getGrid().getNode().setNodeTimeout("240");
-    config.getGrid().getNode().setMaxSession(1);
+    config.getNode().setRole("wd");
+    config.getNode().setPort("4445");
+    config.getNode().setHub("http://localhost:4444");
+    config.getNode().setNodeTimeout("240");
+    config.getNode().setMaxSession("1");
 
     String hostIp = RuntimeConfig.getCurrentHostIP();
-    if (!hostIp.equals("")) {
-      config.getGrid().getNode().setHost(hostIp);
-    }
-    config.getGrid().getNode()
+
+    config.getNode()
         .setProxy("com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
 
     if (OSChecker.isWindows()) {
-      config.getGrid().getNode().setIeDriver(config.getIEdriver().getExecutablePath());
+      config.getNode().setIeDriver(config.getIEdriver().getExecutablePath());
     }
 
 

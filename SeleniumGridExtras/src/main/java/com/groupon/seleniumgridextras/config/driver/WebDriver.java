@@ -42,11 +42,11 @@ public class WebDriver extends DriverInfo {
 
   @Override
   public String getExecutablePath() {
-    String seporator = "/";
+    String separator = "/";
     if (OSChecker.isWindows()){
-      seporator = "\\";
+      separator = "\\";
     }
 
-    return this.directory + seporator + this.version + ".jar";
+    return this.getDirectory() + separator + this.getVersion() + ".jar";
   }
 }

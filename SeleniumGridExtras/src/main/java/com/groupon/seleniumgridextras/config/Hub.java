@@ -2,54 +2,52 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Hub implements GridRole {
+import java.util.HashMap;
 
-  @SerializedName("-port")
-  private String port;
-  @SerializedName("-host")
-  private String host;
-  @SerializedName("-role")
-  private String role;
-  @SerializedName("-servlets")
-  private String servlets;
+public class Hub extends HashMap<String, String> implements GridRole {
+
+  public static final String PORT = "port";
+  public static final String HOST = "host";
+  public static final String ROLE = "role";
+  public static final String SERVLETS = "servlets";
 
   @Override
   public String getPort() {
-    return port;
+    return this.get(PORT);
   }
 
   public void setPort(String port) {
-    this.port = port;
+    this.put(PORT, port);
   }
 
   @Override
   public String getHost() {
-    return host;
+    return this.get(HOST);
   }
 
   public void setHost(String host) {
-    this.host = host;
+    this.put(HOST,  host);
+  }
+
+  public String getRole() {
+    return this.get(ROLE);
+  }
+
+  public void setRole(String role) {
+    this.put(ROLE, role);
+  }
+
+  public String getServlets() {
+    return this.get(SERVLETS);
+  }
+
+  public void setServlets(String servlets) {
+    this.put(SERVLETS,  servlets);
   }
 
   @Override
   public String getStartCommand() {
-    return "-role " + role + " -port " + port + " -host " + host + " -servlets " + servlets;
-  }
-
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  public String getServlets() {
-    return servlets;
-  }
-
-  public void setServlets(String servlets) {
-    this.servlets = servlets;
+    return "-role " + getRole() + " -port " + getPort() + " -host " + getHost() + " -servlets " + getServlets();
   }
 }
 

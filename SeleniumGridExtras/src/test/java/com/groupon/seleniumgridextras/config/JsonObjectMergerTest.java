@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras.config;
 
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import com.google.gson.JsonObject;
@@ -48,6 +49,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -226,7 +229,52 @@ public class JsonObjectMergerTest {
     assertEquals(expecteResult, JsonObjectMerger.mergeWithDefaults(startingObject, overwrite));
 
 
+  }
 
+  @Test
+  public void testDima() throws Exception {
+
+    String dima = "{\n"
+                  + "  \"capabilities\":\n"
+                  + "      [\n"
+                  + "        {\n"
+                  + "          \"browserName\": \"*firefox\",\n"
+                  + "          \"maxInstances\": 3,\n"
+                  + "          \"seleniumProtocol\": \"Selenium\"\n"
+                  + "        }\n"
+                  + "      ],\n"
+                  + "  \"configuration\":\n"
+                  + "  {\n"
+                  + "    \"proxy\": \"org.openqa.grid.selenium.proxy.DefaultRemoteProxy\",\n"
+                  + "    \"maxSession\": 5,\n"
+                  + "    \"port\": 5555,\n"
+                  + "    \"host\": \"127.0.0.1\",\n"
+                  + "    \"register\": true,\n"
+                  + "    \"registerCycle\": 5000,\n"
+                  + "    \"hubPort\": 4444,\n"
+                  + "    \"hubHost\": \"127.0.0.1\"\n"
+                  + "  }\n"
+                  + "}";
+
+    Config foo = new Config();
+
+    foo.toPrettyJsonString();
+    Gson gson = new Gson();
+
+    Map newHash = new HashMap();
+
+    newHash.put("dima", "was here");
+    newHash.put("configuration", new HashMap());
+    Map config = (HashMap) newHash.get("configuration");
+    config.put("proxy", "12334");
+
+    Map bar = gson.fromJson(dima,  HashMap.class);
+
+    bar.putAll(newHash);
+
+
+
+    System.out.println(bar);
 
   }
 

@@ -43,11 +43,11 @@ public class IEDriver extends DriverInfo {
 
   @Override
   public String getExecutablePath() {
-    String seporator = "/";
+    String separator = "/";
     if (OSChecker.isWindows()) {
-      seporator = "\\";
+      separator = "\\";
     }
 
-    return getDirectory() + seporator + getBit() + "_" + getVersion() + ".exe";
+    return this.getDirectory() + separator + this.getBit() + "_" + this.getVersion() + ".exe";
   }
 }

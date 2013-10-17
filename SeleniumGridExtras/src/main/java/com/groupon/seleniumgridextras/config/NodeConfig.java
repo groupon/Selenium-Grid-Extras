@@ -38,96 +38,95 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.annotations.SerializedName;
 
-public class NodeConfig implements GridRole {
+import java.util.HashMap;
 
-  @SerializedName("-port")
-  private String port;
-  @SerializedName("-hub")
-  private String hub;
-  @SerializedName("-host")
-  private String host;
-  @SerializedName("-role")
-  private String role;
-  @SerializedName("-nodeTimeout")
-  private String nodeTimeout;
-  @SerializedName("-maxSession")
-  private int maxSession;
-  @SerializedName("-proxy")
-  private String proxy;
-  @SerializedName("-Dwebdriver.ie.driver")
-  private String ieDriver;
+public class NodeConfig extends HashMap<String, String> implements GridRole {
 
-  public void setIeDriver(String ieDriverPath){
-    this.ieDriver = ieDriverPath;
+
+  public static final String IE_DRIVER = "ieDriver";
+  private static final String PORT = "PORT";
+  public static final String HUB = "HUB";
+  public static final String ROLE = "ROLE";
+  public static final String NODE_TIMEOUT = "nodeTimeout";
+  public static final String MAX_SESSION = "maxSession";
+  public static final String PROXY = "proxy";
+
+  public void setIeDriver(String ieDriverPath) {
+    this.put(IE_DRIVER, ieDriverPath);
   }
 
-  @Override
-  public String getPort() {
-    return port;
-  }
-
-  public void setPort(String port) {
-    this.port = port;
+  public String getIeDriver() {
+    return this.get(IE_DRIVER);
   }
 
   @Override
   public String getHost() {
-    return host;
+    return RuntimeConfig.getCurrentHostIP();
   }
 
-  public void setHost(String host) {
-    this.host = host;
+  @Override
+  public String getPort() {
+    return this.get(PORT);
+  }
+
+
+  public void setPort(String port) {
+    this.put(PORT, port);
+  }
+
+  public String getHub() {
+    return this.get(HUB);
+  }
+
+  public void setHub(String hub) {
+    this.put(HUB, hub);
+  }
+
+  public String getRole() {
+    return this.get(ROLE);
+  }
+
+  public void setRole(String role) {
+    this.put(ROLE, role);
+  }
+
+  public String getNodeTimeout() {
+    return this.get(NODE_TIMEOUT);
+  }
+
+  public void setNodeTimeout(String nodeTimeout) {
+    this.put(NODE_TIMEOUT, nodeTimeout);
+  }
+
+  public String getMaxSession() {
+    return this.get(MAX_SESSION);
+  }
+
+  public void setMaxSession(String maxSession) {
+    this.put(MAX_SESSION, maxSession);
+  }
+
+  public String getProxy() {
+    return this.get(PROXY);
+  }
+
+  public void setProxy(String proxy) {
+    this.put(PROXY, proxy);
   }
 
   @Override
   public String getStartCommand() {
-    String command = "-role " + role + " -port " + port + " -host " + host + " -hub " + hub
-                     + " -nodeTimeout " + nodeTimeout + " -maxSession " + maxSession + " -proxy " + proxy;
+    String
+        command =
+        "-role " + getRole() + " -port " + getPort() + " -host " + getHost() + " -hub " + getHub()
+        + " -nodeTimeout " + getNodeTimeout() + " -maxSession " + getMaxSession() + " -proxy "
+        + getProxy();
 
-    if(ieDriver != null){
-      command = command + " -Dwebdriver.ie.driver=" + ieDriver;
+    if (getIeDriver() != null) {
+      command = command + " -Dwebdriver.ie.driver=" + getIeDriver();
     }
 
     return command;
   }
 
-  public String getHub() {
-    return hub;
-  }
-
-  public void setHub(String hub) {
-    this.hub = hub;
-  }
-
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
-  }
-
-  public String getNodeTimeout() {
-    return nodeTimeout;
-  }
-
-  public void setNodeTimeout(String nodeTimeout) {
-    this.nodeTimeout = nodeTimeout;
-  }
-
-  public int getMaxSession() {
-    return maxSession;
-  }
-
-  public void setMaxSession(int maxSession) {
-    this.maxSession = maxSession;
-  }
-
-  public String getProxy() {
-    return proxy;
-  }
-
-  public void setProxy(String proxy) {
-    this.proxy = proxy;
-  }
 }
