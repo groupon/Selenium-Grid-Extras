@@ -78,8 +78,14 @@ public class RuntimeConfig {
     Config defaultConfig = DefaultConfig.getDefaultConfig();
 
     String configString = readConfigFile(configFile);
+    //Reason to use the "" instead of checking if the config already exists is because
+    //if the file does exist but there is any formatting error, or parsing error, etc..
+    //We assume file does not exist and overwrite it with good configs.
     if (configString != "") {
       config = new Gson().fromJson(configString, Config.class);
+
+
+
     } else {
       // first time runner
       config = new Config();
