@@ -44,9 +44,9 @@ public class NodeConfig extends HashMap<String, String> implements GridRole {
 
 
   public static final String IE_DRIVER = "ieDriver";
-  private static final String PORT = "PORT";
-  public static final String HUB = "HUB";
-  public static final String ROLE = "ROLE";
+  private static final String PORT = "port";
+  public static final String HUB = "hub";
+  public static final String ROLE = "role";
   public static final String NODE_TIMEOUT = "nodeTimeout";
   public static final String MAX_SESSION = "maxSession";
   public static final String PROXY = "proxy";
