@@ -19,14 +19,14 @@ import java.util.Map;
 
 public class Config {
 
-  public static final String ACTIVATE_MODULES = "ACTIVATE_MODULES";
-  public static final String DISABLED_MODULES = "DISABLED_MODULES";
-  public static final String SETUP = "SETUP";
-  public static final String TEAR_DOWN = "TEAR_DOWN";
-  public static final String GRID = "GRID";
-  public static final String WEBDRIVER = "WEBDRIVER";
-  public static final String IEDRIVER = "IEDRIVER";
-  public static final String EXPOSE_DIRECTORY = "EXPOSE_DIRECTORY";
+  public static final String ACTIVATE_MODULES = "active_modules";
+  public static final String DISABLED_MODULES = "disabled_modules";
+  public static final String SETUP = "setup";
+  public static final String TEAR_DOWN = "tear_down";
+  public static final String GRID = "grid";
+  public static final String WEBDRIVER = "webdriver";
+  public static final String IEDRIVER = "iedriver";
+  public static final String EXPOSE_DIRECTORY = "expose_directory";
 
   public static final String AUTO_START_NODE = "auto_start_node";
   public static final String AUTO_START_HUB = "auto_start_hub";
