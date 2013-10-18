@@ -54,6 +54,10 @@ public class Config {
 
   }
 
+  public void overwriteConfig(Map overwrites){
+    HashMapMerger.overwriteMergeStrategy(theConfigMap, overwrites);
+  }
+
 
   public List<String> getActivatedModules() {
     return (List<String>) theConfigMap.get(ACTIVATE_MODULES);
@@ -167,13 +171,6 @@ public class Config {
     return (JsonObject) new JsonParser().parse(this.toJsonString());
   }
 
-  public boolean getAutoStartNode() {
-    return theConfigMap.get(AUTO_START_HUB).equals("1") ? true : false;
-  }
-
-  public boolean getAutoStartHub() {
-    return theConfigMap.get(AUTO_START_NODE).equals("1") ? true : false;
-  }
 
   public void setDefaultRole(String defaultRole) {
     theConfigMap.put(DEFAULT_ROLE, defaultRole);
@@ -185,6 +182,14 @@ public class Config {
 
   public void setAutoStartNode(String autoStartNode) {
     theConfigMap.put(AUTO_START_NODE, autoStartNode);
+  }
+
+  public boolean getAutoStartNode() {
+    return theConfigMap.get(AUTO_START_NODE).equals("1") ? true : false;
+  }
+
+  public boolean getAutoStartHub() {
+    return theConfigMap.get(AUTO_START_HUB).equals("1") ? true : false;
   }
 
   public Hub getHub() {
