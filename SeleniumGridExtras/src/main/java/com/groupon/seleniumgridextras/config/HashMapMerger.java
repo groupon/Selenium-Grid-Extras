@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConfigMerger {
+public class HashMapMerger {
 
   public static Config merge(Config defaultConfig, Config overwriteConfig){
 
