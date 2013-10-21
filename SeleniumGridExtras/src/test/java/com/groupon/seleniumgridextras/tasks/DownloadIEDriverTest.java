@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.junit.After;
@@ -54,7 +55,10 @@ public class DownloadIEDriverTest {
   @Before
   public void setUp() throws Exception {
     RuntimeConfig.setConfigFile("download_ie_test.json");
-    RuntimeConfig.loadDefaults();
+    Config config = new Config(true);
+    config.writeToDisk(RuntimeConfig.getConfigFile());
+
+    RuntimeConfig.load();
     task = new DownloadIEDriver();
   }
 

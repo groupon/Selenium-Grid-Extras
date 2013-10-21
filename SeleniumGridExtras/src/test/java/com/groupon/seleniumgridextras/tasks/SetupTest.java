@@ -42,6 +42,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.After;
 import org.junit.Before;
@@ -59,7 +61,10 @@ public class SetupTest {
   @Before
   public void setUp() throws Exception {
     RuntimeConfig.setConfigFile("setup_test.json");
-    RuntimeConfig.loadDefaults();
+    Config config = new Config(true);
+    config.writeToDisk(RuntimeConfig.getConfigFile());
+
+    RuntimeConfig.load();
 
     task = new Setup();
     Boolean initialized = task.initialize();

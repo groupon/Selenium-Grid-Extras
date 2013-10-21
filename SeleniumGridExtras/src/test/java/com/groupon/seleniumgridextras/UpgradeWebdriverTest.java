@@ -39,6 +39,8 @@ package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridWrapper;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
@@ -60,7 +62,10 @@ public class UpgradeWebdriverTest {
   @Before
   public void setUp() throws Exception {
     RuntimeConfig.setConfigFile("upgrade_test.json");
-    RuntimeConfig.loadDefaults();
+    Config config = new Config(true);
+    config.writeToDisk(RuntimeConfig.getConfigFile());
+
+    RuntimeConfig.load();
     task = new UpgradeWebdriver();
   }
 

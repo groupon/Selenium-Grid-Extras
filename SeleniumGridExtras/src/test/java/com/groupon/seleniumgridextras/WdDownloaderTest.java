@@ -38,6 +38,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.WdDownloader;
@@ -59,7 +60,10 @@ public class WdDownloaderTest {
   @Before
   public void setUp() throws Exception {
     RuntimeConfig.setConfigFile("downloader_test.json");
-    RuntimeConfig.loadDefaults();
+    Config config = new Config(true);
+    config.writeToDisk(RuntimeConfig.getConfigFile());
+
+    RuntimeConfig.load();
     downloader = new WdDownloader(version);
   }
 

@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
@@ -55,7 +56,9 @@ public class DownloadWebdriverTest {
   @Before
   public void setUp() throws Exception {
     RuntimeConfig.setConfigFile("download_test.json");
-    RuntimeConfig.loadDefaults();
+    Config config = new Config(true);
+    config.writeToDisk(RuntimeConfig.getConfigFile());
+    RuntimeConfig.load();
     task = new DownloadWebdriver();
   }
 

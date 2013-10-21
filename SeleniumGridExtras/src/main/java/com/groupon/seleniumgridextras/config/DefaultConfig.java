@@ -41,6 +41,7 @@ import com.groupon.seleniumgridextras.OSChecker;
 public class DefaultConfig {
 
   private static Config config;
+  private static final String webDriverDefaultVersion = "2.37.0";
 
   public static Config getDefaultConfig() {
     config = new Config();
@@ -55,6 +56,10 @@ public class DefaultConfig {
     loadSharedDir();
 
     return config;
+  }
+
+  public static String getWebDriverDefaultVersion(){
+    return webDriverDefaultVersion;
   }
 
 
@@ -77,7 +82,7 @@ public class DefaultConfig {
     }
 
     config.getWebdriver().setDirectory(tmpDir + "webdriver");
-    config.getWebdriver().setVersion("2.35.3");
+    config.getWebdriver().setVersion(DefaultConfig.getWebDriverDefaultVersion());
 
   }
 

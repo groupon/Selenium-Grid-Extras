@@ -35,52 +35,96 @@ public class Config {
   public static final String HUB_CONFIG = "hub_config";
 
 
+
   protected Map theConfigMap;
 
   public Config() {
     theConfigMap = new HashMap();
-    theConfigMap.put(ACTIVATE_MODULES, new ArrayList<String>());
-    theConfigMap.put(DISABLED_MODULES, new ArrayList<String>());
-    theConfigMap.put(SETUP, new ArrayList<String>());
-    theConfigMap.put(TEAR_DOWN, new ArrayList<String>());
+    initialize();
+  }
 
-    theConfigMap.put(GRID, new StringMap());
-    theConfigMap.put(WEBDRIVER, new WebDriver());
-    theConfigMap.put(IEDRIVER, new IEDriver());
-
-    theConfigMap.put(HUB_CONFIG, new Hub());
-    theConfigMap.put(NODE_CONFIG, new NodeConfig());
-
+  public Config(Boolean emptyConfig){
+    theConfigMap = new HashMap();
+    if (!emptyConfig){
+      initialize();
+    }
 
   }
 
+  private void initialize(){
+    getConfigMap().put(ACTIVATE_MODULES, new ArrayList<String>());
+    getConfigMap().put(DISABLED_MODULES, new ArrayList<String>());
+    getConfigMap().put(SETUP, new ArrayList<String>());
+    getConfigMap().put(TEAR_DOWN, new ArrayList<String>());
+
+    getConfigMap().put(GRID, new StringMap());
+    initializeWebdriver();
+    getConfigMap().put(IEDRIVER, new IEDriver());
+
+    initializeHubConfig();
+    initializeNodeConfig();
+  }
+
+  private void initializeNodeConfig() {
+    getConfigMap().put(NODE_CONFIG, new NodeConfig());
+  }
+
+  private void initializeHubConfig() {
+    getConfigMap().put(HUB_CONFIG, new Hub());
+  }
+
+  private void initializeWebdriver() {
+    getConfigMap().put(WEBDRIVER, new WebDriver());
+  }
+
+  private Map getConfigMap() {
+    return theConfigMap;
+  }
+
+
+
+  public static Config initilizedFromUserInput(){
+    Config config = new Config(true);
+    config.initializeWebdriver();
+    config.initializeHubConfig();
+    config.initializeNodeConfig();
+
+    return FirstTimeRunConfig.customiseConfig(config);
+  }
+
   public void overwriteConfig(Map overwrites){
-    HashMapMerger.overwriteMergeStrategy(theConfigMap, overwrites);
+    if (overwrites.containsKey("theConfigMap")){
+      System.out.println("Merging config overwrites from file");
+      System.out.println("File config" +  (Map<String, Object>) overwrites.get("theConfigMap"));
+      System.out.println("Before\n\n\n" + getConfigMap());
+      HashMapMerger.overwriteMergeStrategy(getConfigMap(), (Map<String, Object>) overwrites.get("theConfigMap"));
+      System.out.println("After\n\n\n" + getConfigMap());
+    }
   }
 
 
   public List<String> getActivatedModules() {
-    return (List<String>) theConfigMap.get(ACTIVATE_MODULES);
+    return (List<String>) getConfigMap().get(ACTIVATE_MODULES);
   }
 
   public List<String> getDisabledModules() {
-    return (List<String>) theConfigMap.get(DISABLED_MODULES);
+    return (List<String>) getConfigMap().get(DISABLED_MODULES);
   }
 
   public String getExposedDirectory() {
-    return (String) theConfigMap.get(EXPOSE_DIRECTORY);
+    return (String) getConfigMap().get(EXPOSE_DIRECTORY);
   }
 
   public List<String> getSetup() {
-    return (List<String>) theConfigMap.get(SETUP);
+    return (List<String>) getConfigMap().get(SETUP);
   }
 
   public List<String> getTeardown() {
-    return (List<String>) theConfigMap.get(TEAR_DOWN);
+    return (List<String>) getConfigMap().get(TEAR_DOWN);
   }
 
   public StringMap getGrid() {
-    return (StringMap) theConfigMap.get(GRID);
+    return (StringMap) getConfigMap().get(GRID);
   }
 
   public void setIEdriver() {
@@ -89,16 +133,16 @@ public class Config {
 
   public IEDriver getIEdriver() {
     try {
-      return (IEDriver) theConfigMap.get(IEDRIVER);
+      return (IEDriver) getConfigMap().get(IEDRIVER);
     } catch (ClassCastException e) {
       StringMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) theConfigMap.get(IEDRIVER);
+          (StringMap) getConfigMap().get(IEDRIVER);
       IEDriver ieDriver = new IEDriver();
 
       ieDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
 
-      theConfigMap.put(IEDRIVER, ieDriver);
+      getConfigMap().put(IEDRIVER, ieDriver);
 
       return ieDriver;
     }
@@ -106,16 +150,16 @@ public class Config {
 
   public WebDriver getWebdriver() {
     try {
-      return (WebDriver) theConfigMap.get(WEBDRIVER);
+      return (WebDriver) getConfigMap().get(WEBDRIVER);
     } catch (ClassCastException e) {
       StringMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) theConfigMap.get(WEBDRIVER);
+          (StringMap) getConfigMap().get(WEBDRIVER);
       WebDriver webDriver = new WebDriver();
 
       webDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
 
-      theConfigMap.put(WEBDRIVER, webDriver);
+      getConfigMap().put(WEBDRIVER, webDriver);
 
       return webDriver;
     }
@@ -151,7 +195,7 @@ public class Config {
   }
 
   public void setSharedDir(String sharedDir) {
-    theConfigMap.put(EXPOSE_DIRECTORY, sharedDir);
+    getConfigMap().put(EXPOSE_DIRECTORY, sharedDir);
   }
 
   public String toJsonString() {
@@ -173,60 +217,60 @@ public class Config {
 
 
   public void setDefaultRole(String defaultRole) {
-    theConfigMap.put(DEFAULT_ROLE, defaultRole);
+    getConfigMap().put(DEFAULT_ROLE, defaultRole);
   }
 
   public void setAutoStartHub(String autoStartHub) {
-    theConfigMap.put(AUTO_START_HUB, autoStartHub);
+    getConfigMap().put(AUTO_START_HUB, autoStartHub);
   }
 
   public void setAutoStartNode(String autoStartNode) {
-    theConfigMap.put(AUTO_START_NODE, autoStartNode);
+    getConfigMap().put(AUTO_START_NODE, autoStartNode);
   }
 
   public boolean getAutoStartNode() {
-    return theConfigMap.get(AUTO_START_NODE).equals("1") ? true : false;
+    return getConfigMap().get(AUTO_START_NODE).equals("1") ? true : false;
   }
 
   public boolean getAutoStartHub() {
-    return theConfigMap.get(AUTO_START_HUB).equals("1") ? true : false;
+    return getConfigMap().get(AUTO_START_HUB).equals("1") ? true : false;
   }
 
   public Hub getHub() {
 
     try {
-      return (Hub) theConfigMap.get(HUB_CONFIG);
+      return (Hub) getConfigMap().get(HUB_CONFIG);
     } catch (ClassCastException e) {
       StringMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) theConfigMap.get(HUB_CONFIG);
+          (StringMap) getConfigMap().get(HUB_CONFIG);
       Hub hubConfig = new Hub();
 
       hubConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
 
-      theConfigMap.put(HUB_CONFIG, hubConfig);
+      getConfigMap().put(HUB_CONFIG, hubConfig);
 
       return hubConfig;
     }
   }
 
   public void setHub(Hub hub) {
-    theConfigMap.put(HUB_CONFIG, hub);
+    getConfigMap().put(HUB_CONFIG, hub);
   }
 
 
   public NodeConfig getNode() {
     try {
-      return (NodeConfig) theConfigMap.get(NODE_CONFIG);
+      return (NodeConfig) getConfigMap().get(NODE_CONFIG);
     } catch (ClassCastException e) {
       StringMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) theConfigMap.get(NODE_CONFIG);
+          (StringMap) getConfigMap().get(NODE_CONFIG);
       NodeConfig nodeConfig = new NodeConfig();
 
       nodeConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
 
-      theConfigMap.put(NODE_CONFIG, nodeConfig);
+      getConfigMap().put(NODE_CONFIG, nodeConfig);
 
       return nodeConfig;
     }
@@ -234,6 +278,6 @@ public class Config {
   }
 
   public String getDefaultRole() {
-    return (String) theConfigMap.get(DEFAULT_ROLE);
+    return (String) getConfigMap().get(DEFAULT_ROLE);
   }
 }

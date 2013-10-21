@@ -70,7 +70,8 @@ public class FirstTimeRunConfig {
   }
 
   private static void setWebDriverVersion(Config defaultConfig) {
-    String newVersion = askQuestion("What version of webdriver JAR should we use?", defaultConfig.getWebdriver().getVersion());
+    System.out.println(defaultConfig);
+    String newVersion = askQuestion("What version of webdriver JAR should we use?", DefaultConfig.getWebDriverDefaultVersion());
     defaultConfig.getWebdriver().setVersion(newVersion);
   }
 

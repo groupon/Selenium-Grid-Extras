@@ -79,6 +79,7 @@ public class RuntimeConfigTest {
   }
 
   private void loadOverwriteConfigs() throws Exception{
+    JsonObject fullConfig = new JsonObject();
     JsonObject theConfigMap = new JsonObject();
 
     JsonObject webdriver  = new JsonObject();
@@ -92,7 +93,10 @@ public class RuntimeConfigTest {
 
 
     File f = new File(RuntimeConfig.getConfigFile());
-    FileUtils.writeStringToFile(f, theConfigMap.toString());
+
+    fullConfig.add("theConfigMap", theConfigMap);
+
+    FileUtils.writeStringToFile(f, fullConfig.toString());
 
   }
 

@@ -38,10 +38,15 @@
 package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -61,7 +66,8 @@ public class RuntimeConfig {
     config = new Config();
   }
 
-  protected static void clearConfig(){
+  protected static void clearConfig() {
+    //Use only for tests, don't use for any other reason
     config = null;
   }
 
@@ -74,31 +80,25 @@ public class RuntimeConfig {
   }
 
   public static Config load() {
-
-    Config defaultConfig = DefaultConfig.getDefaultConfig();
+    Map overwriteValues;
+    config = DefaultConfig.getDefaultConfig();
 
     String configString = readConfigFile(configFile);
     //Reason to use the "" instead of checking if the config already exists is because
     //if the file does exist but there is any formatting error, or parsing error, etc..
     //We assume file does not exist and overwrite it with good configs.
     if (configString != "") {
-      config = new Gson().fromJson(configString, Config.class);
-
-
-
+      overwriteValues = new Gson().fromJson(configString, HashMap.class);
     } else {
       // first time runner
-      config = new Config();
-      config = FirstTimeRunConfig.customiseConfig(config);
-      config.writeToDisk(configFile);
+      Config userInput = Config.initilizedFromUserInput();
+      userInput.writeToDisk(RuntimeConfig.getConfigFile());
+      configString = readConfigFile(configFile);
+      overwriteValues = new Gson().fromJson(configString, HashMap.class);
     }
+    config.overwriteConfig(overwriteValues);
 
     return config;
-  }
-
-  public static Config loadDefaults() {
-    DefaultConfig.getDefaultConfig().writeToDisk(configFile);
-    return load();
   }
 
   public static String getSeleniumGridExtrasJarFile() {
