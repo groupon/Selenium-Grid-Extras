@@ -14,6 +14,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public class Config {
   public static final String DEFAULT_ROLE = "default_role";
   public static final String NODE_CONFIG = "node_config";
   public static final String HUB_CONFIG = "hub_config";
-
+  public static final String NODE_CONFIG_FILES = "node_config_files";
 
 
   protected Map theConfigMap;
@@ -61,8 +62,15 @@ public class Config {
     initializeWebdriver();
     getConfigMap().put(IEDRIVER, new IEDriver());
 
+    getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
+
     initializeHubConfig();
     initializeNodeConfig();
+  }
+
+  public void addNodeConfigFile(String filename){
+    LinkedList<String> files = (LinkedList<String>) getConfigMap().get(NODE_CONFIG_FILES);
+    files.add(filename);
   }
 
   private void initializeNodeConfig() {
