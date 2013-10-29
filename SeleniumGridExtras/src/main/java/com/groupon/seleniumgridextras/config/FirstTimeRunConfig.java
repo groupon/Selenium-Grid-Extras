@@ -1,4 +1,4 @@
-/**
+ /**
  * Copyright (c) 2013, Groupon, Inc.
  * All rights reserved.
  *
@@ -36,9 +36,14 @@
  */
 package com.groupon.seleniumgridextras.config;
 
+import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.config.capabilities.Capability;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FirstTimeRunConfig {
 
@@ -49,15 +54,88 @@ public class FirstTimeRunConfig {
 
     setWebDriverVersion(defaultConfig);
     setDefaultService(defaultConfig);
-    setGridHubUrl(defaultConfig);
+
+    String hubHost = getGridHubHost();
+    String hubPort = getGridHubPort();
+
+    List<Capability> caps = getDesiredCapabilities();
+
+    configureNodes(caps, hubHost, hubPort, defaultConfig);
+
     setGridHubAutostart(defaultConfig);
     setGridNodeAutostart(defaultConfig);
 
+
     System.out
-        .println("Thank you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
+        .println(
+            "Thank you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
     System.out.println("You can modify this file directly to tweak more options");
     return defaultConfig;
   }
+
+  private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost, String hubPort, Config defaultConfig){
+    List<GridNode> nodes = new LinkedList<GridNode>();
+    int nodePort = 5555;
+
+    for(Capability cap : capabilities){
+      GridNode node = new GridNode();
+
+      node.getCapabilities().add(cap);
+      node.getConfiguration().setHost(RuntimeConfig.getCurrentHostIP());
+      node.getConfiguration().setHubHost(hubHost);
+      node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
+      node.getConfiguration().setPort(nodePort);
+
+      String configFileName = "node_" + nodePort + ".json";
+
+      node.writeToFile(configFileName);
+      defaultConfig.addNodeConfigFile(configFileName);
+      RuntimeConfig.addNode(node);
+
+      nodePort++;
+    }
+
+    return nodes;
+  }
+
+
+  private static List<Capability> getDesiredCapabilities() {
+    List<Capability> chosenCapabilities = new LinkedList<Capability>();
+
+    String platform = askQuestion(
+        "What is node Platform? (WINDOWS|XP|VISTA|MAC|LINUX|UNIX|ANDROID)",
+        guessPlatform());
+
+    for (Capability currentCapability : RuntimeConfig.getAvailableCapabilitiesList()) {
+      String
+          value =
+          askQuestion(
+              "Will this node run '" + currentCapability.getBrowserName() + "' (1-yes/0-no)", "0");
+
+      if (value.equals("1")) {
+        currentCapability.setPlatform(platform.toUpperCase());
+        currentCapability.setBrowserVersion(askQuestion(
+            "What version of '" + currentCapability.getBrowserName() + "' is installed?"));
+
+        chosenCapabilities.add(currentCapability);
+      }
+
+    }
+
+    return chosenCapabilities;
+  }
+
+
+  private static String guessPlatform() {
+    if (OSChecker.isWindows()) {
+      return "WINDOWS";
+    } else if (OSChecker.isMac()) {
+      return "MAC";
+    } else {
+      return "LINUX";
+    }
+  }
+
 
   private static void setGridHubAutostart(Config defaultConfig) {
     String value = askQuestion("Do you want Grid Hub to be auto started? (1-yes/0-no)", "0");
@@ -71,13 +149,21 @@ public class FirstTimeRunConfig {
 
   private static void setWebDriverVersion(Config defaultConfig) {
     System.out.println(defaultConfig);
-    String newVersion = askQuestion("What version of webdriver JAR should we use?", DefaultConfig.getWebDriverDefaultVersion());
+    String
+        newVersion =
+        askQuestion("What version of webdriver JAR should we use?",
+                    DefaultConfig.getWebDriverDefaultVersion());
     defaultConfig.getWebdriver().setVersion(newVersion);
   }
 
-  private static void setGridHubUrl(Config defaultConfig) {
-    String url = askQuestion("What is the url for the Selenium Grid Hub?", "http://localhost:4444");
-    defaultConfig.getNode().setHub(url);
+  private static String getGridHubHost() {
+    String host = askQuestion("What is the HOST for the Selenium Grid Hub?", "127.0.0.1");
+    return host;
+  }
+
+  private static String getGridHubPort() {
+    String port = askQuestion("What is the PORT for the Selenium Grid Hub?", "4444");
+    return port;
   }
 
   private static void setDefaultService(Config defaultConfig) {
@@ -100,6 +186,14 @@ public class FirstTimeRunConfig {
 
     return answer;
 
+  }
+
+  private static String askQuestion(String question) {
+    System.out.println("\n\n" + question);
+    System.out.println("(No Default Value)");
+    String answer = readLine();
+
+    return answer;
   }
 
   private static String readLine() {
