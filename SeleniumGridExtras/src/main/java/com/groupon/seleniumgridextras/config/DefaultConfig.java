@@ -138,7 +138,6 @@ public class DefaultConfig {
     config.setAutoStartNode("1");
 
     setGridHubConfig();
-    setGridNodeConfig();
 
   }
 
@@ -153,25 +152,6 @@ public class DefaultConfig {
     if (!hostIp.equals("")) {
       config.getHub().setHost(hostIp);
     }
-  }
-
-  private static void setGridNodeConfig() {
-    config.getNode().setRole("wd");
-    config.getNode().setPort("4445");
-    config.getNode().setHub("http://localhost:4444");
-    config.getNode().setNodeTimeout("240");
-    config.getNode().setMaxSession("1");
-
-    String hostIp = RuntimeConfig.getCurrentHostIP();
-
-    config.getNode()
-        .setProxy("com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
-
-    if (OSChecker.isWindows()) {
-      config.getNode().setIeDriver(config.getIEdriver().getExecutablePath());
-    }
-
-
   }
 
   private static void loadSharedDir() {
