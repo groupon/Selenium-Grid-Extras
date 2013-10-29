@@ -70,11 +70,11 @@ public class GridNodeTest {
   @After
   public void tearDown() throws Exception {
 
-//    File f = new File(fileaname);
-//
-//    if ( f.exists() ){
-//      f.delete();
-//    }
+    File f = new File(fileaname);
+
+    if ( f.exists() ){
+      f.delete();
+    }
 
   }
 
