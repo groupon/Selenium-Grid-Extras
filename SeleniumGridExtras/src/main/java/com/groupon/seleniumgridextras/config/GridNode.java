@@ -1,27 +1,64 @@
 package com.groupon.seleniumgridextras.config;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
 import org.apache.commons.io.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class GridNode {
 
-  @SerializedName("capabilities")
   private LinkedList<Capability> capabilities;
-  @SerializedName("configuration")
   private GridNodeConfiguration configuration;
 
 
-  public GridNode(){
-    capabilities  = new LinkedList<Capability>();
+  public GridNode() {
+    capabilities = new LinkedList<Capability>();
     configuration = new GridNodeConfiguration();
+  }
+
+  private GridNode(LinkedList<Capability> caps, GridNodeConfiguration config) {
+    capabilities = caps;
+    configuration = config;
+  }
+
+  public static GridNode loadFromFile(String filename) {
+
+    String configString = readConfigFile(filename);
+    Map topLevelHash = getMapFromString(configString);
+
+    String configFromFile = topLevelHash.get("configuration").toString();
+
+    GridNodeConfiguration
+        nodeConfiguration =
+        new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
+
+    List<StringMap> capabilitiesFromFile = (ArrayList<StringMap>) topLevelHash.get("capabilities");
+
+    LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
+
+    for (StringMap cap : capabilitiesFromFile){
+      if (cap.containsKey("browserName")){
+        filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName")));
+      }
+
+    }
+
+    return new GridNode(filteredCapabilities, nodeConfiguration);
   }
 
 
@@ -56,6 +93,51 @@ public class GridNode {
   public String getStartCommand() {
     return "";
   }
+
+
+  protected static String readConfigFile(String filePath) {
+    String returnString = "";
+    try {
+      BufferedReader reader = new BufferedReader(new FileReader(filePath));
+      String line = null;
+      while ((line = reader.readLine()) != null) {
+        returnString = returnString + line;
+      }
+    } catch (FileNotFoundException error) {
+      error.printStackTrace();
+      System.exit(1);
+    } catch (IOException error) {
+      error.printStackTrace();
+      System.exit(1);
+    }
+    return returnString;
+  }
+
+  public static Map getMapFromString(String input) {
+    return new Gson().fromJson(input, HashMap.class);
+  }
+
+
+  //<Grumble Grumble>, google parsing Gson, Grumble
+  protected static Map doubleToIntConverter(Map input) {
+    for (Object key : input.keySet()) {
+
+      if (input.get(key) instanceof Double) {
+        input.put(key, ((Double) input.get(key)).intValue());
+      }
+    }
+
+    return input;
+  }
+
+  public static Map stringMapToHashMap(StringMap input) {
+    Map output = new HashMap();
+    output.putAll(input);
+
+    return output;
+  }
+
+  //</Grubmle>
 
 
   public class GridNodeConfiguration {

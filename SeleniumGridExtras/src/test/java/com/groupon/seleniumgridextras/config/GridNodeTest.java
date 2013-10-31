@@ -1,26 +1,24 @@
 package com.groupon.seleniumgridextras.config;
 
+
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.capabilities.Firefox;
 
-import com.google.gson.internal.StringMap;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.grid.internal.utils.GridNodeConfiguration;
 
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,7 +35,6 @@ public class GridNodeTest {
 
   @Before
   public void setUp() throws Exception {
-    node = new GridNode();
 
     expectedConfiguration = new HashMap();
     expectedConfiguration
@@ -53,7 +50,7 @@ public class GridNodeTest {
     expectedCapabilities = new LinkedList<Capability>();
     expectedCapabilities.add(new Firefox());
 
-
+    node = new GridNode();
     node.getConfiguration().setHubHost("google.com");
     node.getConfiguration().setHost("localhost");
     node.getConfiguration().setHubPort(4444);
@@ -64,7 +61,6 @@ public class GridNodeTest {
     node.writeToFile(fileaname);
 
 
-
   }
 
   @After
@@ -72,11 +68,29 @@ public class GridNodeTest {
 
     File f = new File(fileaname);
 
-    if ( f.exists() ){
+    if (f.exists()) {
       f.delete();
     }
 
   }
+
+  @Test
+  public void testCreateNodeFromFile() throws Exception {
+
+    GridNode nodeFromFile = GridNode.loadFromFile(fileaname);
+
+    assertEquals(1, nodeFromFile.getCapabilities().size());
+    assertEquals(expectedCapabilities, nodeFromFile.getCapabilities());
+
+    //Find lowest common denamitator of comparison which is a HasMap, convert everything into that andd run test
+    Map expected = new Gson().fromJson(new Gson().toJson(expectedConfiguration), HashMap.class);
+    Map
+        actual =
+        new Gson().fromJson(new Gson().toJson(nodeFromFile.getConfiguration()), HashMap.class);
+
+    assertEquals(expected, actual);
+  }
+
 
   @Test
   public void testGetCapabilities() throws Exception {
@@ -102,12 +116,12 @@ public class GridNodeTest {
     List actualCapabilities = (ArrayList) actual.get("capabilities");
     assertEquals(1, actualCapabilities.size());
 
-    Map actualCapability = getMapFromString(actualCapabilities.get(0).toString());
+    Map actualCapability = GridNode.getMapFromString(actualCapabilities.get(0).toString());
 
-    actualCapability = doubleToIntConverter(actualCapability);
+    actualCapability = GridNode.doubleToIntConverter(actualCapability);
 
     Map expectedFirefox = new HashMap();
-    expectedFirefox.put("browserName", "*firefox");
+    expectedFirefox.put("browserName", "firefox");
     expectedFirefox.put("maxInstances", 1);
     expectedFirefox.put("seleniumProtocol", "Selenium");
 
@@ -118,73 +132,25 @@ public class GridNodeTest {
   public void testConfigurationProperlyWrittenToFile() throws Exception {
     Map actual = getMapFromConfigFile(fileaname);
 
-    Map actualConfiguration = stringMapToHashMap((StringMap) actual.get("configuration"));
-    actualConfiguration = doubleToIntConverter(actualConfiguration);
-
+    Map actualConfiguration = GridNode.stringMapToHashMap((StringMap) actual.get("configuration"));
+    actualConfiguration = GridNode.doubleToIntConverter(actualConfiguration);
     assertEquals(expectedConfiguration, actualConfiguration);
 
-
-  }
-
-  @Test
-  public void testGetStartCommand() throws Exception {
-
-  }
-
-  private Map getMapFromString(String input){
-    return new Gson().fromJson(input, HashMap.class);
-  }
-
-  private Map getMapFromConfigFile(String filenameToUse){
-    String nodeConfigString = assertFileExistsAndRead(filenameToUse);
-    return new Gson().fromJson(nodeConfigString, HashMap.class);
   }
 
   private String assertFileExistsAndRead(String filenameToUse) {
     File f = new File(filenameToUse);
     assertTrue(f.exists());
 
-    String stringFromFile = readConfigFile(filenameToUse);
+    String stringFromFile = GridNode.readConfigFile(filenameToUse);
     assertNotEquals("", stringFromFile);
     return stringFromFile;
   }
 
-
-  //<Grumble Grumble>, google parsing Gson, Grumble
-  private Map doubleToIntConverter(Map input) {
-    for (Object key : input.keySet()) {
-
-      if (input.get(key) instanceof Double) {
-        input.put(key, ((Double) input.get(key)).intValue());
-      }
-    }
-
-    return input;
+  private Map getMapFromConfigFile(String filenameToUse) {
+    String nodeConfigString = assertFileExistsAndRead(filenameToUse);
+    return GridNode.getMapFromString(nodeConfigString);
   }
 
-  private Map stringMapToHashMap(StringMap input) {
-    Map output = new HashMap();
-    output.putAll(input);
-
-    return output;
-  }
-
-  //</Grubmle>
-
-  private String readConfigFile(String filePath) {
-    String returnString = "";
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(filePath));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        returnString = returnString + line;
-      }
-    } catch (FileNotFoundException error) {
-      System.out.println("File " + filePath + " does not exist, going to use default configs");
-    } catch (IOException error) {
-      System.out.println("Error reading" + filePath + ". Going with default configs");
-    }
-    return returnString;
-  }
 
 }
