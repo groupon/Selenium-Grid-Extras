@@ -88,12 +88,16 @@ public class DefaultConfig {
 
   private static void loadIEDriverInfo() {
     String tmpDir;
+    String delimiter;
+
 
     if (OSChecker.isWindows()) {
-      tmpDir = "\\webdriver\\";
+      delimiter = "\\";
     } else {
-      tmpDir = "/tmp/webdriver/";
+      delimiter = "/";
     }
+
+    tmpDir = config.getWebdriver().getDirectory() + delimiter;
 
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
     config.getIEdriver().setVersion("2.35.3");
