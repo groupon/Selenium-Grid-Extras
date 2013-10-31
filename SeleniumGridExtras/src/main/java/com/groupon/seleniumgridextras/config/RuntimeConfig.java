@@ -38,19 +38,14 @@
 package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
