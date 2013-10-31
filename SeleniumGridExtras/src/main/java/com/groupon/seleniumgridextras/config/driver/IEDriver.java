@@ -37,8 +37,6 @@
 
 package com.groupon.seleniumgridextras.config.driver;
 
-import com.groupon.seleniumgridextras.OSChecker;
-
 public class IEDriver extends DriverInfo {
 
   @Override
