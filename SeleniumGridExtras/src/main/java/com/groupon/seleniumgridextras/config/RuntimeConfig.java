@@ -92,7 +92,7 @@ public class RuntimeConfig {
       overwriteValues = new Gson().fromJson(configString, HashMap.class);
     }
     config.overwriteConfig(overwriteValues);
-
+    config.loadNodeClasses();
     return config;
   }
 
