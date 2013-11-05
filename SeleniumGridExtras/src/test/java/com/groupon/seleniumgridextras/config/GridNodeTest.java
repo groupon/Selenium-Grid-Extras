@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.config;
 
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -11,7 +10,6 @@ import com.groupon.seleniumgridextras.config.capabilities.Firefox;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.grid.internal.utils.GridNodeConfiguration;
 
 
 import static org.junit.Assert.assertEquals;
