@@ -1,4 +1,4 @@
- /**
+/**
  * Copyright (c) 2013, Groupon, Inc.
  * All rights reserved.
  *
@@ -58,12 +58,13 @@ public class FirstTimeRunConfig {
     String hubHost = getGridHubHost();
     String hubPort = getGridHubPort();
 
-    List<Capability> caps = getDesiredCapabilities();
+    List<Capability> caps = getCapabilitiesFromUser();
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
 
     setGridHubAutostart(defaultConfig);
     setGridNodeAutostart(defaultConfig);
+    setIeDriverVersion(defaultConfig);
 
 
     System.out
@@ -73,11 +74,16 @@ public class FirstTimeRunConfig {
     return defaultConfig;
   }
 
-  private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost, String hubPort, Config defaultConfig){
+  private static void setIeDriverVersion(Config defaultConfig){
+    defaultConfig.getIEdriver().setVersion(askQuestion("What version of IEDriver.exe to use?", "2.35.3"));
+  }
+
+  private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost,
+                                               String hubPort, Config defaultConfig) {
     List<GridNode> nodes = new LinkedList<GridNode>();
     int nodePort = 5555;
 
-    for(Capability cap : capabilities){
+    for (Capability cap : capabilities) {
       GridNode node = new GridNode();
 
       node.getCapabilities().add(cap);
@@ -89,8 +95,7 @@ public class FirstTimeRunConfig {
       String configFileName = "node_" + nodePort + ".json";
 
       node.writeToFile(configFileName);
-      defaultConfig.addNodeConfigFile(configFileName);
-      RuntimeConfig.addNode(node);
+      defaultConfig.addNode(node, configFileName);
 
       nodePort++;
     }
@@ -99,25 +104,35 @@ public class FirstTimeRunConfig {
   }
 
 
-  private static List<Capability> getDesiredCapabilities() {
+  private static List<Capability> getCapabilitiesFromUser() {
     List<Capability> chosenCapabilities = new LinkedList<Capability>();
 
     String platform = askQuestion(
         "What is node Platform? (WINDOWS|XP|VISTA|MAC|LINUX|UNIX|ANDROID)",
         guessPlatform());
 
-    for (Capability currentCapability : RuntimeConfig.getAvailableCapabilitiesList()) {
+    for (Class currentCapabilityClass : Capability.getSupportedCapabilities().keySet()) {
       String
           value =
           askQuestion(
-              "Will this node run '" + currentCapability.getBrowserName() + "' (1-yes/0-no)", "0");
+              "Will this node run '" + currentCapabilityClass.getSimpleName()
+              + "' (1-yes/0-no)", "0");
 
       if (value.equals("1")) {
-        currentCapability.setPlatform(platform.toUpperCase());
-        currentCapability.setBrowserVersion(askQuestion(
-            "What version of '" + currentCapability.getBrowserName() + "' is installed?"));
+        Capability capability;
+        try {
+          capability = (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
+          capability.setPlatform(platform.toUpperCase());
+          capability.setBrowserVersion(askQuestion(
+              "What version of '" + capability.getBrowserName() + "' is installed?"));
 
-        chosenCapabilities.add(currentCapability);
+          chosenCapabilities.add(capability);
+        } catch (Exception e) {
+          System.out
+              .println("Warning: Had an issue creating capability for " + currentCapabilityClass.getSimpleName());
+          System.out.println("Will ignore it");
+          e.printStackTrace();
+        }
       }
 
     }
@@ -148,7 +163,6 @@ public class FirstTimeRunConfig {
   }
 
   private static void setWebDriverVersion(Config defaultConfig) {
-    System.out.println(defaultConfig);
     String
         newVersion =
         askQuestion("What version of webdriver JAR should we use?",
