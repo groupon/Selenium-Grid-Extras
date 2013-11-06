@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -57,6 +58,11 @@ public class GridStarterTest {
 
   @After
   public void tearDown() throws Exception {
+    new File(START_HUB_BAT).delete();
+    new File(GRID_HUB_LOG).delete();
+    new File(nodeOneConfig).delete();
+    new File(nodeTwoConfig).delete();
+
 
   }
 
