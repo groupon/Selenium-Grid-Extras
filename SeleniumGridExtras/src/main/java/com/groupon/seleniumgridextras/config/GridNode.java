@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -88,10 +87,6 @@ public class GridNode {
 
   private String toPrettyJsonString() {
     return new GsonBuilder().setPrettyPrinting().create().toJson(this);
-  }
-
-  public String getStartCommand() {
-    return "";
   }
 
 
