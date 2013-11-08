@@ -37,15 +37,15 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OSChecker;
-import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
-import org.apache.commons.io.FileUtils;
+import com.groupon.seleniumgridextras.grid.GridStarter;
 
-import java.io.File;
 import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
@@ -68,41 +68,18 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    return execute(GridWrapper.getDefaultRole());
+    return execute(RuntimeConfig.getConfig().getDefaultRole());
   }
 
   @Override
   public JsonObject execute(String role) {
     try {
-      String servicePort = GridWrapper.getGridConfigPortForRole(role);
-      JsonObject occupiedPid = PortChecker.getParsedPortInfo(servicePort);
-
-      if (occupiedPid.has("pid")) {
-        System.out.println(servicePort + " port is busy, won't try to start a service");
-        getJsonResponse().addKeyValues("error", "Port: " + servicePort
-            + " is occupied by some other process: "
-            + occupiedPid);
-
-        return getJsonResponse().getJson();
-      }
-
-      String
-
-          command =
-          OSChecker.isWindows() ? getWindowsCommand(role)
-              : OSChecker.isMac() ? getMacCommand(role) : getLinuxCommand(role);
-
-      JsonObject serviceStartResponse = ExecuteCommand.execRuntime(command, false);
-
-      if (serviceStartResponse.get("exit_code").toString().equals("0")) {
-        getJsonResponse().addKeyValues("out",
-            "Service start command sent, might take as long as 10 seconds to spin up");
-        return getJsonResponse().getJson();
+      if (role.equals("hub")) {
+        return startHub();
       } else {
-        System.out.println("Something didn't go right in launching service");
-        System.out.println(serviceStartResponse);
-        return serviceStartResponse;
+        return startNodes();
       }
+
     } catch (Exception error) {
       getJsonResponse().addKeyValues("error", error.toString());
       return getJsonResponse().getJson();
@@ -118,30 +95,48 @@ public class StartGrid extends ExecuteOSTask {
     }
   }
 
-  @Override
-  public String getLinuxCommand(String role) {
-    return GridWrapper.getStartCommand(role) + " &";
-  }
+  private JsonObject startNodes() {
+    for (String command : GridStarter.getStartCommandsForNodes(OSChecker.isWindows())) {
+      try {
 
-  @Override
-  public String getWindowsCommand(String role) {
-    String batchFile = RuntimeConfig.getSeleniungGridExtrasHomePath() + "start_" + role + ".bat";
+        JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
 
-    writeBatchFile(batchFile, GridWrapper.getWindowsStartCommand(role));
+        if (!startResponse.get("exit_code").toString().equals("0")) {
+          getJsonResponse()
+              .addKeyValues("error", "Error running " + startResponse.get("error").toString());
+        }
+      } catch (Exception e) {
+        getJsonResponse()
+            .addKeyValues("error", "Error running " + command);
+        getJsonResponse()
+            .addKeyValues("error", e.toString());
 
-    return "powershell.exe /c \"Start-Process " + batchFile + "\"";
-  }
-
-  private void writeBatchFile(String filename, String input) {
-
-    File file = new File(filename);
-
-    try {
-      FileUtils.writeStringToFile(file, input);
-    } catch (Exception error) {
-      System.out
-          .println("Could not write default config file, exit with error " + error.toString());
+        e.printStackTrace();
+      }
 
     }
+
+    return getJsonResponse().getJson();
   }
+
+  private JsonObject startHub() {
+
+    JsonObject serviceStartResponse = ExecuteCommand.execRuntime(
+        GridStarter.getOsSpecificHubStartCommand(OSChecker.isWindows())
+        , false);
+
+    if (serviceStartResponse.get("exit_code").toString().equals("0")) {
+      getJsonResponse().addKeyValues("out",
+                                     "Service start command sent, might take as long as 10 seconds to spin up");
+    } else {
+      System.out.println("Something didn't go right in launching service");
+      System.out.println(serviceStartResponse);
+      getJsonResponse().addKeyValues("error", (JsonArray) serviceStartResponse.get("error"));
+    }
+
+    return getJsonResponse().getJson();
+
+  }
+
+
 }

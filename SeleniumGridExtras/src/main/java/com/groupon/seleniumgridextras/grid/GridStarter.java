@@ -55,12 +55,18 @@ public class GridStarter {
   protected static String getBackgroundStartCommandForNode(String command, String logFile,
                                                            Boolean windows) {
 
+    String
+        logFileFullPath =
+        RuntimeConfig.getConfig().getExposedDirectory() + (windows ? "\\" : "/")
+        + logFile;
+
     if (windows) {
       String batchFile = logFile.replace("log", "bat");
-      writeBatchFile(batchFile, "powershell.exe /c \"Start-Process " + batchFile + "\" | Out-File " + logFile);
+      writeBatchFile(batchFile,
+                     "powershell.exe /c \"Start-Process " + command + "\" | Out-File " + logFileFullPath);
       return batchFile;
     } else {
-      return command + " & 2>&1 > " + logFile;
+      return command + " & 2>&1 > " + logFileFullPath;
     }
 
   }

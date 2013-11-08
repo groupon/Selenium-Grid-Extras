@@ -30,11 +30,11 @@ public class GridStarterTest {
   private final String logFile = "foo.log";
   private final String command = "command";
   private final String windowsBatchFileName = logFile.replace("log", "bat");
-  private final String expectedLinuxCommand = command + " & 2>&1 > " + logFile;
+  private final String expectedLinuxCommand = command + " & 2>&1 > " + "shared/" +logFile;
   private final
   String
       expectedWindowsCommand =
-      "powershell.exe /c \"Start-Process " + windowsBatchFileName + "\" | Out-File " + logFile;
+      "powershell.exe /c \"Start-Process " + command + "\" | Out-File " + "shared\\" + logFile;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/
