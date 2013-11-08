@@ -32,27 +32,52 @@ public class Config {
   public static final String AUTO_START_NODE = "auto_start_node";
   public static final String AUTO_START_HUB = "auto_start_hub";
   public static final String DEFAULT_ROLE = "default_role";
-  public static final String NODE_CONFIG = "node_config";
   public static final String HUB_CONFIG = "hub_config";
   public static final String NODE_CONFIG_FILES = "node_config_files";
 
 
   protected Map theConfigMap;
+  protected List<GridNode> gridNodeList;
 
   public Config() {
     theConfigMap = new HashMap();
+    gridNodeList = new LinkedList<GridNode>();
+    getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
     initialize();
   }
 
-  public Config(Boolean emptyConfig){
+  public Config(Boolean emptyConfig) {
     theConfigMap = new HashMap();
-    if (!emptyConfig){
+    gridNodeList = new LinkedList<GridNode>();
+    getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
+    if (!emptyConfig) {
       initialize();
     }
 
   }
 
-  private void initialize(){
+  public List<String> getNodeConfigFiles() {
+    return (List<String>) getConfigMap().get(NODE_CONFIG_FILES);
+  }
+
+  public List<GridNode> getNodes() {
+    return this.gridNodeList;
+  }
+
+  public void addNode(GridNode node, String filename) {
+    getNodes().add(node);
+    addNodeConfigFile(filename);
+  }
+
+  public void loadNodeClasses() {
+    for (String filename : getNodeConfigFiles()) {
+      GridNode node = GridNode.loadFromFile(filename);
+      getNodes().add(node);
+    }
+  }
+
+
+  private void initialize() {
     getConfigMap().put(ACTIVATE_MODULES, new ArrayList<String>());
     getConfigMap().put(DISABLED_MODULES, new ArrayList<String>());
     getConfigMap().put(SETUP, new ArrayList<String>());
@@ -60,22 +85,23 @@ public class Config {
 
     getConfigMap().put(GRID, new StringMap());
     initializeWebdriver();
-    getConfigMap().put(IEDRIVER, new IEDriver());
+    initializeIEDriver();
 
     getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
 
     initializeHubConfig();
-    initializeNodeConfig();
+
   }
 
-  public void addNodeConfigFile(String filename){
+  private void initializeIEDriver() {
+    getConfigMap().put(IEDRIVER, new IEDriver());
+  }
+
+  public void addNodeConfigFile(String filename) {
     LinkedList<String> files = (LinkedList<String>) getConfigMap().get(NODE_CONFIG_FILES);
     files.add(filename);
   }
 
-  private void initializeNodeConfig() {
-    getConfigMap().put(NODE_CONFIG, new NodeConfig());
-  }
 
   private void initializeHubConfig() {
     getConfigMap().put(HUB_CONFIG, new Hub());
@@ -90,23 +116,19 @@ public class Config {
   }
 
 
-
-  public static Config initilizedFromUserInput(){
+  public static Config initilizedFromUserInput() {
     Config config = new Config(true);
     config.initializeWebdriver();
     config.initializeHubConfig();
-    config.initializeNodeConfig();
+    config.initializeIEDriver();
 
     return FirstTimeRunConfig.customiseConfig(config);
   }
 
-  public void overwriteConfig(Map overwrites){
-    if (overwrites.containsKey("theConfigMap")){
-      System.out.println("Merging config overwrites from file");
-      System.out.println("File config" +  (Map<String, Object>) overwrites.get("theConfigMap"));
-      System.out.println("Before\n\n\n" + getConfigMap());
-      HashMapMerger.overwriteMergeStrategy(getConfigMap(), (Map<String, Object>) overwrites.get("theConfigMap"));
-      System.out.println("After\n\n\n" + getConfigMap());
+  public void overwriteConfig(Map overwrites) {
+    if (overwrites.containsKey("theConfigMap")) {
+      HashMapMerger.overwriteMergeStrategy(getConfigMap(),
+                                           (Map<String, Object>) overwrites.get("theConfigMap"));
     }
   }
 
@@ -133,10 +155,6 @@ public class Config {
 
   public StringMap getGrid() {
     return (StringMap) getConfigMap().get(GRID);
-  }
-
-  public void setIEdriver() {
-//    this.put(IEDRIVERz)
   }
 
   public IEDriver getIEdriver() {
@@ -177,7 +195,10 @@ public class Config {
   public void writeToDisk(String file) {
     try {
       File f = new File(file);
-      String config = this.toPrettyJsonString();
+      Map temp = new HashMap();
+      temp.put("theConfigMap", getConfigMap());
+
+      String config = toPrettyJsonString(temp);
       FileUtils.writeStringToFile(f, config);
     } catch (Exception error) {
       System.out
@@ -210,8 +231,12 @@ public class Config {
     return new Gson().toJson(this);
   }
 
-  public String toPrettyJsonString() {
-    return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+  public String toJson() {
+    return toPrettyJsonString(this);
+  }
+
+  public String toPrettyJsonString(Object object) {
+    return new GsonBuilder().setPrettyPrinting().create().toJson(object);
   }
 
   public boolean checkIfModuleEnabled(String module) {
@@ -266,24 +291,6 @@ public class Config {
     getConfigMap().put(HUB_CONFIG, hub);
   }
 
-
-  public NodeConfig getNode() {
-    try {
-      return (NodeConfig) getConfigMap().get(NODE_CONFIG);
-    } catch (ClassCastException e) {
-      StringMap
-          stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(NODE_CONFIG);
-      NodeConfig nodeConfig = new NodeConfig();
-
-      nodeConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
-
-      getConfigMap().put(NODE_CONFIG, nodeConfig);
-
-      return nodeConfig;
-    }
-
-  }
 
   public String getDefaultRole() {
     return (String) getConfigMap().get(DEFAULT_ROLE);
