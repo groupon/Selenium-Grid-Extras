@@ -20,11 +20,21 @@ import java.util.regex.*;
 
 public class GridStarterTest {
 
+  private final String gridStartTestJson = "grid_start_test.json";
   private static final String START_HUB_BAT = "start_hub.bat";
   private static final String GRID_HUB_LOG = "grid_hub.log";
   private static final String TEST_COMMAND = "command is here";
   private final String nodeOneConfig = "node1.json";
   private final String nodeTwoConfig = "node2.json";
+
+  private final String logFile = "foo.log";
+  private final String command = "command";
+  private final String windowsBatchFileName = logFile.replace("log", "bat");
+  private final String expectedLinuxCommand = command + " & 2>&1 > " + logFile;
+  private final
+  String
+      expectedWindowsCommand =
+      "powershell.exe /c \"Start-Process " + windowsBatchFileName + "\" | Out-File " + logFile;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/
@@ -37,7 +47,7 @@ public class GridStarterTest {
 
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfigFile("grid_start_test.json");
+    RuntimeConfig.setConfigFile(gridStartTestJson);
     Config config = new Config();
     config.getWebdriver().setVersion("1.1.1");
 
@@ -61,22 +71,14 @@ public class GridStarterTest {
     new File(GRID_HUB_LOG).delete();
     new File(nodeOneConfig).delete();
     new File(nodeTwoConfig).delete();
-
+    new File(windowsBatchFileName).delete();
+    new File(gridStartTestJson).delete();
 
   }
 
 
   @Test
   public void testGetBackgroundStartCommandForNode() throws Exception {
-
-    final String logFile = "foo.log";
-    final String command = "command";
-    final String windowsBatchFileName = logFile.replace("log", "bat");
-    final String expectedLinuxCommand = command + " & 2>&1 > " + logFile;
-    final
-    String
-        expectedWindowsCommand =
-        "powershell.exe /c \"Start-Process " + windowsBatchFileName + "\" | Out-File " + logFile;
 
     assertEquals(expectedLinuxCommand,
                  GridStarter.getBackgroundStartCommandForNode(command, logFile, false));
