@@ -4,7 +4,6 @@ import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,8 +65,26 @@ public class GridStarterTest {
 
   }
 
+
   @Test
-  public void testGetNodesStartCommand() throws Exception{
+  public void testGetBackgroundStartCommandForNode() throws Exception {
+
+    final String logFile = "foo.log";
+    final String command = "command";
+    final String windowsBatchFileName = logFile.replace("log", "bat");
+    final String expectedLinuxCommand = command + " & 2>&1 > " + logFile;
+    final
+    String
+        expectedWindowsCommand =
+        "powershell.exe /c \"Start-Process " + windowsBatchFileName + "\" | Out-File " + logFile;
+
+    assertEquals(expectedLinuxCommand,
+                 GridStarter.getBackgroundStartCommandForNode(command, logFile, false));
+
+    assertEquals(windowsBatchFileName,
+                 GridStarter.getBackgroundStartCommandForNode(command, logFile, true));
+
+    assertEquals(expectedWindowsCommand, readFile(windowsBatchFileName));
 
 
   }

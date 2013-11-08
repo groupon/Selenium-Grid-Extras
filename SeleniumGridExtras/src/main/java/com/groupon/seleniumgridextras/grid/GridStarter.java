@@ -10,38 +10,12 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GridStarter {
 
-
-  public static JsonObject startHub() {
-    Boolean isWindows = OSChecker.isWindows();
-    String backgroundCommand = buildBackgroundStartCommand(getOsSpecificHubStartCommand(isWindows), isWindows);
-    return ExecuteCommand.execRuntime(backgroundCommand);
-  }
-
-
-  public static JsonObject startNodes() {
-    return null;
-  }
-
-  protected static String buildBackgroundStartCommand(String command, Boolean windows) {
-    String backgroundCommand;
-    final String gridLogFile = "grid_hub.log";
-    final String batchFile = "start_hub.bat";
-
-    if (windows) {
-      writeBatchFile(batchFile, command);
-      backgroundCommand =
-          "powershell.exe /c \"Start-Process " + batchFile + "\" | Out-File " + gridLogFile;
-    } else {
-      backgroundCommand = command + " & 2>&1 > " + gridLogFile;
-    }
-
-    return backgroundCommand;
-  }
-
-  protected static String getOsSpecificHubStartCommand(Boolean windows) {
+  public static String getOsSpecificHubStartCommand(Boolean windows) {
     String colon = windows ? ";" : ":";
 
     StringBuilder command = new StringBuilder();
@@ -59,6 +33,65 @@ public class GridStarter {
     command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
 
     return String.valueOf(command);
+  }
+
+  public static List<String> getStartCommandsForNodes(Boolean windows) {
+    List<String> commands = new LinkedList<String>();
+
+    for (String configFile : RuntimeConfig.getConfig().getNodeConfigFiles()) {
+
+      String
+          backgroundCommand =
+          getBackgroundStartCommandForNode(getNodeStartCommand(configFile, windows),
+                                           configFile.replace("json", "log"),
+                                           windows);
+
+      commands.add(backgroundCommand);
+    }
+
+    return commands;
+  }
+
+  protected static String getBackgroundStartCommandForNode(String command, String logFile,
+                                                           Boolean windows) {
+
+    if (windows) {
+      String batchFile = logFile.replace("log", "bat");
+      writeBatchFile(batchFile, "powershell.exe /c \"Start-Process " + batchFile + "\" | Out-File " + logFile);
+      return batchFile;
+    } else {
+      return command + " & 2>&1 > " + logFile;
+    }
+
+  }
+
+  protected static String getNodeStartCommand(String configFile, Boolean windows) {
+    return "java " + getIEDriverExecutionPathParam() +
+           " -cp " + getGridExtrasJarFilePath()
+           + (windows ? ";" : ":") + getCurrentWebDriverJarPath()
+           + " org.openqa.grid.selenium.GridLauncher -role node -nodeConfig "
+           + configFile;
+  }
+
+  protected static String getIEDriverExecutionPathParam() {
+    return "-Dwebdriver.iexplorer.driver=" + RuntimeConfig.getConfig().getIEdriver()
+        .getExecutablePath();
+  }
+
+  protected static String buildBackgroundStartCommand(String command, Boolean windows) {
+    String backgroundCommand;
+    final String gridLogFile = "grid_hub.log";
+    final String batchFile = "start_hub.bat";
+
+    if (windows) {
+      writeBatchFile(batchFile, command);
+      backgroundCommand =
+          "powershell.exe /c \"Start-Process " + batchFile + "\" | Out-File " + gridLogFile;
+    } else {
+      backgroundCommand = command + " & 2>&1 > " + gridLogFile;
+    }
+
+    return backgroundCommand;
   }
 
   protected static String getGridExtrasJarFilePath() {
