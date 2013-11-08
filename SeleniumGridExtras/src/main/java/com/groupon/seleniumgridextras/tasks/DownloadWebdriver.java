@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.WdDownloader;
-import com.groupon.seleniumgridextras.grid.GridWrapper;
 import java.io.File;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -71,7 +70,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
     getJsonResponse()
         .addKeyValues("file_full_path", RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
 
-    getJsonResponse().addKeyValues("root_dir", GridWrapper.getWebdriverHome());
+    getJsonResponse().addKeyValues("root_dir", RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
 
   }
@@ -118,9 +117,9 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public boolean initialize() {
 
     try {
-      System.out.println(GridWrapper.getCurrentWebDriverJarPath());
+      System.out.println(RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
       System.out.println(RuntimeConfig.getConfig().getWebdriver().getDirectory());
-      File webdriverJar = new File(GridWrapper.getCurrentWebDriverJarPath());
+      File webdriverJar = new File(RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
       File webdriverHome = new File(RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
       if (!webdriverHome.exists()) {
