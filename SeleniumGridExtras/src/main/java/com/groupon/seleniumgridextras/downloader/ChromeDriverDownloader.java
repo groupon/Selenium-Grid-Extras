@@ -38,17 +38,23 @@
 package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class ChromeDriverDownloader extends Downloader {
 
   private String bit;
   private String version;
 
-  public ChromeDriverDownloader(String version){
-    new ChromeDriverDownloader(version, "32");
-  }
+  public ChromeDriverDownloader(String version, String bitVersion) {
 
-  public ChromeDriverDownloader(String version, String bitVersion){
+    setDestinationDir(RuntimeConfig.getConfig().getChromeDriver().getDirectory());
+    setVersion(version);
+    setBitVersion(bitVersion);
+
+    setDestinationFile(getVersion() + getBitVersion() + ".zip");
+
+    setSourceURL("http://chromedriver.storage.googleapis.com/" + getVersion() + "/chromedriver_"
+                 + getOSName() + getBitVersion() + ".zip");
 
   }
 
@@ -68,11 +74,11 @@ public class ChromeDriverDownloader extends Downloader {
   }
 
 
-  public String getBit() {
+  public String getBitVersion() {
     return bit;
   }
 
-  public void setBit(String bit) {
+  public void setBitVersion(String bit) {
     this.bit = bit;
   }
 
@@ -85,17 +91,31 @@ public class ChromeDriverDownloader extends Downloader {
   }
 
 
-  protected String getOSName(){
+  protected String getOSName() {
     String os;
 
-    if (OSChecker.isWindows()){
-      os = "win";
-    } else if (OSChecker.isMac()){
-      os = "mac";
-    } else{
-      os = "linux";
+    if (OSChecker.isWindows()) {
+      os = getWindownsName();
+    } else if (OSChecker.isMac()) {
+      os = getMacName();
+    } else {
+      os = getLinuxName();
     }
 
     return os;
   }
+
+  protected String getLinuxName() {
+    return "linux";
+  }
+
+  protected String getMacName() {
+    return "mac";
+  }
+
+  protected String getWindownsName() {
+    return "win";
+  }
+
+
 }

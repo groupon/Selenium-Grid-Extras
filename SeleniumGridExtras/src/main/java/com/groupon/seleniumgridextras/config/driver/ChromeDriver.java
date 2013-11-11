@@ -36,10 +36,18 @@
  */
 package com.groupon.seleniumgridextras.config.driver;
 
+import com.groupon.seleniumgridextras.OSChecker;
+
 public class ChromeDriver extends  DriverInfo{
 
   @Override
   public String getExecutablePath() {
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
+    String path = this.getDirectory() + this.getBit() + "_" + this.getVersion();
+
+    if (OSChecker.isWindows()){
+      path = path + ".exe";
+    }
+
+    return path;
   }
 }
