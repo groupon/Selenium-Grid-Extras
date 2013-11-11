@@ -118,9 +118,9 @@ public class DefaultConfig {
 
     tmpDir = config.getWebdriver().getDirectory() + delimiter;
 
-    config.getIEdriver().setDirectory(tmpDir + "chromedriver");
-    config.getIEdriver().setVersion("2.6");
-    config.getIEdriver().setBit("32");
+    config.getChromeDriver().setDirectory(tmpDir + "chromedriver");
+    config.getChromeDriver().setVersion("2.6");
+    config.getChromeDriver().setBit("32");
   }
 
 
