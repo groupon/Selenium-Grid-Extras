@@ -12,7 +12,7 @@ public class CapabilityTest {
   @Test
   public void getCapabilitiesFromList() throws Exception {
     Capability firefox = Capability.getCapabilityFor( "firefox" );
-    Capability ie = Capability.getCapabilityFor( "iexplore" );
+    Capability ie = Capability.getCapabilityFor( "internet explorer" );
     Capability chrome = Capability.getCapabilityFor( "chrome" );
 
     assertTrue(firefox instanceof Firefox);
@@ -26,7 +26,7 @@ public class CapabilityTest {
   public void testGetWDStyleName() throws Exception {
     assertEquals("firefox", Capability.getSupportedCapabilities().get(Firefox.class));
     assertEquals("chrome", Capability.getSupportedCapabilities().get(Chrome.class));
-    assertEquals("iexplore",
+    assertEquals("internet explorer",
                  Capability.getSupportedCapabilities().get(InternetExplorer.class));
   }
 }
