@@ -57,7 +57,7 @@ public abstract class Capability extends HashMap {
     Map<Class, String> capabilityHash = new HashMap<Class, String>();
 
     capabilityHash.put(Firefox.class, "firefox");
-    capabilityHash.put(InternetExplorer.class, "internet explorer");
+    capabilityHash.put(InternetExplorer.class, "iexplore");
     capabilityHash.put(Chrome.class, "chrome");
 
     return capabilityHash;
