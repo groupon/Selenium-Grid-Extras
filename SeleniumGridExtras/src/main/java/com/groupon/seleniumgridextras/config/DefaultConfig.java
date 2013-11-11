@@ -48,6 +48,7 @@ public class DefaultConfig {
 
     loadWebDriverInfo();
     loadIEDriverInfo();
+    loadChromeDriverInfo();
     loadDisabledPlugins();
     loadEnabledPlugins();
     loadSetupConfig();
@@ -102,6 +103,24 @@ public class DefaultConfig {
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
     config.getIEdriver().setVersion("2.35.3");
     config.getIEdriver().setBit("Win32");
+  }
+
+  private static void loadChromeDriverInfo() {
+    String tmpDir;
+    String delimiter;
+
+
+    if (OSChecker.isWindows()) {
+      delimiter = "\\";
+    } else {
+      delimiter = "/";
+    }
+
+    tmpDir = config.getWebdriver().getDirectory() + delimiter;
+
+    config.getIEdriver().setDirectory(tmpDir + "chromedriver");
+    config.getIEdriver().setVersion("2.6");
+    config.getIEdriver().setBit("32");
   }
 
 
