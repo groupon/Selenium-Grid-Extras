@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.StringMap;
 
+import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
+import com.groupon.seleniumgridextras.config.driver.DriverInfo;
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
 
@@ -27,6 +29,7 @@ public class Config {
   public static final String GRID = "grid";
   public static final String WEBDRIVER = "webdriver";
   public static final String IEDRIVER = "iedriver";
+  public static final String CHROME_DRIVER = "chromedriver";
   public static final String EXPOSE_DIRECTORY = "expose_directory";
 
   public static final String AUTO_START_NODE = "auto_start_node";
@@ -86,6 +89,7 @@ public class Config {
     getConfigMap().put(GRID, new StringMap());
     initializeWebdriver();
     initializeIEDriver();
+    initializeChromeDriver();
 
     getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
 
@@ -95,6 +99,10 @@ public class Config {
 
   private void initializeIEDriver() {
     getConfigMap().put(IEDRIVER, new IEDriver());
+  }
+
+  private void initializeChromeDriver() {
+    getConfigMap().put(CHROME_DRIVER, new ChromeDriver());
   }
 
   public void addNodeConfigFile(String filename) {
@@ -157,7 +165,7 @@ public class Config {
     return (StringMap) getConfigMap().get(GRID);
   }
 
-  public IEDriver getIEdriver() {
+  public DriverInfo getIEdriver() {
     try {
       return (IEDriver) getConfigMap().get(IEDRIVER);
     } catch (ClassCastException e) {
@@ -173,6 +181,24 @@ public class Config {
       return ieDriver;
     }
   }
+
+  public DriverInfo getChromeDriver() {
+    try {
+      return (ChromeDriver) getConfigMap().get(CHROME_DRIVER);
+    } catch (ClassCastException e) {
+      StringMap
+          stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+          (StringMap) getConfigMap().get(CHROME_DRIVER);
+      DriverInfo chromeDriver = new ChromeDriver();
+
+      chromeDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+      getConfigMap().put(CHROME_DRIVER, chromeDriver);
+
+      return chromeDriver;
+    }
+  }
+
 
   public WebDriver getWebdriver() {
     try {
