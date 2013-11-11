@@ -65,7 +65,7 @@ public class GridStarter {
       writeBatchFile(batchFile, "start " + command);
       return batchFile;
     } else {
-      return command + " & 2>&1 > " + logFileFullPath;
+      return command;
     }
 
   }
@@ -93,7 +93,7 @@ public class GridStarter {
       backgroundCommand =
           "start " + batchFile;
     } else {
-      backgroundCommand = command + " & 2>&1 > " + gridLogFile;
+      backgroundCommand = command;
     }
 
     return backgroundCommand;

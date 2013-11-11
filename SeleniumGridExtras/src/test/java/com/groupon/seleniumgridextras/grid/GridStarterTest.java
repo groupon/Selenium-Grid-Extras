@@ -30,7 +30,7 @@ public class GridStarterTest {
   private final String logFile = "foo.log";
   private final String command = "command";
   private final String windowsBatchFileName = logFile.replace("log", "bat");
-  private final String expectedLinuxCommand = command + " & 2>&1 > " + "shared/" + logFile;
+  private final String expectedLinuxCommand = command;
   private final String expectedWindowsCommand = "start " + command;
 
 
@@ -142,8 +142,7 @@ public class GridStarterTest {
 
   @Test
   public void testBuildBackgroundStartCommand() throws Exception {
-    assertEquals(TEST_COMMAND + " & 2>&1 > " + GRID_HUB_LOG,
-                 GridStarter.buildBackgroundStartCommand(TEST_COMMAND, false));
+    assertEquals(TEST_COMMAND, GridStarter.buildBackgroundStartCommand(TEST_COMMAND, false));
 
     assertEquals("start " + START_HUB_BAT,
                  GridStarter.buildBackgroundStartCommand(TEST_COMMAND, true));
