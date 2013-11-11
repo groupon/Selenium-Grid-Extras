@@ -12,7 +12,7 @@ public abstract class Capability extends HashMap {
 
   public Capability() {
     this.put("maxInstances", 1);
-    this.put("seleniumProtocol", "Selenium");
+    this.put("seleniumProtocol", "WebDriver");
     setBrowser(getWDStyleName());
   }
 

@@ -121,7 +121,7 @@ public class GridNodeTest {
     Map expectedFirefox = new HashMap();
     expectedFirefox.put("browserName", "firefox");
     expectedFirefox.put("maxInstances", 1);
-    expectedFirefox.put("seleniumProtocol", "Selenium");
+    expectedFirefox.put("seleniumProtocol", "WebDriver");
 
     assertEquals(expectedFirefox, actualCapability);
   }
