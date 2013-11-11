@@ -62,8 +62,7 @@ public class GridStarter {
 
     if (windows) {
       String batchFile = logFile.replace("log", "bat");
-      writeBatchFile(batchFile,
-                     "powershell.exe /c \"Start-Process " + command + "\" | Out-File " + logFileFullPath);
+      writeBatchFile(batchFile, "start " + command);
       return batchFile;
     } else {
       return command + " & 2>&1 > " + logFileFullPath;
@@ -92,7 +91,7 @@ public class GridStarter {
     if (windows) {
       writeBatchFile(batchFile, command);
       backgroundCommand =
-          "powershell.exe /c \"Start-Process " + batchFile + "\" | Out-File " + gridLogFile;
+          "start " + batchFile;
     } else {
       backgroundCommand = command + " & 2>&1 > " + gridLogFile;
     }

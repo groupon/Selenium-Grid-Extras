@@ -30,11 +30,8 @@ public class GridStarterTest {
   private final String logFile = "foo.log";
   private final String command = "command";
   private final String windowsBatchFileName = logFile.replace("log", "bat");
-  private final String expectedLinuxCommand = command + " & 2>&1 > " + "shared/" +logFile;
-  private final
-  String
-      expectedWindowsCommand =
-      "powershell.exe /c \"Start-Process " + command + "\" | Out-File " + "shared\\" + logFile;
+  private final String expectedLinuxCommand = command + " & 2>&1 > " + "shared/" + logFile;
+  private final String expectedWindowsCommand = "start " + command;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/
@@ -148,9 +145,8 @@ public class GridStarterTest {
     assertEquals(TEST_COMMAND + " & 2>&1 > " + GRID_HUB_LOG,
                  GridStarter.buildBackgroundStartCommand(TEST_COMMAND, false));
 
-    assertEquals(
-        "powershell.exe /c \"Start-Process " + START_HUB_BAT + "\" | Out-File " + GRID_HUB_LOG,
-        GridStarter.buildBackgroundStartCommand(TEST_COMMAND, true));
+    assertEquals("start " + START_HUB_BAT,
+                 GridStarter.buildBackgroundStartCommand(TEST_COMMAND, true));
 
     assertEquals(TEST_COMMAND, readFile(START_HUB_BAT));
 
