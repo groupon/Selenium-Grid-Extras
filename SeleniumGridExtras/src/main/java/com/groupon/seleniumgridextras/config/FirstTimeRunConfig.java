@@ -65,6 +65,7 @@ public class FirstTimeRunConfig {
     setGridHubAutostart(defaultConfig);
     setGridNodeAutostart(defaultConfig);
     setIeDriverVersion(defaultConfig);
+    setChromeDriverVersion(defaultConfig);
 
 
     System.out
@@ -76,6 +77,10 @@ public class FirstTimeRunConfig {
 
   private static void setIeDriverVersion(Config defaultConfig){
     defaultConfig.getIEdriver().setVersion(askQuestion("What version of IEDriver.exe to use?", "2.35.3"));
+  }
+
+  private static void setChromeDriverVersion(Config defaultConfig){
+    defaultConfig.getChromeDriver().setVersion(askQuestion("What version of ChromeDriver to use?", "2.6"));
   }
 
   private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost,
