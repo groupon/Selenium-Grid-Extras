@@ -129,6 +129,7 @@ public class Config {
     config.initializeWebdriver();
     config.initializeHubConfig();
     config.initializeIEDriver();
+    config.initializeChromeDriver();
 
     return FirstTimeRunConfig.customiseConfig(config);
   }
