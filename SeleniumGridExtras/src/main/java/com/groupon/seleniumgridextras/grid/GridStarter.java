@@ -71,7 +71,8 @@ public class GridStarter {
   }
 
   protected static String getNodeStartCommand(String configFile, Boolean windows) {
-    return "java " + getIEDriverExecutionPathParam() +
+    return "java" + getIEDriverExecutionPathParam() +
+           getChromeDriverExecutionPathParam() +
            " -cp " + getGridExtrasJarFilePath()
            + (windows ? ";" : ":") + getCurrentWebDriverJarPath()
            + " org.openqa.grid.selenium.GridLauncher -role node -nodeConfig "
@@ -79,7 +80,16 @@ public class GridStarter {
   }
 
   protected static String getIEDriverExecutionPathParam() {
-    return "-Dwebdriver.iexplorer.driver=" + RuntimeConfig.getConfig().getIEdriver()
+    if (OSChecker.isWindows()) {
+      return " -Dwebdriver.iexplorer.driver=" + RuntimeConfig.getConfig().getIEdriver()
+          .getExecutablePath();
+    } else {
+      return "";
+    }
+  }
+
+  protected static String getChromeDriverExecutionPathParam() {
+    return " -Dwebdriver.chrome.driver=" + RuntimeConfig.getConfig().getChromeDriver()
         .getExecutablePath();
   }
 
