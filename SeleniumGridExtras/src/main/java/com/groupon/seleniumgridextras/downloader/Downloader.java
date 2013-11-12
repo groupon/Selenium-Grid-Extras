@@ -80,15 +80,19 @@ public abstract class Downloader {
     return errorMessage;
   }
 
+  public void setErrorMessage(String errorMessage) {
+    this.errorMessage = errorMessage;
+  }
+
   protected boolean startDownload(){
     try {
-      URL url = new URL(sourceURL);
+      URL url = new URL(getSourceURL());
       FileUtils.copyURLToFile(url, getDestinationFileFullPath());
       return true;
     } catch (MalformedURLException error){
-      errorMessage = error.toString();
+      setErrorMessage(error.toString());
     } catch (IOException error) {
-      errorMessage = error.toString();
+      setErrorMessage(error.toString());
     }
     return false;
   }
