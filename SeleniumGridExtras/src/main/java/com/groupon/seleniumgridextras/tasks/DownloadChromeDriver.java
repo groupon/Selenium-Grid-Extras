@@ -108,7 +108,7 @@ public class DownloadChromeDriver extends ExecuteOSTask {
         downloader =
         new ChromeDriverDownloader(version, bit);
 
-    if (!downloader.getDestinationFileFullPath().exists()) {
+    if (!new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
       getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
 
