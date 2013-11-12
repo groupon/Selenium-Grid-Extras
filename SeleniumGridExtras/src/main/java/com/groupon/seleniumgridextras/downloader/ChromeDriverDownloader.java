@@ -83,45 +83,21 @@ public class ChromeDriverDownloader extends Downloader {
       slash = "/";
     }
 
-    String destinationFilePath = RuntimeConfig.getConfig().getChromeDriver().getDirectory();
+    if (startDownload()) {
 
-    destinationFilePath =
-        destinationFilePath + slash + getBitVersion() + "bit_" + getVersion();
+      if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(),
+                         getDestinationDir())) {
 
-    if (OSChecker.isWindows()) {
-      destinationFilePath = destinationFilePath + ".exe";
-    }
-    File finalExeName = new File(destinationFilePath);
+        File tempUnzipedExecutable = new File(getDestinationDir(), "chromedriver");
+        File finalExecutable =
+            new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
 
-    Boolean downloaded = startDownload();
-    String zipPath = getDestinationDir() + slash + getDestinationFile();
+        tempUnzipedExecutable.renameTo(finalExecutable);
 
-    if (downloaded) {
-      Boolean unzippied = Unzipper.unzip(zipPath,
-                                         RuntimeConfig.getConfig().getChromeDriver()
-                                             .getDirectory());
+        setDestinationFile(finalExecutable.getAbsolutePath());
 
-      if (unzippied) {
-
-        File zip = new File(zipPath);
-        zip.delete();
-
-        setDestinationFile(destinationFilePath);
-
-        String
-            exePath =
-            RuntimeConfig.getConfig().getChromeDriver().getDirectory() + slash + "ChromeDriver";
-
-        if (OSChecker.isWindows()) {
-          exePath = exePath + ".exe";
-        }
-        File exe = new File(exePath);
-        exe.renameTo(finalExeName);
-
-        if (!OSChecker.isWindows()) {
-          finalExeName.setExecutable(true, false);
-          finalExeName.setReadable(true, false);
-        }
+        finalExecutable.setExecutable(true, false);
+        finalExecutable.setReadable(true, false);
 
         return true;
       }
