@@ -95,17 +95,10 @@ public class IEDownloader extends Downloader {
 
   @Override
   public boolean download() {
-    Boolean downloaded = startDownload();
-    String zipPath = getDestinationDir() + "/" + getDestinationFile();
 
-    if (downloaded) {
-      Boolean unzippied = Unzipper.unzip(zipPath,
-                                         RuntimeConfig.getConfig().getIEdriver().getDirectory());
+    if (startDownload()) {
 
-      if (unzippied) {
-
-        File zip = new File(zipPath);
-        zip.delete();
+      if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
 
         String slash = "\\";
 
@@ -113,17 +106,16 @@ public class IEDownloader extends Downloader {
           slash = "/";
         }
 
-        String destinationFilePath = RuntimeConfig.getConfig().getIEdriver().getDirectory();
+        File tempUnzipedExecutable = new File(getDestinationDir(), "IEDriverServer.exe");
+        File finalExecutable =
+            new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
 
-        destinationFilePath =
-            destinationFilePath + slash + getBitVersion() + "_" + getVersion() + ".exe";
+        tempUnzipedExecutable.renameTo(finalExecutable);
+        setDestinationFile(finalExecutable.getAbsolutePath());
 
-        setDestinationFile(destinationFilePath);
-        File
-            exe =
-            new File(
-                RuntimeConfig.getConfig().getIEdriver().getDirectory() + "/IEDriverServer.exe");
-        exe.renameTo(new File(destinationFilePath));
+        finalExecutable.setExecutable(true, false);
+        finalExecutable.setReadable(true, false);
+
         return true;
       }
     }

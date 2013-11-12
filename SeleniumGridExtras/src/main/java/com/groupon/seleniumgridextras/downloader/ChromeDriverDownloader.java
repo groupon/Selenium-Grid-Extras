@@ -85,8 +85,7 @@ public class ChromeDriverDownloader extends Downloader {
 
     if (startDownload()) {
 
-      if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(),
-                         getDestinationDir())) {
+      if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
 
         File tempUnzipedExecutable = new File(getDestinationDir(), "chromedriver");
         File finalExecutable =

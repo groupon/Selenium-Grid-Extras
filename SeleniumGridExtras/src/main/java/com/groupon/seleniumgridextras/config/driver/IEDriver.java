@@ -41,6 +41,7 @@ public class IEDriver extends DriverInfo {
 
   @Override
   public String getExecutablePath() {
-    return this.getDirectory() + this.getBit() + "_" + this.getVersion() + ".exe";
+    return this.getDirectory() + "\\iedriver_" + this.getVersion() + "_" + this.getBit()
+           + "bit.exe";
   }
 }
