@@ -40,6 +40,8 @@ package com.groupon.seleniumgridextras.downloader;
 import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import java.io.File;
+
 public class ChromeDriverDownloader extends Downloader {
 
   private String bit;
@@ -51,7 +53,7 @@ public class ChromeDriverDownloader extends Downloader {
     setVersion(version);
     setBitVersion(bitVersion);
 
-    setDestinationFile(getVersion() + getBitVersion() + ".zip");
+    setDestinationFile(getVersion() + "_" + getBitVersion() + "bit" + ".zip");
 
     setSourceURL("http://chromedriver.storage.googleapis.com/" + getVersion() + "/chromedriver_"
                  + getOSName() + getBitVersion() + ".zip");
@@ -71,6 +73,59 @@ public class ChromeDriverDownloader extends Downloader {
   @Override
   public void setDestinationDir(String dir) {
     destinationDir = dir;
+  }
+
+  @Override
+  public boolean download() {
+    String slash = "\\";
+
+    if (!OSChecker.isWindows()) {
+      slash = "/";
+    }
+    Boolean downloaded = startDownload();
+    String zipPath = getDestinationDir() + slash + getDestinationFile();
+
+    if (downloaded) {
+      Boolean unzippied = Unzipper.unzip(zipPath,
+                                         RuntimeConfig.getConfig().getChromeDriver()
+                                             .getDirectory());
+
+      if (unzippied) {
+
+        File zip = new File(zipPath);
+        zip.delete();
+
+        String destinationFilePath = RuntimeConfig.getConfig().getChromeDriver().getDirectory();
+
+        destinationFilePath =
+            destinationFilePath + slash + getBitVersion() + "bit_" + getVersion();
+
+        if (OSChecker.isWindows()) {
+          destinationFilePath = destinationFilePath + ".exe";
+        }
+
+        setDestinationFile(destinationFilePath);
+
+        String
+            exePath =
+            RuntimeConfig.getConfig().getChromeDriver().getDirectory() + slash + "ChromeDriver";
+
+        if (OSChecker.isWindows()) {
+          exePath = exePath + ".exe";
+        }
+        File exe = new File(exePath);
+        File newExeName =  new File(destinationFilePath);
+        exe.renameTo(newExeName);
+
+        if(!OSChecker.isWindows()){
+          newExeName.setExecutable(true, false);
+          newExeName.setReadable(true, false);
+        }
+
+        return true;
+      }
+    }
+    return false;
   }
 
 
