@@ -82,6 +82,17 @@ public class ChromeDriverDownloader extends Downloader {
     if (!OSChecker.isWindows()) {
       slash = "/";
     }
+
+    String destinationFilePath = RuntimeConfig.getConfig().getChromeDriver().getDirectory();
+
+    destinationFilePath =
+        destinationFilePath + slash + getBitVersion() + "bit_" + getVersion();
+
+    if (OSChecker.isWindows()) {
+      destinationFilePath = destinationFilePath + ".exe";
+    }
+    File finalExeName = new File(destinationFilePath);
+
     Boolean downloaded = startDownload();
     String zipPath = getDestinationDir() + slash + getDestinationFile();
 
@@ -95,15 +106,6 @@ public class ChromeDriverDownloader extends Downloader {
         File zip = new File(zipPath);
         zip.delete();
 
-        String destinationFilePath = RuntimeConfig.getConfig().getChromeDriver().getDirectory();
-
-        destinationFilePath =
-            destinationFilePath + slash + getBitVersion() + "bit_" + getVersion();
-
-        if (OSChecker.isWindows()) {
-          destinationFilePath = destinationFilePath + ".exe";
-        }
-
         setDestinationFile(destinationFilePath);
 
         String
@@ -114,12 +116,11 @@ public class ChromeDriverDownloader extends Downloader {
           exePath = exePath + ".exe";
         }
         File exe = new File(exePath);
-        File newExeName =  new File(destinationFilePath);
-        exe.renameTo(newExeName);
+        exe.renameTo(finalExeName);
 
-        if(!OSChecker.isWindows()){
-          newExeName.setExecutable(true, false);
-          newExeName.setReadable(true, false);
+        if (!OSChecker.isWindows()) {
+          finalExeName.setExecutable(true, false);
+          finalExeName.setReadable(true, false);
         }
 
         return true;
