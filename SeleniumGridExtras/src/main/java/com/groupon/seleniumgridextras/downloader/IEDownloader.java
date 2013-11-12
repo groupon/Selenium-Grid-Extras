@@ -96,7 +96,7 @@ public class IEDownloader extends Downloader {
   @Override
   public boolean download() {
     Boolean downloaded = startDownload();
-    String zipPath = destinationDir + "/" + destinationFile;
+    String zipPath = getDestinationDir() + "/" + getDestinationFile();
 
     if (downloaded) {
       Boolean unzippied = Unzipper.unzip(zipPath,
