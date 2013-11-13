@@ -105,7 +105,7 @@ public class DownloadIEDriver extends ExecuteOSTask {
         downloader =
         new IEDownloader(version, bit);
 
-    if (!downloader.getDestinationFileFullPath().exists()) {
+    if (!new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
       getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
 
