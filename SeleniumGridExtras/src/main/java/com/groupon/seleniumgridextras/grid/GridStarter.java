@@ -81,7 +81,7 @@ public class GridStarter {
 
   protected static String getIEDriverExecutionPathParam() {
     if (OSChecker.isWindows()) {
-      return " -Dwebdriver.iexplorer.driver=" + RuntimeConfig.getConfig().getIEdriver()
+      return " -Dwebdriver.ie.driver=" + RuntimeConfig.getConfig().getIEdriver()
           .getExecutablePath();
     } else {
       return "";
