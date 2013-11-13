@@ -1,3 +1,8 @@
+1.2.0 - Refactor config, local config only overwrite the explicit values in default config
+      - Add support for chrome
+      - Start each browser node as a an individual process
+      - Grid nodes now use the JSON config which comes with WebDriver
+      - Adding a JSON servlette to show status of the grid
 1.1.9 - Auto download IEDriver.exe
       - Allow user to change Protected mode for IE via end-point
 1.1.8 - Nodes started from withing Grid now auto kill IE and move mouse
