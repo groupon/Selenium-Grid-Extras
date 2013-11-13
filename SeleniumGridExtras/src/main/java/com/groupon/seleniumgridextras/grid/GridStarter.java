@@ -62,8 +62,8 @@ public class GridStarter {
 
     if (windows) {
       String batchFile = logFile.replace("log", "bat");
-      writeBatchFile(batchFile, "start " + command);
-      return batchFile;
+      writeBatchFile(batchFile, command);
+      return "start " + batchFile;
     } else {
       return command;
     }
