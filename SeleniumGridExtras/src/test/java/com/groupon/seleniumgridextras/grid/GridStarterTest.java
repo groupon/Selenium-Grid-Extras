@@ -31,7 +31,7 @@ public class GridStarterTest {
   private final String command = "command";
   private final String windowsBatchFileName = logFile.replace("log", "bat");
   private final String expectedLinuxCommand = command;
-  private final String expectedWindowsCommand = "start " + command;
+  private final String expectedWindowsCommand = command;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/
@@ -80,7 +80,7 @@ public class GridStarterTest {
     assertEquals(expectedLinuxCommand,
                  GridStarter.getBackgroundStartCommandForNode(command, logFile, false));
 
-    assertEquals(windowsBatchFileName,
+    assertEquals("start " +windowsBatchFileName,
                  GridStarter.getBackgroundStartCommandForNode(command, logFile, true));
 
     assertEquals(expectedWindowsCommand, readFile(windowsBatchFileName));
