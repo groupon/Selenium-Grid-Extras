@@ -83,13 +83,31 @@ public class ChromeDriverDownloader extends Downloader {
       slash = "/";
     }
 
+    System.out.println("Downloading from " + getSourceURL());
+
     if (startDownload()) {
 
       if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
 
-        File tempUnzipedExecutable = new File(getDestinationDir(), "chromedriver");
+        String chromedriver = "chromedriver";
+        if (OSChecker.isWindows()){
+          chromedriver = chromedriver + ".exe";
+        }
+
+
+        File tempUnzipedExecutable = new File(getDestinationDir(), chromedriver);
         File finalExecutable =
             new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
+
+        if (tempUnzipedExecutable.exists()){
+          System.out.println(tempUnzipedExecutable.getAbsolutePath());
+          System.out.println("It does exist");
+          System.out.println(finalExecutable.getAbsolutePath());
+        } else {
+          System.out.println(tempUnzipedExecutable.getAbsolutePath());
+          System.out.println("NO exist");
+          System.out.println(finalExecutable.getAbsolutePath());
+        }
 
         tempUnzipedExecutable.renameTo(finalExecutable);
 

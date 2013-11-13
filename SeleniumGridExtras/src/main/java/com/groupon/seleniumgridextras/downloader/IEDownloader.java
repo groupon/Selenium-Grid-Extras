@@ -108,7 +108,19 @@ public class IEDownloader extends Downloader {
 
         File tempUnzipedExecutable = new File(getDestinationDir(), "IEDriverServer.exe");
         File finalExecutable =
-            new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
+            new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
+
+        if (tempUnzipedExecutable.exists()){
+          System.out.println(tempUnzipedExecutable.getAbsolutePath());
+          System.out.println("It does exist");
+          System.out.println(finalExecutable.getAbsolutePath());
+        } else {
+          System.out.println(tempUnzipedExecutable.getAbsolutePath());
+          System.out.println("NO exist");
+          System.out.println(finalExecutable.getAbsolutePath());
+        }
+
+
 
         tempUnzipedExecutable.renameTo(finalExecutable);
         setDestinationFile(finalExecutable.getAbsolutePath());
