@@ -30,7 +30,7 @@ public class Config {
   public static final String WEBDRIVER = "webdriver";
   public static final String IEDRIVER = "iedriver";
   public static final String CHROME_DRIVER = "chromedriver";
-  public static final String EXPOSE_DIRECTORY = "expose_directory";
+  public static final String SHARED_DIR = "expose_directory";
 
   public static final String AUTO_START_NODE = "auto_start_node";
   public static final String AUTO_START_HUB = "auto_start_hub";
@@ -150,8 +150,8 @@ public class Config {
     return (List<String>) getConfigMap().get(DISABLED_MODULES);
   }
 
-  public String getExposedDirectory() {
-    return (String) getConfigMap().get(EXPOSE_DIRECTORY);
+  public String getSharedDirectory() {
+    return (String) getConfigMap().get(SHARED_DIR);
   }
 
   public List<String> getSetup() {
@@ -251,7 +251,7 @@ public class Config {
   }
 
   public void setSharedDir(String sharedDir) {
-    getConfigMap().put(EXPOSE_DIRECTORY, sharedDir);
+    getConfigMap().put(SHARED_DIR, sharedDir);
   }
 
   public String toJsonString() {
