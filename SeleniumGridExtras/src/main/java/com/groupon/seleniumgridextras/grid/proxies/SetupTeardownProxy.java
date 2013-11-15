@@ -68,20 +68,29 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   @Override
   public void beforeSession(TestSession session) {
     super.beforeSession(session);
-    Map<String,Object> cap =session.getRequestedCapabilities();
-    if(cap.get(CapabilityType.BROWSER_NAME).equals("internet explorer"))
-        callAction(session,"kill_ie"); //kill IE if starting IE
+    killBrowserForCurrentSession(session);
     callAction(session, "setup");
   }
 
   @Override
   public void afterSession(TestSession session) {
     super.afterSession(session);
-    Map<String,Object> cap =session.getRequestedCapabilities();
-    if(cap.get(CapabilityType.BROWSER_NAME).equals("internet explorer"))
-        callAction(session,"kill_ie"); //kill IE if starting IE
+    killBrowserForCurrentSession(session);
     callAction(session, "teardown");
   }
+
+  private void killBrowserForCurrentSession(TestSession session) {
+       Map<String, Object> cap = session.getRequestedCapabilities();
+       String browser = (String) cap.get(CapabilityType.BROWSER_NAME);
+
+       if (browser.equals("internet explorer")) {
+         callAction(session, "kill_ie");
+       } else if (browser.equals("chrome")) {
+         callAction(session, "kill_chrome");
+       } else if (browser.equals("firefox")){
+         callAction(session, "kill_firefox");
+       }
+     }
 
   synchronized private void callAction(TestSession session, String action) {
     try {
