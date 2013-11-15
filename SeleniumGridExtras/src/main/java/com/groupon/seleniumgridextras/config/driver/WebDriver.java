@@ -47,6 +47,11 @@ public class WebDriver extends DriverInfo {
       separator = "\\";
     }
 
-    return this.getDirectory() + separator + this.getVersion() + ".jar";
+    return this.getDirectory() + separator + getExecutableName();
+  }
+
+  @Override
+  public String getExecutableName() {
+    return this.getVersion() + ".jar";
   }
 }
