@@ -51,13 +51,18 @@ public class ChromeDriver extends DriverInfo {
 
     String
         path =
-        this.getDirectory() + slash + "chromedriver_" + this.getVersion() + "_" + this.getBit()
-        + "bit";
-
-    if (OSChecker.isWindows()) {
-      path = path + ".exe";
-    }
+        this.getDirectory() + slash + getExecutableName();
 
     return path;
+  }
+
+  @Override
+  public String getExecutableName() {
+    String exe = "chromedriver_" + this.getVersion() + "_" + this.getBit() + "bit";
+
+    if (OSChecker.isWindows()) {
+      exe = exe + ".exe";
+    }
+    return exe;
   }
 }

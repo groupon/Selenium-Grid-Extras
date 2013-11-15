@@ -54,6 +54,8 @@ public abstract class DriverInfo extends HashMap<String, String> implements Driv
 
   public abstract String getExecutablePath();
 
+  public abstract String getExecutableName();
+
   public String getBit(){
     return this.get(BIT);
   }
