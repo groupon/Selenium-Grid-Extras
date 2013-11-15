@@ -30,8 +30,8 @@ public class GridStarterTest {
   private final String logFile = "foo.log";
   private final String command = "command";
   private final String windowsBatchFileName = logFile.replace("log", "bat");
-  private final String expectedLinuxCommand = command;
-  private final String expectedWindowsCommand = command;
+  private final String expectedLinuxCommand = command + " -log shared/" + logFile;
+  private final String expectedWindowsCommand = command + " -log shared\\" + logFile;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/

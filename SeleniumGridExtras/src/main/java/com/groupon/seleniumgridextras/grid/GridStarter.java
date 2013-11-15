@@ -20,14 +20,16 @@ public class GridStarter {
     command.append(getGridExtrasJarFilePath());
 
     String jarPath = colon + getCurrentWebDriverJarPath() + " ";
-
+    String logCommand = " -log " + RuntimeConfig.getConfig().getSharedDirectory() + "/grid_hub.log";
     if (windows) {
+      logCommand = OSChecker.toWindowsPath(logCommand);
       jarPath = OSChecker.toWindowsPath(jarPath);
     }
 
     command.append(jarPath);
     command.append(" org.openqa.grid.selenium.GridLauncher ");
     command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
+    command.append(logCommand);
 
     return String.valueOf(command);
   }
@@ -56,6 +58,8 @@ public class GridStarter {
         logFileFullPath =
         RuntimeConfig.getConfig().getSharedDirectory() + (windows ? "\\" : "/")
         + logFile;
+
+    command = command + " -log " + logFileFullPath;
 
     if (windows) {
       String batchFile = logFile.replace("log", "bat");
