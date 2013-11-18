@@ -142,8 +142,12 @@ public class GridNode {
     private int port;
     private String host;
     private boolean register = true;
+    private int nodePolling = 2000;
     private int registerCycle = 2000;
+    private int cleanupCycle = 4000;
+    private int unregisterIfStillDownAfter = 4000;
     private int hubPort;
+    private int nodeTimeout = 120;
     private String hubHost;
 
 
