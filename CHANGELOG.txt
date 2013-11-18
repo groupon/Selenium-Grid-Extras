@@ -1,3 +1,5 @@
+1.2.1 - Output node and hub logs into the shared directory for easy review
+      - Tweak node registration cycle to work better when node dies
 1.2.0 - Refactor config, local config only overwrite the explicit values in default config
       - Add support for chrome
       - Start each browser node as a an individual process
