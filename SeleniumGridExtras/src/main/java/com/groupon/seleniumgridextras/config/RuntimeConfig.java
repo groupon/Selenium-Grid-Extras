@@ -56,10 +56,16 @@ public class RuntimeConfig {
 
   private static String configFile = "selenium_grid_extras_config.json";
   private static Config config = null;
+  private final static String version = "1.2.1";
 
   public RuntimeConfig() {
     config = new Config();
   }
+
+  public static String getVersion() {
+    return version;
+  }
+
 
   protected static void clearConfig() {
     //Use only for tests, don't use for any other reason
