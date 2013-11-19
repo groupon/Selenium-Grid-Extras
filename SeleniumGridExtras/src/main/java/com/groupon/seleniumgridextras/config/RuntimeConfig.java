@@ -147,4 +147,8 @@ public class RuntimeConfig {
     return config;
   }
 
+  public static String getUserHome(){
+    return System.getProperty( "user.home" );
+  }
+
 }
