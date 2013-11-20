@@ -23,6 +23,7 @@ public class GridNode {
 
   private LinkedList<Capability> capabilities;
   private GridNodeConfiguration configuration;
+  private String loadedFromFile;
 
 
   public GridNode() {
@@ -57,7 +58,18 @@ public class GridNode {
 
     }
 
-    return new GridNode(filteredCapabilities, nodeConfiguration);
+    GridNode node = new GridNode(filteredCapabilities, nodeConfiguration);
+    node.setLoadedFromFile(filename);
+
+    return node;
+  }
+
+  public String getLoadedFromFile() {
+    return this.loadedFromFile;
+  }
+
+  public void setLoadedFromFile(String file) {
+    this.loadedFromFile = file;
   }
 
 
