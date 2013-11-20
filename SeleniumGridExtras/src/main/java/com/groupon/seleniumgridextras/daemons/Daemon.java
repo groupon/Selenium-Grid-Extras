@@ -1,6 +1,6 @@
 package com.groupon.seleniumgridextras.daemons;
 
 public interface Daemon {
-  public Boolean startDaemon();
-  public Boolean stopDaemon();
+  public void installDaemon();
+  public void uninstallDaemon();
 }
