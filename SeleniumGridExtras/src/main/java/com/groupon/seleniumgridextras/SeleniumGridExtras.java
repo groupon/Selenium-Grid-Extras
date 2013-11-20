@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras;
 
 import com.google.gson.GsonBuilder;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
@@ -55,7 +56,9 @@ public class SeleniumGridExtras {
 
     RuntimeConfig.load();
 
-    HttpServer server = HttpServer.create(new InetSocketAddress(3000), 0);
+    HttpServer
+        server =
+        HttpServer.create(new InetSocketAddress(RuntimeConfig.getGridExtrasPort()), 0);
 
     List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
     for (String module : RuntimeConfig.getConfig().getActivatedModules()) {
@@ -75,7 +78,9 @@ public class SeleniumGridExtras {
             System.out.println(
                 "End-point " + task.getEndpoint() + " was called with HTTP params " + params
                     .toString());
-            String result = new GsonBuilder().setPrettyPrinting().create().toJson(task.execute(params));
+            String
+                result =
+                new GsonBuilder().setPrettyPrinting().create().toJson(task.execute(params));
             return result;
           }
         });

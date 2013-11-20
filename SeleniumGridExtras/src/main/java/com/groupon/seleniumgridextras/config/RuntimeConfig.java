@@ -61,6 +61,13 @@ public class RuntimeConfig {
   private static Config config = null;
   private static OS currentOS = new OS();
   private final static String version = "1.2.1";
+  private final static int gridExtrasPort = 3000;
+
+  public static int getGridExtrasPort() {
+    return gridExtrasPort;
+  }
+
+
 
   public RuntimeConfig() {
     config = new Config();
