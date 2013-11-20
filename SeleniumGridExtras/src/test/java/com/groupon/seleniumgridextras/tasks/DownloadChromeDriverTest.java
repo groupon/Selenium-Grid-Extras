@@ -39,7 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.Gson;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -117,9 +117,9 @@ public class DownloadChromeDriverTest {
 
     String os;
 
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       os = "win";
-    } else if (OSChecker.isMac()) {
+    } else if (RuntimeConfig.getOS().isMac()) {
       os = "mac";
     } else {
       os = "linux";

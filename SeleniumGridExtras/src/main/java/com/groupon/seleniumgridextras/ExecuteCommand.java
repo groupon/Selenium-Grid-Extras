@@ -39,6 +39,8 @@ package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -56,7 +58,7 @@ public class ExecuteCommand {
     Process process;
 
     try {
-      if(OSChecker.isWindows())
+      if(RuntimeConfig.getOS().isWindows())
         process = Runtime.getRuntime().exec("cmd /C "+cmd);
       else
         process = Runtime.getRuntime().exec(cmd);

@@ -37,27 +37,17 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-public class OSChecker {
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class OSTest {
 
 
-  public static boolean isWindows() {
-    return getOSName().startsWith("Windows");
+  @Test
+  public void testGetOSName() throws Exception {
+    assertEquals(RuntimeConfig.getOS().getOSName(), System.getProperty("os.name"));
   }
-
-  public static boolean isMac() {
-    return getOSName().startsWith("Mac");
-  }
-
-  public static String getOSName() {
-    return System.getProperty("os.name");
-  }
-
-  public static String toWindowsPath(String path) {
-    String windowsPath = path;
-    windowsPath = windowsPath.replaceAll("^/", "");
-    windowsPath = windowsPath.replaceAll("[\\/]", "\\\\");
-    return windowsPath;
-  }
-
 }

@@ -45,7 +45,7 @@ public class OsXDaemon implements Daemon {
   }
 
   public String getInitDExecutablePath(){
-    return  RuntimeConfig.getUserHome() + "/Library/LaunchAgents/" + getLabelName();
+    return  RuntimeConfig.getOS().getUserHome() + "/Library/LaunchAgents/" + getLabelName();
   }
 
   protected String getDaemonName() {
@@ -63,7 +63,7 @@ public class OsXDaemon implements Daemon {
   }
 
   protected String getExecutableFilePath() {
-    return RuntimeConfig.getSeleniumGridExtrasJarFile();
+    return RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath();
   }
 
   protected String getJava() {

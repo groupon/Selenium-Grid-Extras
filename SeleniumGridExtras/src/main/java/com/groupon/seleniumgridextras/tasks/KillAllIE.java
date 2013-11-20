@@ -41,10 +41,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-
-import java.io.File;
 
 public class KillAllIE extends KillAllByName {
 
@@ -74,7 +72,7 @@ public class KillAllIE extends KillAllByName {
   @Override
   public JsonObject execute(String param) {
 
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       return killIEAndIEDriver();
     } else {
       getJsonResponse().addKeyValues("error", "Kill IE command is only implemented in Windows");

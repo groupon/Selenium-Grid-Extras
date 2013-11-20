@@ -37,7 +37,7 @@
 
 package com.groupon.seleniumgridextras.downloader;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.io.File;
@@ -77,11 +77,6 @@ public class ChromeDriverDownloader extends Downloader {
 
   @Override
   public boolean download() {
-    String slash = "\\";
-
-    if (!OSChecker.isWindows()) {
-      slash = "/";
-    }
 
     System.out.println("Downloading from " + getSourceURL());
 
@@ -90,7 +85,7 @@ public class ChromeDriverDownloader extends Downloader {
       if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
 
         String chromedriver = "chromedriver";
-        if (OSChecker.isWindows()){
+        if (RuntimeConfig.getOS().isWindows()){
           chromedriver = chromedriver + ".exe";
         }
 
@@ -143,9 +138,9 @@ public class ChromeDriverDownloader extends Downloader {
   protected String getOSName() {
     String os;
 
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       os = getWindownsName();
-    } else if (OSChecker.isMac()) {
+    } else if (RuntimeConfig.getOS().isMac()) {
       os = getMacName();
     } else {
       os = getLinuxName();

@@ -1,7 +1,7 @@
 package com.groupon.seleniumgridextras.grid;
 
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.commons.io.FileUtils;
@@ -13,18 +13,16 @@ import java.util.List;
 public class GridStarter {
 
   public static String getOsSpecificHubStartCommand(Boolean windows) {
-    String colon = windows ? ";" : ":";
 
     StringBuilder command = new StringBuilder();
     command.append("java -cp ");
     command.append(getGridExtrasJarFilePath());
 
-    String jarPath = colon + getCurrentWebDriverJarPath() + " ";
-    String logCommand = " -log " + RuntimeConfig.getConfig().getSharedDirectory() + "/grid_hub.log";
-    if (windows) {
-      logCommand = OSChecker.toWindowsPath(logCommand);
-      jarPath = OSChecker.toWindowsPath(jarPath);
-    }
+    String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + " ";
+    String
+        logCommand =
+        " -log " + RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator()
+        + "grid_hub.log";
 
     command.append(jarPath);
     command.append(" org.openqa.grid.selenium.GridLauncher ");
@@ -56,8 +54,7 @@ public class GridStarter {
 
     String
         logFileFullPath =
-        RuntimeConfig.getConfig().getSharedDirectory() + (windows ? "\\" : "/")
-        + logFile;
+        RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
     command = command + " -log " + logFileFullPath;
 
@@ -75,13 +72,13 @@ public class GridStarter {
     return "java" + getIEDriverExecutionPathParam() +
            getChromeDriverExecutionPathParam() +
            " -cp " + getGridExtrasJarFilePath()
-           + (windows ? ";" : ":") + getCurrentWebDriverJarPath()
+           + RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath()
            + " org.openqa.grid.selenium.GridLauncher -role node -nodeConfig "
            + configFile;
   }
 
   protected static String getIEDriverExecutionPathParam() {
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       return " -Dwebdriver.ie.driver=" + RuntimeConfig.getConfig().getIEdriver()
           .getExecutablePath();
     } else {
@@ -96,7 +93,6 @@ public class GridStarter {
 
   protected static String buildBackgroundStartCommand(String command, Boolean windows) {
     String backgroundCommand;
-    final String gridLogFile = "grid_hub.log";
     final String batchFile = "start_hub.bat";
 
     if (windows) {
@@ -111,11 +107,11 @@ public class GridStarter {
   }
 
   protected static String getGridExtrasJarFilePath() {
-    return RuntimeConfig.getSeleniumGridExtrasJarFile();
+    return RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath();
   }
 
   protected static String getCurrentWebDriverJarPath() {
-    return getWebdriverHome() + "/" + getWebdriverVersion() + ".jar";
+    return getWebdriverHome() + RuntimeConfig.getOS().getFileSeparator() + getWebdriverVersion() + ".jar";
   }
 
   protected static String getWebdriverVersion() {

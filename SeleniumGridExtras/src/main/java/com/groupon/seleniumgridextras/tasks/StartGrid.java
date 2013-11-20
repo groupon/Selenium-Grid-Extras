@@ -39,10 +39,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridStarter;
 
@@ -96,7 +95,7 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   private JsonObject startNodes() {
-    for (String command : GridStarter.getStartCommandsForNodes(OSChecker.isWindows())) {
+    for (String command : GridStarter.getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
       try {
 
         JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
@@ -122,7 +121,7 @@ public class StartGrid extends ExecuteOSTask {
   private JsonObject startHub() {
 
     JsonObject serviceStartResponse = ExecuteCommand.execRuntime(
-        GridStarter.getOsSpecificHubStartCommand(OSChecker.isWindows())
+        GridStarter.getOsSpecificHubStartCommand(RuntimeConfig.getOS().isWindows())
         , false);
 
     if (serviceStartResponse.get("exit_code").toString().equals("0")) {

@@ -158,7 +158,7 @@
 //
 //    modifiedActual =
 //        modifiedActual
-//            .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
+//            .replace(OS.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
 //                "replaced-for-now-");
 //
 //    assertEquals(expectedCommand, modifiedActual);
@@ -190,7 +190,7 @@
 //
 //    modifiedActual =
 //        modifiedActual
-//            .replace(OSChecker.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
+//            .replace(OS.toWindowsPath(RuntimeConfig.getSeleniungGridExtrasHomePath()),
 //                "replaced-for-now-");
 //
 //    assertEquals(expectedCommand, modifiedActual);

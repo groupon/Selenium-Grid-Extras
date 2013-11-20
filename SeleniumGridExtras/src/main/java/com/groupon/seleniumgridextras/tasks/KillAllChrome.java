@@ -40,7 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class KillAllChrome extends KillAllByName {
@@ -62,9 +62,9 @@ public class KillAllChrome extends KillAllByName {
   @Override
   public JsonObject execute(String param) {
 
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       return killChromeOnWindows();
-    } else if (OSChecker.isMac()) {
+    } else if (RuntimeConfig.getOS().isMac()) {
       return killChromeOnMac();
     } else {
       return killChromeOnLinux();

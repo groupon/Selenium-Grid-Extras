@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras.downloader;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -59,7 +61,7 @@ public abstract class Downloader {
   public File getDestinationFileFullPath(){
     File dir = new File(getDestinationDir());
     File file = new File(getDestinationFile());
-    File combined = new File(dir.getAbsolutePath() + "/" + file.getName());
+    File combined = new File(dir.getAbsolutePath() + RuntimeConfig.getOS().getFileSeparator() + file.getName());
     return combined;
   }
 

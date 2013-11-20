@@ -37,26 +37,37 @@
 
 package com.groupon.seleniumgridextras;
 
-import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
-public class OSCheckerTest {
+public class OS {
 
 
-  @Test
-  public void testGetOSName() throws Exception {
-    assertEquals(OSChecker.getOSName(), System.getProperty("os.name"));
+  public boolean isWindows() {
+    return getOSName().startsWith("Windows");
   }
 
-  @Test
-  public void testToWindowsPathDoesNotReplacesColons() throws Exception {
-    assertEquals("foo:bar", OSChecker.toWindowsPath("foo:bar"));
+  public boolean isMac() {
+    return getOSName().startsWith("Mac");
   }
 
-  @Test
-  public void testToWindowsPathReplacesForwardSlashes() throws Exception {
-    assertEquals("foo\\bar", OSChecker.toWindowsPath("foo/bar"));
-    assertEquals("foo\\bar\\foo", OSChecker.toWindowsPath("foo/bar/foo"));
+  public String getOSName() {
+    return System.getProperty("os.name");
   }
+
+  public String getUserHome() {
+    return System.getProperty("user.home");
+  }
+
+  public String getUserName() {
+    return System.getProperty("user.name");
+  }
+
+  public String getFileSeparator() {
+    return System.getProperty("file.separator");
+  }
+
+  public String getPathSeparator() {
+    return System.getProperty("path.separator");
+  }
+
+
 }

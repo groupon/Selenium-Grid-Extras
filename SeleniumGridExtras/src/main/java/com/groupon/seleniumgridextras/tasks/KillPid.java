@@ -38,7 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.Map;
 
@@ -74,7 +74,7 @@ public class KillPid extends ExecuteOSTask {
       return execute();
     } else {
       String pid = parameter.get("id").toString();
-      if (!OSChecker.isWindows() && parameter.containsKey("signal")) {
+      if (!RuntimeConfig.getOS().isWindows() && parameter.containsKey("signal")) {
         pid = "-" + parameter.get("signal").toString() + " " + pid;
       }
 

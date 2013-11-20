@@ -39,10 +39,13 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -56,6 +59,7 @@ public class RuntimeConfig {
 
   private static String configFile = "selenium_grid_extras_config.json";
   private static Config config = null;
+  private static OS currentOS = new OS();
   private final static String version = "1.2.1";
 
   public RuntimeConfig() {
@@ -102,8 +106,9 @@ public class RuntimeConfig {
     return config;
   }
 
-  public static String getSeleniumGridExtrasJarFile() {
-    return SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+  public static File getSeleniumGridExtrasJarFile() {
+    return new File(
+        SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath());
   }
 
   public static String getCurrentHostIP() {
@@ -117,14 +122,8 @@ public class RuntimeConfig {
   }
 
   public static String getSeleniungGridExtrasHomePath() {
-    String path = getSeleniumGridExtrasJarFile();
-    path = path.replaceAll("[\\w-\\d\\.]*\\.jar", "");
-
-    if (OSChecker.isWindows()) {
-      path = OSChecker.toWindowsPath(path);
-    }
-
-    return path;
+    return FilenameUtils
+        .getFullPathNoEndSeparator(getSeleniumGridExtrasJarFile().getAbsolutePath());
   }
 
   private static String readConfigFile(String filePath) {
@@ -147,20 +146,8 @@ public class RuntimeConfig {
     return config;
   }
 
-  public static String getUserHome(){
-    return System.getProperty( "user.home" );
-  }
-
-  public static String getUserName(){
-    return System.getProperty("user.name");
-  }
-
-  public static String getFileSeparator(){
-    return System.getProperty("file.separator");
-  }
-
-  public static String getPathSeparator(){
-    return System.getProperty("path.separator");
+  public static OS getOS() {
+    return currentOS;
   }
 
 }

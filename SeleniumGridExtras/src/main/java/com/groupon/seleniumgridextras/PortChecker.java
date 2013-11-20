@@ -41,7 +41,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.List;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,7 +53,7 @@ public class PortChecker {
     JsonObject status = getPortInfo(port);
     JsonArray standardOut = (JsonArray) status.get("out");
 
-    if(OSChecker.isWindows())
+    if(RuntimeConfig.getOS().isWindows())
         return parseWindowsInfo(standardOut);
     return parseLinuxInfo(standardOut);
 
@@ -70,13 +71,6 @@ public class PortChecker {
     }
 
     return ExecuteCommand.execRuntime(command.toString());
-  }
-
-
-  private static String getWindowsPid() {
-    System.out.println("Implement me!!!  Port Checkier get windwos PID");
-    System.exit(1);
-    return "";
   }
 
   private static JsonObject parseLinuxInfo(JsonArray status) {
@@ -113,7 +107,7 @@ public class PortChecker {
 
 
   private static String getCommand() {
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       return "netstat -aon ";
     } else {
       return "lsof -i TCP";
@@ -121,7 +115,7 @@ public class PortChecker {
   }
 
   private static String getParameters() {
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       return " | findstr :";
     } else {
       return ":";

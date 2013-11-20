@@ -40,7 +40,8 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
 import com.groupon.seleniumgridextras.os.MacSystemInfo;
 import com.groupon.seleniumgridextras.os.OSInfo;
@@ -82,9 +83,9 @@ public class SystemInfo extends ExecuteOSTask {
     try {
       OSInfo info;
 
-      if (OSChecker.isWindows()) {
+      if (RuntimeConfig.getOS().isWindows()) {
         info = new WindowsSystemInfo();
-      } else if (OSChecker.isMac()) {
+      } else if (RuntimeConfig.getOS().isMac()) {
         info = new MacSystemInfo();
       } else {
         info = new LinuxSystemInfo();

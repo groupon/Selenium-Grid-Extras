@@ -30,8 +30,10 @@ public class GridStarterTest {
   private final String logFile = "foo.log";
   private final String command = "command";
   private final String windowsBatchFileName = logFile.replace("log", "bat");
-  private final String expectedLinuxCommand = command + " -log shared/" + logFile;
-  private final String expectedWindowsCommand = command + " -log shared\\" + logFile;
+  private final
+  String
+      expectedCommand =
+      command + " -log shared" + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/
@@ -77,46 +79,24 @@ public class GridStarterTest {
   @Test
   public void testGetBackgroundStartCommandForNode() throws Exception {
 
-    assertEquals(expectedLinuxCommand,
+    assertEquals(expectedCommand,
                  GridStarter.getBackgroundStartCommandForNode(command, logFile, false));
 
-    assertEquals("start " +windowsBatchFileName,
+    assertEquals("start " + windowsBatchFileName,
                  GridStarter.getBackgroundStartCommandForNode(command, logFile, true));
 
-    assertEquals(expectedWindowsCommand, readFile(windowsBatchFileName));
+    assertEquals(expectedCommand, readFile(windowsBatchFileName));
 
 
   }
 
-  @Test
-  public void testGetOsSpecificHubStartCommandForWindows() throws Exception {
-
-    Matcher
-        matcher =
-        startHubCommandPattern.matcher(GridStarter.getOsSpecificHubStartCommand(true));
-
-    assertTrue(matcher.find()); //Make sure the matchers are met
-    assertEquals(11, matcher.groupCount()); //We have 11 total matches
-    assertEquals("java -cp", matcher.group(1)); //start with java command
-    assertEquals(";", matcher.group(3)); //OS specific class delimeter
-    assertEquals("\\tmp\\webdriver\\", matcher.group(4)); //Location of the WD jar file
-    assertEquals("1.1.1.jar", matcher.group(5)); //name of jar file
-    assertEquals("org.openqa.grid.selenium.GridLauncher",
-                 matcher.group(6)); //Calling the Grid launcher class
-    assertEquals("hub", matcher.group(7)); //check role of the start command
-    assertEquals("4444", matcher.group(8)); //Check port used
-    assertEquals(RuntimeConfig.getCurrentHostIP(), matcher.group(9)); //Host name
-    assertEquals("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet",
-                 matcher.group(10)); //Using the servlete to pretty print html
-    assertEquals("com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet",
-                 matcher.group(11)); //JSON current status proxy
-
-
-  }
 
   @Test
   public void testGetOsSpecificHubStartCommandForLinux() throws Exception {
-
+    String
+        expecteWdDir =
+        RuntimeConfig.getOS().getFileSeparator() + "tmp" + RuntimeConfig.getOS().getFileSeparator() + "webdriver"
+        + RuntimeConfig.getOS().getFileSeparator();
     Matcher
         matcher =
         startHubCommandPattern.matcher(GridStarter.getOsSpecificHubStartCommand(false));
@@ -124,8 +104,8 @@ public class GridStarterTest {
     assertTrue(matcher.find()); //Make sure the matchers are met
     assertEquals(11, matcher.groupCount()); //We have 11 total matches
     assertEquals("java -cp", matcher.group(1)); //start with java command
-    assertEquals(":", matcher.group(3)); //OS specific class delimeter
-    assertEquals("/tmp/webdriver/", matcher.group(4)); //Location of the WD jar file
+    assertEquals(RuntimeConfig.getOS().getPathSeparator(), matcher.group(3)); //OS specific class delimeter
+    assertEquals(expecteWdDir, matcher.group(4)); //Location of the WD jar file
     assertEquals("1.1.1.jar", matcher.group(5)); //name of jar file
     assertEquals("org.openqa.grid.selenium.GridLauncher",
                  matcher.group(6)); //Calling the Grid launcher class

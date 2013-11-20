@@ -40,7 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.LinkedList;
@@ -52,7 +52,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   final private
   String
       notImplementedError =
-      "This task was not implemented on " + OSChecker.getOSName();
+      "This task was not implemented on " + RuntimeConfig.getOS().getOSName();
   public boolean waitToFinishTask = true;
 
   public JsonObject execute() {
@@ -70,8 +70,8 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   public JsonObject execute(String parameter) {
 
-    String command = OSChecker.isWindows() ? getWindowsCommand()
-        : OSChecker.isMac() ? getMacCommand() : getLinuxCommand();
+    String command = RuntimeConfig.getOS().isWindows() ? getWindowsCommand()
+        : RuntimeConfig.getOS().isMac() ? getMacCommand() : getLinuxCommand();
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }

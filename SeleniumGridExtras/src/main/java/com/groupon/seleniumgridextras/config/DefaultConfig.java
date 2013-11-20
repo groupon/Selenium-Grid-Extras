@@ -36,7 +36,7 @@
  */
 package com.groupon.seleniumgridextras.config;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 
 public class DefaultConfig {
 
@@ -74,12 +74,10 @@ public class DefaultConfig {
 
 
   private static void loadWebDriverInfo() {
-    String tmpDir;
+    String tmpDir = RuntimeConfig.getOS().getFileSeparator();
 
-    if (OSChecker.isWindows()) {
-      tmpDir = "\\";
-    } else {
-      tmpDir = "/tmp/";
+    if (!RuntimeConfig.getOS().isWindows()) {
+      tmpDir = tmpDir + "tmp" + RuntimeConfig.getOS().getFileSeparator();
     }
 
     config.getWebdriver().setDirectory(tmpDir + "webdriver");
@@ -89,16 +87,8 @@ public class DefaultConfig {
 
   private static void loadIEDriverInfo() {
     String tmpDir;
-    String delimiter;
 
-
-    if (OSChecker.isWindows()) {
-      delimiter = "\\";
-    } else {
-      delimiter = "/";
-    }
-
-    tmpDir = config.getWebdriver().getDirectory() + delimiter;
+    tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
 
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
     config.getIEdriver().setVersion("2.35.3");
@@ -107,16 +97,8 @@ public class DefaultConfig {
 
   private static void loadChromeDriverInfo() {
     String tmpDir;
-    String delimiter;
 
-
-    if (OSChecker.isWindows()) {
-      delimiter = "\\";
-    } else {
-      delimiter = "/";
-    }
-
-    tmpDir = config.getWebdriver().getDirectory() + delimiter;
+    tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
 
     config.getChromeDriver().setDirectory(tmpDir + "chromedriver");
     config.getChromeDriver().setVersion("2.6");

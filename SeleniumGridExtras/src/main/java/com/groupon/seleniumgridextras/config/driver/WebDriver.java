@@ -36,18 +36,13 @@
  */
 package com.groupon.seleniumgridextras.config.driver;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class WebDriver extends DriverInfo {
 
   @Override
   public String getExecutablePath() {
-    String separator = "/";
-    if (OSChecker.isWindows()){
-      separator = "\\";
-    }
-
-    return this.getDirectory() + separator + getExecutableName();
+    return this.getDirectory() + RuntimeConfig.getOS().getFileSeparator() + getExecutableName();
   }
 
   @Override

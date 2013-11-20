@@ -36,7 +36,7 @@
  */
 package com.groupon.seleniumgridextras.config;
 
-import com.groupon.seleniumgridextras.OSChecker;
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
 import java.io.BufferedReader;
@@ -147,9 +147,9 @@ public class FirstTimeRunConfig {
 
 
   private static String guessPlatform() {
-    if (OSChecker.isWindows()) {
+    if (RuntimeConfig.getOS().isWindows()) {
       return "WINDOWS";
-    } else if (OSChecker.isMac()) {
+    } else if (RuntimeConfig.getOS().isMac()) {
       return "MAC";
     } else {
       return "LINUX";

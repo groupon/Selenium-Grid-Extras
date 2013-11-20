@@ -37,7 +37,6 @@
 
 package com.groupon.seleniumgridextras.downloader;
 
-import com.groupon.seleniumgridextras.OSChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.io.File;
@@ -99,12 +98,6 @@ public class IEDownloader extends Downloader {
     if (startDownload()) {
 
       if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
-
-        String slash = "\\";
-
-        if (!OSChecker.isWindows()) {
-          slash = "/";
-        }
 
         File tempUnzipedExecutable = new File(getDestinationDir(), "IEDriverServer.exe");
         File finalExecutable =
