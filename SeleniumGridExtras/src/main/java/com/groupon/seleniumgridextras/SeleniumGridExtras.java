@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras;
 import com.google.gson.GsonBuilder;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.sun.net.httpserver.HttpContext;
@@ -55,6 +56,7 @@ public class SeleniumGridExtras {
   public static void main(String[] args) throws Exception {
 
     RuntimeConfig.load();
+    SelfHealingGrid.checkStatus(RuntimeConfig.getGridExtrasPort(), RuntimeConfig.getConfig());
 
     HttpServer
         server =
