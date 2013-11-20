@@ -95,27 +95,7 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   private JsonObject startNodes() {
-    for (String command : GridStarter.getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
-      try {
-
-        JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
-
-        if (!startResponse.get("exit_code").toString().equals("0")) {
-          getJsonResponse()
-              .addKeyValues("error", "Error running " + startResponse.get("error").toString());
-        }
-      } catch (Exception e) {
-        getJsonResponse()
-            .addKeyValues("error", "Error running " + command);
-        getJsonResponse()
-            .addKeyValues("error", e.toString());
-
-        e.printStackTrace();
-      }
-
-    }
-
-    return getJsonResponse().getJson();
+    return GridStarter.startAllNodes(getJsonResponse());
   }
 
   private JsonObject startHub() {

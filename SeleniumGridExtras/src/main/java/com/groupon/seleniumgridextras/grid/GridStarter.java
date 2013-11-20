@@ -1,7 +1,9 @@
 package com.groupon.seleniumgridextras.grid;
 
+import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.OS;
+import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.commons.io.FileUtils;
@@ -30,6 +32,35 @@ public class GridStarter {
     command.append(logCommand);
 
     return String.valueOf(command);
+  }
+
+
+  public static JsonObject startAllNodes(JsonResponseBuilder jsonResponseBuilder){
+    for (String command : getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
+      try {
+
+        JsonObject startResponse = startOneNode(command);
+
+        if (!startResponse.get("exit_code").toString().equals("0")) {
+          jsonResponseBuilder
+              .addKeyValues("error", "Error running " + startResponse.get("error").toString());
+        }
+      } catch (Exception e) {
+        jsonResponseBuilder
+            .addKeyValues("error", "Error running " + command);
+        jsonResponseBuilder
+            .addKeyValues("error", e.toString());
+
+        e.printStackTrace();
+      }
+
+    }
+
+    return jsonResponseBuilder.getJson();
+  }
+
+  public static JsonObject startOneNode(String command){
+    return ExecuteCommand.execRuntime(command, false);
   }
 
   public static List<String> getStartCommandsForNodes(Boolean windows) {
