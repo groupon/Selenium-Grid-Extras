@@ -151,4 +151,16 @@ public class RuntimeConfig {
     return System.getProperty( "user.home" );
   }
 
+  public static String getUserName(){
+    return System.getProperty("user.name");
+  }
+
+  public static String getFileSeparator(){
+    return System.getProperty("file.separator");
+  }
+
+  public static String getPathSeparator(){
+    return System.getProperty("path.separator");
+  }
+
 }
