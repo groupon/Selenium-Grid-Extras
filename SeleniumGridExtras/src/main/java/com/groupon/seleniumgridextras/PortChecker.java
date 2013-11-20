@@ -59,6 +59,9 @@ public class PortChecker {
 
   }
 
+  public static JsonObject getParsedPortInfo(int port){
+    return getParsedPortInfo(String.valueOf(port));
+  }
 
   public static JsonObject getPortInfo(String port) {
     StringBuilder command = new StringBuilder();
