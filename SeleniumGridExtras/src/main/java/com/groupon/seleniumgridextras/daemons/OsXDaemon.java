@@ -46,11 +46,11 @@ public class OsXDaemon extends DaemonWrapper {
 
   @Override
   public void setDaemonName(String name) {
-    this.daemonName = "com.groupon.seleniumgridextras."  + name + ".plist";
+    this.put(DAEMON_NAME, "com.groupon.seleniumgridextras."  + name + ".plist");
   }
 
   protected int getCheckInterval(){
-    return this.interval * 60;
+    return Integer.parseInt(this.get(INTERVAL)) * 60;
   }
 
 

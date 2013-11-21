@@ -8,12 +8,12 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
 
   protected DaemonInterface daemon;
 
-  protected String workingDir;
-  protected String javaExecutable;
-  protected String logDirectory;
-  protected String jarPath;
-  protected String daemonName;
-  protected int interval;
+  protected String WORKING_DIRECTORY = "workingDirectory";
+  protected String JAVA = "javaExecutable";
+  protected String LOG_DIRECTORY = "logDirectory";
+  protected String JAR_PATH = "jarPath";
+  protected String DAEMON_NAME = "daemonName";
+  protected String INTERVAL = "interval";
 
 //  return RuntimeConfig.getSeleniungGridExtrasHomePath();
 //
@@ -38,56 +38,56 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
 
   @Override
   public void setLogDirectory(String path) {
-    this.logDirectory = path;
+    this.put(LOG_DIRECTORY, path);
   }
 
   @Override
   public void setJavaExecutable(String path) {
-    this.javaExecutable = path;
+    this.put(JAVA, path);
   }
 
   protected String getJavaExecutable() {
-    return this.javaExecutable;
+    return this.get(JAVA);
   }
 
   @Override
   public void setJarPath(String path) {
-    this.jarPath = path;
+    this.put(JAR_PATH, path);
   }
 
   @Override
   public void setDaemonName(String name) {
-    this.daemonName = name;
+    this.put(DAEMON_NAME, name);
   }
 
   @Override
   public void setWorkingDirectory(String path) {
-    this.workingDir = path;
+    this.put(WORKING_DIRECTORY,  path);
   }
 
   @Override
   public void setCheckInterval(int minutes) {
-    this.interval = minutes;
+    this.put(INTERVAL, String.valueOf(minutes));
   }
 
   protected int getCheckInterval(){
-    return this.interval;
+    return Integer.parseInt(this.get(INTERVAL));
   }
 
   protected String getJarPath() {
-    return this.jarPath;
+    return this.get(JAR_PATH);
   }
 
 
   protected String getDaemonName() {
-    return daemonName;
+    return this.get(DAEMON_NAME);
   }
 
   protected String getWorkingDirectory() {
-    return this.workingDir;
+    return this.get(WORKING_DIRECTORY);
   }
 
   protected String getLogDirectory() {
-    return this.logDirectory;
+    return this.get(LOG_DIRECTORY);
   }
 }
