@@ -125,7 +125,7 @@ public class DefaultConfig {
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetInfoForPort");
 //    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GridStatus");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllByName");
-//    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGrid");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGrid");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetConfig");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGridExtras");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
