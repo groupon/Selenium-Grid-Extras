@@ -42,7 +42,10 @@ package com.groupon.seleniumgridextras.tasks;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
+
+import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class StopGrid extends ExecuteOSTask {
 
@@ -73,12 +76,14 @@ public class StopGrid extends ExecuteOSTask {
     return getJsonResponse().getJson();
   }
 
-  /**
-   * Get all the tasks currently running with verbose description. Search in the task description
-   * for execution of the start_&lt;port>.bat and kill the corresponding process.
-   */
+
+
   @Override
   public String getWindowsCommand(String port) {
+    /**
+     * Get all the tasks currently running with verbose description. Search in the task description
+     * for execution of the start_&lt;port>.bat and kill the corresponding process.
+     */
     return "FOR /F \"usebackq tokens=2\" %i IN (`tasklist /V ^| findstr \"" + port
            + ".bat\"`) DO taskkill /PID %i";
   }
@@ -97,11 +102,11 @@ public class StopGrid extends ExecuteOSTask {
 
     if (status.has("pid")){
       KillPid killer = new KillPid();
-      return killer.getLinuxCommand(status.get("pid").toString());
+      return killer.getLinuxCommand(status.get("pid").getAsString());
     }
 
-    //In case the port we wanted was not easily found with port checker, we have a backup command
-    return "lsof -sTCP:LISTEN -i TCP:" + port + " | grep -v PID | awk '{print $2}' | xargs kill";
+      return "";
+//    return "lsof -sTCP:LISTEN -i TCP:" + port + " | grep -v PID | awk '{print $2}' | xargs kill";
   }
 
   @Override
@@ -109,8 +114,25 @@ public class StopGrid extends ExecuteOSTask {
     if (parameter.isEmpty() || !parameter.containsKey("port")) {
       return execute();
     } else {
-      return execute(parameter.get("port").toString());
+      return this.execute(parameter.get("port").toString());
     }
+  }
+
+  @Override
+  public JsonObject execute(String parameter) {
+    String command;
+
+    if (RuntimeConfig.getOS().isWindows()){
+      command = getWindowsCommand(parameter);
+    } else if (RuntimeConfig.getOS().isMac()){
+      command = getMacCommand(parameter);
+    } else {
+      command = getLinuxCommand(parameter);
+    }
+
+    JsonObject foo = ExecuteCommand.execRuntime(command, waitToFinishTask);
+
+    return foo;
   }
 
 }
