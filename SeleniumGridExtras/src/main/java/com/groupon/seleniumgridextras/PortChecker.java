@@ -53,13 +53,15 @@ public class PortChecker {
     JsonObject status = getPortInfo(port);
     JsonArray standardOut = (JsonArray) status.get("out");
 
-    if(RuntimeConfig.getOS().isWindows())
-        return parseWindowsInfo(standardOut);
+    if (RuntimeConfig.getOS().isWindows()) {
+      return parseWindowsInfo(standardOut);
+    }
+
     return parseLinuxInfo(standardOut);
 
   }
 
-  public static JsonObject getParsedPortInfo(int port){
+  public static JsonObject getParsedPortInfo(int port) {
     return getParsedPortInfo(String.valueOf(port));
   }
 
@@ -92,28 +94,31 @@ public class PortChecker {
     }
     return info;
   }
-  
-    private static JsonObject parseWindowsInfo(JsonArray status) {
 
-        JsonObject info = new JsonObject();
+  private static JsonObject parseWindowsInfo(JsonArray status) {
 
-        for (JsonElement line : status) {
-            Matcher m = Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(LISTENING)\\s*(\\d*)").matcher(line.getAsString());
-            if (m.find()) {
-                info.addProperty("pid", m.group(5));
-                break;
-            }
-        }
+    JsonObject info = new JsonObject();
 
-        return info;
+    for (JsonElement line : status) {
+      Matcher
+          m =
+          Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(LISTENING)\\s*(\\d*)")
+              .matcher(line.getAsString());
+      if (m.find()) {
+        info.addProperty("pid", m.group(5));
+        break;
+      }
     }
+
+    return info;
+  }
 
 
   private static String getCommand() {
     if (RuntimeConfig.getOS().isWindows()) {
       return "netstat -aon ";
     } else {
-      return "lsof -i TCP";
+      return "lsof -sTCP:LISTEN -i TCP";
     }
   }
 
