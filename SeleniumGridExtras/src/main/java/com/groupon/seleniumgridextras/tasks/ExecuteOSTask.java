@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.LinkedList;
