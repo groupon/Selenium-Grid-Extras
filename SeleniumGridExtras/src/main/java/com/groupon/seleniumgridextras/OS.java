@@ -38,6 +38,10 @@
 package com.groupon.seleniumgridextras;
 
 
+import com.sun.jna.platform.win32.Kernel32;
+
+import java.lang.management.ManagementFactory;
+
 public class OS {
 
 
@@ -69,5 +73,21 @@ public class OS {
     return System.getProperty("path.separator");
   }
 
+  public String getCurrentPid(){
+    if (isWindows()){
+      return getWindowsPid();
+    } else {
+      return getUnixPid();
+    }
 
+  }
+
+  private String getUnixPid(){
+    return  ManagementFactory.getRuntimeMXBean().getName().replaceAll("@.*", "");
+  }
+
+  private String getWindowsPid() {
+    int pid = Kernel32.INSTANCE.GetCurrentProcessId();
+    return String.valueOf(pid);
+  }
 }
