@@ -42,15 +42,11 @@ public class StopGridTest {
 
   @Test
   public void testGetLinuxCommand() throws Exception {
-    String expected = "kill \"" + RuntimeConfig.getOS().getCurrentPid() + "\"";
+    String expected = "kill " + RuntimeConfig.getOS().getCurrentPid();
     assertEquals(expected, task.getLinuxCommand(port));
 
     final String portToNeverBeFound = "4444444444444444444444444444444";
-    String
-        expectedPortNotFound =
-        "lsof -sTCP:LISTEN -i TCP:" + portToNeverBeFound
-        + " | grep -v PID | awk '{print $2}' | xargs kill";
-    assertEquals(expectedPortNotFound, task.getLinuxCommand(portToNeverBeFound));
+    assertEquals("", task.getLinuxCommand(portToNeverBeFound));
   }
 
 }
