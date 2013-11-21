@@ -72,28 +72,6 @@ public class StopGrid extends ExecuteOSTask {
     getJsonResponse().addKeyValues("error", "Port parameter is required");
     return getJsonResponse().getJson();
   }
-
-//  @Override
-//  public JsonObject execute(String port) {
-//	  String stopSeleniumUrl = "http://";
-//	  // add host
-//	  stopSeleniumUrl += RuntimeConfig.getConfig().getHub().getHost();
-//	  // add port
-//	  stopSeleniumUrl += ":" + RuntimeConfig.getConfig().getHub().getPort();
-//	  // add command
-//	  stopSeleniumUrl += "/selenium-server/driver/?cmd=shutDownSeleniumServer";
-//	    try {
-//	    	URL url = new URL(stopSeleniumUrl);
-//	    	HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//	    	;
-//	    	JsonObject result = new JsonObject();
-//	    	result.add("httpResponse", new JsonPrimitive(connection.getResponseCode()));
-//	    	return result;
-//    } catch (Exception error) {
-//      getJsonResponse().addKeyValues("error", error.toString());
-//      return getJsonResponse().getJson();
-//    }
-//  }
   
   public JsonObject execute(String port) {
 	  return ExecuteCommand.execRuntime(getWindowsCommand(port), true);
