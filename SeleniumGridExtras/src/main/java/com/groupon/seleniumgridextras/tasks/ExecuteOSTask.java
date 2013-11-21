@@ -68,9 +68,15 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
 
   public JsonObject execute(String parameter) {
+    String command;
 
-    String command = RuntimeConfig.getOS().isWindows() ? getWindowsCommand()
-        : RuntimeConfig.getOS().isMac() ? getMacCommand() : getLinuxCommand();
+     if (RuntimeConfig.getOS().isWindows()){
+        command = getWindowsCommand(parameter);
+     } else if (RuntimeConfig.getOS().isMac()){
+        command = getLinuxCommand(parameter);
+     } else {
+        command = getLinuxCommand(parameter);
+     }
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
