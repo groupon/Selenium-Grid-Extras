@@ -7,19 +7,20 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 
-public class OsXDaemon implements Daemon {
+public class OsXDaemon extends DaemonWrapper {
 
-  private String labelName = "com.groupon.seleniumgridextras.plist";
+  public OsXDaemon(){
 
+  }
 
   @Override
   public void installDaemon() {
-    File file = new File(getLabelName());
+    File file = new File(getInitDExecutablePath());
 
     try {
       FileUtils.writeStringToFile(file, getXml());
     } catch (Exception error) {
-      System.out.println("Could not write launchd plist to " + getLabelName());
+      System.out.println("Could not write launchd plist to " + getDaemonName());
       error.printStackTrace();
       System.exit(1);
 
@@ -28,47 +29,30 @@ public class OsXDaemon implements Daemon {
 
   @Override
   public void uninstallDaemon() {
-    File file = new File(getLabelName());
+    File file = new File(getInitDExecutablePath());
 
     if(file.exists()){
       file.delete();
-      System.out.println("Deleted the " + getLabelName());
+      System.out.println("Deleted the " + getDaemonName());
     } else {
-      System.out.println(getLabelName() + " didn't exist so no need to delete it");
+      System.out.println(getDaemonName() + " didn't exist so no need to delete it");
     }
 
   }
 
-
-  public String getLabelName() {
-    return labelName;
+  protected String getInitDExecutablePath(){
+    return  RuntimeConfig.getOS().getUserHome() + "/Library/LaunchAgents/" + getDaemonName();
   }
 
-  public String getInitDExecutablePath(){
-    return  RuntimeConfig.getOS().getUserHome() + "/Library/LaunchAgents/" + getLabelName();
+  @Override
+  public void setDaemonName(String name) {
+    this.daemonName = "com.groupon.seleniumgridextras."  + name + ".plist";
   }
 
-  protected String getDaemonName() {
-    return getLabelName();
+  protected int getCheckInterval(){
+    return this.interval * 60;
   }
 
-
-  protected String getWorkingDir() {
-    return RuntimeConfig.getSeleniungGridExtrasHomePath();
-  }
-
-
-  protected String getLogDir() {
-    return RuntimeConfig.getSeleniungGridExtrasHomePath() + RuntimeConfig.getConfig().getSharedDirectory();
-  }
-
-  protected String getExecutableFilePath() {
-    return RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath();
-  }
-
-  protected String getJava() {
-    return System.getProperty("java.home") + "/java";
-  }
 
 
   protected String getXml() {
@@ -83,19 +67,21 @@ public class OsXDaemon implements Daemon {
            + "     <key>RunAtLoad</key>\n"
            + "       <true/>      \n"
            + "     <key>RootDirectory</key>\n"
-           + "       <string>" + getWorkingDir() + "</string>\n"
+           + "       <string>" + getWorkingDirectory() + "</string>\n"
            + "     <key>WorkingDirectory</key>\n"
-           + "       <string>" + getWorkingDir() + "</string>\n"
+           + "       <string>" + getWorkingDirectory() + "</string>\n"
            + "     <key>ProgramArguments</key>\n"
            + "       <array>\n"
-           + "         <string>" + getJava() + "</string>\n"
+           + "         <string>" + getJavaExecutable() + "</string>\n"
            + "         <string>-jar</string>\n"
-           + "         <string>" + getExecutableFilePath() + "</string>\n"
+           + "         <string>" + getJarPath() + "</string>\n"
            + "       </array>\n"
            + "     <key>StandardErrorPath</key>\n"
-           + "       <string>" + getLogDir() + "/seleniung_grid_extras_err.log</string>\n"
+           + "       <string>" + getLogDirectory() + "/seleniung_grid_extras_err.log</string>\n"
            + "     <key>StandardOutPath</key>\n"
-           + "       <string>" + getLogDir() + "/seleniung_grid_extras_out.log</string>\n"
+           + "       <string>" + getLogDirectory() + "/seleniung_grid_extras_out.log</string>\n"
+           + "     <key>StartInterval</key>\n"
+           + "       <integer>" + getCheckInterval() + "</integer>\n"
            + "  </dict>\n"
            + "</plist>";
 
