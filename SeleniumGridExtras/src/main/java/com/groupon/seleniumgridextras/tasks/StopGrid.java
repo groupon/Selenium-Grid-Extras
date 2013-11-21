@@ -42,7 +42,7 @@ package com.groupon.seleniumgridextras.tasks;
 import java.util.Map;
 
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.PortChecker;
 
 public class StopGrid extends ExecuteOSTask {
 
@@ -72,18 +72,36 @@ public class StopGrid extends ExecuteOSTask {
     getJsonResponse().addKeyValues("error", "Port parameter is required");
     return getJsonResponse().getJson();
   }
-  
-  public JsonObject execute(String port) {
-	  return ExecuteCommand.execRuntime(getWindowsCommand(port), true);
-  }
-  
-	/**
-	 * Get all the tasks currently running with verbose description. Search in
-	 * the task description for execution of the start_&lt;port>.bat and kill
-	 * the corresponding process.
-	 */
+
+  /**
+   * Get all the tasks currently running with verbose description. Search in the task description
+   * for execution of the start_&lt;port>.bat and kill the corresponding process.
+   */
+  @Override
   public String getWindowsCommand(String port) {
-	  return "FOR /F \"usebackq tokens=2\" %i IN (`tasklist /V ^| findstr \"" + port + ".bat\"`) DO taskkill /PID %i";
+    return "FOR /F \"usebackq tokens=2\" %i IN (`tasklist /V ^| findstr \"" + port
+           + ".bat\"`) DO taskkill /PID %i";
+  }
+
+  public String getWindowsCommand(int port) {
+    return getWindowsCommand(String.valueOf(port));
+  }
+
+  public String getLinuxCommand(int port) {
+    return getLinuxCommand(String.valueOf(port));
+  }
+
+  @Override
+  public String getLinuxCommand(String port) {
+    JsonObject status = PortChecker.getParsedPortInfo(port);
+
+    if (status.has("pid")){
+      KillPid killer = new KillPid();
+      return killer.getLinuxCommand(status.get("pid").toString());
+    }
+
+    //In case the port we wanted was not easily found with port checker, we have a backup command
+    return "lsof -sTCP:LISTEN -i TCP:" + port + " | grep -v PID | awk '{print $2}' | xargs kill";
   }
 
   @Override
