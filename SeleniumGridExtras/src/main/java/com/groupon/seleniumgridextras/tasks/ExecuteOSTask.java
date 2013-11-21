@@ -73,7 +73,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
      if (RuntimeConfig.getOS().isWindows()){
         command = getWindowsCommand(parameter);
      } else if (RuntimeConfig.getOS().isMac()){
-        command = getLinuxCommand(parameter);
+        command = getMacCommand(parameter);
      } else {
         command = getLinuxCommand(parameter);
      }
