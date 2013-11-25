@@ -14,16 +14,8 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
   protected String JAR_PATH = "jarPath";
   protected String DAEMON_NAME = "daemonName";
   protected String INTERVAL = "interval";
+  private static final String AUTO_INSTALL = "auto_install";
 
-//  return RuntimeConfig.getSeleniungGridExtrasHomePath();
-//
-//  return System.getProperty("java.home") + "/java";
-//  return RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath();
-//  return RuntimeConfig.getSeleniungGridExtrasHomePath() + RuntimeConfig.getConfig().getSharedDirectory();
-
-  public DaemonWrapper(){
-
-  }
 
   @Override
   public void installDaemon() {
@@ -67,7 +59,26 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
 
   @Override
   public void setCheckInterval(int minutes) {
-    this.put(INTERVAL, String.valueOf(minutes));
+    setCheckInterval(String.valueOf(minutes));
+  }
+
+  public void setCheckInterval(String minutes) {
+    this.put(INTERVAL, minutes);
+  }
+
+  @Override
+  public void setAutoInstallDaemon(String trueOrFalse) {
+    this.put(AUTO_INSTALL, trueOrFalse);
+  }
+
+  @Override
+  public boolean getAutoInstallDaemon() {
+    if(this.get(AUTO_INSTALL).equals("1")){
+      return true;
+    } else {
+      return false;
+    }
+
   }
 
   protected int getCheckInterval(){
@@ -89,5 +100,15 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
 
   protected String getLogDirectory() {
     return this.get(LOG_DIRECTORY);
+  }
+
+  public static DaemonWrapper getNewInstance() {
+
+    if (RuntimeConfig.getOS().isMac()){
+      return new OsXDaemon();
+    }  else {
+      return null;
+    }
+
   }
 }

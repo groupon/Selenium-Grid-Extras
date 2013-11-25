@@ -9,7 +9,7 @@ import java.io.File;
 
 public class OsXDaemon extends DaemonWrapper {
 
-  public OsXDaemon(){
+  public OsXDaemon() {
 
   }
 
@@ -31,7 +31,7 @@ public class OsXDaemon extends DaemonWrapper {
   public void uninstallDaemon() {
     File file = new File(getInitDExecutablePath());
 
-    if(file.exists()){
+    if (file.exists()) {
       file.delete();
       System.out.println("Deleted the " + getDaemonName());
     } else {
@@ -40,22 +40,23 @@ public class OsXDaemon extends DaemonWrapper {
 
   }
 
-  protected String getInitDExecutablePath(){
-    return  RuntimeConfig.getOS().getUserHome() + "/Library/LaunchAgents/" + getDaemonName();
+  protected String getInitDExecutablePath() {
+    return RuntimeConfig.getOS().getUserHome() + "/Library/LaunchAgents/" + getDaemonName();
   }
 
   @Override
   public void setDaemonName(String name) {
-    this.put(DAEMON_NAME, "com.groupon.seleniumgridextras."  + name + ".plist");
+    this.put(DAEMON_NAME, "com.groupon.seleniumgridextras." + name + ".plist");
   }
 
-  protected int getCheckInterval(){
+  protected int getCheckInterval() {
     return Integer.parseInt(this.get(INTERVAL)) * 60;
   }
 
 
-
   protected String getXml() {
+    String separator = RuntimeConfig.getOS().getFileSeparator();
+
     return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
            + "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
            + "<plist version=\"1.0\">\n"
@@ -77,9 +78,11 @@ public class OsXDaemon extends DaemonWrapper {
            + "         <string>" + getJarPath() + "</string>\n"
            + "       </array>\n"
            + "     <key>StandardErrorPath</key>\n"
-           + "       <string>" + getLogDirectory() + "/seleniung_grid_extras_err.log</string>\n"
+           + "       <string>" +  getLogDirectory() + separator
+           + "seleniung_grid_extras_err.log</string>\n"
            + "     <key>StandardOutPath</key>\n"
-           + "       <string>" + getLogDirectory() + "/seleniung_grid_extras_out.log</string>\n"
+           + "       <string>" +  getLogDirectory() + separator
+           + "seleniung_grid_extras_out.log</string>\n"
            + "     <key>StartInterval</key>\n"
            + "       <integer>" + getCheckInterval() + "</integer>\n"
            + "  </dict>\n"
