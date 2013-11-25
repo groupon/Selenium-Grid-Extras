@@ -10,6 +10,7 @@ import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
 import com.groupon.seleniumgridextras.config.driver.DriverInfo;
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
+import com.groupon.seleniumgridextras.daemons.DaemonWrapper;
 
 import org.apache.commons.io.FileUtils;
 
@@ -37,6 +38,8 @@ public class Config {
   public static final String DEFAULT_ROLE = "default_role";
   public static final String HUB_CONFIG = "hub_config";
   public static final String NODE_CONFIG_FILES = "node_config_files";
+
+  public static final String GRID_EXTRAS_DAEMON = "daemon";
 
 
   protected Map theConfigMap;
@@ -79,12 +82,18 @@ public class Config {
     }
   }
 
+  public DaemonWrapper getDaemon(){
+    return (DaemonWrapper) getConfigMap().get(GRID_EXTRAS_DAEMON);
+  }
+
 
   private void initialize() {
     getConfigMap().put(ACTIVATE_MODULES, new ArrayList<String>());
     getConfigMap().put(DISABLED_MODULES, new ArrayList<String>());
     getConfigMap().put(SETUP, new ArrayList<String>());
     getConfigMap().put(TEAR_DOWN, new ArrayList<String>());
+
+    initializeGridDaemon();
 
     getConfigMap().put(GRID, new StringMap());
     initializeWebdriver();
@@ -95,6 +104,10 @@ public class Config {
 
     initializeHubConfig();
 
+  }
+
+  public void initializeGridDaemon() {
+    getConfigMap().put(GRID_EXTRAS_DAEMON, DaemonWrapper.getNewInstance());
   }
 
   private void initializeIEDriver() {

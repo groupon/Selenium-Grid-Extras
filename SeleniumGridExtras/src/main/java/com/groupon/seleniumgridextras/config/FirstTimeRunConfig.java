@@ -36,7 +36,6 @@
  */
 package com.groupon.seleniumgridextras.config;
 
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
 import java.io.BufferedReader;
@@ -66,6 +65,7 @@ public class FirstTimeRunConfig {
     setGridNodeAutostart(defaultConfig);
     setIeDriverVersion(defaultConfig);
     setChromeDriverVersion(defaultConfig);
+    setDaemonAutoInstall(defaultConfig);
 
 
     System.out
@@ -178,6 +178,15 @@ public class FirstTimeRunConfig {
   private static String getGridHubHost() {
     String host = askQuestion("What is the HOST for the Selenium Grid Hub?", "127.0.0.1");
     return host;
+  }
+
+  private static void setDaemonAutoInstall(Config defaultConfig) {
+    String answer = askQuestion("Would you like to install Grid Extras as a Service? (1-yes/0-no)", "1");
+    if (answer.equals("1")){
+      defaultConfig.initializeGridDaemon();
+      defaultConfig.getDaemon().setAutoInstallDaemon("1");
+    }
+
   }
 
   private static String getGridHubPort() {
