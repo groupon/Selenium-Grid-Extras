@@ -77,13 +77,12 @@ public class StopGrid extends ExecuteOSTask {
   }
 
 
-
+  /**
+   * Get all the tasks currently running with verbose description. Search in the task description
+   * for execution of the start_&lt;port>.bat and kill the corresponding process.
+   */
   @Override
   public String getWindowsCommand(String port) {
-    /**
-     * Get all the tasks currently running with verbose description. Search in the task description
-     * for execution of the start_&lt;port>.bat and kill the corresponding process.
-     */
     return "FOR /F \"usebackq tokens=2\" %i IN (`tasklist /V ^| findstr \"" + port
            + ".bat\"`) DO taskkill /PID %i";
   }
