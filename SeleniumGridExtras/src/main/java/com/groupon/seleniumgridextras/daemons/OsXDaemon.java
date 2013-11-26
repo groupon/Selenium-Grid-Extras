@@ -15,6 +15,7 @@ public class OsXDaemon extends DaemonWrapper {
 
   @Override
   public void installDaemon() {
+    uninstallDaemon();
     File file = new File(getInitDExecutablePath());
 
     try {
