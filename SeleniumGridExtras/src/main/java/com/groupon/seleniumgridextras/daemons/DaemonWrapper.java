@@ -106,7 +106,9 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
 
     if (RuntimeConfig.getOS().isMac()){
       return new OsXDaemon();
-    }  else {
+    }  else if (RuntimeConfig.getOS().isWindows()) {
+      return new WindowsDaemon();
+    } else {
       return null;
     }
 
