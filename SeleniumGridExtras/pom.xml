@@ -8,11 +8,23 @@
     <artifactId>SeleniumGridExtras</artifactId>
     <version>1.2.1-SNAPSHOT</version>
 
+    <repositories>
+        <repository>
+            <id>maven2</id>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>2.33.0</version>
+            <version>2.37.0</version>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.14</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
