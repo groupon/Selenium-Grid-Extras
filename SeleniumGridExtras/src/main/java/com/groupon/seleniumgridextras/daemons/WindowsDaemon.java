@@ -17,9 +17,7 @@ public class WindowsDaemon extends DaemonWrapper {
   public void installDaemon() {
     uninstallDaemon();
 
-    daemonConfigFile =
-        new File(getWorkingDirectory() + RuntimeConfig.getOS().getFileSeparator()
-                 + "windowsDaemonConfig.xml");
+    daemonConfigFile = getDaemonConfigFile();
 
     writeDaemonConfigFile(daemonConfigFile);
 
@@ -33,6 +31,11 @@ public class WindowsDaemon extends DaemonWrapper {
     System.out.println(result.get("error"));
 
 
+  }
+
+  protected File getDaemonConfigFile() {
+    return new File(getWorkingDirectory() + RuntimeConfig.getOS().getFileSeparator()
+                    + "windowsDaemonConfig.xml");
   }
 
   protected void writeDaemonConfigFile(File configFilePath) {
@@ -50,6 +53,11 @@ public class WindowsDaemon extends DaemonWrapper {
   public void uninstallDaemon() {
     System.out.println("Attempting to uninstall daemon as a scheduled task");
     JsonObject result = ExecuteCommand.execRuntime(deleteDaemonCommand(getDaemonName()));
+
+    daemonConfigFile = getDaemonConfigFile();
+    if (daemonConfigFile.exists()){
+      daemonConfigFile.delete();
+    }
 
     System.out.println(result.get("out"));
     System.out.println(result.get("error"));
