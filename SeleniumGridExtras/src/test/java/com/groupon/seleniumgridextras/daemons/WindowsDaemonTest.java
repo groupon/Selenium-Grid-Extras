@@ -6,6 +6,9 @@ import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.junit.Assert.assertEquals;
 
 public class WindowsDaemonTest {
@@ -30,14 +33,14 @@ public class WindowsDaemonTest {
                   + "    <Author>" + RuntimeConfig.getOS().getUserName() + "</Author>\n"
                   + "  </RegistrationInfo>\n"
                   + "  <Triggers>\n"
-                  + "    <LogonTrigger>\n"
+                  + "    <TimeTrigger>\n"
                   + "      <Repetition>\n"
                   + "        <Interval>PT" + daemon.getCheckInterval() + "M</Interval>\n"
                   + "        <StopAtDurationEnd>false</StopAtDurationEnd>\n"
                   + "      </Repetition>\n"
+                  + "      <StartBoundary>" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(new Date()) + "</StartBoundary>\n"
                   + "      <Enabled>true</Enabled>\n"
-                  + "      <UserId>" + RuntimeConfig.getOS().getUserName() + "</UserId>\n"
-                  + "    </LogonTrigger>\n"
+                  + "    </TimeTrigger>\n"
                   + "  </Triggers>\n"
                   + "  <Principals>\n"
                   + "    <Principal id=\"Author\">\n"
