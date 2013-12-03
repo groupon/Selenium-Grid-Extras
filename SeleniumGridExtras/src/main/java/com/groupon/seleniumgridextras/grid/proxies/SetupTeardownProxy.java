@@ -39,6 +39,8 @@
 package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+
+import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
@@ -59,10 +61,11 @@ import java.util.regex.Pattern;
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
 
   private Pattern urlPattern = Pattern.compile("http://([^:/]+)");
+  private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
 
   public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
-    System.out.println("Attaching a node with " + getClass().getSimpleName());
+    logger.info("Attaching a node with " + getClass().getSimpleName());
   }
 
   @Override
@@ -103,13 +106,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
       URL url = new URL(cleanAddress + ":3000/" + action);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
-      System.out.println(ExecuteCommand.inputStreamToString(conn.getInputStream()));
+      logger.info(ExecuteCommand.inputStreamToString(conn.getInputStream()));
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      logger.error(e.toString());
     } catch (ProtocolException e) {
-      e.printStackTrace();
+      logger.error(e.toString());
     } catch (IOException e) {
-      e.printStackTrace();
+      logger.error(e.toString());
     }
   }
 

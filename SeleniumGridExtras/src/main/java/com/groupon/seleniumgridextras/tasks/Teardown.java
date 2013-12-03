@@ -42,12 +42,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class Teardown extends ExecuteOSTask {
 
   private List<ExecuteOSTask> teardownTasks;
+  private static Logger logger = Logger.getLogger(Teardown.class);
 
   public Teardown() {
     setEndpoint("/teardown");
@@ -97,21 +100,21 @@ public class Teardown extends ExecuteOSTask {
   @Override
   public boolean initialize() {
     Boolean initialized = true;
-    System.out.println("Tear-Down Tasks");
+    logger.info("Tear-Down Tasks");
     teardownTasks = new LinkedList<ExecuteOSTask>();
     for (String module : RuntimeConfig.getConfig().getTeardown()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         teardownTasks.add(task);
-        System.out.println("    " + task.getClass().getSimpleName());
+        logger.info("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {
-        System.out.println(module + "   " + error);
+        logger.error(module + "   " + error);
         initialized = false;
       } catch (InstantiationException error) {
-        System.out.println(module + "   " + error);
+        logger.error(module + "   " + error);
         initialized = false;
       } catch (IllegalAccessException error) {
-        System.out.println(module + "   " + error);
+        logger.error(module + "   " + error);
         initialized = false;
       }
     }

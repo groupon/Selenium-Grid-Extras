@@ -43,12 +43,15 @@ import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.IEDownloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.Map;
 
 public class DownloadIEDriver extends ExecuteOSTask {
 
   private String bit = "Win32";
+  private static Logger logger = Logger.getLogger(DownloadIEDriver.class);
 
   public DownloadIEDriver() {
     setEndpoint("/download_iedriver");
@@ -113,7 +116,7 @@ public class DownloadIEDriver extends ExecuteOSTask {
         getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
       }
     } else {
-      System.out.println("No need for download");
+      logger.debug("No need for download");
       getJsonResponse().addKeyValues("out", "File already downloaded, will not download again");
     }
 
@@ -140,14 +143,14 @@ public class DownloadIEDriver extends ExecuteOSTask {
       }
 
       if (!ieDriverExe.exists()) {
-        System.out.println("No IE Driver Executable, will download");
-        System.out.println(execute().toString());
+        logger.debug("No IE Driver Executable, will download");
+        logger.debug(execute().toString());
       }
 
 
     } catch (NullPointerException error) {
       printInitilizedFailure();
-      System.out.println(error);
+      logger.error(error);
       return false;
     }
 

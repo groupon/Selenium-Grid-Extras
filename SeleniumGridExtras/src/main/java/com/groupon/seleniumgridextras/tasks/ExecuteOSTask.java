@@ -42,6 +42,8 @@ import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,8 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
       notImplementedError =
       "This task was not implemented on " + RuntimeConfig.getOS().getOSName();
   public boolean waitToFinishTask = true;
+
+  private static Logger logger = Logger.getLogger(ExecuteOSTask.class);
 
   public JsonObject execute() {
     return execute("");
@@ -127,15 +131,22 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   }
 
   public void printInitilizedSuccessAndRegisterWithAPI() {
-    System.out.println(
-        "Y " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this
-            .getDescription());
 
+    final
+    String
+        message =
+        "Y " + this.getClass().getSimpleName() + " - " + this.getEndpoint() + " - " + this
+            .getDescription();
+
+    System.out.println(message);
+    logger.info(message);
     registerApi();
   }
 
   public void printInitilizedFailure() {
-    System.out.println("N " + this.getClass().getSimpleName());
+    final String message = "N " + this.getClass().getSimpleName();
+    System.out.println(message);
+    logger.info(message);
   }
 
   public Boolean allDependenciesLoaded() {
@@ -143,9 +154,9 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
     for (String module : getDependencies()) {
       if (RuntimeConfig.getConfig().checkIfModuleEnabled(module) && returnValue) {
-
+        logger.info(this.getClass().getSimpleName() + " is enabled");
       } else {
-        System.out.println("  " + this.getClass().getSimpleName() + " depends on " + module
+        logger.info("  " + this.getClass().getSimpleName() + " depends on " + module
             + " but it is not activated");
         returnValue = false;
       }

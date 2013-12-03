@@ -38,10 +38,12 @@
 package com.groupon.seleniumgridextras.downloader;
 
 import org.apache.ant.compress.taskdefs.Unzip;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 
 public class Unzipper {
+  private static Logger logger = Logger.getLogger(Unzipper.class);
 
   public static boolean unzip(String source, String destination) {
     try {
@@ -50,7 +52,7 @@ public class Unzipper {
       unzipper.setDest(new File(destination));
       unzipper.execute();
     } catch (Exception e) {
-      e.printStackTrace();
+      logger.error(e.toString());
       return false;
     }
     return true;

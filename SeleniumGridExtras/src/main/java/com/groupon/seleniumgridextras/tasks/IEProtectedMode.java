@@ -47,7 +47,10 @@ import java.util.Map;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
 
+import org.apache.log4j.Logger;
+
 public class IEProtectedMode extends ExecuteOSTask {
+  private static Logger logger = Logger.getLogger(IEProtectedMode.class);
 
   public IEProtectedMode() {
     setEndpoint("/ie_protected_mode");
@@ -159,7 +162,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     for (String key : getZones().keySet()) {
       boolean enabled = getProtectedEnabledForZone(key);
 
-      System.out.println("Zone " + key + " is set to " + enabled);
+      logger.info("Zone " + key + " is set to " + enabled);
       getJsonResponse().addKeyValues(getZones().get(key), enabled);
 
     }

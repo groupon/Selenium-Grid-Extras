@@ -45,9 +45,13 @@ import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.GridStarter;
 
+import org.apache.log4j.Logger;
+
 import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
+
+  private static Logger logger = Logger.getLogger(StartGrid.class);
 
   public StartGrid() {
     waitToFinishTask = false;
@@ -108,8 +112,8 @@ public class StartGrid extends ExecuteOSTask {
       getJsonResponse().addKeyValues("out",
                                      "Service start command sent, might take as long as 10 seconds to spin up");
     } else {
-      System.out.println("Something didn't go right in launching service");
-      System.out.println(serviceStartResponse);
+      logger.error("Something didn't go right in launching service");
+      logger.error(serviceStartResponse);
       getJsonResponse().addKeyValues("error", (JsonArray) serviceStartResponse.get("error"));
     }
 

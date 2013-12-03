@@ -37,8 +37,9 @@
 
 package com.groupon.seleniumgridextras.downloader;
 
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
+import org.apache.log4j.Logger;
 
 import java.io.File;
 
@@ -46,6 +47,8 @@ public class ChromeDriverDownloader extends Downloader {
 
   private String bit;
   private String version;
+
+  private static Logger logger = Logger.getLogger(ChromeDriverDownloader.class);
 
   public ChromeDriverDownloader(String version, String bitVersion) {
 
@@ -78,7 +81,8 @@ public class ChromeDriverDownloader extends Downloader {
   @Override
   public boolean download() {
 
-    System.out.println("Downloading from " + getSourceURL());
+    logger.info("Downloading from " + getSourceURL());
+
 
     if (startDownload()) {
 
@@ -95,13 +99,13 @@ public class ChromeDriverDownloader extends Downloader {
             new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
 
         if (tempUnzipedExecutable.exists()){
-          System.out.println(tempUnzipedExecutable.getAbsolutePath());
-          System.out.println("It does exist");
-          System.out.println(finalExecutable.getAbsolutePath());
+          logger.debug(tempUnzipedExecutable.getAbsolutePath());
+          logger.debug("It does exist");
+          logger.debug(finalExecutable.getAbsolutePath());
         } else {
-          System.out.println(tempUnzipedExecutable.getAbsolutePath());
-          System.out.println("NO exist");
-          System.out.println(finalExecutable.getAbsolutePath());
+          logger.debug(tempUnzipedExecutable.getAbsolutePath());
+          logger.debug("NO exist");
+          logger.debug(finalExecutable.getAbsolutePath());
         }
 
         tempUnzipedExecutable.renameTo(finalExecutable);

@@ -7,37 +7,44 @@ import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-public class SelfHealingGrid extends GridStarter {
+import org.apache.log4j.Logger;
 
+public class SelfHealingGrid extends GridStarter {
+  private static Logger logger = Logger.getLogger(SelfHealingGrid.class);
 
   public static void checkStatus(int gridExtrasPort, Config config) {
     if (portOccupied(gridExtrasPort)) {
-      System.out.println("Already running on port " + gridExtrasPort + " with pid");
+      logger.info("Already running on port " + gridExtrasPort + " with pid");
       healNodesIfNeeded(config);
       System.exit(0);
     } else {
-      System.out.println("GridExtras is not running will boot normally");
+      logger.info("GridExtras is not running will boot normally");
     }
 
   }
 
 
   private static void healNodesIfNeeded(Config config) {
-    System.out.println("Checking if all nodes are running");
+    logger.info("Checking if all nodes are running");
     for (GridNode node : config.getNodes()) {
       int port = node.getConfiguration().getPort();
       if (portOccupied(port)) {
-        System.out.println("Node on port " + port + " is running");
+        logger.debug("Node on port " + port + " is running");
       } else {
-        System.out.println("Node on port " + port + " is NOT running, attempting to start");
+        logger.debug("Node on port " + port + " is NOT running, attempting to start");
 
         Boolean isWindows = RuntimeConfig.getOS().isWindows();
+        logger.debug(isWindows);
         String logFile = node.getLoadedFromFile().replace("json", "log");
+        logger.debug(logFile);
         String configFile = node.getLoadedFromFile();
+        logger.debug(configFile);
         String startCommand = getNodeStartCommand(configFile, isWindows);
+        logger.debug(startCommand);
         String backgroundCommand = getBackgroundStartCommandForNode(startCommand,logFile, isWindows);
+        logger.debug(backgroundCommand);
 
-        startOneNode(backgroundCommand);
+        logger.debug(startOneNode(backgroundCommand));
 
       }
     }

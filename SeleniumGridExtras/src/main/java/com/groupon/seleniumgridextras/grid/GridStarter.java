@@ -7,12 +7,15 @@ import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GridStarter {
+
+  private static Logger logger = Logger.getLogger(GridStarter.class);
 
   public static String getOsSpecificHubStartCommand(Boolean windows) {
 
@@ -161,9 +164,8 @@ public class GridStarter {
     try {
       FileUtils.writeStringToFile(file, input);
     } catch (Exception error) {
-      System.out
-          .println("Could not write default config file, exit with error " + error.toString());
-
+      logger.fatal("Could not write default config file, exit with error " + error.toString());
+      System.exit(1);
     }
   }
 

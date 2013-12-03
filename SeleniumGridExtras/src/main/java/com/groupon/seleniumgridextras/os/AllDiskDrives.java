@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras.os;
 
+import org.apache.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,28 +47,28 @@ import java.util.Map;
 public class AllDiskDrives {
 
   private List<DiskDrive> drives = new LinkedList<DiskDrive>();
+  private static Logger logger = Logger.getLogger(AllDiskDrives.class);
 
   public void addDisk(DiskDrive drive){
     drives.add(drive);
-
-    System.out.println(drive.getName());
-    System.out.println(drive.getSize());
-    System.out.println(drive.getFree());
+    logger.debug(drive.getName());
+    logger.debug(drive.getSize());
+    logger.debug(drive.getFree());
   }
 
   public List<Map<String, String>> toPreJsonArray(){
-    List<Map<String, String>> foo2 = new LinkedList<Map<String, String>>();
+    List<Map<String, String>> drivesInfo = new LinkedList<Map<String, String>>();
 
     for(DiskDrive drive : drives){
-      Map<String, String> bar = new HashMap<String, String>();
-      bar.put("free", drive.getFree());
-      bar.put("size", drive.getSize());
-      bar.put("drive", drive.getName());
-      foo2.add(bar);
+      Map<String, String> currentDrive = new HashMap<String, String>();
+      currentDrive.put("free", drive.getFree());
+      currentDrive.put("size", drive.getSize());
+      currentDrive.put("drive", drive.getName());
+      drivesInfo.add(currentDrive);
 
     }
 
-    return foo2;
+    return drivesInfo;
 
   }
 

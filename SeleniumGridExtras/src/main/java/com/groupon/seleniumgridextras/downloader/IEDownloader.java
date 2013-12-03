@@ -39,6 +39,8 @@ package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 
 
@@ -46,6 +48,8 @@ public class IEDownloader extends Downloader {
 
   private String bit;
   private String version;
+
+  private static Logger logger = Logger.getLogger(IEDownloader.class);
 
   public IEDownloader(String version, String bitVersion) {
     setDestinationDir(RuntimeConfig.getConfig().getIEdriver().getDirectory());
@@ -104,13 +108,13 @@ public class IEDownloader extends Downloader {
             new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath());
 
         if (tempUnzipedExecutable.exists()){
-          System.out.println(tempUnzipedExecutable.getAbsolutePath());
-          System.out.println("It does exist");
-          System.out.println(finalExecutable.getAbsolutePath());
+          logger.debug(tempUnzipedExecutable.getAbsolutePath());
+          logger.debug("It does exist");
+          logger.debug(finalExecutable.getAbsolutePath());
         } else {
-          System.out.println(tempUnzipedExecutable.getAbsolutePath());
-          System.out.println("NO exist");
-          System.out.println(finalExecutable.getAbsolutePath());
+          logger.debug(tempUnzipedExecutable.getAbsolutePath());
+          logger.debug("NO exist");
+          logger.debug(finalExecutable.getAbsolutePath());
         }
 
 

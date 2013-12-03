@@ -47,6 +47,8 @@ import com.groupon.seleniumgridextras.os.MacSystemInfo;
 import com.groupon.seleniumgridextras.os.OSInfo;
 import com.groupon.seleniumgridextras.os.WindowsSystemInfo;
 
+import org.apache.log4j.Logger;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
@@ -54,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SystemInfo extends ExecuteOSTask {
+  private static Logger logger = Logger.getLogger(SystemInfo.class);
 
   public SystemInfo() {
     setEndpoint("/system");
@@ -120,7 +123,7 @@ public class SystemInfo extends ExecuteOSTask {
       host.add(addr.getHostName());
       host.add(addr.getHostAddress());
     } catch (UnknownHostException ex) {
-      System.out.println("Hostname can not be resolved");
+      logger.debug("Hostname can not be resolved");
       host.add("N/A");
       host.add("N/A");
     }

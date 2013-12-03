@@ -43,12 +43,15 @@ import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.Map;
 
 public class DownloadChromeDriver extends ExecuteOSTask {
 
   private String bit = "32";
+  private static Logger logger = Logger.getLogger(DownloadChromeDriver.class);
 
   public DownloadChromeDriver() {
     setEndpoint("/download_chromedriver");
@@ -71,7 +74,7 @@ public class DownloadChromeDriver extends ExecuteOSTask {
                            "Url from which the executable was downloaded. If file already exists, this will be blank, and download will be skipped");
 
 
-    System.out.println(RuntimeConfig.getConfig());
+    logger.debug(RuntimeConfig.getConfig());
 
     getJsonResponse()
         .addKeyValues("root_dir", RuntimeConfig.getConfig().getChromeDriver().getDirectory());
@@ -116,7 +119,7 @@ public class DownloadChromeDriver extends ExecuteOSTask {
         getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
       }
     } else {
-      System.out.println("No need for download");
+      logger.debug("No need for download");
       getJsonResponse().addKeyValues("out", "File already downloaded, will not download again");
     }
 
@@ -143,14 +146,14 @@ public class DownloadChromeDriver extends ExecuteOSTask {
       }
 
       if (!chromeDriverExecutable.exists()) {
-        System.out.println("No Chrome Driver Executable, will download");
-        System.out.println(execute().toString());
+        logger.debug("No Chrome Driver Executable, will download");
+        logger.debug(execute().toString());
       }
 
 
     } catch (NullPointerException error) {
       printInitilizedFailure();
-      System.out.println(error);
+      logger.error(error);
       return false;
     }
 

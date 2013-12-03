@@ -48,6 +48,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHttpRequest;
+import org.apache.log4j.Logger;
 import org.openqa.grid.internal.ProxySet;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.RemoteProxy;
@@ -69,6 +70,7 @@ import java.util.List;
 public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
 
   private Registry internalRegistry;
+  private static Logger logger = Logger.getLogger(SeleniumGridExtrasServlet.class);
 
   public SeleniumGridExtrasServlet(Registry registry) {
     super(registry);
@@ -110,8 +112,8 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
       InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
       s = IOUtils.toString(is, "UTF-8");
     } catch (Exception error) {
-      System.out.println("Problem reading: " + file);
-      error.printStackTrace();
+      logger.error("Problem reading: " + file);
+      logger.error(error.toString());
     }
     return s;
   }
@@ -137,7 +139,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
       HttpResponse response = client.execute(new HttpHost(url.getHost(), url.getPort()), r);
       return extractMessage(response);
     } catch (Exception e) {
-      System.out.println("Problem loading from : " + url.toString() + ", error:" + e.toString());
+      logger.error("Problem loading from : " + url.toString() + ", error:" + e.toString());
       return "";
     }
   }
@@ -185,7 +187,7 @@ public class SeleniumGridExtrasServlet extends RegistryBasedServlet {
         html.append("nodes.push(\"" + p.getRemoteHost().getHost() + "\");");
       }
     }
-    //System.out.println(nodes.toString());
+    logger.debug(nodes.toString());
     html.append("var nodesJson = '" + nodes.toString() + "';");
     html.append("</script>");
     html.append(readFile("www/css_partial.html"));

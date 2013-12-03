@@ -1,5 +1,7 @@
 package com.groupon.seleniumgridextras.windows;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +40,7 @@ import java.io.InputStreamReader;
 public class jWMI
 {
   private static final String CRLF = "\r\n";
-
+  private static Logger logger = Logger.getLogger(jWMI.class);
   /**
    * Generate a VBScript string capable of querying the desired WMI information.
 //   * @param wmiQueryString the query string to be passed to the WMI sub-system.
@@ -143,21 +145,21 @@ public class jWMI
   {
     try
     {
-      System.out.println(getWMIValue("Select * from Win32_ComputerSystem", "Model"));
-      System.out.println(getWMIValue("Select Name from Win32_ComputerSystem", "Name"));
+      logger.debug(getWMIValue("Select * from Win32_ComputerSystem", "Model"));
+      logger.debug(getWMIValue("Select Name from Win32_ComputerSystem", "Name"));
       //System.out.println(getWMIValue("Select Description from Win32_PnPEntity", "Description"));
       //System.out.println(getWMIValue("Select Description, Manufacturer from Win32_PnPEntity", "Description,Manufacturer"));
       //System.out.println(getWMIValue("Select * from Win32_Service WHERE State = 'Stopped'", "Name"));
       //this will return everything since the field is incorrect and was not used to a filter
       //System.out.println(getWMIValue("Select * from Win32_Service", "Name"));
       //this will return nothing since there is no field specified
-      System.out.println(getWMIValue("Select Name from Win32_ComputerSystem", ""));
+      logger.debug(getWMIValue("Select Name from Win32_ComputerSystem", ""));
       //this is a failing case where the Win32_Service class does not contain the 'Name' field
       //System.out.println(getWMIValue("Select * from Win32_Service", "Name"));
     }
     catch(Exception e)
     {
-      e.printStackTrace();
+      logger.error(e.toString());
     }
   }
 

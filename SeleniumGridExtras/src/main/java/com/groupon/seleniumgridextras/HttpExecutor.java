@@ -42,11 +42,14 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
 abstract class HttpExecutor implements HttpHandler {
+  private static Logger logger = Logger.getLogger(HttpExecutor.class);
 
   public void handle(HttpExchange t) throws IOException {
     Map params = (Map) t.getAttribute("parameters");
@@ -55,7 +58,7 @@ abstract class HttpExecutor implements HttpHandler {
     if (params.containsKey("callback")) {
       response = params.get("callback") + "(" + response + ")";
     }
-    System.out.println(response);
+    logger.debug(response);
 
     Headers h = t.getResponseHeaders();
     h.add("Content-Type", "application/json");

@@ -53,6 +53,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 
 public class RuntimeConfig {
@@ -62,6 +63,7 @@ public class RuntimeConfig {
   private static OS currentOS = new OS();
   private final static String version = "1.2.1";
   private final static int gridExtrasPort = 3000;
+  private static Logger logger = Logger.getLogger(RuntimeConfig.class);
 
   public static int getGridExtrasPort() {
     return gridExtrasPort;
@@ -94,22 +96,29 @@ public class RuntimeConfig {
   public static Config load() {
     Map overwriteValues;
     config = DefaultConfig.getDefaultConfig();
+    logger.debug(config);
 
     String configString = readConfigFile(configFile);
+    logger.debug(configString);
     //Reason to use the "" instead of checking if the config already exists is because
     //if the file does exist but there is any formatting error, or parsing error, etc..
     //We assume file does not exist and overwrite it with good configs.
     if (configString != "") {
+      logger.info("Found previously made config, will load from it");
       overwriteValues = new Gson().fromJson(configString, HashMap.class);
+      logger.debug(overwriteValues);
     } else {
-      // first time runner
+      logger.info("Previous config was not found, will ask input from user");
       Config userInput = Config.initilizedFromUserInput();
+      logger.debug(userInput);
       userInput.writeToDisk(RuntimeConfig.getConfigFile());
       configString = readConfigFile(configFile);
+      logger.debug(configString);
       overwriteValues = new Gson().fromJson(configString, HashMap.class);
     }
     config.overwriteConfig(overwriteValues);
     config.loadNodeClasses();
+    logger.debug(config);
     return config;
   }
 
@@ -123,7 +132,7 @@ public class RuntimeConfig {
       InetAddress addr = InetAddress.getLocalHost();
       return addr.getHostAddress();
     } catch (UnknownHostException error) {
-      System.out.println(error);
+      logger.error(RuntimeConfig.class, error);
       return "";
     }
   }
@@ -142,10 +151,11 @@ public class RuntimeConfig {
         returnString = returnString + line;
       }
     } catch (FileNotFoundException error) {
-      System.out.println("File " + filePath + " does not exist, going to use default configs");
+      logger.info("File " + filePath + " does not exist, going to use default configs");
     } catch (IOException error) {
-      System.out.println("Error reading" + filePath + ". Going with default configs");
+      logger.info("Error reading" + filePath + ". Going with default configs");
     }
+
     return returnString;
   }
 

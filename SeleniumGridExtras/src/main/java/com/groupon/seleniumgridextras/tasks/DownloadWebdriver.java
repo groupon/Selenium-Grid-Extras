@@ -44,9 +44,13 @@ import java.io.File;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.util.Map;
 
 public class DownloadWebdriver extends ExecuteOSTask {
+
+  private static Logger logger = Logger.getLogger(DownloadWebdriver.class);
 
   public DownloadWebdriver() {
     setEndpoint("/download_webdriver");
@@ -117,8 +121,8 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public boolean initialize() {
 
     try {
-      System.out.println(RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
-      System.out.println(RuntimeConfig.getConfig().getWebdriver().getDirectory());
+      logger.debug(RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
+      logger.debug(RuntimeConfig.getConfig().getWebdriver().getDirectory());
       File webdriverJar = new File(RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
       File webdriverHome = new File(RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
@@ -127,14 +131,14 @@ public class DownloadWebdriver extends ExecuteOSTask {
       }
 
       if (!webdriverJar.exists()) {
-        System.out.println("no jar");
+        logger.debug("no jar");
         execute();
       }
 
 
     } catch (NullPointerException error) {
       printInitilizedFailure();
-      System.out.println(error);
+      logger.error(error);
       return false;
     }
 

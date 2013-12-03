@@ -7,6 +7,7 @@ import com.google.gson.internal.StringMap;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +26,7 @@ public class GridNode {
   private GridNodeConfiguration configuration;
   private String loadedFromFile;
 
+  private static Logger logger = Logger.getLogger(GridNode.class);
 
   public GridNode() {
     capabilities = new LinkedList<Capability>();
@@ -88,9 +90,8 @@ public class GridNode {
       String config = this.toPrettyJsonString();
       FileUtils.writeStringToFile(f, config);
     } catch (Exception e) {
-      System.out
-          .println("Could not write node config for '" + filename + "' with following error");
-      e.printStackTrace();
+      logger.fatal("Could not write node config for '" + filename + "' with following error");
+      logger.fatal(e.toString());
       System.exit(1);
     }
 

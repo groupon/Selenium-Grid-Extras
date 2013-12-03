@@ -41,45 +41,54 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 
 public class ExecuteCommand {
+
+  private static Logger logger = Logger.getLogger(ExecuteCommand.class);
+
   public static JsonObject execRuntime(String cmd) {
     return execRuntime(cmd, true);
   }
 
   public static JsonObject execRuntime(String cmd, boolean waitToFinish) {
-    System.out.println("Starting to execute - " + cmd);
+    logger.debug("Starting to execute - " + cmd);
 
     JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
 
     Process process;
 
     try {
-      if(RuntimeConfig.getOS().isWindows())
-        process = Runtime.getRuntime().exec("cmd /C "+cmd);
-      else
+      if (RuntimeConfig.getOS().isWindows()) {
+        process = Runtime.getRuntime().exec("cmd /C " + cmd);
+      } else {
         process = Runtime.getRuntime().exec(cmd);
+      }
     } catch (IOException e) {
-      jsonResponse.addKeyValues("error", "Problems in running " + cmd + "\n" + e.toString());
+      final String message = "Problems in running " + cmd + "\n" + e.toString();
+      jsonResponse.addKeyValues("error", message);
+      logger.warn(message);
       return jsonResponse.getJson();
     }
 
     int exitCode;
     if (waitToFinish) {
       try {
-        System.out.println("Waiting to finish");
+        logger.debug("Waiting to finish");
         exitCode = process.waitFor();
-        System.out.println("Command Finished");
+        logger.debug("Command Finished");
       } catch (InterruptedException e) {
-
-        jsonResponse.addKeyValues("error", "Interrupted running " + cmd + "\n" + e.toString());
+        final String message = "Interrupted running " + cmd + "\n" + e.toString();
+        jsonResponse.addKeyValues("error", message);
+        logger.warn(message);
         return jsonResponse.getJson();
       }
     } else {
-      System.out.println("Not waiting for finish");
+      logger.debug("Not waiting for finish");
       jsonResponse.addKeyValues("out", "Background process started");
       return jsonResponse.getJson();
     }
@@ -95,8 +104,9 @@ public class ExecuteCommand {
       }
       return jsonResponse.getJson();
     } catch (IOException e) {
-      jsonResponse.addKeyValues("error", "Problems reading stdout and stderr from " + cmd + "\n" + e
-          .toString());
+      final String message = "Problems reading stdout and stderr from " + cmd + "\n" + e.toString();
+      jsonResponse.addKeyValues("error", message);
+      logger.warn(message);
       return jsonResponse.getJson();
 
     } finally {

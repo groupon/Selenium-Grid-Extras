@@ -38,6 +38,8 @@ package com.groupon.seleniumgridextras.config;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,10 +48,15 @@ import java.util.List;
 
 public class FirstTimeRunConfig {
 
+  private static Logger logger = Logger.getLogger(FirstTimeRunConfig.class);
 
   public static Config customiseConfig(Config defaultConfig) {
-    System.out.println(
-        "\n\n\n\nWe noticed this is a first time running, we will ask some configuration settings\n\n");
+    final
+    String
+        message =
+        "We noticed this is a first time running, we will ask some configuration settings";
+    logger.info(message);
+    System.out.println("\n\n\n\n" + message + "\n\n");
 
     setWebDriverVersion(defaultConfig);
     setDefaultService(defaultConfig);
@@ -67,20 +74,25 @@ public class FirstTimeRunConfig {
     setChromeDriverVersion(defaultConfig);
     setDaemonAutoInstall(defaultConfig);
 
+    final
+    String
+        thankYouMessage =
+        "Thank you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'\n\n"
+        + "You can modify this file directly to tweak more options";
+    logger.info(thankYouMessage);
+    System.out.println(thankYouMessage);
 
-    System.out
-        .println(
-            "Thank you, your answers were recorded to '" + RuntimeConfig.getConfigFile() + "'");
-    System.out.println("You can modify this file directly to tweak more options");
     return defaultConfig;
   }
 
-  private static void setIeDriverVersion(Config defaultConfig){
-    defaultConfig.getIEdriver().setVersion(askQuestion("What version of IEDriver.exe to use?", "2.35.3"));
+  private static void setIeDriverVersion(Config defaultConfig) {
+    defaultConfig.getIEdriver()
+        .setVersion(askQuestion("What version of IEDriver.exe to use?", "2.35.3"));
   }
 
-  private static void setChromeDriverVersion(Config defaultConfig){
-    defaultConfig.getChromeDriver().setVersion(askQuestion("What version of ChromeDriver to use?", "2.6"));
+  private static void setChromeDriverVersion(Config defaultConfig) {
+    defaultConfig.getChromeDriver()
+        .setVersion(askQuestion("What version of ChromeDriver to use?", "2.6"));
   }
 
   private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost,
@@ -126,17 +138,17 @@ public class FirstTimeRunConfig {
       if (value.equals("1")) {
         Capability capability;
         try {
-          capability = (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
+          capability =
+              (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
           capability.setPlatform(platform.toUpperCase());
           capability.setBrowserVersion(askQuestion(
               "What version of '" + capability.getBrowserName() + "' is installed?"));
 
           chosenCapabilities.add(capability);
         } catch (Exception e) {
-          System.out
-              .println("Warning: Had an issue creating capability for " + currentCapabilityClass.getSimpleName());
-          System.out.println("Will ignore it");
-          e.printStackTrace();
+          logger.warn("Warning: Had an issue creating capability for " + currentCapabilityClass
+              .getSimpleName());
+          logger.warn(e.toString());
         }
       }
 
@@ -181,8 +193,10 @@ public class FirstTimeRunConfig {
   }
 
   private static void setDaemonAutoInstall(Config defaultConfig) {
-    String answer = askQuestion("Would you like to install Grid Extras as a Service? (1-yes/0-no)", "1");
-    if (answer.equals("1")){
+    String
+        answer =
+        askQuestion("Would you like to install Grid Extras as a Service? (1-yes/0-no)", "1");
+    if (answer.equals("1")) {
       defaultConfig.initializeGridDaemon();
       defaultConfig.getDaemon().setAutoInstallDaemon("1");
     }
@@ -210,7 +224,9 @@ public class FirstTimeRunConfig {
       answer = defaultValue;
     }
 
-    System.out.println("'" + answer + "' was set as your value\n\n");
+    final String printOutAswer = "'" + answer + "' was set as your value";
+    System.out.println(printOutAswer);
+    logger.info(printOutAswer);
 
     return answer;
 
@@ -231,7 +247,7 @@ public class FirstTimeRunConfig {
     try {
       line = br.readLine();
     } catch (IOException ioe) {
-      System.out.println("IO error trying to read your input.");
+      logger.fatal("IO error trying to read your input.");
       System.exit(1);
     }
 

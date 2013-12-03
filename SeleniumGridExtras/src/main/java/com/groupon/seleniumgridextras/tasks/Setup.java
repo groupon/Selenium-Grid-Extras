@@ -42,6 +42,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +54,8 @@ public class Setup extends ExecuteOSTask {
   String
       shortDescription =
       "Calls several pre-defined tasks to act as setup before build";
+
+  private static Logger logger = Logger.getLogger(Setup.class);
 
   public Setup() {
     setEndpoint("/setup");
@@ -103,21 +107,21 @@ public class Setup extends ExecuteOSTask {
   @Override
   public boolean initialize() {
     Boolean initialized = true;
-    System.out.println("Setup Tasks");
+    logger.info("Setup Tasks");
     setupTasks = new LinkedList<ExecuteOSTask>();
     for (String module : RuntimeConfig.getConfig().getSetup()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         setupTasks.add(task);
-        System.out.println("    " + task.getClass().getSimpleName());
+        logger.info("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {
-        System.out.println(module + "   " + error);
+        logger.error(module + "   " + error);
         initialized = false;
       } catch (InstantiationException error) {
-        System.out.println(module + "   " + error);
+        logger.error(module + "   " + error);
         initialized = false;
       } catch (IllegalAccessException error) {
-        System.out.println(module + "   " + error);
+        logger.error(module + "   " + error);
         initialized = false;
       }
     }

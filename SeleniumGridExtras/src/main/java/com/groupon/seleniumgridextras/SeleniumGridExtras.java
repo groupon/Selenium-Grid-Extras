@@ -46,6 +46,9 @@ import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,9 +56,15 @@ import java.util.Map;
 
 public class SeleniumGridExtras {
 
+  private static Logger logger = Logger.getLogger(SeleniumGridExtras.class);
+
   public static void main(String[] args) throws Exception {
+    final String filename = "log4j.properties";
+    PropertyConfigurator.configure(SeleniumGridExtras.class.getClassLoader().getResource(filename));
+    logger.info("Loaded Grid Logger from " + filename);
 
     RuntimeConfig.load();
+
     SelfHealingGrid.checkStatus(RuntimeConfig.getGridExtrasPort(), RuntimeConfig.getConfig());
 
     HttpServer
@@ -67,9 +76,9 @@ public class SeleniumGridExtras {
       tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
     }
 
-    System.out.println(RuntimeConfig.getSeleniungGridExtrasHomePath());
+    logger.debug(RuntimeConfig.getSeleniungGridExtrasHomePath());
 
-    System.out.println("=== Initializing Task Modules ===");
+    logger.info("Initializing Task Modules");
     for (final ExecuteOSTask task : tasks) {
 
       if (task.initialize()) {
@@ -77,9 +86,9 @@ public class SeleniumGridExtras {
         HttpContext context = server.createContext(task.getEndpoint(), new HttpExecutor() {
           @Override
           String execute(Map params) {
-            System.out.println(
-                "End-point " + task.getEndpoint() + " was called with HTTP params " + params
-                    .toString());
+
+            logger.info("End-point " + task.getEndpoint() + " was called with HTTP params " + params
+                .toString());
             String
                 result =
                 new GsonBuilder().setPrettyPrinting().create().toJson(task.execute(params));
@@ -93,35 +102,35 @@ public class SeleniumGridExtras {
 
     }
 
-    System.out.println("=== API documentation ===");
-    System.out.println("/api - Located here");
+    logger.info("API documentation");
+    logger.info("/api - Located here");
     HttpContext context = server.createContext("/api", new HttpExecutor() {
       @Override
       String execute(Map params) {
-        String foo = ApiDocumentation.getApiDocumentation();
-        System.out.println(foo);
-        return foo;
+        String apiDocs = ApiDocumentation.getApiDocumentation();
+        logger.debug(apiDocs);
+        return apiDocs;
       }
     });
 
     if (RuntimeConfig.getConfig().getAutoStartHub()) {
-      System.out.println("=== Grid Hub was set to Autostart ===");
+      logger.info("Grid Hub was set to Autostart");
       ExecuteOSTask grid = new StartGrid();
-      System.out.println(grid.execute("hub").toString().toString());
+      logger.debug(grid.execute("hub").toString().toString());
 
     }
 
     if (RuntimeConfig.getConfig().getAutoStartNode()) {
-      System.out.println("=== Grid NodeConfig was set to Autostart ===");
+      logger.info("Grid NodeConfig was set to Autostart");
       ExecuteOSTask grid = new StartGrid();
-      System.out.println(grid.execute("node").toString().toString());
+      logger.debug(grid.execute("node").toString().toString());
     }
 
     context.getFilters().add(new ParameterFilter());
 
     server.setExecutor(null);
     server.start();
-    System.out.println("Server has been started");
+    logger.info("Server has been started");
   }
 }
 

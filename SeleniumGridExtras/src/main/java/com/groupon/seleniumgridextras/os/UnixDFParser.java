@@ -40,10 +40,13 @@ package com.groupon.seleniumgridextras.os;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 
+import org.apache.log4j.Logger;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class UnixDFParser {
+  private static Logger logger = Logger.getLogger(UnixDFParser.class);
 
   public static AllDiskDrives getSystemDrives() {
     LinkedList<String> headers;
@@ -111,8 +114,8 @@ public class UnixDFParser {
     if (found) {
       return i;
     } else {
-      System.out.println("Not Found: " + word);
-      System.out.println(list);
+      logger.debug("Not Found: " + word);
+      logger.debug(list);
       return -1;
     }
   }

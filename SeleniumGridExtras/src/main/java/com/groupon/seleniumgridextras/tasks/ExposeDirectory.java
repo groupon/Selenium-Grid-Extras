@@ -41,6 +41,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import java.util.List;
 public class ExposeDirectory extends ExecuteOSTask {
 
   public File sharedDir;
+  private static Logger logger = Logger.getLogger(ExposeDirectory.class);
 
   public ExposeDirectory() {
     setEndpoint("/dir");
@@ -93,7 +95,7 @@ public class ExposeDirectory extends ExecuteOSTask {
       return true;
 
     } catch (IOException error) {
-      System.out.println("Attempt to delete " + RuntimeConfig.getConfig().getSharedDirectory() + " FAILED!!!");
+      logger.error("Attempt to delete " + RuntimeConfig.getConfig().getSharedDirectory() + " FAILED!!!");
       return false;
     }
   }
@@ -113,7 +115,7 @@ public class ExposeDirectory extends ExecuteOSTask {
 
     } catch (NullPointerException error) {
       printInitilizedFailure();
-      System.out.println("  'expose_directory' variable was not set in the config " + error);
+      logger.error("  'expose_directory' variable was not set in the config " + error);
       return false;
     }
 

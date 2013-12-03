@@ -13,6 +13,7 @@ import com.groupon.seleniumgridextras.config.driver.WebDriver;
 import com.groupon.seleniumgridextras.daemons.DaemonWrapper;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,6 +41,8 @@ public class Config {
   public static final String NODE_CONFIG_FILES = "node_config_files";
 
   public static final String GRID_EXTRAS_DAEMON = "daemon";
+
+  private static Logger logger = Logger.getLogger(Config.class);
 
 
   protected Map theConfigMap;
@@ -241,8 +244,7 @@ public class Config {
       String config = toPrettyJsonString(temp);
       FileUtils.writeStringToFile(f, config);
     } catch (Exception error) {
-      System.out
-          .println("Could not write default config file, exit with error " + error.toString());
+      logger.fatal("Could not write default config file, exit with error " + error.toString());
       System.exit(1);
     }
   }
