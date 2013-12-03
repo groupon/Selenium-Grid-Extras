@@ -26,8 +26,7 @@ public class GridStarter {
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + " ";
     String
         logCommand =
-        " -log " + RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator()
-        + "grid_hub.log";
+        " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
     command.append(jarPath);
     command.append(" org.openqa.grid.selenium.GridLauncher ");
@@ -88,7 +87,7 @@ public class GridStarter {
 
     String
         logFileFullPath =
-        RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator() + logFile;
+        "log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
     command = command + " -log " + logFileFullPath;
 

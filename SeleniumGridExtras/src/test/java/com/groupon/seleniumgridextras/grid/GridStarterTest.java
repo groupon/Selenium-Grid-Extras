@@ -33,7 +33,7 @@ public class GridStarterTest {
   private final
   String
       expectedCommand =
-      command + " -log shared" + RuntimeConfig.getOS().getFileSeparator() + logFile;
+      command + " -log log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/
