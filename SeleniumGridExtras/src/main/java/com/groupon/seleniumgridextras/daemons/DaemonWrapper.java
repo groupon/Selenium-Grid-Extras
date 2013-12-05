@@ -109,7 +109,7 @@ public class DaemonWrapper extends HashMap<String, String> implements DaemonInte
     }  else if (RuntimeConfig.getOS().isWindows()) {
       return new WindowsDaemon();
     } else {
-      return null;
+      return new LinuxDaemon();
     }
 
   }
