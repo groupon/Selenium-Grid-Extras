@@ -67,9 +67,6 @@ public class FirstTimeRunConfig {
     List<Capability> caps = getCapabilitiesFromUser();
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
-
-    setGridHubAutostart(defaultConfig);
-    setGridNodeAutostart(defaultConfig);
     setIeDriverVersion(defaultConfig);
     setChromeDriverVersion(defaultConfig);
     setDaemonAutoInstall(defaultConfig);
@@ -169,13 +166,11 @@ public class FirstTimeRunConfig {
   }
 
 
-  private static void setGridHubAutostart(Config defaultConfig) {
-    String value = askQuestion("Do you want Grid Hub to be auto started? (1-yes/0-no)", "0");
+  private static void setGridHubAutostart(Config defaultConfig, String value) {
     defaultConfig.setAutoStartHub(value);
   }
 
-  private static void setGridNodeAutostart(Config defaultConfig) {
-    String value = askQuestion("Do you want Grid NodeConfig to be auto started? (1-yes/0-no)", "1");
+  private static void setGridNodeAutostart(Config defaultConfig, String value) {
     defaultConfig.setAutoStartNode(value);
   }
 
@@ -209,8 +204,26 @@ public class FirstTimeRunConfig {
   }
 
   private static void setDefaultService(Config defaultConfig) {
-    String role = askQuestion("What is the default Role of this computer? (hub|node)", "node");
-    defaultConfig.setDefaultRole(role);
+    String
+        role =
+        askQuestion(
+            "What is the default Role of this computer? (1 - node | 2 - hub | 3 - hub & node) ",
+            "1");
+
+
+    if (role.equals("1")){
+      setGridHubAutostart(defaultConfig, "0");
+      setGridNodeAutostart(defaultConfig, "1");
+      defaultConfig.setDefaultRole("node");
+    } else if (role.equals("2")){
+      setGridHubAutostart(defaultConfig, "1");
+      setGridNodeAutostart(defaultConfig, "0");
+      defaultConfig.setDefaultRole("hub");
+    } else {
+      setGridHubAutostart(defaultConfig, "1");
+      setGridNodeAutostart(defaultConfig, "1");
+      defaultConfig.setDefaultRole("hub");
+    }
   }
 
   private static String askQuestion(String question, String defaultValue) {
