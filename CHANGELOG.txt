@@ -1,3 +1,9 @@
+1.2.2 - All of the System.out statments now write to log/log.out
+      - Install self as a crontab service on Windows/Mac/Linux boxes
+      - Crontab service checks if all the nodes are up and running, if any down starts them up
+      - Remove Webdriver Jar from packed dependencies, reducing artifact size from 32MB to 4MB
+        (Webdriver Jar gets downloaded by this jar automatically, and when started uses this jar
+         in the classpath to get access to servlettes etc...)
 1.2.1 - Output node and hub logs into the shared directory for easy review
       - Tweak node registration cycle to work better when node dies
       - Fix the /stop_grid end point for windows and linux
