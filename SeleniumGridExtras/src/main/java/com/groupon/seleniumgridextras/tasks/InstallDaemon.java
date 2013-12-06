@@ -31,7 +31,7 @@ public class InstallDaemon extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues("error", "'action' parameter is required");
+    getJsonResponse().addKeyValues("error", "The action parameter is required (install/uninstall)");
     return getJsonResponse().getJson();
   }
 

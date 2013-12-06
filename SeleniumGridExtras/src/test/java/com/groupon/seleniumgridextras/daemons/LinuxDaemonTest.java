@@ -19,7 +19,7 @@ public class LinuxDaemonTest {
   public void setUp() throws Exception {
     daemon = new LinuxDaemon();
     daemon.setLogDirectory("/tmp");
-    daemon.setJavaExecutable("/usr/local/bin");
+    daemon.setJavaExecutable("/usr/local/bin/java");
     daemon.setJarPath("dima.jar");
     daemon.setWorkingDirectory("/home/builduser/dima");
     daemon.setCheckInterval(2);
