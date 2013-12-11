@@ -1,6 +1,6 @@
 1.2.3 - Take out "host" out of node config. The boot time for each node will be slightly longer
         However, it will be much simpler to copy paste same config file on many nodes and not
-        have to edit each mode 1 by 1
+        have to edit each node 1 by 1
 1.2.2 - All of the System.out statments now write to log/log.out
       - Install self as a crontab service on Windows/Mac/Linux boxes
       - Crontab service checks if all the nodes are up and running, if any down starts them up
