@@ -39,7 +39,6 @@ public class GridNodeTest {
         .put("proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
     expectedConfiguration.put("maxSession", 1);
     expectedConfiguration.put("port", 5555);
-    expectedConfiguration.put("host", "localhost");
     expectedConfiguration.put("register", true);
     expectedConfiguration.put("registerCycle", 2000);
     expectedConfiguration.put("hubPort", 4444);
@@ -54,7 +53,6 @@ public class GridNodeTest {
 
     node = new GridNode();
     node.getConfiguration().setHubHost("google.com");
-    node.getConfiguration().setHost("localhost");
     node.getConfiguration().setHubPort(4444);
     node.getConfiguration().setPort(5555);
 
@@ -107,7 +105,6 @@ public class GridNodeTest {
   public void testGetConfiguration() throws Exception {
     assertEquals(expectedConfiguration.get("port"), node.getConfiguration().getPort());
     assertEquals(expectedConfiguration.get("hubPort"), node.getConfiguration().getHubPort());
-    assertEquals(expectedConfiguration.get("host"), node.getConfiguration().getHost());
     assertEquals(expectedConfiguration.get("hubHost"), node.getConfiguration().getHubHost());
   }
 

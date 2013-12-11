@@ -101,7 +101,6 @@ public class FirstTimeRunConfig {
       GridNode node = new GridNode();
 
       node.getCapabilities().add(cap);
-      node.getConfiguration().setHost(RuntimeConfig.getCurrentHostIP());
       node.getConfiguration().setHubHost(hubHost);
       node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
       node.getConfiguration().setPort(nodePort);

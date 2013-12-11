@@ -153,7 +153,6 @@ public class GridNode {
     private String proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
     private int maxSession = 1;
     private int port;
-    private String host;
     private boolean register = true;
     private int nodePolling = 2000;
     private int registerCycle = 2000;
@@ -171,15 +170,6 @@ public class GridNode {
     public void setPort(int port) {
       this.port = port;
     }
-
-    public String getHost() {
-      return host;
-    }
-
-    public void setHost(String host) {
-      this.host = host;
-    }
-
 
     public int getHubPort() {
       return hubPort;
