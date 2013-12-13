@@ -127,15 +127,6 @@ public class RuntimeConfig {
         SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().getPath());
   }
 
-  public static String getCurrentHostIP() {
-    try {
-      InetAddress addr = InetAddress.getLocalHost();
-      return addr.getHostAddress();
-    } catch (UnknownHostException error) {
-      logger.error(RuntimeConfig.class, error);
-      return "";
-    }
-  }
 
   public static String getSeleniungGridExtrasHomePath() {
     return FilenameUtils
