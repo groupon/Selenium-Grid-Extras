@@ -40,9 +40,14 @@ package com.groupon.seleniumgridextras;
 
 import com.sun.jna.platform.win32.Kernel32;
 
+import org.apache.log4j.Logger;
+
 import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class OS {
+  private static Logger logger = Logger.getLogger(OS.class);
 
 
   public boolean isWindows() {
@@ -81,6 +86,28 @@ public class OS {
     }
 
   }
+
+  public String getHostName(){
+    try{
+      InetAddress addr = InetAddress.getLocalHost();
+      return addr.getHostName();
+    } catch (UnknownHostException e) {
+      logger.warn(e.toString());
+      return null;
+    }
+  }
+
+  public String getHostIp(){
+    try{
+      InetAddress addr = InetAddress.getLocalHost();
+      return addr.getHostAddress();
+    } catch (UnknownHostException e) {
+      logger.warn(e.toString());
+      return null;
+    }
+  }
+
+
 
   private String getUnixPid(){
     return  ManagementFactory.getRuntimeMXBean().getName().replaceAll("@.*", "");

@@ -102,11 +102,20 @@ public class GridStarter {
   }
 
   protected static String getNodeStartCommand(String configFile, Boolean windows) {
+
+    String host = "";
+
+    if (RuntimeConfig.getOS().getHostIp() != null){
+      host = " -host "+ RuntimeConfig.getOS().getHostIp();
+    }
+
     return "java" + getIEDriverExecutionPathParam() +
            getChromeDriverExecutionPathParam() +
            " -cp " + getGridExtrasJarFilePath()
            + RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath()
-           + " org.openqa.grid.selenium.GridLauncher -role node -nodeConfig "
+           + " org.openqa.grid.selenium.GridLauncher -role node "
+           + host
+           + " -nodeConfig "
            + configFile;
   }
 
