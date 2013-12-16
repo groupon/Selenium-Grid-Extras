@@ -118,6 +118,7 @@ public class RuntimeConfig {
     }
     config.overwriteConfig(overwriteValues);
     config.loadNodeClasses();
+    config.writeToDisk(RuntimeConfig.getConfigFile() + ".example");
     logger.debug(config);
     return config;
   }
