@@ -1,4 +1,5 @@
-1.2.4 - Add the host ip back into the mix, by adding it as a CLI flag that is generated on the fly
+1.2.4 - Adding Safari as a capability
+      - Add the host ip back into the mix, by adding it as a CLI flag that is generated on the fly
       - Write example of config file to file system to see what can be overwritten
 1.2.3 - Take out "host" out of node config. The boot time for each node will be slightly longer
         However, it will be much simpler to copy paste same config file on many nodes and not
