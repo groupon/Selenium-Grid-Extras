@@ -40,13 +40,13 @@ public class GridNodeTest {
     expectedConfiguration.put("maxSession", 1);
     expectedConfiguration.put("port", 5555);
     expectedConfiguration.put("register", true);
-    expectedConfiguration.put("registerCycle", 2000);
+    expectedConfiguration.put("registerCycle", 10000);
     expectedConfiguration.put("hubPort", 4444);
     expectedConfiguration.put("hubHost", "google.com");
     expectedConfiguration.put("nodeTimeout", 120);
-    expectedConfiguration.put("unregisterIfStillDownAfter", 4000);
-    expectedConfiguration.put("cleanupCycle", 4000);
-    expectedConfiguration.put("nodePolling", 2000);
+    expectedConfiguration.put("unregisterIfStillDownAfter", 20000);
+    expectedConfiguration.put("cleanupCycle", 10000);
+    expectedConfiguration.put("nodePolling", 10000);
 
     expectedCapabilities = new LinkedList<Capability>();
     expectedCapabilities.add(new Firefox());
