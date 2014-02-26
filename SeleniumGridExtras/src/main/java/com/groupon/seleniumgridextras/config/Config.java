@@ -318,32 +318,46 @@ public class Config {
     }
 
     public String getGridJvmOptions() {
+        System.out.println(getConfigMap().get(GRID_JVM_OPTIONS));
         return mapToJvmParams((Map<String, Object>) getConfigMap().get(GRID_JVM_OPTIONS));
     }
 
     public String getGridExtrasJvmOptions() {
+        System.out.println(getConfigMap().get(GRID_EXTRAS_JVM_OPTIONS));
         return mapToJvmParams((Map<String, Object>) getConfigMap().get(GRID_EXTRAS_JVM_OPTIONS));
     }
 
-    public void addGridJvmOptions(String key, Object value){
+    public void addGridJvmOptions(String key, Object value) {
+        System.out.println(key + " " + value);
         Map<String, Object> params = (Map<String, Object>) getConfigMap().get(GRID_JVM_OPTIONS);
-        params.put(key, value);
+        params.put(key, String.valueOf(value));
     }
 
-    public void addGridExtrasJvmOptions(String key, Object value){
+    public void addGridExtrasJvmOptions(String key, Object value) {
+        System.out.println(key + " " + value);
         Map<String, Object> params = (Map<String, Object>) getConfigMap().get(GRID_EXTRAS_JVM_OPTIONS);
-        params.put(key, value);
+        params.put(key, String.valueOf(value));
     }
 
     protected String mapToJvmParams(Map<String, Object> params) {
         String returnString = "";
 
-        for (String p : params.keySet()) {
-            returnString = returnString + "-D" + p + "=" + params.get(p) + " ";
+        for (String key : params.keySet()) {
+            Object value = params.get(key);
+            String formattedValue = "";
+
+            if (value instanceof Number) {
+                formattedValue = "" + ((Number) value).intValue() + "";
+            } else {
+                formattedValue = value.toString();
+            }
+
+            returnString = returnString + "-D" + key + "=" + formattedValue + " ";
         }
 
         return returnString;
     }
+
 
     public Hub getHub() {
 
