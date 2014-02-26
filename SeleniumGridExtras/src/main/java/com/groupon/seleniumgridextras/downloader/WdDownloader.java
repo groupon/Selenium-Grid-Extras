@@ -45,8 +45,10 @@ public class WdDownloader extends Downloader {
     setDestinationDir(RuntimeConfig.getConfig().getWebdriver().getDirectory());
     setDestinationFile(version + ".jar");
 
-    setSourceURL(
-        "http://selenium.googlecode.com/files/selenium-server-standalone-" + destinationFile);
+    String versionMajor = version.substring(0, version.lastIndexOf('.'));
+
+    setSourceURL("http://selenium-release.storage.googleapis.com/" + versionMajor
+                 + "/selenium-server-standalone-" + destinationFile);
   }
 
   @Override
