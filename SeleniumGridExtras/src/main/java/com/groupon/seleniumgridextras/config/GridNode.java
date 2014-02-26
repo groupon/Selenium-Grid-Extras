@@ -154,10 +154,10 @@ public class GridNode {
     private int maxSession = 1;
     private int port;
     private boolean register = true;
-    private int nodePolling = 2000;
-    private int registerCycle = 2000;
-    private int cleanupCycle = 4000;
-    private int unregisterIfStillDownAfter = 4000;
+    private int nodePolling = 10000;
+    private int registerCycle = 10000;
+    private int cleanupCycle = 10000;
+    private int unregisterIfStillDownAfter = 20000;
     private int hubPort;
     private int nodeTimeout = 120;
     private String hubHost;

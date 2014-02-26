@@ -3,6 +3,7 @@
       - Write example of config file to file system to see what can be overwritten
       - Update URL for new WD locations
       - Add ability to pass JVM args into the node starters and grid extras
+      - Bump up the registration cycle so the nodes are not spamming the HUB
 1.2.3 - Take out "host" out of node config. The boot time for each node will be slightly longer
         However, it will be much simpler to copy paste same config file on many nodes and not
         have to edit each node 1 by 1
