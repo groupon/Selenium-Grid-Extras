@@ -34,6 +34,7 @@ public class GridStarter {
     command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
     command.append(logCommand);
 
+    logger.info("Hub Start Command: \n\n" + String.valueOf(command));
     return String.valueOf(command);
   }
 
@@ -80,6 +81,7 @@ public class GridStarter {
       commands.add(backgroundCommand);
     }
 
+    logger.info("Node Start Command: \n\n" + String.valueOf(commands));
     return commands;
   }
 
