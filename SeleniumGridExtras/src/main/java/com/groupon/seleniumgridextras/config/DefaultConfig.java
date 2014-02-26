@@ -42,7 +42,9 @@ import com.groupon.seleniumgridextras.daemons.DaemonWrapper;
 public class DefaultConfig {
 
   private static Config config;
-  private static final String webDriverDefaultVersion = "2.37.0";
+  private static final String webDriverDefaultVersion = "2.40.0";
+  private static final String ieDriverDefaultVersion = "2.40.0";
+  private static final String chromeDriverDefaultVersion = "2.9";
 
   public static Config getDefaultConfig() {
     config = new Config();
@@ -82,6 +84,14 @@ public class DefaultConfig {
     return webDriverDefaultVersion;
   }
 
+  public static String getIeDriverDefaultVersion() {
+    return ieDriverDefaultVersion;
+  }
+
+  public static String getChromeDriverDefaultVersion(){
+    return chromeDriverDefaultVersion;
+  }
+
 
   private static void loadSetupConfig() {
     config.addSetupTask("com.groupon.seleniumgridextras.tasks.MoveMouse");
@@ -110,7 +120,7 @@ public class DefaultConfig {
     tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
 
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
-    config.getIEdriver().setVersion("2.35.3");
+    config.getIEdriver().setVersion(getIeDriverDefaultVersion());
     config.getIEdriver().setBit("Win32");
   }
 
@@ -120,7 +130,7 @@ public class DefaultConfig {
     tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
 
     config.getChromeDriver().setDirectory(tmpDir + "chromedriver");
-    config.getChromeDriver().setVersion("2.6");
+    config.getChromeDriver().setVersion(getChromeDriverDefaultVersion());
     config.getChromeDriver().setBit("32");
   }
 

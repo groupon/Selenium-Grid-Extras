@@ -83,13 +83,19 @@ public class FirstTimeRunConfig {
   }
 
   private static void setIeDriverVersion(Config defaultConfig) {
-    defaultConfig.getIEdriver()
-        .setVersion(askQuestion("What version of IEDriver.exe to use?", "2.35.3"));
+    String version = DefaultConfig.getIeDriverDefaultVersion();
+
+    if (RuntimeConfig.getOS().isWindows()) {
+      version = askQuestion("What version of IEDriver.exe to use?", version);
+    }
+
+    defaultConfig.getIEdriver().setVersion(version);
   }
 
   private static void setChromeDriverVersion(Config defaultConfig) {
     defaultConfig.getChromeDriver()
-        .setVersion(askQuestion("What version of ChromeDriver to use?", "2.6"));
+        .setVersion(askQuestion("What version of ChromeDriver to use?",
+                                DefaultConfig.getChromeDriverDefaultVersion()));
   }
 
   private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost,
@@ -209,12 +215,11 @@ public class FirstTimeRunConfig {
             "What is the default Role of this computer? (1 - node | 2 - hub | 3 - hub & node) ",
             "1");
 
-
-    if (role.equals("1")){
+    if (role.equals("1")) {
       setGridHubAutostart(defaultConfig, "0");
       setGridNodeAutostart(defaultConfig, "1");
       defaultConfig.setDefaultRole("node");
-    } else if (role.equals("2")){
+    } else if (role.equals("2")) {
       setGridHubAutostart(defaultConfig, "1");
       setGridNodeAutostart(defaultConfig, "0");
       defaultConfig.setDefaultRole("hub");
