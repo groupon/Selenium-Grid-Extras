@@ -15,176 +15,177 @@ import java.util.List;
 
 public class GridStarter {
 
-    private static Logger logger = Logger.getLogger(GridStarter.class);
+  private static Logger logger = Logger.getLogger(GridStarter.class);
 
-    public static String getOsSpecificHubStartCommand(Boolean windows) {
+  public static String getOsSpecificHubStartCommand(Boolean windows) {
 
-        StringBuilder command = new StringBuilder();
-        command.append("java -cp ");
-        command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-        command.append(getGridExtrasJarFilePath());
+    StringBuilder command = new StringBuilder();
+    command.append("java -cp ");
+    command.append(RuntimeConfig.getConfig().getGridJvmOptions());
+    command.append(getGridExtrasJarFilePath());
 
-        String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + " ";
-        String
-                logCommand =
-                " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
+    String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + " ";
+    String
+        logCommand =
+        " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
-        command.append(jarPath);
-        command.append(" org.openqa.grid.selenium.GridLauncher ");
-        command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
-        command.append(logCommand);
+    command.append(jarPath);
+    command.append(" org.openqa.grid.selenium.GridLauncher ");
+    command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
+    command.append(logCommand);
 
-        return String.valueOf(command);
-    }
+    return String.valueOf(command);
+  }
 
 
-    public static JsonObject startAllNodes(JsonResponseBuilder jsonResponseBuilder) {
-        for (String command : getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
-            try {
+  public static JsonObject startAllNodes(JsonResponseBuilder jsonResponseBuilder) {
+    for (String command : getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
+      try {
 
-                JsonObject startResponse = startOneNode(command);
+        JsonObject startResponse = startOneNode(command);
 
-                if (!startResponse.get("exit_code").toString().equals("0")) {
-                    jsonResponseBuilder
-                            .addKeyValues("error", "Error running " + startResponse.get("error").toString());
-                }
-            } catch (Exception e) {
-                jsonResponseBuilder
-                        .addKeyValues("error", "Error running " + command);
-                jsonResponseBuilder
-                        .addKeyValues("error", e.toString());
-
-                e.printStackTrace();
-            }
-
+        if (!startResponse.get("exit_code").toString().equals("0")) {
+          jsonResponseBuilder
+              .addKeyValues("error", "Error running " + startResponse.get("error").toString());
         }
+      } catch (Exception e) {
+        jsonResponseBuilder
+            .addKeyValues("error", "Error running " + command);
+        jsonResponseBuilder
+            .addKeyValues("error", e.toString());
 
-        return jsonResponseBuilder.getJson();
-    }
-
-    public static JsonObject startOneNode(String command) {
-        return ExecuteCommand.execRuntime(command, false);
-    }
-
-    public static List<String> getStartCommandsForNodes(Boolean windows) {
-        List<String> commands = new LinkedList<String>();
-
-        for (String configFile : RuntimeConfig.getConfig().getNodeConfigFiles()) {
-
-            String
-                    backgroundCommand =
-                    getBackgroundStartCommandForNode(getNodeStartCommand(configFile, windows),
-                            configFile.replace("json", "log"),
-                            windows);
-
-            commands.add(backgroundCommand);
-        }
-
-        return commands;
-    }
-
-    protected static String getBackgroundStartCommandForNode(String command, String logFile,
-                                                             Boolean windows) {
-
-        String
-                logFileFullPath =
-                "log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
-
-        command = command + " -log " + logFileFullPath;
-
-        if (windows) {
-            String batchFile = logFile.replace("log", "bat");
-            writeBatchFile(batchFile, command);
-            return "start " + batchFile;
-        } else {
-            return command;
-        }
+        e.printStackTrace();
+      }
 
     }
 
-    protected static String getNodeStartCommand(String configFile, Boolean windows) {
+    return jsonResponseBuilder.getJson();
+  }
 
-        String host = "";
+  public static JsonObject startOneNode(String command) {
+    return ExecuteCommand.execRuntime(command, false);
+  }
 
-        if (RuntimeConfig.getOS().getHostIp() != null) {
-            host = " -host " + RuntimeConfig.getOS().getHostIp();
-        }
+  public static List<String> getStartCommandsForNodes(Boolean windows) {
+    List<String> commands = new LinkedList<String>();
 
-        StringBuilder command = new StringBuilder();
-        command.append("java ");
-        command.append(RuntimeConfig.getConfig().getGridJvmOptions());
+    for (String configFile : RuntimeConfig.getConfig().getNodeConfigFiles()) {
 
-        if(RuntimeConfig.getOS().isWindows()){
-            command.append(getIEDriverExecutionPathParam());
-        }
+      String
+          backgroundCommand =
+          getBackgroundStartCommandForNode(getNodeStartCommand(configFile, windows),
+                                           configFile.replace("json", "log"),
+                                           windows);
 
-        command.append(getChromeDriverExecutionPathParam());
-        command.append(" -cp " + getGridExtrasJarFilePath());
-        command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath());
-        command.append(" org.openqa.grid.selenium.GridLauncher -role node ");
-        command.append(host);
-        command.append(" -nodeConfig " + configFile);
-
-        return String.valueOf(command);
+      commands.add(backgroundCommand);
     }
 
-    protected static String getIEDriverExecutionPathParam() {
-        if (RuntimeConfig.getOS().isWindows()) {
-            return " -Dwebdriver.ie.driver=" + RuntimeConfig.getConfig().getIEdriver()
-                    .getExecutablePath();
-        } else {
-            return "";
-        }
+    return commands;
+  }
+
+  protected static String getBackgroundStartCommandForNode(String command, String logFile,
+                                                           Boolean windows) {
+
+    String
+        logFileFullPath =
+        "log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
+
+    command = command + " -log " + logFileFullPath;
+
+    if (windows) {
+      String batchFile = logFile.replace("log", "bat");
+      writeBatchFile(batchFile, command);
+      return "start " + batchFile;
+    } else {
+      return command;
     }
 
-    protected static String getChromeDriverExecutionPathParam() {
-        return " -Dwebdriver.chrome.driver=" + RuntimeConfig.getConfig().getChromeDriver()
-                .getExecutablePath();
+  }
+
+  protected static String getNodeStartCommand(String configFile, Boolean windows) {
+
+    String host = "";
+
+    if (RuntimeConfig.getOS().getHostIp() != null) {
+      host = " -host " + RuntimeConfig.getOS().getHostIp();
     }
 
-    protected static String buildBackgroundStartCommand(String command, Boolean windows) {
-        String backgroundCommand;
-        final String batchFile = "start_hub.bat";
+    StringBuilder command = new StringBuilder();
+    command.append("java ");
+    command.append(RuntimeConfig.getConfig().getGridJvmOptions());
 
-        if (windows) {
-            writeBatchFile(batchFile, command);
-            backgroundCommand =
-                    "start " + batchFile;
-        } else {
-            backgroundCommand = command;
-        }
-
-        return backgroundCommand;
+    if (RuntimeConfig.getOS().isWindows()) {
+      command.append(getIEDriverExecutionPathParam());
     }
 
-    protected static String getGridExtrasJarFilePath() {
-        return RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath();
+    command.append(getChromeDriverExecutionPathParam());
+    command.append(" -cp " + getGridExtrasJarFilePath());
+    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath());
+    command.append(" org.openqa.grid.selenium.GridLauncher -role node ");
+    command.append(host);
+    command.append(" -nodeConfig " + configFile);
+
+    return String.valueOf(command);
+  }
+
+  protected static String getIEDriverExecutionPathParam() {
+    if (RuntimeConfig.getOS().isWindows()) {
+      return " -Dwebdriver.ie.driver=" + RuntimeConfig.getConfig().getIEdriver()
+          .getExecutablePath();
+    } else {
+      return "";
+    }
+  }
+
+  protected static String getChromeDriverExecutionPathParam() {
+    return " -Dwebdriver.chrome.driver=" + RuntimeConfig.getConfig().getChromeDriver()
+        .getExecutablePath();
+  }
+
+  protected static String buildBackgroundStartCommand(String command, Boolean windows) {
+    String backgroundCommand;
+    final String batchFile = "start_hub.bat";
+
+    if (windows) {
+      writeBatchFile(batchFile, command);
+      backgroundCommand =
+          "start " + batchFile;
+    } else {
+      backgroundCommand = command;
     }
 
-    protected static String getCurrentWebDriverJarPath() {
-        return getWebdriverHome() + RuntimeConfig.getOS().getFileSeparator() + getWebdriverVersion() + ".jar";
+    return backgroundCommand;
+  }
+
+  protected static String getGridExtrasJarFilePath() {
+    return RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath();
+  }
+
+  protected static String getCurrentWebDriverJarPath() {
+    return getWebdriverHome() + RuntimeConfig.getOS().getFileSeparator() + getWebdriverVersion()
+           + ".jar";
+  }
+
+  protected static String getWebdriverVersion() {
+    return RuntimeConfig.getConfig().getWebdriver().getVersion();
+  }
+
+
+  protected static String getWebdriverHome() {
+    return RuntimeConfig.getConfig().getWebdriver().getDirectory();
+  }
+
+  private static void writeBatchFile(String filename, String input) {
+
+    File file = new File(filename);
+
+    try {
+      FileUtils.writeStringToFile(file, input);
+    } catch (Exception error) {
+      logger.fatal("Could not write default config file, exit with error " + error.toString());
+      System.exit(1);
     }
-
-    protected static String getWebdriverVersion() {
-        return RuntimeConfig.getConfig().getWebdriver().getVersion();
-    }
-
-
-    protected static String getWebdriverHome() {
-        return RuntimeConfig.getConfig().getWebdriver().getDirectory();
-    }
-
-    private static void writeBatchFile(String filename, String input) {
-
-        File file = new File(filename);
-
-        try {
-            FileUtils.writeStringToFile(file, input);
-        } catch (Exception error) {
-            logger.fatal("Could not write default config file, exit with error " + error.toString());
-            System.exit(1);
-        }
-    }
+  }
 
 
 }
