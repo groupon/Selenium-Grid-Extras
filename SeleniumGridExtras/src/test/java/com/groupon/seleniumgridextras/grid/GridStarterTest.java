@@ -41,7 +41,7 @@ public class GridStarterTest {
   Pattern
       startHubCommandPattern =
       Pattern.compile(
-          "(java -cp)\\s*([/\\\\\\w-]*)([:;])([/\\\\\\w-^]*)(1.1.1.jar)\\s*(org.openqa.grid.selenium.GridLauncher)\\s*-role\\s(\\w*)\\s-port\\s(\\d{4})\\s-host\\s([\\d\\.]*)\\s-servlets\\s([\\w\\.]*),([\\w\\.]*)");
+          "(java\\s*-cp)\\s*([/\\\\\\w-]*)([:;])([/\\\\\\w-^]*)(1.1.1.jar)\\s*(org.openqa.grid.selenium.GridLauncher)\\s*-role\\s(\\w*)\\s-port\\s(\\d{4})\\s-host\\s([\\d\\.]*)\\s-servlets\\s([\\w\\.]*),([\\w\\.]*)");
 
 
   @Before
@@ -104,7 +104,7 @@ public class GridStarterTest {
 
     assertTrue(matcher.find()); //Make sure the matchers are met
     assertEquals(11, matcher.groupCount()); //We have 11 total matches
-    assertEquals("java -cp", matcher.group(1)); //start with java command
+    assertEquals("java  -cp", matcher.group(1)); //start with java command
     assertEquals(RuntimeConfig.getOS().getPathSeparator(),
                  matcher.group(3)); //OS specific class delimeter
     assertEquals(expecteWdDir, matcher.group(4)); //Location of the WD jar file
