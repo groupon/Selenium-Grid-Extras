@@ -20,9 +20,9 @@ public class GridStarter {
   public static String getOsSpecificHubStartCommand(Boolean windows) {
 
     StringBuilder command = new StringBuilder();
-    command.append("java -cp ");
+    command.append("java ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-    command.append(getGridExtrasJarFilePath());
+    command.append(" -cp " + getGridExtrasJarFilePath());
 
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + " ";
     String
