@@ -69,7 +69,6 @@ public class FirstTimeRunConfig {
     configureNodes(caps, hubHost, hubPort, defaultConfig);
     setIeDriverVersion(defaultConfig);
     setChromeDriverVersion(defaultConfig);
-    setDaemonAutoInstall(defaultConfig);
 
     final
     String
@@ -192,16 +191,6 @@ public class FirstTimeRunConfig {
     return host;
   }
 
-  private static void setDaemonAutoInstall(Config defaultConfig) {
-    String
-        answer =
-        askQuestion("Would you like to install Grid Extras as a Service? (1-yes/0-no)", "1");
-    if (answer.equals("1")) {
-      defaultConfig.initializeGridDaemon();
-      defaultConfig.getDaemon().setAutoInstallDaemon("1");
-    }
-
-  }
 
   private static String getGridHubPort() {
     String port = askQuestion("What is the PORT for the Selenium Grid Hub?", "4444");

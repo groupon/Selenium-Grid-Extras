@@ -10,7 +10,6 @@ import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
 import com.groupon.seleniumgridextras.config.driver.DriverInfo;
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
-import com.groupon.seleniumgridextras.daemons.DaemonWrapper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -42,8 +41,6 @@ public class Config {
 
   public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
-
-  public static final String GRID_EXTRAS_DAEMON = "daemon";
 
   private static Logger logger = Logger.getLogger(Config.class);
 
@@ -88,10 +85,6 @@ public class Config {
     }
   }
 
-  public DaemonWrapper getDaemon() {
-    return (DaemonWrapper) getConfigMap().get(GRID_EXTRAS_DAEMON);
-  }
-
 
   private void initialize() {
     getConfigMap().put(ACTIVATE_MODULES, new ArrayList<String>());
@@ -99,7 +92,6 @@ public class Config {
     getConfigMap().put(SETUP, new ArrayList<String>());
     getConfigMap().put(TEAR_DOWN, new ArrayList<String>());
 
-    initializeGridDaemon();
 
     getConfigMap().put(GRID, new StringMap());
     initializeWebdriver();
@@ -115,9 +107,6 @@ public class Config {
 
   }
 
-  public void initializeGridDaemon() {
-    getConfigMap().put(GRID_EXTRAS_DAEMON, DaemonWrapper.getNewInstance());
-  }
 
   private void initializeIEDriver() {
     getConfigMap().put(IEDRIVER, new IEDriver());

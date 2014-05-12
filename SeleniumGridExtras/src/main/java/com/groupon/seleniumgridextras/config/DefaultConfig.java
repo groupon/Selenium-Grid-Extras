@@ -36,8 +36,6 @@
  */
 package com.groupon.seleniumgridextras.config;
 
-import com.groupon.seleniumgridextras.OS;
-import com.groupon.seleniumgridextras.daemons.DaemonWrapper;
 
 public class DefaultConfig {
 
@@ -58,27 +56,10 @@ public class DefaultConfig {
     loadTeardownConfig();
     loadGridConfig();
     loadSharedDir();
-    loadDaemonConfig();
 
     return config;
   }
 
-  private static void loadDaemonConfig() {
-
-    DaemonWrapper daemon = config.getDaemon();
-    daemon.setJavaExecutable(
-        System.getProperty("java.home") + RuntimeConfig.getOS().getFileSeparator() + "bin"
-        + RuntimeConfig.getOS().getFileSeparator() + "java");
-    daemon.setDaemonName("SeleniumGridExtras");
-    daemon.setLogDirectory(
-        RuntimeConfig.getSeleniungGridExtrasHomePath() + RuntimeConfig.getOS().getFileSeparator()
-        + config.getSharedDirectory());
-    daemon.setWorkingDirectory(RuntimeConfig.getSeleniungGridExtrasHomePath());
-    daemon.setJarPath(RuntimeConfig.getSeleniumGridExtrasJarFile().getAbsolutePath());
-    daemon.setCheckInterval(1);
-    daemon.setAutoInstallDaemon("1");
-
-  }
 
   public static String getWebDriverDefaultVersion() {
     return webDriverDefaultVersion;
@@ -161,7 +142,6 @@ public class DefaultConfig {
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadChromeDriver");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.SystemInfo");
-    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.InstallDaemon");
   }
 
   private static void loadDisabledPlugins() {
