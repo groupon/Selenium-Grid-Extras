@@ -37,7 +37,7 @@ public class GridNodeTest {
     expectedConfiguration = new HashMap();
     expectedConfiguration
         .put("proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
-//    expectedConfiguration.put("maxSession", 1);
+    expectedConfiguration.put("maxSession", 1);
     expectedConfiguration.put("port", 5555);
     expectedConfiguration.put("register", true);
 //    expectedConfiguration.put("registerCycle", 10000);
