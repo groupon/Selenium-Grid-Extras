@@ -25,6 +25,8 @@ After all the tests are finished running and all dependencies are downloaded, yo
 Starting Services
 -------------------
 
+Note: Make sure to run Grid Extras at least once prior to setting it up as a service, so it can ask you the first run questions.
+
 On Windows:
 
 On Linux:
@@ -43,9 +45,6 @@ Note: You might need to add a cron job to restart vncserver in similar fashion, 
 
 After you have the virtual display running, add run this command to edit the cron list for current user (vi is the editor used)
 
-Note: It is assumed that you have executed grid extras for the first time already, and answered all the information for node count etc...
-
-
 ```
 crontab -e
 ```
@@ -61,8 +60,19 @@ This cron will run every 5 minutes.
 
 
 
-
 On OSx:
+
+Download the com.groupon.SeleniumGridExtras.plist to your computer, open it in editor of choice.
+
+Update the XML file replacing WORKING_DIRECTORY with the location of the selenium grid extras working directory
+Update the XML file replacing SELENIUM_GRID_EXTRAS.jar with the name Selenium Grid Extras was saved as
+
+Move the com.groupon.SeleniumGridExtras.plist to ~/Library/LaunchAgents/
+
+run
+```
+launchctl load ~/Library/LaunchAgents/com.groupon.SeleniumGridExtras.plist
+``
 
 
 
