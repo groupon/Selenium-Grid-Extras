@@ -151,12 +151,12 @@ public class GridNode {
   public class GridNodeConfiguration {
 
     private String proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
-    private int maxSession = 1;
+//    private int maxSession = 1;
     private int port;
     private boolean register = true;
-    private int nodePolling = 10000;
-    private int registerCycle = 10000;
-    private int cleanupCycle = 10000;
+//    private int nodePolling = 10000;
+//    private int registerCycle = 10000;
+//    private int cleanupCycle = 10000;
     private int unregisterIfStillDownAfter = 20000;
     private int hubPort;
     private int nodeTimeout = 120;
