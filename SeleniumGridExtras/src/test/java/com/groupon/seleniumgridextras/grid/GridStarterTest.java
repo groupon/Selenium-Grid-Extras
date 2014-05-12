@@ -72,6 +72,7 @@ public class GridStarterTest {
     new File(nodeTwoConfig).delete();
     new File(windowsBatchFileName).delete();
     new File(gridStartTestJson).delete();
+    new File(RuntimeConfig.getConfigFile() + ".example").delete();
 
   }
 

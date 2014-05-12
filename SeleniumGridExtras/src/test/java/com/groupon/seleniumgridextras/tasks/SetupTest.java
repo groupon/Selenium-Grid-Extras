@@ -74,6 +74,7 @@ public class SetupTest {
   public void tearDown() throws Exception {
     File config = new File(RuntimeConfig.getConfigFile());
     config.delete();
+    new File(RuntimeConfig.getConfigFile() + ".example").delete();
   }
 
   @Test

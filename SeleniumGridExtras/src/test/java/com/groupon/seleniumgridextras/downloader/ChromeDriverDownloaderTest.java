@@ -32,6 +32,7 @@ public class ChromeDriverDownloaderTest {
   @After
   public void tearDown() throws Exception {
     new File(RuntimeConfig.getConfigFile()).delete();
+    new File(RuntimeConfig.getConfigFile() + ".example").delete();
     new File(downloader.getDestinationDir()).delete();
   }
 
