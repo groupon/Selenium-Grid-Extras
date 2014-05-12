@@ -36,6 +36,7 @@
  */
 package com.groupon.seleniumgridextras.config;
 
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
 import org.apache.log4j.Logger;
@@ -187,7 +188,7 @@ public class FirstTimeRunConfig {
   }
 
   private static String getGridHubHost() {
-    String host = askQuestion("What is the HOST for the Selenium Grid Hub?", "127.0.0.1");
+    String host = askQuestion("What is the HOST for the Selenium Grid Hub?", RuntimeConfig.getOS().getHostIp());
     return host;
   }
 
