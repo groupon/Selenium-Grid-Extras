@@ -143,8 +143,8 @@ public class FirstTimeRunConfig {
           capability =
               (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
           capability.setPlatform(platform.toUpperCase());
-          capability.setBrowserVersion(askQuestion(
-              "What version of '" + capability.getBrowserName() + "' is installed?"));
+//          capability.setBrowserVersion(askQuestion(
+//              "What version of '" + capability.getBrowserName() + "' is installed?"));
 
           chosenCapabilities.add(capability);
         } catch (Exception e) {
