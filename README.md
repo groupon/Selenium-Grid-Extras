@@ -22,29 +22,49 @@ After all the tests are finished running and all dependencies are downloaded, yo
 * SeleniumGridExtras-X.X.X-SNAPSHOT.jar
 
 
-Starting Serivces
+Starting Services
 -------------------
 
-The JAR file with "-jar-with-dependencies.jar" extension has all of the dependencies pre-packed into itself. You can use it but it's larger in size. If you want to add all dependencies to CLASSPATH yourself, you can use the smaller JAR
+On Windows:
 
-Move the JAR file to desired location and run command
+On Linux:
 
-```bash
-java -jar SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
+There are a lot of security issues with setting up a cron job as a “build user” and letting that user run in the normal display desktop (DISPLAY=:0 aka the one you see when it is connected to the computer monitor). There is a work around to allow the service to run in DISPLAY=:0 but that’s not recommended.
+
+Instead, it is a much better practice to set up a XVNC server on a Linux computer, with a light desktop manager (FluxBox seems to be a good lightweight choice http://fluxbox.org/). Once VNC server and desktop managers are installed, run the following command to start a virtual DISPLAY:
+
+```
+vncserver :1 -geometry 1024x768
 ```
 
-On first run you will be asked the Node's default role (hub|node), what version of WebDriver JAR to use and URL to the Grid Hub node.
+This will start an XVNC server on DISPLAY=:1 with screen resolution of 1024x768. You can tweak these parameters as needed.
+Note: You might need to add a cron job to restart vncserver in similar fashion, since vncserver will not automatically start after reboot
 
-After the information is provided, the application will download the desired version of webdriver to "webdriver/(version).jar" and will auto configure version number and url for the grid hub.
 
-Once the service is running, you can hit http://localhost:3000/api for the list of api commands available on a given node.
+After you have the virtual display running, add run this command to edit the cron list for current user (vi is the editor used)
 
-Starting Grid
-=============
+Note: It is assumed that you have executed grid extras for the first time already, and answered all the information for node count etc...
 
-To start a Grid Hub on a give computer, hit this URL http://localhost:3000/start_grid?role=hub
-To start a Grid Node on a given computer, hit this URL http://localhost:3000/start_grid?role=node
-You can check the status of HUB/Node ona given computer by hitting http://localhost:3000/grid_status
+
+```
+crontab -e
+```
+
+Add following line to the cron list:
+
+```
+*/5 * * * * bash -i -c 'cd WORKING_DIRECTORY; export DISPLAY=:1 java -jar SELENIUM_GRID_EXTRAS.jar' >> WORKING_DIRECTORY/log/log.out 2>&1
+```
+
+Where the WORKING_DIRECTORY needs to be replaced with the location where grid extras jar was downloaded, and SELENIUM_GRID_EXTRAS represents the name given to the grid extras jar.
+This cron will run every 5 minutes.
+
+
+
+
+On OSx:
+
+
 
 Other Useful Commands
 =====================
