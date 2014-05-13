@@ -41,6 +41,7 @@ import com.google.gson.Gson;
 
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
+import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -50,10 +51,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.log4j.Logger;
+import org.dom4j.DocumentException;
 
 
 public class RuntimeConfig {
@@ -64,15 +69,38 @@ public class RuntimeConfig {
   private final static String version = "1.2.1";
   private final static int gridExtrasPort = 3000;
   private static Logger logger = Logger.getLogger(RuntimeConfig.class);
+  private static WebDriverReleaseManager releaseManager;
 
   public static int getGridExtrasPort() {
     return gridExtrasPort;
   }
 
+  public static WebDriverReleaseManager getReleaseManager() {
+    return releaseManager;
+  }
 
+
+  private void loadWebDriverReleaseManager(String webDriverAndIEDriverURL, String chromeDriverUrl) {
+    try {
+      this.releaseManager =
+          new WebDriverReleaseManager(new URL(webDriverAndIEDriverURL), new URL(chromeDriverUrl));
+    } catch (MalformedURLException e) {
+      logger.error("Seems that " + webDriverAndIEDriverURL + " is malformed");
+      logger.error(e.toString());
+      e.printStackTrace();
+    } catch (DocumentException e) {
+      logger.error("Something went wrong loading webdriver versions");
+      logger.error(e.toString());
+      e.printStackTrace();
+    }
+
+  }
 
   public RuntimeConfig() {
     config = new Config();
+    loadWebDriverReleaseManager("http://selenium-release.storage.googleapis.com/",
+                                "http://chromedriver.storage.googleapis.com/LATEST_RELEASE");
+
   }
 
   public static String getVersion() {

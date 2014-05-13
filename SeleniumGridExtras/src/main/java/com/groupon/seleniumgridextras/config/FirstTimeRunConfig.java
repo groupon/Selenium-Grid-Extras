@@ -38,6 +38,7 @@ package com.groupon.seleniumgridextras.config;
 
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
+import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 
 import org.apache.log4j.Logger;
 
@@ -59,7 +60,6 @@ public class FirstTimeRunConfig {
     logger.info(message);
     System.out.println("\n\n\n\n" + message + "\n\n");
 
-    setWebDriverVersion(defaultConfig);
     setDefaultService(defaultConfig);
 
     String hubHost = getGridHubHost();
@@ -68,8 +68,6 @@ public class FirstTimeRunConfig {
     List<Capability> caps = getCapabilitiesFromUser();
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
-    setIeDriverVersion(defaultConfig);
-    setChromeDriverVersion(defaultConfig);
 
     final
     String
@@ -82,20 +80,35 @@ public class FirstTimeRunConfig {
     return defaultConfig;
   }
 
-  private static void setIeDriverVersion(Config defaultConfig) {
-    String version = DefaultConfig.getIeDriverDefaultVersion();
+  private static void setDriverAutoUpdater(Config defaultConfig) {
+    String
+        answer =
+        askQuestion(
+            "Would you like WebDriver, IEDriver and ChromeDriver to auto update (1-yes/0-no)", "1");
 
-    if (RuntimeConfig.getOS().isWindows()) {
-      version = askQuestion("What version of IEDriver.exe to use?", version);
+    if (answer.equals("1")) {
+      defaultConfig.setAutoUpdateDrivers("1");
+
+      WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
+
+      defaultConfig.getWebdriver()
+          .setVersion(manager.getWedriverLatestVersion().getPrettyPrintVersion("."));
+      defaultConfig.getWebdriver()
+          .setVersion(manager.getIeDriverLatestVersion().getPrettyPrintVersion("."));
+
+
+    } else {
+      defaultConfig.setAutoUpdateDrivers("0");
+      System.out.println(
+          "Drivers will not be automatically updated.\n You can change the versions of each driver later in the config");
     }
 
-    defaultConfig.getIEdriver().setVersion(version);
-  }
+    System.out
+        .println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
+    System.out.println("Current IE Driver Version: " + defaultConfig.getIEdriver().getVersion());
+    System.out
+        .println("Current Chrome Driver Version: " + defaultConfig.getChromeDriver().getVersion());
 
-  private static void setChromeDriverVersion(Config defaultConfig) {
-    defaultConfig.getChromeDriver()
-        .setVersion(askQuestion("What version of ChromeDriver to use?",
-                                DefaultConfig.getChromeDriverDefaultVersion()));
   }
 
   private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost,
@@ -179,16 +192,11 @@ public class FirstTimeRunConfig {
     defaultConfig.setAutoStartNode(value);
   }
 
-  private static void setWebDriverVersion(Config defaultConfig) {
-    String
-        newVersion =
-        askQuestion("What version of webdriver JAR should we use?",
-                    DefaultConfig.getWebDriverDefaultVersion());
-    defaultConfig.getWebdriver().setVersion(newVersion);
-  }
-
   private static String getGridHubHost() {
-    String host = askQuestion("What is the HOST for the Selenium Grid Hub?", RuntimeConfig.getOS().getHostIp());
+    String
+        host =
+        askQuestion("What is the HOST for the Selenium Grid Hub?",
+                    RuntimeConfig.getOS().getHostIp());
     return host;
   }
 

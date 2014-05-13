@@ -56,10 +56,18 @@ public class DefaultConfig {
     loadTeardownConfig();
     loadGridConfig();
     loadSharedDir();
+    setAutoUpdateDrivers("1");
 
     return config;
   }
 
+  public static boolean getAutoUpdateDrivers(){
+    return config.getAutoUpdateDrivers();
+  }
+
+  public static void setAutoUpdateDrivers(String update){
+    config.setAutoUpdateDrivers(update);
+  }
 
   public static String getWebDriverDefaultVersion() {
     return webDriverDefaultVersion;

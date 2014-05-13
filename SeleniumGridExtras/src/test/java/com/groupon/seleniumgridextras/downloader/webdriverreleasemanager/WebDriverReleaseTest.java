@@ -70,20 +70,30 @@ public class WebDriverReleaseTest {
 
   @Test
   public void testPrettyPrintVersion() throws Exception{
-    WebDriverRelease IEDriverRelease = new WebDriverRelease("2.39/IEDriverServer_Win32_2.39.0.zip");
-    WebDriverRelease WdDriverRelease = new WebDriverRelease("2.41/selenium-server-standalone-2.41.1.jar");
+    WebDriverRelease ieDriverRelease = new WebDriverRelease("2.39/IEDriverServer_Win32_2.39.0.zip");
+    WebDriverRelease wdDriverRelease = new WebDriverRelease("2.41/selenium-server-standalone-2.41.1.jar");
 
-    assertEquals("2.39.0", IEDriverRelease.getPrettyPrintVersion("."));
-    assertEquals("2.41.1", WdDriverRelease.getPrettyPrintVersion("."));
+    assertEquals("2.39.0", ieDriverRelease.getPrettyPrintVersion("."));
+    assertEquals("2.41.1", wdDriverRelease.getPrettyPrintVersion("."));
   }
 
   @Test
   public void testComparableVersion() throws Exception{
-    WebDriverRelease IEDriverRelease = new WebDriverRelease("2.39/IEDriverServer_Win32_2.39.0.zip");
-    WebDriverRelease WdDriverRelease = new WebDriverRelease("2.41/selenium-server-standalone-2.41.1.jar");
+    WebDriverRelease ieDriverRelease = new WebDriverRelease("2.39/IEDriverServer_Win32_2.39.0.zip");
+    WebDriverRelease wdDriverRelease = new WebDriverRelease("2.41/selenium-server-standalone-2.41.1.jar");
 
-    assertEquals(203900, IEDriverRelease.getComparableVersion());
-    assertEquals(204101, WdDriverRelease.getComparableVersion());
+    assertEquals(203900, ieDriverRelease.getComparableVersion());
+    assertEquals(204101, wdDriverRelease.getComparableVersion());
+
+  }
+
+  @Test
+  public void testChromeDriverRelease() throws Exception{
+    WebDriverRelease chromeRelease = new ChromeDriverRelease("2.10");
+
+    assertEquals("2.10", chromeRelease.getPrettyPrintVersion("."));
+    assertEquals("chromedriver", chromeRelease.getName());
+    assertEquals("index.html?path=2.10/", chromeRelease.getRelativePath());
 
   }
 }

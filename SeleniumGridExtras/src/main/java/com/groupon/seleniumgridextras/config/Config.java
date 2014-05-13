@@ -42,6 +42,8 @@ public class Config {
   public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
 
+  public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
+
   private static Logger logger = Logger.getLogger(Config.class);
 
 
@@ -104,6 +106,25 @@ public class Config {
 
     getConfigMap().put(GRID_JVM_OPTIONS, new HashMap<String, Object>());
     getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
+
+    getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
+
+  }
+
+  public boolean getAutoUpdateDrivers(){
+    if (getConfigMap().get(AUTO_UPDATE_DRIVERS).equals("1")){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void setAutoUpdateDrivers(String input){
+    if (input.equals("1")){
+      getConfigMap().put(AUTO_UPDATE_DRIVERS, input);
+    } else {
+      getConfigMap().put(AUTO_UPDATE_DRIVERS, "0");
+    }
 
   }
 

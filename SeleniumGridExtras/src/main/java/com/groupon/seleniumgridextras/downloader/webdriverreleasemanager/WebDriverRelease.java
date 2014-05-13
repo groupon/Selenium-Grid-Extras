@@ -11,6 +11,7 @@ public class WebDriverRelease {
   private String name;
   private String relativePath;
 
+
   public WebDriverRelease(String input) {
 
     Matcher initialMatcher = Pattern.compile("(selenium-server-standalone)|(IEDriverServer)").matcher(input);
@@ -23,11 +24,11 @@ public class WebDriverRelease {
               .matcher(input);
 
       if (detailedMatcher.find()) {
-        this.relativePath = detailedMatcher.group(0);
-        this.majorVersion = Integer.valueOf(detailedMatcher.group(1));
-        this.minorVersion = Integer.valueOf(detailedMatcher.group(2));
-        this.patchVersion = Integer.valueOf(detailedMatcher.group(9));
-        this.name = detailedMatcher.group(3);
+        setRelativePath(detailedMatcher.group(0));
+        setMajorVersion(Integer.valueOf(detailedMatcher.group(1)));
+        setMinorVersion(Integer.valueOf(detailedMatcher.group(2)));
+        setPatchVersion(Integer.valueOf(detailedMatcher.group(9)));
+        setName(detailedMatcher.group(3));
 
       }
 
@@ -71,6 +72,27 @@ public class WebDriverRelease {
   public String getRelativePath() {
     return relativePath;
   }
+
+  public void setMajorVersion(int majorVersion) {
+    this.majorVersion = majorVersion;
+  }
+
+  public void setMinorVersion(int minorVersion) {
+    this.minorVersion = minorVersion;
+  }
+
+  public void setPatchVersion(int patchVersion) {
+    this.patchVersion = patchVersion;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public void setRelativePath(String relativePath) {
+    this.relativePath = relativePath;
+  }
+
 
 
 }
