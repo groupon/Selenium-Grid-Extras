@@ -36,6 +36,22 @@ public class WebDriverRelease {
 
   }
 
+  public String getPrettyPrintVersion(String separator){
+    StringBuilder stringBuilder = new StringBuilder();
+
+    stringBuilder.append(getMajorVersion());
+    stringBuilder.append(separator);
+    stringBuilder.append(getMinorVersion());
+    stringBuilder.append(separator);
+    stringBuilder.append(getPatchVersion());
+
+    return stringBuilder.toString();
+  }
+
+  public int getComparableVersion(){
+    return Integer.valueOf(getPrettyPrintVersion("0"));
+  }
+
   public int getMajorVersion() {
     return majorVersion;
   }

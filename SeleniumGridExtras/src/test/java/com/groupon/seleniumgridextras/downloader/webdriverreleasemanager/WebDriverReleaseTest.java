@@ -67,4 +67,23 @@ public class WebDriverReleaseTest {
     assertEquals(null, release.getRelativePath());
 
   }
+
+  @Test
+  public void testPrettyPrintVersion() throws Exception{
+    WebDriverRelease IEDriverRelease = new WebDriverRelease("2.39/IEDriverServer_Win32_2.39.0.zip");
+    WebDriverRelease WdDriverRelease = new WebDriverRelease("2.41/selenium-server-standalone-2.41.1.jar");
+
+    assertEquals("2.39.0", IEDriverRelease.getPrettyPrintVersion("."));
+    assertEquals("2.41.1", WdDriverRelease.getPrettyPrintVersion("."));
+  }
+
+  @Test
+  public void testComparableVersion() throws Exception{
+    WebDriverRelease IEDriverRelease = new WebDriverRelease("2.39/IEDriverServer_Win32_2.39.0.zip");
+    WebDriverRelease WdDriverRelease = new WebDriverRelease("2.41/selenium-server-standalone-2.41.1.jar");
+
+    assertEquals(203900, IEDriverRelease.getComparableVersion());
+    assertEquals(204101, WdDriverRelease.getComparableVersion());
+
+  }
 }
