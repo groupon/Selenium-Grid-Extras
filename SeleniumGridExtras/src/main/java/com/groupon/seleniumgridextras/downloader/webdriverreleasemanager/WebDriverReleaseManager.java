@@ -43,6 +43,10 @@ public class WebDriverReleaseManager {
   }
 
   public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL) throws DocumentException {
+
+    System.out.println("Checking the latest version of WebDriver, IEDriver, ChromeDriver from");
+    System.out.println(webDriverAndIEDriverURL.toExternalForm());
+    System.out.println("and from \n" + chromeDriverVersionURL.toExternalForm());
     initialize();
 
     SAXReader reader = new SAXReader();
