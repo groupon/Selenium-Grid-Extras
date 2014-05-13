@@ -69,6 +69,8 @@ public class FirstTimeRunConfig {
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
 
+    setDriverAutoUpdater(defaultConfig);
+
     final
     String
         thankYouMessage =
@@ -93,8 +95,10 @@ public class FirstTimeRunConfig {
 
       defaultConfig.getWebdriver()
           .setVersion(manager.getWedriverLatestVersion().getPrettyPrintVersion("."));
-      defaultConfig.getWebdriver()
+      defaultConfig.getIEdriver()
           .setVersion(manager.getIeDriverLatestVersion().getPrettyPrintVersion("."));
+      defaultConfig.getChromeDriver()
+          .setVersion(manager.getChromeDriverLatestVersion().getPrettyPrintVersion("."));
 
 
     } else {

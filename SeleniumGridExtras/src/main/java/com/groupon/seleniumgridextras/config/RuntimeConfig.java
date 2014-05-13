@@ -76,14 +76,21 @@ public class RuntimeConfig {
   }
 
   public static WebDriverReleaseManager getReleaseManager() {
+    if (releaseManager == null) {
+      releaseManager =
+          loadWebDriverReleaseManager("http://selenium-release.storage.googleapis.com/",
+                                      "http://chromedriver.storage.googleapis.com/LATEST_RELEASE");
+    }
+
     return releaseManager;
   }
 
 
-  private void loadWebDriverReleaseManager(String webDriverAndIEDriverURL, String chromeDriverUrl) {
+  private static WebDriverReleaseManager loadWebDriverReleaseManager(String webDriverAndIEDriverURL,
+                                                                     String chromeDriverUrl) {
     try {
-      this.releaseManager =
-          new WebDriverReleaseManager(new URL(webDriverAndIEDriverURL), new URL(chromeDriverUrl));
+      return new WebDriverReleaseManager(new URL(webDriverAndIEDriverURL),
+                                         new URL(chromeDriverUrl));
     } catch (MalformedURLException e) {
       logger.error("Seems that " + webDriverAndIEDriverURL + " is malformed");
       logger.error(e.toString());
@@ -94,13 +101,11 @@ public class RuntimeConfig {
       e.printStackTrace();
     }
 
+    return null;
   }
 
   public RuntimeConfig() {
     config = new Config();
-    loadWebDriverReleaseManager("http://selenium-release.storage.googleapis.com/",
-                                "http://chromedriver.storage.googleapis.com/LATEST_RELEASE");
-
   }
 
   public static String getVersion() {
