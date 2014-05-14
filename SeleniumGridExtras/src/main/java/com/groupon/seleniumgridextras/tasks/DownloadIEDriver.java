@@ -73,6 +73,7 @@ public class DownloadIEDriver extends ExecuteOSTask {
     addResponseDescription("source_url",
                            "Url from which the EXE was downloaded. If file already exists, this will be blank, and download will be skipped");
 
+    this.bit = RuntimeConfig.getConfig().getIEdriver().getBit();
     getJsonResponse()
         .addKeyValues("root_dir", RuntimeConfig.getConfig().getIEdriver().getDirectory());
     getJsonResponse().addKeyValues("source_url", "");
