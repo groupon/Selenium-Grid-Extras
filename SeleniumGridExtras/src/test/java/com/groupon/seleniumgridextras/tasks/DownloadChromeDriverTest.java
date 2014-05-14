@@ -115,17 +115,12 @@ public class DownloadChromeDriverTest {
   @Test
   public void testExecute() throws Exception {
 
-    String os;
+    String os = getOS();
+    // default setting from configuration
+    String bit = "32";
+    String version = "2.5";
 
-    if (RuntimeConfig.getOS().isWindows()) {
-      os = "win";
-    } else if (RuntimeConfig.getOS().isMac()) {
-      os = "mac";
-    } else {
-      os = "linux";
-    }
-
-    Map firstExec = new Gson().fromJson(task.execute("2.5"), HashMap.class);
+    Map firstExec = new Gson().fromJson(task.execute(version), HashMap.class);
 
     File expectedFile = new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
 
@@ -136,7 +131,7 @@ public class DownloadChromeDriverTest {
     assertEquals(downloadDir, ((ArrayList) firstExec.get("root_dir")).get(0));
     assertEquals(expectedFile.getAbsolutePath(),
                  ((ArrayList) firstExec.get("file_full_path")).get(0));
-    assertEquals("http://chromedriver.storage.googleapis.com/2.5/chromedriver_" + os + "32.zip",
+    assertEquals("http://chromedriver.storage.googleapis.com/" + version + "/chromedriver_" + os + bit + ".zip",
                  ((ArrayList) firstExec.get("source_url")).get(0));
 
     Map secondExec = new Gson().fromJson(task.execute("2.5"), HashMap.class);
@@ -151,7 +146,31 @@ public class DownloadChromeDriverTest {
 
     assertEquals(expectedFile.getAbsolutePath(),
                  ((ArrayList) firstExec.get("file_full_path")).get(0));
+  }
 
+  @Test
+  public void testCustomExecute() throws Exception {
+    String os = getOS();
+    String bit = "64";
+    String version = "2.9";
+    RuntimeConfig.getConfig().getChromeDriver().setBit(bit);
+
+    DownloadChromeDriver customSettingTask = new DownloadChromeDriver();
+
+    Map firstExec = new Gson().fromJson(customSettingTask.execute(version), HashMap.class);
+    assertEquals("http://chromedriver.storage.googleapis.com/" + version + "/chromedriver_" + os + bit + ".zip",
+                 ((ArrayList) firstExec.get("source_url")).get(0));
+
+  }
+
+  private String getOS() {
+    if (RuntimeConfig.getOS().isWindows()) {
+      return "win";
+    } else if (RuntimeConfig.getOS().isMac()) {
+      return "mac";
+    } else {
+      return "linux";
+    }
   }
 
   private void deleteDownloadDir() {
