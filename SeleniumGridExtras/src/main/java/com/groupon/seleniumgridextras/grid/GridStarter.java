@@ -22,14 +22,14 @@ public class GridStarter {
     StringBuilder command = new StringBuilder();
     command.append("java ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-    command.append(" -cp " + getGridExtrasJarFilePath());
+    command.append(" -cp \"" + getGridExtrasJarFilePath());
 
-    String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + " ";
+    String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
     String
         logCommand =
         " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
-    command.append(jarPath);
+    command.append(jarPath + "\"");
     command.append(" org.openqa.grid.selenium.GridLauncher ");
     command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
     command.append(logCommand);
@@ -121,8 +121,8 @@ public class GridStarter {
     }
 
     command.append(getChromeDriverExecutionPathParam());
-    command.append(" -cp " + getGridExtrasJarFilePath());
-    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath());
+    command.append(" -cp \"" + getGridExtrasJarFilePath());
+    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + "\"");
     command.append(" org.openqa.grid.selenium.GridLauncher -role node ");
     command.append(host);
     command.append(" -nodeConfig " + configFile);

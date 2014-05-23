@@ -1,12 +1,9 @@
 package com.groupon.seleniumgridextras.daemons;
 
 import com.google.gson.JsonObject;
-
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-
 import org.apache.commons.io.FileUtils;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -64,7 +61,7 @@ public class WindowsDaemon extends DaemonWrapper {
   }
 
   protected String createDaemonCommand(String daemonName, String xmlLocation) {
-    return "schtasks /create /tn " + daemonName + " /xml " + xmlLocation;
+    return "schtasks /create /tn " + daemonName + " /xml \"" + xmlLocation + "\"";
   }
 
   protected String deleteDaemonCommand(String daemonName) {
