@@ -63,10 +63,11 @@ abstract class HttpExecutor implements HttpHandler {
     Headers h = t.getResponseHeaders();
     h.add("Content-Type", "application/json");
 
-    t.sendResponseHeaders(200, response.length());
+    byte[] body = response.getBytes();
+    t.sendResponseHeaders(200, body.length);
 
     OutputStream os = t.getResponseBody();
-    os.write(response.getBytes());
+    os.write(body);
     os.close();
   }
 
