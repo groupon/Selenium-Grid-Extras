@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +78,8 @@ public class UpgradeWebdriver extends ExecuteOSTask {
     DownloadWebdriver downloader = new DownloadWebdriver();
     JsonObject result = downloader.execute(version);
 
-    if (result.get("error").isJsonNull()) {
+    boolean noError = result.get("error").isJsonArray() && result.get("error").getAsJsonArray().size() == 0;
+    if (noError) {
       RuntimeConfig.getConfig().getWebdriver().setVersion(version);
       RuntimeConfig.getConfig().writeToDisk(RuntimeConfig.getConfigFile());
       getJsonResponse().addKeyValues("new_version", version);
