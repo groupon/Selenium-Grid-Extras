@@ -59,8 +59,9 @@ public class IEDownloader extends Downloader {
 
     setDestinationFile(getVersion() + getBitVersion() + ".zip");
 
+    String versionMajor = version.substring(0, version.lastIndexOf('.'));
     setSourceURL(
-        "https://selenium.googlecode.com/files/IEDriverServer_" + getBitVersion() + "_"
+        "https://selenium-release.storage.googleapis.com/" + versionMajor + "/IEDriverServer_" + getBitVersion() + "_"
         + getVersion() + ".zip");
   }
 
