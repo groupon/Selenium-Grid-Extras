@@ -41,7 +41,7 @@ public class GridStarterTest {
   Pattern
       startHubCommandPattern =
       Pattern.compile(
-          "(java\\s*-cp)\\s*([/\\\\\\w-]*)([:;])([/\\\\\\w-^]*)(1.1.1.jar)\\s*(org.openqa.grid.selenium.GridLauncher)\\s*-role\\s(\\w*)\\s-port\\s(\\d{4})\\s-host\\s([\\d\\.]*)\\s-servlets\\s([\\w\\.]*),([\\w\\.]*)");
+          "(java\\s*-cp)\\s*\"([/\\\\\\w-]*)([:;])([/\\\\\\w-^]*)(1.1.1.jar)\"\\s*(org.openqa.grid.selenium.GridLauncher)\\s*-role\\s(\\w*)\\s-port\\s(\\d{4})\\s-host\\s([\\d\\.]*)\\s-servlets\\s([\\w\\.]*),([\\w\\.]*)");
 
 
   @Before
