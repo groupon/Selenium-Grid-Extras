@@ -40,9 +40,9 @@ package com.groupon.seleniumgridextras.config;
 public class DefaultConfig {
 
   private static Config config;
-  private static final String webDriverDefaultVersion = "2.40.0";
-  private static final String ieDriverDefaultVersion = "2.40.0";
-  private static final String chromeDriverDefaultVersion = "2.9";
+  private static final String webDriverDefaultVersion = "2.42.0";
+  private static final String ieDriverDefaultVersion = "2.42.0";
+  private static final String chromeDriverDefaultVersion = "2.10";
 
   public static Config getDefaultConfig() {
     config = new Config();
