@@ -200,7 +200,7 @@ public class FirstTimeRunConfig {
     String
         host =
         askQuestion("What is the HOST for the Selenium Grid Hub?",
-                    RuntimeConfig.getOS().getHostIp());
+                    "127.0.0.1");
     return host;
   }
 
