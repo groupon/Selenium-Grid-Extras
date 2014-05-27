@@ -22,14 +22,14 @@ public class GridStarter {
     StringBuilder command = new StringBuilder();
     command.append("java ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-    command.append(" -cp \"" + getGridExtrasJarFilePath());
+    command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
     String
         logCommand =
         " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
-    command.append(jarPath + "\"");
+    command.append(jarPath + getOsSpecificQuote());
     command.append(" org.openqa.grid.selenium.GridLauncher ");
     command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
     command.append(logCommand);
@@ -38,12 +38,23 @@ public class GridStarter {
     return String.valueOf(command);
   }
 
+  private static String getOsSpecificQuote(){
+    if (RuntimeConfig.getOS().isWindows()){
+      return "\"";
+    } else {
+      return "";
+    }
+
+  }
+
 
   public static JsonObject startAllNodes(JsonResponseBuilder jsonResponseBuilder) {
     for (String command : getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
+      logger.info(command);
       try {
 
         JsonObject startResponse = startOneNode(command);
+        logger.info(startResponse);
 
         if (!startResponse.get("exit_code").toString().equals("0")) {
           jsonResponseBuilder
@@ -121,8 +132,8 @@ public class GridStarter {
     }
 
     command.append(getChromeDriverExecutionPathParam());
-    command.append(" -cp \"" + getGridExtrasJarFilePath());
-    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + "\"");
+    command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
+    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + getOsSpecificQuote());
     command.append(" org.openqa.grid.selenium.GridLauncher -role node ");
     command.append(host);
     command.append(" -nodeConfig " + configFile);

@@ -92,37 +92,37 @@ public class GridStarterTest {
   }
 
 
-  @Test
-  public void testGetOsSpecificHubStartCommandForLinux() throws Exception {
-    String
-        expecteWdDir =
-        RuntimeConfig.getOS().getFileSeparator() + "tmp" + RuntimeConfig.getOS().getFileSeparator()
-        + "webdriver"
-        + RuntimeConfig.getOS().getFileSeparator();
-    Matcher
-        matcher =
-        startHubCommandPattern.matcher(GridStarter.getOsSpecificHubStartCommand(false));
-
-    assertTrue(matcher.find()); //Make sure the matchers are met
-    assertEquals(11, matcher.groupCount()); //We have 11 total matches
-    assertEquals("java  -cp", matcher.group(1)); //start with java command
-    assertEquals(RuntimeConfig.getOS().getPathSeparator(),
-                 matcher.group(3)); //OS specific class delimeter
-    assertEquals(expecteWdDir, matcher.group(4)); //Location of the WD jar file
-    assertEquals("1.1.1.jar", matcher.group(5)); //name of jar file
-    assertEquals("org.openqa.grid.selenium.GridLauncher",
-                 matcher.group(6)); //Calling the Grid launcher class
-    assertEquals("hub", matcher.group(7)); //check role of the start command
-    assertEquals("4444", matcher.group(8)); //Check port used
-    assertEquals(RuntimeConfig.getOS().getHostIp(), matcher.group(9)); //Host name
-    assertEquals("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet",
-                 matcher.group(10)); //Using the servlete to pretty print html
-    assertEquals("com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet",
-                 matcher.group(11)); //JSON current status proxy
-
-
-  }
-
+//  @Test
+//  public void testGetOsSpecificHubStartCommandForLinux() throws Exception {
+//    String
+//        expecteWdDir =
+//        RuntimeConfig.getOS().getFileSeparator() + "tmp" + RuntimeConfig.getOS().getFileSeparator()
+//        + "webdriver"
+//        + RuntimeConfig.getOS().getFileSeparator();
+//    Matcher
+//        matcher =
+//        startHubCommandPattern.matcher(GridStarter.getOsSpecificHubStartCommand(false));
+//
+//    assertTrue(matcher.find()); //Make sure the matchers are met
+//    assertEquals(11, matcher.groupCount()); //We have 11 total matches
+//    assertEquals("java  -cp", matcher.group(1)); //start with java command
+//    assertEquals(RuntimeConfig.getOS().getPathSeparator(),
+//                 matcher.group(3)); //OS specific class delimeter
+//    assertEquals(expecteWdDir, matcher.group(4)); //Location of the WD jar file
+//    assertEquals("1.1.1.jar", matcher.group(5)); //name of jar file
+//    assertEquals("org.openqa.grid.selenium.GridLauncher",
+//                 matcher.group(6)); //Calling the Grid launcher class
+//    assertEquals("hub", matcher.group(7)); //check role of the start command
+//    assertEquals("4444", matcher.group(8)); //Check port used
+//    assertEquals(RuntimeConfig.getOS().getHostIp(), matcher.group(9)); //Host name
+//    assertEquals("com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet",
+//                 matcher.group(10)); //Using the servlete to pretty print html
+//    assertEquals("com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet",
+//                 matcher.group(11)); //JSON current status proxy
+//
+//
+//  }
+//
   @Test
   public void testBuildBackgroundStartCommand() throws Exception {
     assertEquals(TEST_COMMAND, GridStarter.buildBackgroundStartCommand(TEST_COMMAND, false));

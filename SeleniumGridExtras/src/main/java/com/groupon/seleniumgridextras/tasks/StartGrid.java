@@ -99,14 +99,18 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   private JsonObject startNodes() {
+    System.out.println("Attempting to start Grid Nodes");
     return GridStarter.startAllNodes(getJsonResponse());
   }
 
   private JsonObject startHub() {
+    System.out.println("Attempting to start Grid Hub");
 
     JsonObject serviceStartResponse = ExecuteCommand.execRuntime(
         GridStarter.getOsSpecificHubStartCommand(RuntimeConfig.getOS().isWindows())
         , false);
+
+    logger.info(serviceStartResponse);
 
     if (serviceStartResponse.get("exit_code").toString().equals("0")) {
       getJsonResponse().addKeyValues("out",
