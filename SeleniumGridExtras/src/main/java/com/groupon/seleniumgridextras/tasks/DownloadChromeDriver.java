@@ -73,9 +73,10 @@ public class DownloadChromeDriver extends ExecuteOSTask {
     addResponseDescription("source_url",
                            "Url from which the executable was downloaded. If file already exists, this will be blank, and download will be skipped");
 
+    // bit value should be initialized from configuration
+    this.bit = RuntimeConfig.getConfig().getChromeDriver().getBit();
 
     logger.debug(RuntimeConfig.getConfig());
-
     getJsonResponse()
         .addKeyValues("root_dir", RuntimeConfig.getConfig().getChromeDriver().getDirectory());
     getJsonResponse().addKeyValues("source_url", "");
@@ -90,26 +91,25 @@ public class DownloadChromeDriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey("version")) {
-      return execute();
-    } else {
-
+    if (!parameter.isEmpty() && parameter.containsKey("version")) {
       if (parameter.containsKey("bit")) {
         this.bit = parameter.get("bit").toString();
       } else {
         this.bit = "32";
       }
-
       return execute(parameter.get("version").toString());
+    } else {
+      return execute();
     }
   }
 
   @Override
   public JsonObject execute(String version) {
 
+
     Downloader
         downloader =
-        new ChromeDriverDownloader(version, bit);
+        new ChromeDriverDownloader(version, this.bit);
 
     if (!new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();

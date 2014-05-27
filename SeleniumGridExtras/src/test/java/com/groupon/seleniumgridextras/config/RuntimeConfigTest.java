@@ -65,6 +65,9 @@ public class RuntimeConfigTest {
     assertEquals("1.1.1.1.1", RuntimeConfig.getConfig().getWebdriver().getVersion());
     assertEquals("some_dir", RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
+    assertEquals("64", RuntimeConfig.getConfig().getChromeDriver().getBit());
+    assertEquals("40.0.1.0", RuntimeConfig.getConfig().getChromeDriver().getVersion());
+
     List<String> expectedSetup = new LinkedList<String>();
     assertEquals(expectedSetup, RuntimeConfig.getConfig().getSetup());
 
@@ -82,15 +85,21 @@ public class RuntimeConfigTest {
   private void loadOverwriteConfigs() throws Exception{
     JsonObject fullConfig = new JsonObject();
     JsonObject theConfigMap = new JsonObject();
+    JsonObject chromedriver = new JsonObject();
 
     JsonObject webdriver  = new JsonObject();
     webdriver.addProperty("directory", "some_dir" );
     webdriver.addProperty("version", "1.1.1.1.1" );
 
+    chromedriver.addProperty("bit", "64");
+    chromedriver.addProperty("version", "40.0.1.0");
+
     theConfigMap.add("webdriver", webdriver);
+    theConfigMap.add("chromedriver", chromedriver);
     theConfigMap.add("setup", new JsonArray());
     theConfigMap.addProperty("auto_start_hub", "1");
     theConfigMap.addProperty("auto_start_node", "0");
+
 
 
     File f = new File(RuntimeConfig.getConfigFile());
