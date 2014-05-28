@@ -15,6 +15,8 @@ import static org.junit.Assert.assertEquals;
 public class ConfigFileReaderTest {
 
   private static String configFile = "config_file_reader_test.json";
+  private ConfigFileReader parsedConfig;
+  private Map expectedHashMap;
 
   @Before
   public void setUp() throws Exception {
@@ -23,6 +25,13 @@ public class ConfigFileReaderTest {
     Config config = new Config(true);
     config.writeToDisk(RuntimeConfig.getConfigFile());
 
+    parsedConfig = new ConfigFileReader(configFile);
+
+    Map expectedNodeFiles = new HashMap();
+    expectedNodeFiles.put("node_config_files", new LinkedList());
+
+    expectedHashMap = new HashMap();
+    expectedHashMap.put("theConfigMap", expectedNodeFiles);
   }
 
   @After
@@ -37,22 +46,23 @@ public class ConfigFileReaderTest {
   }
 
   @Test
-  public void testFullDefaultConfig() {
-    ConfigFileReader c = new ConfigFileReader(configFile);
-    assertEquals(true, c.hasContent());
+  public void testWriteToDisk() throws Exception {
+    Map h = parsedConfig.toHashMap();
+    h.put("test", "This is a test");
+    expectedHashMap.put("test", "This is a test");
 
-    Map expectedNodeFiles = new HashMap();
-    expectedNodeFiles.put("node_config_files", new LinkedList());
-
-    Map expected = new HashMap();
-    expected.put("theConfigMap", expectedNodeFiles);
-
-    assertEquals(expected, c.toHashMap());
-
+    parsedConfig.overwriteExistingConfig(h);
+    assertEquals(expectedHashMap, parsedConfig.toHashMap());
   }
 
   @Test
-  public void testEmptyConfig() {
+  public void testFullDefaultConfig() throws Exception {
+    assertEquals(true, parsedConfig.hasContent());
+    assertEquals(expectedHashMap, parsedConfig.toHashMap());
+  }
+
+  @Test
+  public void testEmptyConfig() throws Exception {
     ConfigFileReader c = new ConfigFileReader("foo.json");
     assertEquals(false, c.hasContent());
     assertEquals(new HashMap(), c.toHashMap());
