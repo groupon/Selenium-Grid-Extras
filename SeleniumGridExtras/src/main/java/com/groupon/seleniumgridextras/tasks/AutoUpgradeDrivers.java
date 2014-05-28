@@ -64,7 +64,6 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
     ConfigFileReader configOnDisk = new ConfigFileReader(RuntimeConfig.getConfigFile());
     Map configHash = configOnDisk.toHashMap();
 
-
     if (updateChromeDriver) {
       String
           newChromeDriverVersion =
@@ -94,9 +93,10 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       updateVersionFor(configHash, "iedriver", newIEDriverVersion);
     }
 
-
-    if (updateChromeDriver || updateIEDriver || updateWebDriver){
-      String message = "Update was detected for one or more versions of the drivers. You may need to restart Grid Extras for new versions to work";
+    if (updateChromeDriver || updateIEDriver || updateWebDriver) {
+      String
+          message =
+          "Update was detected for one or more versions of the drivers. You may need to restart Grid Extras for new versions to work";
 
       systemAndLog(message);
       getJsonResponse().addKeyValues("out", message);
@@ -107,23 +107,24 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
 
     }
 
-
     return getJsonResponse().getJson();
   }
 
-  protected void updateVersionFor(Map inputMap, String driver, String version){
-    ((Map)((Map)inputMap.get("theConfigMap")).get(driver)).put("version", version);
+  protected void updateVersionFor(Map inputMap, String driver, String version) {
+    ((Map) ((Map) inputMap.get("theConfigMap")).get(driver)).put("version", version);
   }
 
   @Override
   public boolean initialize() {
 
-    try {
-      execute();
-    } catch (Exception e) {
-      printInitilizedFailure();
-      logger.error(e.toString());
-      return false;
+    if (RuntimeConfig.getConfig().getAutoUpdateDrivers()) {
+      try {
+        execute();
+      } catch (Exception e) {
+        printInitilizedFailure();
+        logger.error(e.toString());
+        return false;
+      }
     }
 
     printInitilizedSuccessAndRegisterWithAPI();

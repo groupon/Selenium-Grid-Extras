@@ -88,24 +88,27 @@ public class FirstTimeRunConfig {
         askQuestion(
             "Would you like WebDriver, IEDriver and ChromeDriver to auto update (1-yes/0-no)", "1");
 
+    WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
+    String versionOfChrome = manager.getChromeDriverLatestVersion().getPrettyPrintVersion(".");
+    String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
+    String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
+
     if (answer.equals("1")) {
       defaultConfig.setAutoUpdateDrivers("1");
-
-      WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
-
-      defaultConfig.getWebdriver()
-          .setVersion(manager.getWedriverLatestVersion().getPrettyPrintVersion("."));
-      defaultConfig.getIEdriver()
-          .setVersion(manager.getIeDriverLatestVersion().getPrettyPrintVersion("."));
-      defaultConfig.getChromeDriver()
-          .setVersion(manager.getChromeDriverLatestVersion().getPrettyPrintVersion("."));
-
 
     } else {
       defaultConfig.setAutoUpdateDrivers("0");
       System.out.println(
           "Drivers will not be automatically updated.\n You can change the versions of each driver later in the config");
+
+      versionOfWebDriver = askQuestion("What version of WebDriver Jar should we use?", versionOfWebDriver);
+      versionOfChrome = askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
+      versionOfIEDriver = askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
     }
+
+    defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
+    defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
+    defaultConfig.getChromeDriver().setVersion(versionOfChrome);
 
     System.out
         .println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
