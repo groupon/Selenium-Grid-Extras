@@ -146,8 +146,8 @@ public class DownloadChromeDriver extends ExecuteOSTask {
       }
 
       if (!chromeDriverExecutable.exists()) {
-        logger.debug("No Chrome Driver Executable, will download");
-        logger.debug(execute().toString());
+        systemAndLog("Downloading Chrome Driver " + RuntimeConfig.getConfig().getChromeDriver().getVersion());
+        logger.info(execute().toString());
       }
 
 

@@ -144,8 +144,8 @@ public class DownloadIEDriver extends ExecuteOSTask {
       }
 
       if (!ieDriverExe.exists()) {
-        logger.debug("No IE Driver Executable, will download");
-        logger.debug(execute().toString());
+        systemAndLog("Download IE Driver Executable " + RuntimeConfig.getConfig().getIEdriver().getVersion());
+        logger.info(execute().toString());
       }
 
 

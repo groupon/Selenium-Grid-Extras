@@ -131,8 +131,8 @@ public class DownloadWebdriver extends ExecuteOSTask {
       }
 
       if (!webdriverJar.exists()) {
-        logger.debug("no jar");
-        execute();
+        systemAndLog("Downloading WebDriver Jar " + RuntimeConfig.getConfig().getWebdriver().getVersion());
+        logger.info(execute().toString());
       }
 
 
