@@ -73,7 +73,9 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       RuntimeConfig.getConfig().getChromeDriver().setVersion(newChromeDriverVersion);
 
       updateVersionFor(configHash, "chromedriver", newChromeDriverVersion);
+      getJsonResponse().addKeyValues("new_chrome_driver", newChromeDriverVersion);
     }
+
 
     if (updateWebDriver) {
       String
@@ -82,6 +84,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       logger.info("WebDriver JAR " + genericUpdate + " " + newWebDriverVersion);
       RuntimeConfig.getConfig().getWebdriver().setVersion(newWebDriverVersion);
       updateVersionFor(configHash, "webdriver", newWebDriverVersion);
+      getJsonResponse().addKeyValues("new_web_driver_jar", newWebDriverVersion);
     }
 
     if (updateIEDriver) {
@@ -91,6 +94,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       logger.info("IE Driver " + genericUpdate + " " + newIEDriverVersion);
       RuntimeConfig.getConfig().getIEdriver().setVersion(newIEDriverVersion);
       updateVersionFor(configHash, "iedriver", newIEDriverVersion);
+      getJsonResponse().addKeyValues("new_ie_driver", newIEDriverVersion);
     }
 
     if (updateChromeDriver || updateIEDriver || updateWebDriver) {
