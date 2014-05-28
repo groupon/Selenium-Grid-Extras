@@ -37,7 +37,6 @@
 
 package com.groupon.seleniumgridextras.config;
 
-import com.google.gson.Gson;
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
@@ -49,7 +48,6 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -123,24 +121,20 @@ public class RuntimeConfig {
     config = DefaultConfig.getDefaultConfig();
     logger.debug(config);
 
-    String configString = readConfigFile(configFile);
-    logger.debug(configString);
-    //Reason to use the "" instead of checking if the config already exists is because
-    //if the file does exist but there is any formatting error, or parsing error, etc..
-    //We assume file does not exist and overwrite it with good configs.
-    if (configString != "") {
-      logger.info("Found previously made config, will load from it");
-      overwriteValues = new Gson().fromJson(configString, HashMap.class);
-      logger.debug(overwriteValues);
-    } else {
+    ConfigFileReader configFileObject = new ConfigFileReader(configFile);
+
+    logger.debug(configFileObject.toHashMap());
+
+    if (!configFileObject.hasContent()) {
       logger.info("Previous config was not found, will ask input from user");
       Config userInput = Config.initilizedFromUserInput();
       logger.debug(userInput);
       userInput.writeToDisk(RuntimeConfig.getConfigFile());
-      configString = readConfigFile(configFile);
-      logger.debug(configString);
-      overwriteValues = new Gson().fromJson(configString, HashMap.class);
     }
+
+    configFileObject.readConfigFile();
+    overwriteValues = configFileObject.toHashMap();
+    logger.info(overwriteValues);
     config.overwriteConfig(overwriteValues);
     config.loadNodeClasses();
     config.writeToDisk(RuntimeConfig.getConfigFile() + ".example");
@@ -149,14 +143,14 @@ public class RuntimeConfig {
   }
 
   public static File getSeleniumGridExtrasJarFile() {
-      try {
-          return new File(
-              SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-      } catch (URISyntaxException e) {
-          logger.error("Could not get jar file");
-          logger.error(e);
-          throw new RuntimeException(e);
-      }
+    try {
+      return new File(
+          SeleniumGridExtras.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+    } catch (URISyntaxException e) {
+      logger.error("Could not get jar file");
+      logger.error(e);
+      throw new RuntimeException(e);
+    }
   }
 
 
@@ -165,22 +159,6 @@ public class RuntimeConfig {
         .getFullPathNoEndSeparator(getSeleniumGridExtrasJarFile().getAbsolutePath());
   }
 
-  private static String readConfigFile(String filePath) {
-    String returnString = "";
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(filePath));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        returnString = returnString + line;
-      }
-    } catch (FileNotFoundException error) {
-      logger.info("File " + filePath + " does not exist, going to use default configs");
-    } catch (IOException error) {
-      logger.info("Error reading" + filePath + ". Going with default configs");
-    }
-
-    return returnString;
-  }
 
   public static Config getConfig() {
     return config;
