@@ -42,11 +42,12 @@ public class WebDriverReleaseManager {
     allProducts.put(CHROME_DRIVER, new LinkedList<WebDriverRelease>());
   }
 
-  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL) throws DocumentException {
+  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL)
+      throws DocumentException {
 
-    System.out.println("Checking the latest version of WebDriver, IEDriver, ChromeDriver from");
-    System.out.println(webDriverAndIEDriverURL.toExternalForm());
-    System.out.println("and from \n" + chromeDriverVersionURL.toExternalForm());
+    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver from "
+                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL
+        .toExternalForm());
     initialize();
 
     SAXReader reader = new SAXReader();
@@ -91,7 +92,7 @@ public class WebDriverReleaseManager {
     return this.latestIEDriverVersion;
   }
 
-  public WebDriverRelease getChromeDriverLatestVersion(){
+  public WebDriverRelease getChromeDriverLatestVersion() {
     return this.latestChromeDriverVersion;
   }
 
@@ -111,7 +112,7 @@ public class WebDriverReleaseManager {
     return highestVersion;
   }
 
-  public void loadChromeDriverVersionFromURL(URL url){
+  public void loadChromeDriverVersionFromURL(URL url) {
     InputStream in = null;
     try {
       in = url.openStream();
@@ -125,7 +126,7 @@ public class WebDriverReleaseManager {
     }
   }
 
-  public void loadChromeDriverVersion(String version){
+  public void loadChromeDriverVersion(String version) {
     this.latestChromeDriverVersion = new ChromeDriverRelease(version);
   }
 
