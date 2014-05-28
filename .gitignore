@@ -8,5 +8,14 @@ shared/*
 selenium_grid_extras_config.json
 webdriver/*
 SeleniumGridExtras/SeleniumGridExtras.iml
-SeleniumGridExtras/target/
+SeleniumGridExtras/target/*
 tmp
+log/*
+SeleniumGridExtras/log/*
+.DS_Store
+node_5555.json
+node_5556.json
+node_5557.json
+node_5558.json
+selenium_grid_extras_config.json
+selenium_grid_extras_config.json.example
