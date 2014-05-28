@@ -170,4 +170,9 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
     return dependencies;
   }
 
+  protected void systemAndLog(String output){
+    System.out.println(output);
+    logger.info(output);
+  }
+
 }
