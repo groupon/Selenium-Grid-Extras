@@ -125,8 +125,7 @@ public class DefaultConfig {
 
 
   private static void loadEnabledPlugins() {
-    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
-    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.UpgradeWebdriver");
+
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Setup");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Teardown");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.MoveMouse");
@@ -146,10 +145,13 @@ public class DefaultConfig {
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGrid");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetConfig");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGridExtras");
-    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
-    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadChromeDriver");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.SystemInfo");
+
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.AutoUpgradeDrivers");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadIEDriver");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadChromeDriver");
   }
 
   private static void loadDisabledPlugins() {
