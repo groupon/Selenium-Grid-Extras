@@ -43,8 +43,10 @@ public class ConfigFileReader {
     }
   }
 
-  protected void readConfigFile(){
-
+  public void readConfigFile(){
+    //Reason to use the "" instead of checking if the config already exists is because
+    //if the file does exist but there is any formatting error, or parsing error, etc..
+    //We assume file does not exist and overwrite it with good configs.
     String readString = "";
     try {
       BufferedReader reader = new BufferedReader(new FileReader(this.filePath));
