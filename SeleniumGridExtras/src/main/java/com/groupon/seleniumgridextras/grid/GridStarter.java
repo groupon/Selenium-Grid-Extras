@@ -123,6 +123,10 @@ public class GridStarter {
       host = " -host " + RuntimeConfig.getOS().getHostIp();
     }
 
+    if (RuntimeConfig.getOS().getHostName() != null){
+      host = " -friendlyHostName " + RuntimeConfig.getOS().getHostName();
+    }
+
     StringBuilder command = new StringBuilder();
     command.append("java ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
