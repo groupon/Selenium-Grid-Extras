@@ -1,3 +1,4 @@
+1.2.5
 1.2.4 - Added ability to self update all of the drivers if a new version was released
       - Adding Safari as a capability
       - Add the host ip back into the mix, by adding it as a CLI flag that is generated on the fly
