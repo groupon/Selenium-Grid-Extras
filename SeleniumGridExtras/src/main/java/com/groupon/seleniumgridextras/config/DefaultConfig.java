@@ -40,8 +40,8 @@ package com.groupon.seleniumgridextras.config;
 public class DefaultConfig {
 
   private static Config config;
-  private static final String webDriverDefaultVersion = "2.42.0";
-  private static final String ieDriverDefaultVersion = "2.42.0";
+  private static final String webDriverDefaultVersion = "2.41.0";
+  private static final String ieDriverDefaultVersion = "2.41.0";
   private static final String chromeDriverDefaultVersion = "2.10";
 
   public static Config getDefaultConfig() {
@@ -57,6 +57,7 @@ public class DefaultConfig {
     loadGridConfig();
     loadSharedDir();
     setAutoUpdateDrivers("1");
+    setRebootAfterSessionCount("10");
 
     return config;
   }
@@ -184,6 +185,10 @@ public class DefaultConfig {
 
   private static void loadSharedDir() {
     config.setSharedDir("shared");
+  }
+
+  public static void setRebootAfterSessionCount(String sessionCount){
+    config.setRebootAfterSessions(sessionCount);
   }
 
 

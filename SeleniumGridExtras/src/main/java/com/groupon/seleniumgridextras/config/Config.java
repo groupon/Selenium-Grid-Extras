@@ -43,6 +43,7 @@ public class Config {
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
 
   public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
+  private static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
 
   private static Logger logger = Logger.getLogger(Config.class);
 
@@ -108,6 +109,8 @@ public class Config {
     getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
 
     getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
+
+    getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
 
   }
 
@@ -394,5 +397,13 @@ public class Config {
 
   public String getDefaultRole() {
     return (String) getConfigMap().get(DEFAULT_ROLE);
+  }
+
+  public void setRebootAfterSessions(String sessions){
+    getConfigMap().put(REBOOT_AFTER_SESSIONS, sessions);
+  }
+
+  public int getRebootAfterSessions(){
+    return Integer.valueOf((String)getConfigMap().get(REBOOT_AFTER_SESSIONS));
   }
 }

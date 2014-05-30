@@ -69,6 +69,8 @@ public class FirstTimeRunConfig {
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
 
+    setRebootAfterSessionLimit(defaultConfig);
+
     setDriverAutoUpdater(defaultConfig);
 
     final
@@ -80,6 +82,15 @@ public class FirstTimeRunConfig {
     System.out.println(thankYouMessage);
 
     return defaultConfig;
+  }
+
+  private static void setRebootAfterSessionLimit(Config defaultConfig){
+    String
+        answer =
+        askQuestion("Restart after how many tests (0-never restart)", "10");
+
+    defaultConfig.setRebootAfterSessions(answer);
+
   }
 
   private static void setDriverAutoUpdater(Config defaultConfig) {
