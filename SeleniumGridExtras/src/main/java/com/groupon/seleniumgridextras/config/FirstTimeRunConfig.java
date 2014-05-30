@@ -36,7 +36,6 @@
  */
 package com.groupon.seleniumgridextras.config;
 
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 
