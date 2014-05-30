@@ -46,6 +46,7 @@ public class RuntimeConfigTest {
 
     List<String> expectedSetup = new LinkedList<String>();
     expectedSetup.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
+    expectedSetup.add("com.groupon.seleniumgridextras.tasks.SessionCounterStartSession");
 
     assertEquals(expectedSetup, RuntimeConfig.getConfig().getSetup());
 

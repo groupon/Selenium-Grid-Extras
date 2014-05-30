@@ -84,10 +84,12 @@ public class DefaultConfig {
 
   private static void loadSetupConfig() {
     config.addSetupTask("com.groupon.seleniumgridextras.tasks.MoveMouse");
+    config.addSetupTask("com.groupon.seleniumgridextras.tasks.SessionCounterStartSession");
   }
 
   private static void loadTeardownConfig() {
     config.addTeardownTask("com.groupon.seleniumgridextras.tasks.MoveMouse");
+    config.addTeardownTask("com.groupon.seleniumgridextras.tasks.SessionCounterStopSession");
   }
 
 

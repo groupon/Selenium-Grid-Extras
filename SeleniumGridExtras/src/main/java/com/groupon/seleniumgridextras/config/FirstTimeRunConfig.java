@@ -36,6 +36,7 @@
  */
 package com.groupon.seleniumgridextras.config;
 
+
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 
@@ -120,28 +121,23 @@ public class FirstTimeRunConfig {
 
   }
 
-  private static List<GridNode> configureNodes(List<Capability> capabilities, String hubHost,
+  private static void configureNodes(List<Capability> capabilities, String hubHost,
                                                String hubPort, Config defaultConfig) {
-    List<GridNode> nodes = new LinkedList<GridNode>();
+    GridNode node = new GridNode();
     int nodePort = 5555;
 
+    node.getConfiguration().setHubHost(hubHost);
+    node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
+    node.getConfiguration().setPort(nodePort);
+
     for (Capability cap : capabilities) {
-      GridNode node = new GridNode();
-
       node.getCapabilities().add(cap);
-      node.getConfiguration().setHubHost(hubHost);
-      node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
-      node.getConfiguration().setPort(nodePort);
-
-      String configFileName = "node_" + nodePort + ".json";
-
-      node.writeToFile(configFileName);
-      defaultConfig.addNode(node, configFileName);
-
-      nodePort++;
     }
 
-    return nodes;
+    String configFileName = "node_" + nodePort + ".json";
+
+    node.writeToFile(configFileName);
+    defaultConfig.addNode(node, configFileName);
   }
 
 

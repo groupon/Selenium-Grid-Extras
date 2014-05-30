@@ -40,6 +40,8 @@ package com.groupon.seleniumgridextras.config;
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
+import com.groupon.seleniumgridextras.grid.SessionTracker;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
@@ -60,6 +62,7 @@ public class RuntimeConfig {
   private final static int gridExtrasPort = 3000;
   private static Logger logger = Logger.getLogger(RuntimeConfig.class);
   private static WebDriverReleaseManager releaseManager;
+  private static SessionTracker sessionTracker;
 
   public static int getGridExtrasPort() {
     return gridExtrasPort;
@@ -166,6 +169,14 @@ public class RuntimeConfig {
 
   public static OS getOS() {
     return currentOS;
+  }
+
+  public static SessionTracker getTestSessionTracker(){
+    if (sessionTracker == null){
+      sessionTracker = new SessionTracker();
+    }
+
+    return sessionTracker;
   }
 
 }

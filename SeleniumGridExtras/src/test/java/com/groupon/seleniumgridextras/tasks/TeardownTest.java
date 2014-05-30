@@ -83,6 +83,7 @@ public class TeardownTest {
       Long exitCode = new Long(0);
       JsonArray expectedClasses = new JsonArray();
       expectedClasses.add(new JsonPrimitive("MoveMouse"));
+      expectedClasses.add(new JsonPrimitive("SessionCounterStopSession"));
 
       assertEquals((Object) exitCode, result.get("exit_code").getAsLong());
       assertEquals(expectedClasses, result.get("classes_to_execute"));
@@ -105,7 +106,7 @@ public class TeardownTest {
     if (!java.awt.GraphicsEnvironment.isHeadless()) {
 
       assertEquals(
-          new JsonParser().parse("{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"MoveMouse\"],\"out\":[]}"),
+          new JsonParser().parse("{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"MoveMouse\", \"SessionCounterStopSession\"],\"out\":[]}"),
           task.getJsonResponse().getJson());
 
       assertEquals("List of full canonical classes to execute on Tear-Down",
