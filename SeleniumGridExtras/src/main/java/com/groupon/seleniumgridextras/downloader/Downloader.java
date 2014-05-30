@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.downloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +54,7 @@ public abstract class Downloader {
   protected String destinationFile;
   protected String destinationDir;
 
+  private static Logger logger = Logger.getLogger(Downloader.class);
 
   public boolean download(){
     return startDownload();
@@ -89,13 +91,18 @@ public abstract class Downloader {
   protected boolean startDownload(){
     try {
       URL url = new URL(getSourceURL());
+      logger.info("Starting to download from " + url);
       FileUtils.copyURLToFile(url, getDestinationFileFullPath());
+      logger.info("Download complete");
       return true;
     } catch (MalformedURLException error){
+      logger.error(error.toString());
       setErrorMessage(error.toString());
     } catch (IOException error) {
+      logger.error(error.toString());
       setErrorMessage(error.toString());
     }
+    logger.error("Download failed");
     return false;
   }
 
