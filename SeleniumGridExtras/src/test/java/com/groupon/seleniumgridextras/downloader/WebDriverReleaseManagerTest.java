@@ -1,7 +1,6 @@
 package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +16,9 @@ public class WebDriverReleaseManagerTest {
 
   @Before
   public void setUp() throws Exception {
-    releaseManager = new WebDriverReleaseManager("fixtures/selenium_release_manifest.xml", "2.10");
+      URL webDriverAndIEDriverURL = ClassLoader.getSystemResource("fixtures/selenium_release_manifest.xml");
+      URL chromeDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
+      releaseManager = new WebDriverReleaseManager(webDriverAndIEDriverURL, chromeDriverVersionURL);
   }
 
   @Test
