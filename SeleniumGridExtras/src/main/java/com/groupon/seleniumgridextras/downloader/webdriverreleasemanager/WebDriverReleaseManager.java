@@ -2,22 +2,16 @@ package com.groupon.seleniumgridextras.downloader.webdriverreleasemanager;
 
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
-import org.apache.log4j.Logger;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import java.util.*;
 
 
 public class WebDriverReleaseManager {
@@ -55,17 +49,6 @@ public class WebDriverReleaseManager {
     loadWebDriverAndIEDriverVersions(parsedXml);
     loadChromeDriverVersionFromURL(chromeDriverVersionURL);
   }
-
-  public WebDriverReleaseManager(String webDriverAndIEDriverXml, String chromeDriverVersion)
-      throws DocumentException {
-    initialize();
-
-    SAXReader reader = new SAXReader();
-    parsedXml = reader.read(webDriverAndIEDriverXml);
-    loadWebDriverAndIEDriverVersions(parsedXml);
-    loadChromeDriverVersion(chromeDriverVersion);
-  }
-
 
   public int getWebdriverVersionCount() {
     return allProducts.get(WEBDRIVER_JAR).size();
