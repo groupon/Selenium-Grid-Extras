@@ -65,7 +65,7 @@ public class FirstTimeRunConfig {
     String hubHost = getGridHubHost();
     String hubPort = getGridHubPort();
 
-    List<Capability> caps = getCapabilitiesFromUser();
+    List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
 
@@ -101,9 +101,12 @@ public class FirstTimeRunConfig {
       System.out.println(
           "Drivers will not be automatically updated.\n You can change the versions of each driver later in the config");
 
-      versionOfWebDriver = askQuestion("What version of WebDriver Jar should we use?", versionOfWebDriver);
-      versionOfChrome = askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
-      versionOfIEDriver = askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
+      versionOfWebDriver =
+          askQuestion("What version of WebDriver Jar should we use?", versionOfWebDriver);
+      versionOfChrome =
+          askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
+      versionOfIEDriver =
+          askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
     }
 
     defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
@@ -143,37 +146,41 @@ public class FirstTimeRunConfig {
   }
 
 
-  private static List<Capability> getCapabilitiesFromUser() {
+  private static List<Capability> getCapabilitiesFromUser(Config defaultConfig) {
+
     List<Capability> chosenCapabilities = new LinkedList<Capability>();
 
-    String platform = askQuestion(
-        "What is node Platform? (WINDOWS|XP|VISTA|MAC|LINUX|UNIX|ANDROID)",
-        guessPlatform());
+    if (defaultConfig.getAutoStartNode()) {
 
-    for (Class currentCapabilityClass : Capability.getSupportedCapabilities().keySet()) {
-      String
-          value =
-          askQuestion(
-              "Will this node run '" + currentCapabilityClass.getSimpleName()
-              + "' (1-yes/0-no)", "0");
+      String platform = askQuestion(
+          "What is node Platform? (WINDOWS|XP|VISTA|MAC|LINUX|UNIX|ANDROID)",
+          guessPlatform());
 
-      if (value.equals("1")) {
-        Capability capability;
-        try {
-          capability =
-              (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
-          capability.setPlatform(platform.toUpperCase());
+      for (Class currentCapabilityClass : Capability.getSupportedCapabilities().keySet()) {
+        String
+            value =
+            askQuestion(
+                "Will this node run '" + currentCapabilityClass.getSimpleName()
+                + "' (1-yes/0-no)", "0");
+
+        if (value.equals("1")) {
+          Capability capability;
+          try {
+            capability =
+                (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
+            capability.setPlatform(platform.toUpperCase());
 //          capability.setBrowserVersion(askQuestion(
 //              "What version of '" + capability.getBrowserName() + "' is installed?"));
 
-          chosenCapabilities.add(capability);
-        } catch (Exception e) {
-          logger.warn("Warning: Had an issue creating capability for " + currentCapabilityClass
-              .getSimpleName());
-          logger.warn(e.toString());
+            chosenCapabilities.add(capability);
+          } catch (Exception e) {
+            logger.warn("Warning: Had an issue creating capability for " + currentCapabilityClass
+                .getSimpleName());
+            logger.warn(e.toString());
+          }
         }
-      }
 
+      }
     }
 
     return chosenCapabilities;
