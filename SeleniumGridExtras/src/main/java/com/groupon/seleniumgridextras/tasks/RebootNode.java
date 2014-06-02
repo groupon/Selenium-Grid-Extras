@@ -55,11 +55,21 @@ public class RebootNode extends ExecuteOSTask {
 
   @Override
   public String getWindowsCommand() {
+    return getWindowsCommand("");
+  }
+
+  @Override
+  public String getWindowsCommand(String param) {
     return "shutdown -r -t 1 -f";
   }
 
   @Override
   public String getMacCommand() {
+    return getMacCommand("");
+  }
+
+  @Override
+  public String getMacCommand(String param) {
     return "shutdown -r now";
   }
 }

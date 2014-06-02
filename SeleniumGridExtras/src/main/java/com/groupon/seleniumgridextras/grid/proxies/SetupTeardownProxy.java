@@ -38,7 +38,12 @@
 
 package com.groupon.seleniumgridextras.grid.proxies;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import com.groupon.seleniumgridextras.ExecuteCommand;
+
+import org.openqa.grid.common.exception.RemoteUnregisterException;
 
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
@@ -46,7 +51,6 @@ import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
-import org.openqa.selenium.remote.CapabilityType;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -54,67 +58,149 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
 
-  private Pattern urlPattern = Pattern.compile("http://([^:/]+)");
   private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
+  private boolean available = true;
+  private boolean restarting = false;
+
 
   public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
-    logger.info("Attaching a node with " + getClass().getSimpleName());
+    logger.info("Attaching a node: " + getHost());
   }
+
+  @Override
+  public TestSession getNewSession(Map<String, Object> requestedCapability) {
+    synchronized (this) {
+      if (timeToReboot() && !this.isBusy()) {
+        setAvailable(false);
+        setRestarting(false);
+        killBrowserForCurrentSession();
+        stopGridNode();
+        rebootGridExtrasNode();
+        unregister();
+      }
+      if (!isAvailable() || this.isBusy()) {
+        return null;
+      } else {
+        TestSession session = super.getNewSession(requestedCapability);
+        if (session == null) {
+          return null;
+        } else {
+          return session;
+        }
+      }
+
+    }
+  }
+
 
   @Override
   public void beforeSession(TestSession session) {
     super.beforeSession(session);
-    killBrowserForCurrentSession(session);
-    callAction(session, "setup");
+    callRemoteGridExtras("setup");
   }
 
   @Override
   public void afterSession(TestSession session) {
     super.afterSession(session);
-    killBrowserForCurrentSession(session);
-    callAction(session, "teardown");
+    callRemoteGridExtras("teardown");
   }
 
-  private void killBrowserForCurrentSession(TestSession session) {
-       Map<String, Object> cap = session.getRequestedCapabilities();
-       String browser = (String) cap.get(CapabilityType.BROWSER_NAME);
+  protected void stopGridNode() {
+    logger.info("Asking " + getHost() + " to stop grid node politely");
+    logger.info(callRemoteGridExtras("stop_grid?port=5555"));
+  }
 
-       if (browser.equals("internet explorer")) {
-         callAction(session, "kill_ie");
-       } else if (browser.equals("chrome")) {
-         callAction(session, "kill_chrome");
-       } else if (browser.equals("firefox")){
-         callAction(session, "kill_firefox");
-       }
-     }
+  protected void killBrowserForCurrentSession() {
+    logger.info("Asking " + getHost() + " to politely kill all browsers");
 
-  synchronized private void callAction(TestSession session, String action) {
+    logger.info(callRemoteGridExtras("kill_ie"));
+    logger.info(callRemoteGridExtras("kill_safari"));
+    logger.info(callRemoteGridExtras("kill_chrome"));
+    logger.info(callRemoteGridExtras("kill_firefox"));
+  }
+
+  private void rebootGridExtrasNode() {
+    logger.info("Asking SeleniumGridExtras to reboot " + getHost());
+    logger.info(callRemoteGridExtras("reboot"));
+  }
+
+  private JsonObject callRemoteGridExtras(String action) {
+    String returnedString;
+
     try {
-      String nodeAddress = session.getSlot().getProxy().getRemoteHost().toString();
-      Matcher matcher = urlPattern.matcher(nodeAddress);
-      String cleanAddress = "";
-      while (matcher.find()) {
-        cleanAddress = matcher.group();
-      }
-      URL url = new URL(cleanAddress + ":3000/" + action);
+      URL url = new URL("http://" + getHost() + ":3000/" + action);
       HttpURLConnection conn = (HttpURLConnection) url.openConnection();
       conn.setRequestMethod("GET");
-      logger.info(ExecuteCommand.inputStreamToString(conn.getInputStream()));
+      returnedString = ExecuteCommand.inputStreamToString(conn.getInputStream());
+
+      JsonParser j = new JsonParser();
+      return (JsonObject) j.parse(returnedString);
+
     } catch (MalformedURLException e) {
       logger.error(e.toString());
+      e.printStackTrace();
     } catch (ProtocolException e) {
       logger.error(e.toString());
+      e.printStackTrace();
     } catch (IOException e) {
       logger.error(e.toString());
+      e.printStackTrace();
     }
+
+    return null;
   }
 
+  protected String getHost() {
+    return this.getRemoteHost().getHost();
+  }
+
+  protected boolean isAvailable() {
+    return this.available;
+  }
+
+  protected void setAvailable(boolean available) {
+    this.available = available;
+  }
+
+  protected boolean timeToReboot() {
+    JsonObject status = callRemoteGridExtras("grid_status");
+
+    boolean nodeRunning = status.get("node_running").getAsBoolean();
+    int sessionsStarted = status.get("node_sessions_started").getAsInt();
+    int sessionLimit = status.get("node_sessions_limit").getAsInt();
+
+    if (!nodeRunning) {
+      logger.info("The grid node on " + getHost() + " does not seem to be running");
+    } else if (sessionLimit == 0) {
+      return false;
+    } else if (sessionsStarted >= sessionLimit) {
+      logger.info("Node " + getHost() + " has reached " + sessionsStarted + " of " + sessionLimit
+                  + " test session, time to reboot");
+    } else {
+      return false;
+
+    }
+    setAvailable(false);
+    return true;
+  }
+
+  public void unregister() {
+    logger.info("Sending Un register command for " + getHost());
+    addNewEvent(new RemoteUnregisterException("Unregistering the node."));
+  }
+
+  public boolean isRestarting() {
+    return this.restarting;
+  }
+
+  public void setRestarting(boolean restarting) {
+    this.restarting = restarting;
+  }
 
 }
