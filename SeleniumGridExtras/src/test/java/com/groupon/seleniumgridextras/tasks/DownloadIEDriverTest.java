@@ -37,6 +37,10 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -81,10 +85,11 @@ public class DownloadIEDriverTest {
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    assertEquals(
-        "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":[\"/tmp/webdriver/iedriver\"],\"file\":[\"\"],\"file_full_path\":[\""
-        + "\"],\"source_url\":[\"\"]}",
-        task.getJsonResponse().toString());
+      final JsonElement rootDir = new JsonPrimitive(RuntimeConfig.getConfig().getIEdriver().getDirectory());
+      final String expectedResponse = "{\"exit_code\":0,\"out\":[],\"error\":[],\"root_dir\":["
+              + rootDir.toString() + "],\"file\":[\"\"],\"file_full_path\":[\""
+              + "\"],\"source_url\":[\"\"]}";
+    assertEquals(expectedResponse , task.getJsonResponse().toString());
   }
 
   @Test
