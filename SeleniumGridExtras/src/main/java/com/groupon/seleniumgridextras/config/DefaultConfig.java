@@ -97,9 +97,7 @@ public class DefaultConfig {
   private static void loadWebDriverInfo() {
     String tmpDir = RuntimeConfig.getOS().getFileSeparator();
 
-    if (!RuntimeConfig.getOS().isWindows() || true) {
-      tmpDir = tmpDir + "tmp" + RuntimeConfig.getOS().getFileSeparator();
-    }
+    tmpDir = tmpDir + "tmp" + RuntimeConfig.getOS().getFileSeparator();
 
     config.getWebdriver().setDirectory(tmpDir + "webdriver");
     config.getWebdriver().setVersion(DefaultConfig.getWebDriverDefaultVersion());
