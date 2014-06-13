@@ -7,10 +7,12 @@ This project is designed to help you manage your Selenium Grid installation by g
 Setup Instructions
 ------------------
 
-[Compiled Jars](https://github.com/groupon/Selenium-Grid-Extras/releases)
+Obtain the latest version of Grid Extras Jars, by either downloading pre-compiled binaries or compiling from source
+
+### [Compiled Jars](https://github.com/groupon/Selenium-Grid-Extras/releases) ###
 
 
-Compile from source:
+### Compile from source: ###
 
 ```bash
 git clone https://github.com/groupon/Selenium-Grid-Extras.git
@@ -33,7 +35,7 @@ Starting with release 1.3.0 the nodes have an option of automatically restarting
 ### Windows ###
 
 1. [Follow Microsoft's Technical Help](http://technet.microsoft.com/en-us/magazine/ee872306.aspx)
-2. ...
+2. Add start up batch script to StartUp directory or set up a Scheduled Task to start the batch file automatically
 3. No need to setup permission as long as current user can run the following command in the Terminal
 ```bash
 shutdown -r -t 1 -f
@@ -41,8 +43,22 @@ shutdown -r -t 1 -f
 
 ### OS X ###
 
+1. Turn on Automatic Login option and make the desired user auto login
+2. Set up the shell script which starts Grid Extras to run automatically.
+3. Modify the /etc/sudoers to contain this line, where the $USER is the current user that will be used for running grid node.
+```bash
+$USER ALL=(ALL) NOPASSWD: /sbin/shutdown
+```
+
+
 ### Linux ###
 
+1. ...
+2. Set up the shell script which starts Grid Extras to run automatically.
+3. Modify the /etc/sudoers to contain this line, where the $USER is the current user that will be used for running grid node.
+```bash
+$USER ALL=(ALL) NOPASSWD: /sbin/shutdown
+```
 
 
 
@@ -51,9 +67,9 @@ Starting Services
 
 Note: Make sure to run Grid Extras at least once prior to setting it up as a service, so it can ask you the first run questions.
 
-On Windows:
+### Windows ###
 
-On Linux:
+### Linux ###
 
 There are a lot of security issues with setting up a cron job as a “build user” and letting that user run in the normal display desktop (DISPLAY=:0 aka the one you see when it is connected to the computer monitor). There is a work around to allow the service to run in DISPLAY=:0 but that’s not recommended.
 
@@ -84,9 +100,9 @@ This cron will run every 5 minutes.
 
 
 
-On OSx:
+### OS X ###
 
-Download the com.groupon.SeleniumGridExtras.plist to your computer, open it in editor of choice.
+Download the [SeleniumGridExtras.plist](https://github.com/groupon/Selenium-Grid-Extras/blob/master/service_scripts/com.groupon.SeleniumGridExtras.plist) to your computer, open it in editor of choice.
 
 Update the XML file replacing WORKING_DIRECTORY with the location of the selenium grid extras working directory
 Update the XML file replacing SELENIUM_GRID_EXTRAS.jar with the name Selenium Grid Extras was saved as
@@ -115,10 +131,6 @@ Other Useful Commands
 /screenshot - Take a full OS screen Screen Shot of the node
 
 
-Web GUI
-=======
-
-We are currently working on providing a WEB GUI to allow you to get information about the nodes and control them.
 
 
 Contributing
