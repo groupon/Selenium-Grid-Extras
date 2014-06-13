@@ -72,6 +72,11 @@ Note: Make sure to run Grid Extras at least once prior to setting it up as a ser
 
 ### Windows ###
 
+There are two major ways to make windows automatically start the Grid Extras binary
+
+* Insert a batch file into StartUp directory
+* Using the Task Scheduler to add the java start command, where the executable will be the path to java.exe and the path to Grid Extras passed in as an argument
+
 ### Linux ###
 
 There are a lot of security issues with setting up a cron job as a “build user” and letting that user run in the normal display desktop (DISPLAY=:0 aka the one you see when it is connected to the computer monitor). There is a work around to allow the service to run in DISPLAY=:0 but that’s not recommended.
