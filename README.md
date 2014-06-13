@@ -9,6 +9,7 @@ Setup Instructions
 
 Obtain the latest version of Grid Extras Jars, by either downloading pre-compiled binaries or compiling from source
 
+
 ### [Compiled Jars](https://github.com/groupon/Selenium-Grid-Extras/releases) ###
 
 
@@ -23,6 +24,8 @@ After all the tests are finished running and all dependencies are downloaded, yo
 * SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
 * SeleniumGridExtras-X.X.X-SNAPSHOT.jar
 
+
+### [Change log](https://github.com/groupon/Selenium-Grid-Extras/blob/master/CHANGELOG.txt) ###
 
 Auto Restarting Nodes
 -------------------
@@ -112,23 +115,9 @@ Move the com.groupon.SeleniumGridExtras.plist to ~/Library/LaunchAgents/
 run
 ```
 launchctl load ~/Library/LaunchAgents/com.groupon.SeleniumGridExtras.plist
-``
+```
 
 
-
-Other Useful Commands
-=====================
-(This is an incomplete list, please hit /api for more detailed breakdown)
-
-/upgrade_webdriver - Downloads a version of WebDriver jar to node, and upgrades the setting to use new version on restart
-/move_mouse - Moves the computers mouse to x and y location. (Default 0,0)
-/kill_ie - Executes os level kill command on all instance of Internet Explorer
-/ps - Gets a list of currently running processes
-/kill_pid - Kills a given process id
-/netstat - Returns a system call for all ports. Use /port_info to get parsed details
-/port_info - Returns parsed information on a PID occupying a given port
-/stop_grid - Stops grid or node process
-/screenshot - Take a full OS screen Screen Shot of the node
 
 
 
