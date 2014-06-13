@@ -22,6 +22,30 @@ After all the tests are finished running and all dependencies are downloaded, yo
 * SeleniumGridExtras-X.X.X-SNAPSHOT.jar
 
 
+Auto Restarting Nodes
+-------------------
+Starting with release 1.3.0 the nodes have an option of automatically restarting after a certain amount of builds have been executed and the node is currently not busy. This helps to keep the nodes in pristine state for longer periods of time, and clears up and browser crashes, which may have occurred. Some setup will be needed to make this feature work as intended.
+
+1. Setup default login user
+2. Setup default start up task
+3. Give permission to access OS.
+
+### Windows ###
+
+1. [Follow Microsoft's Technical Help](http://technet.microsoft.com/en-us/magazine/ee872306.aspx)
+2. ...
+3. No need to setup permission as long as current user can run the following command in the Terminal
+```bash
+shutdown -r -t 1 -f
+```
+
+### OS X ###
+
+### Linux ###
+
+
+
+
 Starting Services
 -------------------
 
