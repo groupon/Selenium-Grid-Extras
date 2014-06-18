@@ -138,7 +138,7 @@ public class GridStarter {
     command.append(getChromeDriverExecutionPathParam());
     command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
     command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + getOsSpecificQuote());
-    command.append(" org.openqa.grid.selenium.GridLauncher -role node ");
+    command.append(" org.openqa.grid.selenium.GridLauncher -role wd ");
     command.append(host);
     command.append(" -nodeConfig " + configFile);
 
