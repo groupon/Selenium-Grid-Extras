@@ -63,14 +63,13 @@ import java.util.regex.Pattern;
 
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
 
-  private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
   private boolean available = true;
   private boolean restarting = false;
 
 
   public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
-    logger.info("Attaching a node: " + getHost());
+    System.out.println("Attaching a node: " + getHost());
   }
 
   @Override
@@ -112,22 +111,22 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   }
 
   protected void stopGridNode() {
-    logger.info("Asking " + getHost() + " to stop grid node politely");
-    logger.info(callRemoteGridExtras("stop_grid?port=5555"));
+    System.out.println("Asking " + getHost() + " to stop grid node politely");
+    System.out.println(callRemoteGridExtras("stop_grid?port=5555"));
   }
 
   protected void killBrowserForCurrentSession() {
-    logger.info("Asking " + getHost() + " to politely kill all browsers");
+    System.out.println("Asking " + getHost() + " to politely kill all browsers");
 
-    logger.info(callRemoteGridExtras("kill_ie"));
-    logger.info(callRemoteGridExtras("kill_safari"));
-    logger.info(callRemoteGridExtras("kill_chrome"));
-    logger.info(callRemoteGridExtras("kill_firefox"));
+    System.out.println(callRemoteGridExtras("kill_ie"));
+    System.out.println(callRemoteGridExtras("kill_safari"));
+    System.out.println(callRemoteGridExtras("kill_chrome"));
+    System.out.println(callRemoteGridExtras("kill_firefox"));
   }
 
   private void rebootGridExtrasNode() {
-    logger.info("Asking SeleniumGridExtras to reboot " + getHost());
-    logger.info(callRemoteGridExtras("reboot"));
+    System.out.println("Asking SeleniumGridExtras to reboot " + getHost());
+    System.out.println(callRemoteGridExtras("reboot"));
   }
 
   private JsonObject callRemoteGridExtras(String action) {
@@ -143,13 +142,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
       return (JsonObject) j.parse(returnedString);
 
     } catch (MalformedURLException e) {
-      logger.error(e.toString());
+      System.out.println(e.toString());
       e.printStackTrace();
     } catch (ProtocolException e) {
-      logger.error(e.toString());
+      System.out.println(e.toString());
       e.printStackTrace();
     } catch (IOException e) {
-      logger.error(e.toString());
+      System.out.println(e.toString());
       e.printStackTrace();
     }
 
@@ -176,11 +175,11 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     int sessionLimit = status.get("node_sessions_limit").getAsInt();
 
     if (!nodeRunning) {
-      logger.info("The grid node on " + getHost() + " does not seem to be running");
+      System.out.println("The grid node on " + getHost() + " does not seem to be running");
     } else if (sessionLimit == 0) {
       return false;
     } else if (sessionsStarted >= sessionLimit) {
-      logger.info("Node " + getHost() + " has reached " + sessionsStarted + " of " + sessionLimit
+      System.out.println("Node " + getHost() + " has reached " + sessionsStarted + " of " + sessionLimit
                   + " test session, time to reboot");
     } else {
       return false;
@@ -191,7 +190,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   }
 
   public void unregister() {
-    logger.info("Sending Un register command for " + getHost());
+    System.out.println("Sending Un register command for " + getHost());
     addNewEvent(new RemoteUnregisterException("Unregistering the node."));
   }
 
