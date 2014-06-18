@@ -11,7 +11,7 @@ import java.util.Map;
 public abstract class Capability extends HashMap {
 
   public Capability() {
-    this.put("maxInstances", 1);
+    this.put("maxInstances", 3);
     this.put("seleniumProtocol", "WebDriver");
     setBrowser(getWDStyleName());
   }

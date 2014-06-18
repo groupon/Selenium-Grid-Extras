@@ -37,7 +37,7 @@ public class GridNodeTest {
     expectedConfiguration = new HashMap();
     expectedConfiguration
         .put("proxy", "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy");
-    expectedConfiguration.put("maxSession", 1);
+    expectedConfiguration.put("maxSession", 3);
     expectedConfiguration.put("port", 5555);
     expectedConfiguration.put("register", true);
 //    expectedConfiguration.put("registerCycle", 10000);
@@ -121,7 +121,7 @@ public class GridNodeTest {
 
     Map expectedFirefox = new HashMap();
     expectedFirefox.put("browserName", "firefox");
-    expectedFirefox.put("maxInstances", 1);
+    expectedFirefox.put("maxInstances", 3);
     expectedFirefox.put("seleniumProtocol", "WebDriver");
 
     assertEquals(expectedFirefox, actualCapability);
