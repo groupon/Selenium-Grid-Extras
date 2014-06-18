@@ -25,21 +25,23 @@ public class GridStarter {
     command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
-    String
-        logCommand =
-        " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
     command.append(jarPath + getOsSpecificQuote());
     command.append(" org.openqa.grid.selenium.GridLauncher ");
     command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
+
+    String
+        logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
+
     command.append(logCommand);
+    command.append(" -newSessionWaitTimeout 120000");
 
     logger.info("Hub Start Command: \n\n" + String.valueOf(command));
     return String.valueOf(command);
   }
 
-  private static String getOsSpecificQuote(){
-    if (RuntimeConfig.getOS().isWindows()){
+  private static String getOsSpecificQuote() {
+    if (RuntimeConfig.getOS().isWindows()) {
       return "\"";
     } else {
       return "";
@@ -123,7 +125,7 @@ public class GridStarter {
       host = " -host " + RuntimeConfig.getOS().getHostIp();
     }
 
-    if (RuntimeConfig.getOS().getHostName() != null){
+    if (RuntimeConfig.getOS().getHostName() != null) {
       host = " -friendlyHostName " + RuntimeConfig.getOS().getHostName();
     }
 
@@ -137,7 +139,8 @@ public class GridStarter {
 
     command.append(getChromeDriverExecutionPathParam());
     command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
-    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath() + getOsSpecificQuote());
+    command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath()
+                   + getOsSpecificQuote());
     command.append(" org.openqa.grid.selenium.GridLauncher -role wd ");
     command.append(host);
     command.append(" -nodeConfig " + configFile);
