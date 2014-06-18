@@ -83,15 +83,16 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         rebootGridExtrasNode();
         unregister();
       }
-      if (!isAvailable() || this.isBusy()) {
-        return null;
-      } else {
+
+      if (isAvailable()) {
         TestSession session = super.getNewSession(requestedCapability);
         if (session == null) {
           return null;
         } else {
           return session;
         }
+      } else {
+        return null;
       }
 
     }
