@@ -46,7 +46,7 @@ public class Hub extends HashMap<String, String> implements GridRole {
 
   @Override
   public String getStartCommand() {
-    return "-role " + getRole() + " -port " + getPort() + " -host " + getHost() + " -servlets " + getServlets();
+    return "-role " + getRole() + " -port " + getPort() + " -servlets " + getServlets();
   }
 }
 
