@@ -119,13 +119,13 @@ public class DownloadChromeDriverTest {
     String os = getOS();
     // default setting from configuration
     String bit = "32";
-    String version = "2.5";
+    String version = "2.6";
 
     Map firstExec = new Gson().fromJson(task.execute(version), HashMap.class);
 
     File expectedFile = new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
 
-    assertEquals(new Double(0.0), firstExec.get("exit_code"));
+    assertEquals(0.0, firstExec.get("exit_code"));
     assertEquals(expectedFile.getName(), ((ArrayList) firstExec.get("file")).get(0));
     assertEquals(0, ((ArrayList) firstExec.get("error")).size());
     assertEquals(0, ((ArrayList) firstExec.get("out")).size());
@@ -135,9 +135,9 @@ public class DownloadChromeDriverTest {
     assertEquals("http://chromedriver.storage.googleapis.com/" + version + "/chromedriver_" + os + bit + ".zip",
                  ((ArrayList) firstExec.get("source_url")).get(0));
 
-    Map secondExec = new Gson().fromJson(task.execute("2.5"), HashMap.class);
+    Map secondExec = new Gson().fromJson(task.execute(version), HashMap.class);
 
-    assertEquals(new Double(0.0), secondExec.get("exit_code"));
+    assertEquals(0.0, secondExec.get("exit_code"));
     assertEquals(0, ((ArrayList) secondExec.get("error")).size());
     assertEquals("File already downloaded, will not download again",
                  ((ArrayList) secondExec.get("out")).get(0));

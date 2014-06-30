@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class RuntimeConfigTest {
 
     assertNotNull(RuntimeConfig.getConfig());
     assertNotNull(RuntimeConfig.getConfig().getWebdriver().getVersion());
-    assertEquals("/tmp/webdriver", RuntimeConfig.getConfig().getWebdriver().getDirectory());
+    assertEquals(File.separator + "tmp" + File.separator + "webdriver", RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
     List<String> expectedSetup = new LinkedList<String>();
     expectedSetup.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
