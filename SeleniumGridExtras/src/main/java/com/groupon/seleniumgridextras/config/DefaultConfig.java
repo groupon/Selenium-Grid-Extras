@@ -148,6 +148,7 @@ public class DefaultConfig {
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.StopGridExtras");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.IEProtectedMode");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.SystemInfo");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetNodeConfig");
 
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.AutoUpgradeDrivers");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.DownloadWebdriver");
