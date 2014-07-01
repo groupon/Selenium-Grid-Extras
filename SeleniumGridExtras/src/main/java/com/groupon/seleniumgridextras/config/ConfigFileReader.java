@@ -4,6 +4,8 @@ package com.groupon.seleniumgridextras.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import com.groupon.seleniumgridextras.utilities.FileReaderUtility;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -52,15 +54,14 @@ public class ConfigFileReader {
     //We assume file does not exist and overwrite it with good configs.
     String readString = "";
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(this.filePath));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        readString = readString + line;
-      }
+      readString = FileReaderUtility.getAsString(this.filePath);
     } catch (FileNotFoundException error) {
       logger.info("File " + this.filePath + " does not exist, going to use default configs");
     } catch (IOException error) {
       logger.info("Error reading" + this.filePath + ". Going with default configs");
+    } catch (Exception error){
+      error.printStackTrace();
+      logger.warn(error.getMessage());
     }
 
     this.configString = readString;
