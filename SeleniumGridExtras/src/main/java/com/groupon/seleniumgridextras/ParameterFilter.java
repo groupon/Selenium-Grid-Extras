@@ -58,15 +58,16 @@ public class ParameterFilter extends Filter {
   }
 
   @Override
-  public void doFilter(HttpExchange exchange, Chain chain)
-      throws IOException {
-    parseGetParameters(exchange);
-    parsePostParameters(exchange);
+  public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
+    if ("post".equalsIgnoreCase(exchange.getRequestMethod())) {
+      parsePostParameters(exchange);
+    } else {
+      parseGetParameters(exchange);
+    }
     chain.doFilter(exchange);
   }
 
-  private void parseGetParameters(HttpExchange exchange)
-      throws UnsupportedEncodingException {
+  private void parseGetParameters(HttpExchange exchange) throws UnsupportedEncodingException {
 
     Map parameters = new HashMap();
     URI requestedUri = exchange.getRequestURI();
@@ -75,8 +76,7 @@ public class ParameterFilter extends Filter {
     exchange.setAttribute("parameters", parameters);
   }
 
-  private void parsePostParameters(HttpExchange exchange)
-      throws IOException {
+  private void parsePostParameters(HttpExchange exchange) throws IOException {
 
     if ("post".equalsIgnoreCase(exchange.getRequestMethod())) {
       @SuppressWarnings("unchecked")
@@ -91,8 +91,7 @@ public class ParameterFilter extends Filter {
   }
 
   @SuppressWarnings("unchecked")
-  private void parseQuery(String query, Map parameters)
-      throws UnsupportedEncodingException {
+  private void parseQuery(String query, Map parameters) throws UnsupportedEncodingException {
 
     if (query != null) {
       String pairs[] = query.split("[&]");
@@ -104,12 +103,12 @@ public class ParameterFilter extends Filter {
         String value = null;
         if (param.length > 0) {
           key = URLDecoder.decode(param[0],
-              System.getProperty("file.encoding"));
+                                  System.getProperty("file.encoding"));
         }
 
         if (param.length > 1) {
           value = URLDecoder.decode(param[1],
-              System.getProperty("file.encoding"));
+                                    System.getProperty("file.encoding"));
         }
 
         if (parameters.containsKey(key)) {
