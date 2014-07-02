@@ -68,7 +68,6 @@ public class ParameterFilter extends Filter {
   }
 
   private void parseGetParameters(HttpExchange exchange) throws UnsupportedEncodingException {
-
     Map parameters = new HashMap();
     URI requestedUri = exchange.getRequestURI();
     String query = requestedUri.getRawQuery();
@@ -77,17 +76,15 @@ public class ParameterFilter extends Filter {
   }
 
   private void parsePostParameters(HttpExchange exchange) throws IOException {
+    @SuppressWarnings("unchecked")
+    Map parameters =
+        (Map) exchange.getAttribute("parameters");
+    InputStreamReader isr =
+        new InputStreamReader(exchange.getRequestBody(), "utf-8");
+    BufferedReader br = new BufferedReader(isr);
+    String query = br.readLine();
+    parseQuery(query, parameters);
 
-    if ("post".equalsIgnoreCase(exchange.getRequestMethod())) {
-      @SuppressWarnings("unchecked")
-      Map parameters =
-          (Map) exchange.getAttribute("parameters");
-      InputStreamReader isr =
-          new InputStreamReader(exchange.getRequestBody(), "utf-8");
-      BufferedReader br = new BufferedReader(isr);
-      String query = br.readLine();
-      parseQuery(query, parameters);
-    }
   }
 
   @SuppressWarnings("unchecked")
