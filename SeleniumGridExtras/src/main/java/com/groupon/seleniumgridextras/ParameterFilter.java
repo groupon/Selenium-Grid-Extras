@@ -61,9 +61,9 @@ public class ParameterFilter extends Filter {
   public void doFilter(HttpExchange exchange, Chain chain) throws IOException {
     if ("post".equalsIgnoreCase(exchange.getRequestMethod())) {
       parsePostParameters(exchange);
-    } else {
-      parseGetParameters(exchange);
     }
+    parseGetParameters(exchange);
+
     chain.doFilter(exchange);
   }
 
