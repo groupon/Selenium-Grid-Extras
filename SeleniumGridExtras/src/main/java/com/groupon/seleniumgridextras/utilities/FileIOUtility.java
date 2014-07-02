@@ -1,5 +1,8 @@
 package com.groupon.seleniumgridextras.utilities;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,6 +12,8 @@ import java.io.FileReader;
  * File | Settings | File Templates.
  */
 public class FileIOUtility {
+
+  private static Logger logger = Logger.getLogger(FileIOUtility.class);
 
   public static String getAsString(String file) throws Exception {
     return getAsString(new File(file));
@@ -24,7 +29,18 @@ public class FileIOUtility {
       readString = readString + line;
     }
 
+    logger.debug("Read from" + file.getAbsolutePath() + " following content\n" + readString);
+
     return readString;
+  }
+
+  public static void writeToFile(String filename, String content) throws Exception {
+    writeToFile(new File(filename), content);
+  }
+
+  public static void writeToFile(File filename, String content) throws Exception {
+    logger.debug("Writing to " + filename.getAbsolutePath() + " following content\n" + content);
+    FileUtils.writeStringToFile(filename, content);
   }
 
 }

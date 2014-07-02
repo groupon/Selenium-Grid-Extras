@@ -10,6 +10,7 @@ import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
 import com.groupon.seleniumgridextras.config.driver.DriverInfo;
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
+import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -261,7 +262,7 @@ public class Config {
       temp.put("theConfigMap", getConfigMap());
 
       String config = toPrettyJsonString(temp);
-      FileUtils.writeStringToFile(f, config);
+      FileIOUtility.writeToFile(f, config);
     } catch (Exception error) {
       logger.fatal("Could not write default config file, exit with error " + error.toString());
       System.exit(1);
