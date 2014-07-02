@@ -2,7 +2,8 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.utilities.FileReaderUtility;
+import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import java.io.File;
@@ -45,7 +46,7 @@ public class GetNodeConfig extends ExecuteOSTask {
 
       for (File file : getAllJsonConfigs(node_specific_config_dir)) {
         try {
-          addFileContentsToResponse(file.getName(), FileReaderUtility.getAsString(file));
+          addFileContentsToResponse(file.getName(), FileIOUtility.getAsString(file));
         } catch (Exception error) {
           getJsonResponse().addKeyValues("error", error.toString());
           logger.warn(error.toString());

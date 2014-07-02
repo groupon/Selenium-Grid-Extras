@@ -8,7 +8,7 @@ import java.io.FileReader;
  * Created with IntelliJ IDEA. User: dima Date: 7/1/14 Time: 3:27 PM To change this template use
  * File | Settings | File Templates.
  */
-public class FileReaderUtility {
+public class FileIOUtility {
 
   public static String getAsString(String file) throws Exception {
     return getAsString(new File(file));
