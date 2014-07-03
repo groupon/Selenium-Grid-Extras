@@ -1,11 +1,13 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +17,6 @@ import java.util.Map;
 
 public class GetNodeConfig extends ExecuteOSTask {
 
-  private File central_config_dir = new File("node_configs");
   private static Logger logger = Logger.getLogger(GetNodeConfig.class);
 
   public GetNodeConfig() {
@@ -39,7 +40,8 @@ public class GetNodeConfig extends ExecuteOSTask {
     File
         node_specific_config_dir =
         new File(
-            central_config_dir.getAbsoluteFile() + RuntimeConfig.getOS().getFileSeparator() + node);
+            RuntimeConfig.getConfig().getConfigsDirectory().getAbsoluteFile() + RuntimeConfig
+                .getOS().getFileSeparator() + node);
 
     if (node_specific_config_dir.exists()) {
       logger.info("Found " + node_specific_config_dir.getAbsolutePath());
@@ -79,11 +81,12 @@ public class GetNodeConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey("node")) {
+    if (parameter.isEmpty() || !parameter.containsKey("node") ) {
       return execute();
     } else if (!configDirExist()) {
       getJsonResponse().addKeyValues("error", "This node does not contain the following directory: "
-                                              + central_config_dir.getName());
+                                              + RuntimeConfig.getConfig().getConfigsDirectory()
+          .getName());
       return getJsonResponse().getJson();
     } else {
       return execute(parameter.get("node").toString());
@@ -92,11 +95,13 @@ public class GetNodeConfig extends ExecuteOSTask {
 
   protected boolean configDirExist() {
 
-    if (central_config_dir.exists()) {
-      logger.info(central_config_dir.getAbsolutePath() + " directory exists");
+    if (RuntimeConfig.getConfig().getConfigsDirectory().exists()) {
+      logger.info(
+          RuntimeConfig.getConfig().getConfigsDirectory().getAbsolutePath() + " directory exists");
       return true;
     } else {
-      logger.info(central_config_dir.getAbsolutePath() + " directory does not exist");
+      logger.info(RuntimeConfig.getConfig().getConfigsDirectory().getAbsolutePath()
+                  + " directory does not exist");
       return false;
     }
 

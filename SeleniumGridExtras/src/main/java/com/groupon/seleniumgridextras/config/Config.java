@@ -407,4 +407,8 @@ public class Config {
   public int getRebootAfterSessions(){
     return Integer.valueOf((String)getConfigMap().get(REBOOT_AFTER_SESSIONS));
   }
+
+  public File getConfigsDirectory(){
+    return new File("configs");
+  }
 }

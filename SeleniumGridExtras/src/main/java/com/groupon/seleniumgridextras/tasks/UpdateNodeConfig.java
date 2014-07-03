@@ -17,7 +17,6 @@ import java.util.Map;
  */
 public class UpdateNodeConfig extends ExecuteOSTask {
 
-  private File central_config_dir = new File("node_configs");
   private static Logger logger = Logger.getLogger(UpdateNodeConfig.class);
 
   public UpdateNodeConfig() {
@@ -62,10 +61,10 @@ public class UpdateNodeConfig extends ExecuteOSTask {
       final
       File filename =
           new File(
-              central_config_dir + RuntimeConfig.getOS().getFileSeparator() + node + RuntimeConfig
+              RuntimeConfig.getConfig().getConfigsDirectory() + RuntimeConfig.getOS()
+                  .getFileSeparator() + node + RuntimeConfig
                   .getOS().getFileSeparator() + parameter
                   .get("filename"));
-
 
       createNodeDirIfNotExisting(filename);
       logger.info(
@@ -84,10 +83,18 @@ public class UpdateNodeConfig extends ExecuteOSTask {
     }
   }
 
-  protected void createNodeDirIfNotExisting(File node){
-    if (!node.getParentFile().exists()){
+  protected void createNodeDirIfNotExisting(File node) {
+    createConfigsDirIfNotExisting(RuntimeConfig.getConfig().getConfigsDirectory());
+    if (!node.getParentFile().exists()) {
       logger.info("Node's config dir didn't exist so we will create it");
       node.getParentFile().mkdir();
+    }
+  }
+
+  protected void createConfigsDirIfNotExisting(File config){
+    if(!config.exists()){
+      logger.info("Configs dir didn't exist so we will create it");
+      config.mkdir();
     }
   }
 
