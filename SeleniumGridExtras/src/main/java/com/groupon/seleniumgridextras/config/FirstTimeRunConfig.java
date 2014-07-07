@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class FirstTimeRunConfig {
 
@@ -73,6 +74,7 @@ public class FirstTimeRunConfig {
 
     setDriverAutoUpdater(defaultConfig);
 
+
     final
     String
         thankYouMessage =
@@ -81,10 +83,54 @@ public class FirstTimeRunConfig {
     logger.info(thankYouMessage);
     System.out.println(thankYouMessage);
 
+    defaultConfig.writeToDisk(RuntimeConfig.getConfigFile());
+    askToStoreConfigsOnHub(defaultConfig, hubHost);
+
     return defaultConfig;
   }
 
-  private static void setRebootAfterSessionLimit(Config defaultConfig){
+  private static void askToStoreConfigsOnHub(Config defaultConfig, String hubHost) {
+    String
+        answer =
+        askQuestion(
+            "Should we store all of these configs in central location on the HUB node and update from there? (1-yes/0-no)",
+            "1");
+
+    if (answer.equals("1")) {
+      ConfigPusher pusher = new ConfigPusher();
+      pusher.setHubHost(hubHost);
+      pusher.addConfigFile("selenium_grid_extras_config.json");
+
+      logger.info("Sending config files to " + hubHost);
+      for (String file : defaultConfig.getNodeConfigFiles()) {
+        pusher.addConfigFile(file);
+      }
+
+      logger.info("Open transfer");
+      Map<String, Integer> results = pusher.sendAllConfigsToHub();
+      logger.info("Checking status of transfered files");
+      Boolean failure = false;
+      for (String file : results.keySet()) {
+        logger.info(file + " - " + results.get(file));
+        if (!results.get(file).equals(200)) {
+          failure = true;
+        }
+      }
+
+      if (failure) {
+        System.out.println(
+            "Not all files were successfully sent to the HUB, please check log for more info");
+      } else {
+        System.out.println(
+            "All files sent to hub, check the 'configs" + RuntimeConfig.getOS().getFileSeparator()
+            + RuntimeConfig.getOS().getHostName()
+            + "' directory to modify the configs for this node in the future");
+      }
+
+    }
+  }
+
+  private static void setRebootAfterSessionLimit(Config defaultConfig) {
     String
         answer =
         askQuestion("Restart after how many tests (0-never restart)", "10");
@@ -133,7 +179,7 @@ public class FirstTimeRunConfig {
   }
 
   private static void configureNodes(List<Capability> capabilities, String hubHost,
-                                               String hubPort, Config defaultConfig) {
+                                     String hubPort, Config defaultConfig) {
     GridNode node = new GridNode();
     int nodePort = 5555;
 

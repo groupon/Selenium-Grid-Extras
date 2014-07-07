@@ -132,7 +132,6 @@ public class RuntimeConfig {
       logger.info("Previous config was not found, will ask input from user");
       Config userInput = Config.initilizedFromUserInput();
       logger.debug(userInput);
-      userInput.writeToDisk(RuntimeConfig.getConfigFile());
     }
 
     configFileObject.readConfigFile();
