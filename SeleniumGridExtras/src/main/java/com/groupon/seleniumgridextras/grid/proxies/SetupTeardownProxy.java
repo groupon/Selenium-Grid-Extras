@@ -41,11 +41,12 @@ package com.groupon.seleniumgridextras.grid.proxies;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import com.groupon.seleniumgridextras.ExecuteCommand;
+
+import com.groupon.seleniumgridextras.utilities.HttpUtility;
 
 import org.openqa.grid.common.exception.RemoteUnregisterException;
 
-import org.apache.log4j.Logger;
+
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
@@ -53,12 +54,10 @@ import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
@@ -134,10 +133,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     String returnedString;
 
     try {
-      URL url = new URL("http://" + getHost() + ":3000/" + action);
-      HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-      conn.setRequestMethod("GET");
-      returnedString = ExecuteCommand.inputStreamToString(conn.getInputStream());
+
+      returnedString = HttpUtility.getRequestAsString(
+          new URL("http://" + getHost() + ":3000/" + action));
 
       JsonParser j = new JsonParser();
       return (JsonObject) j.parse(returnedString);
@@ -180,8 +178,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     } else if (sessionLimit == 0) {
       return false;
     } else if (sessionsStarted >= sessionLimit) {
-      System.out.println("Node " + getHost() + " has reached " + sessionsStarted + " of " + sessionLimit
-                  + " test session, time to reboot");
+      System.out
+          .println("Node " + getHost() + " has reached " + sessionsStarted + " of " + sessionLimit
+                   + " test session, time to reboot");
     } else {
       return false;
 

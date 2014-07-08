@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.StreamUtility;
 
 import org.apache.log4j.Logger;
 
@@ -94,8 +95,8 @@ public class ExecuteCommand {
     }
 
     try {
-      String output = inputStreamToString(process.getInputStream());
-      String error = inputStreamToString(process.getErrorStream());
+      String output = StreamUtility.inputStreamToString(process.getInputStream());
+      String error = StreamUtility.inputStreamToString(process.getErrorStream());
       jsonResponse.addKeyValues("exit_code", exitCode);
       jsonResponse.addKeyValues("out", output);
       if (!error.equals("")) {
@@ -112,15 +113,5 @@ public class ExecuteCommand {
     } finally {
       process.destroy();
     }
-  }
-
-  public static String inputStreamToString(InputStream is) throws IOException {
-    StringBuilder result = new StringBuilder();
-    int in;
-    while ((in = is.read()) != -1) {
-      result.append((char) in);
-    }
-    is.close();
-    return result.toString();
   }
 }
