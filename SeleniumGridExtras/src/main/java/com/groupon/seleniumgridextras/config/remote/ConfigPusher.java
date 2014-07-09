@@ -1,16 +1,11 @@
-package com.groupon.seleniumgridextras.config;
+package com.groupon.seleniumgridextras.config.remote;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.HttpUtility;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicHttpResponse;
-import org.apache.http.message.BasicStatusLine;
 import org.apache.log4j.Logger;
 
 import java.io.FileNotFoundException;
@@ -53,20 +48,26 @@ public class ConfigPusher {
     Map<String, Integer> responses = new HashMap<String, Integer>();
 
     for (String file : filesToSend.keySet()) {
-      try {
-        String content = filesToSend.get(file);
-        logger.info("Sending '" + file +"'");
-        logger.debug("File content is: " + content);
 
-        HttpResponse response = sendRequest(buildUrl(file, content));
-        logger.debug(response);
-        responses.put(file, response.getStatusLine().getStatusCode());
+      String content = filesToSend.get(file);
+      logger.info("Sending '" + file +"'");
+      logger.debug("File content is: " + content);
+
+
+      try {
+        responses.put(file, HttpUtility.getRequest(buildUrl(file, content)).getResponseCode());
       } catch (URISyntaxException error) {
         logger.warn("Error building send url for file " + file);
         logger.warn("Config will not be sent");
         logger.warn("Content: " + filesToSend.get(file));
         logger.warn(error);
-        responses.put(file, 500);
+        responses.put(file, 999);
+      } catch (IOException error){
+        logger.warn("Error reading content");
+        logger.warn("Config will not be sent");
+        logger.warn("Content: " + filesToSend.get(file));
+        logger.warn(error);
+        responses.put(file, 999);
       }
     }
 
@@ -105,44 +106,5 @@ public class ConfigPusher {
   protected String toBase64(String value) {
     return new String(Base64.encodeBase64(value.getBytes()));
   }
-
-  protected HttpResponse sendRequest(URI uri) {
-    HttpClient client = new DefaultHttpClient();
-    try {
-      HttpGet request = new HttpGet(uri);
-      return client.execute(request);
-    } catch (IOException error) {
-      logger.error("Error Executing request");
-      logger.error(error);
-
-      return new BasicHttpResponse(
-          new BasicStatusLine(new HttpVersion(1, 1), 404, "Connection Refused"));
-    }
-  }
-
-//  protected String getResponseContent() {
-//
-//    try {
-//      BufferedReader rd = new BufferedReader(
-//          new InputStreamReader(getResponse().getEntity().getContent()));
-//
-//      StringBuffer result = new StringBuffer();
-//
-//      String line = "";
-//      while ((line = rd.readLine()) != null) {
-//        result.append(line);
-//      }
-//
-//      return result.toString();
-//    } catch (IOException error) {
-//      logger.error(error);
-//      return "";
-//    }
-//  }
-
-//  protected Map getParsedResponse() {
-//    return new Gson().fromJson(getResponseContent(), HashMap.class);
-//  }
-
 
 }
