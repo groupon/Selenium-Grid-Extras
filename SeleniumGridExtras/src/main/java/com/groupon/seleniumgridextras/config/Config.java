@@ -411,4 +411,8 @@ public class Config {
   public File getConfigsDirectory(){
     return new File("configs");
   }
+
+  public String getCentralConfigFileName(){
+    return "central_config_repo_config.txt";
+  }
 }
