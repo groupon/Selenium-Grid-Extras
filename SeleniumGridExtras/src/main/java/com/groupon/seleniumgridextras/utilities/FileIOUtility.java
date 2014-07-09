@@ -22,19 +22,27 @@ public class FileIOUtility {
   }
 
 
-  public static String getAsString(File file) throws FileNotFoundException{
+  public static String getAsString(File file) throws FileNotFoundException {
 
     String readString = "";
     BufferedReader reader = new BufferedReader(new FileReader(file));
     String line = null;
 
-    try{
-    while ((line = reader.readLine()) != null) {
-      readString = readString + line;
-    }
-    }catch (IOException error){
-      logger.error("IOExcetion reading "+ file.getAbsolutePath());
+    try {
+      while ((line = reader.readLine()) != null) {
+        readString = readString + line;
+      }
+    } catch (IOException error) {
+      logger.error("IOExcetion reading " + file.getAbsolutePath());
       logger.error(error);
+    } finally {
+      try {
+        reader.close();
+      } catch (IOException e) {
+        logger.error("Error closing the file reader");
+        logger.equals(e);
+        e.printStackTrace();
+      }
     }
 
     logger.debug("Read from" + file.getAbsolutePath() + " following content\n" + readString);
@@ -42,11 +50,11 @@ public class FileIOUtility {
     return readString;
   }
 
-  public static void writeToFile(String filename, String content) throws Exception {
+  public static void writeToFile(String filename, String content) throws IOException {
     writeToFile(new File(filename), content);
   }
 
-  public static void writeToFile(File filename, String content) throws Exception {
+  public static void writeToFile(File filename, String content) throws IOException {
     logger.debug("Writing to " + filename.getAbsolutePath() + " following content\n" + content);
     FileUtils.writeStringToFile(filename, content);
   }
