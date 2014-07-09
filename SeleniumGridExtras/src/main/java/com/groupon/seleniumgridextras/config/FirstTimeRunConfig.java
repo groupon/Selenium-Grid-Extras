@@ -38,11 +38,14 @@ package com.groupon.seleniumgridextras.config;
 
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
+import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
+import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
@@ -74,7 +77,6 @@ public class FirstTimeRunConfig {
 
     setDriverAutoUpdater(defaultConfig);
 
-
     final
     String
         thankYouMessage =
@@ -84,7 +86,9 @@ public class FirstTimeRunConfig {
     System.out.println(thankYouMessage);
 
     defaultConfig.writeToDisk(RuntimeConfig.getConfigFile());
-    askToStoreConfigsOnHub(defaultConfig, hubHost);
+    if (!defaultConfig.getAutoStartHub()) { //For now let's not store hub's config in central repo
+      askToStoreConfigsOnHub(defaultConfig, hubHost);
+    }
 
     return defaultConfig;
   }
@@ -97,6 +101,9 @@ public class FirstTimeRunConfig {
             "1");
 
     if (answer.equals("1")) {
+
+      saveCentralStorageUrl("http://" + hubHost + ":3000/");
+
       ConfigPusher pusher = new ConfigPusher();
       pusher.setHubHost(hubHost);
       pusher.addConfigFile("selenium_grid_extras_config.json");
@@ -128,6 +135,33 @@ public class FirstTimeRunConfig {
       }
 
     }
+  }
+
+  private static void saveCentralStorageUrl(String url) {
+    File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
+    if (!configsDirectory.exists()) {
+      configsDirectory.mkdir();
+    }
+
+    File
+        storageUrlFile =
+        new File(configsDirectory.getAbsoluteFile() + RuntimeConfig.getOS().getFileSeparator()
+                 + RuntimeConfig.getConfig().getCentralConfigFileName());
+
+    try {
+      logger.info("Saving the central config url '" + url + "' to file " + storageUrlFile
+          .getAbsolutePath());
+      FileIOUtility.writeToFile(storageUrlFile, url);
+    } catch (IOException error) {
+      String
+          message =
+          "Unable to save the central config repository URL to '" + storageUrlFile
+          + "' please update that file to allow the nodes to automatically self update in the future";
+      System.out.println(message);
+      logger.warn(message);
+      logger.warn(error);
+    }
+
   }
 
   private static void setRebootAfterSessionLimit(Config defaultConfig) {
