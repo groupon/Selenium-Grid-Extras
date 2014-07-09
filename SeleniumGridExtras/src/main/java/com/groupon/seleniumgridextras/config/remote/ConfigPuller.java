@@ -45,6 +45,12 @@ public class ConfigPuller {
       logger.info("The central config URL is empty, will not download the latest configs.");
     } else {
       try {
+        String
+            message =
+            "Checking central Config repository for " + RuntimeConfig.getOS().getHostName()
+            + " node's config. This may take a while...";
+        logger.info(message);
+        System.out.println(message);
         downloadRemoteConfigs(new URL(url));
       } catch (MalformedURLException error) {
         String
@@ -79,6 +85,8 @@ public class ConfigPuller {
 
 
     } catch (IOException error) {
+      System.out.println(
+          "Reading config from central repository encountered an error: " + error.getMessage());
       logger.warn("Problem reading the content from remote url " + url);
       logger.warn(error);
     }
