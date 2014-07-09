@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,9 +54,7 @@ public class ConfigFileReader {
       readString = FileIOUtility.getAsString(this.filePath);
     } catch (FileNotFoundException error) {
       logger.info("File " + this.filePath + " does not exist, going to use default configs");
-    } catch (IOException error) {
-      logger.info("Error reading" + this.filePath + ". Going with default configs");
-    } catch (Exception error){
+    }  catch (Exception error){
       error.printStackTrace();
       logger.warn(error.getMessage());
     }
