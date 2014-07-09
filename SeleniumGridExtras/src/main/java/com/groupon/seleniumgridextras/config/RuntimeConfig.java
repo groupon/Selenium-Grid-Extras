@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.config;
 
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
+import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.grid.SessionTracker;
 
@@ -124,6 +125,8 @@ public class RuntimeConfig {
     config = DefaultConfig.getDefaultConfig();
     logger.debug(config);
 
+    new ConfigPuller().updateFromRemote();
+
     ConfigFileReader configFileObject = new ConfigFileReader(configFile);
 
     logger.debug(configFileObject.toHashMap());
@@ -134,12 +137,20 @@ public class RuntimeConfig {
       logger.debug(userInput);
     }
 
+    // Read the primary config file
     configFileObject.readConfigFile();
     overwriteValues = configFileObject.toHashMap();
-    logger.info(overwriteValues);
+    logger.debug(overwriteValues);
+
+    //Overwrite default configs
     config.overwriteConfig(overwriteValues);
+
+    //Load node info from the node classes
     config.loadNodeClasses();
+
+    //Write out all of the possible examples into an example file
     config.writeToDisk(RuntimeConfig.getConfigFile() + ".example");
+
     logger.debug(config);
     return config;
   }
