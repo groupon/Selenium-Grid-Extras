@@ -71,7 +71,7 @@ public class UpdateNodeConfig extends ExecuteOSTask {
           "Update to node '" + node + "' file '" + filename.getAbsolutePath() + " was called");
       logger.debug(decodedString);
       try {
-        FileIOUtility.writeToFile(filename, decodedString);
+        FileIOUtility.writePrettyJsonToFile(filename, decodedString);
         getJsonResponse().addKeyValues("node", node);
         getJsonResponse().addKeyValues("filename", filename.getAbsolutePath());
       } catch (Exception error) {

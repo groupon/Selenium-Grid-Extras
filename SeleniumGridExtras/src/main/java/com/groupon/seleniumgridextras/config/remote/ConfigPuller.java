@@ -98,11 +98,9 @@ public class ConfigPuller {
     for (String filename : (Set<String>) config.keySet()) {
       if (!filename.equals("exit_code") && !filename.equals("out") && !filename.equals("error")) {
         try {
-          String
-              fileContents =
-              stringJsonToPrettyStringJson((String) (((ArrayList) config.get(filename)).get(0)));
+          String fileContents = (String) (((ArrayList) config.get(filename)).get(0));
 
-          FileIOUtility.writeToFile(filename, fileContents);
+          FileIOUtility.writePrettyJsonToFile(filename, fileContents);
 
           String message = "Updated '" + filename + "' from central config repository";
           System.out.println(message);
@@ -118,12 +116,6 @@ public class ConfigPuller {
         }
       }
     }
-
-  }
-
-  protected String stringJsonToPrettyStringJson(String json) {
-    Map parsedJson = new Gson().fromJson(json, HashMap.class);
-    return new GsonBuilder().setPrettyPrinting().create().toJson(parsedJson);
 
   }
 

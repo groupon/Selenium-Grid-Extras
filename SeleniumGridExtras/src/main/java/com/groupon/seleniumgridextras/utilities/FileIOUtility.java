@@ -1,5 +1,8 @@
 package com.groupon.seleniumgridextras.utilities;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -8,6 +11,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA. User: dima Date: 7/1/14 Time: 3:27 PM To change this template use
@@ -50,13 +55,18 @@ public class FileIOUtility {
     return readString;
   }
 
-  public static void writeToFile(String filename, String content) throws IOException {
-    writeToFile(new File(filename), content);
-  }
-
   public static void writeToFile(File filename, String content) throws IOException {
     logger.debug("Writing to " + filename.getAbsolutePath() + " following content\n" + content);
     FileUtils.writeStringToFile(filename, content);
+  }
+
+  public static void writePrettyJsonToFile(File filename, String content) throws IOException{
+    Map parsedJson = new Gson().fromJson(content, HashMap.class);
+    writeToFile(filename, new GsonBuilder().setPrettyPrinting().create().toJson(parsedJson));
+  }
+
+  public static void writePrettyJsonToFile(String filename, String content) throws IOException{
+    writePrettyJsonToFile(new File(filename), content);
   }
 
 }
