@@ -125,6 +125,8 @@ public class RuntimeConfig {
     config = DefaultConfig.getDefaultConfig();
     logger.debug(config);
 
+    new ConfigPuller().updateFromRemote();
+
     ConfigFileReader configFileObject = new ConfigFileReader(configFile);
 
     logger.debug(configFileObject.toHashMap());
