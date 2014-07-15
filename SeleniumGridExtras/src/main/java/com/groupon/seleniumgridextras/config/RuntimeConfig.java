@@ -120,12 +120,14 @@ public class RuntimeConfig {
     configFile = file;
   }
 
-  public static Config load() {
+  public static Config load(boolean UpdateConfigsFromHub) {
     Map overwriteValues;
     config = DefaultConfig.getDefaultConfig();
     logger.debug(config);
 
-    new ConfigPuller().updateFromRemote();
+    if (UpdateConfigsFromHub) {
+      new ConfigPuller().updateFromRemote();
+    }
 
     ConfigFileReader configFileObject = new ConfigFileReader(configFile);
 
@@ -155,6 +157,11 @@ public class RuntimeConfig {
     return config;
   }
 
+
+  public static Config load() {
+    return load(false);
+  }
+
   public static File getSeleniumGridExtrasJarFile() {
     try {
       return new File(
@@ -181,8 +188,8 @@ public class RuntimeConfig {
     return currentOS;
   }
 
-  public static SessionTracker getTestSessionTracker(){
-    if (sessionTracker == null){
+  public static SessionTracker getTestSessionTracker() {
+    if (sessionTracker == null) {
       sessionTracker = new SessionTracker();
     }
 

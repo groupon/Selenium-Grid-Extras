@@ -63,7 +63,7 @@ public class SeleniumGridExtras {
     PropertyConfigurator.configure(SeleniumGridExtras.class.getClassLoader().getResource(filename));
     logger.info("Loaded Grid Logger from " + filename);
 
-    RuntimeConfig.load();
+    RuntimeConfig.load(true);
 
     SelfHealingGrid.checkStatus(RuntimeConfig.getGridExtrasPort(), RuntimeConfig.getConfig());
 
