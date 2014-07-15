@@ -1,31 +1,71 @@
 Selenium-Grid-Extras
 ====================
 
-This project is designed to help you manage your Selenium Grid installation by giving you control over the Grid Hub machine and Grid Node machine. This is very useful in cases when Internet Explorer Driver crashes, and you need to kill the iedriver.exe so that next test can start and not fail.
+Selenium Grid Extras is a project that helps you set up and manage your local Selenium Grid. Typical instances of the Grid consists of the HUB and Nodes. The HUB is responsible for managing test sessions and assigning new session idle nodes.
+
+Setup of Grid Extras is made to be simple, just run the packaged JAR file and point the node at the HUB location, Grid Extras will take care of the rest for you.
+Here are the features you get by using Selenium Grid Extras vs Selenium Grid alone:
+* Ability to control individual grid nodes, following is an incomplete list of OS level tasks:
+** Killing any browser instance by name
+** Stopping any Process by PID
+** Moving mouse to specific location
+** Get Memory usage and disk statistics
+* Automatically upgrade WebDriver binaries
+* Restart node after a set number of test executions
+* Central storage of configurations for all nodes on the HUB server
+* Screenshots at the OS level
+* And much more.
+
 
 
 Setup Instructions
 ------------------
 
-Obtain the latest version of Grid Extras Jars, by either downloading pre-compiled binaries or compiling from source
+Setup is simple, just download the Grid Extras Jar to get started from here: [Download Latest](https://github.com/groupon/Selenium-Grid-Extras/releases)
 
 
-### [Compiled Jars](https://github.com/groupon/Selenium-Grid-Extras/releases) ###
+### Setting up Grid Hub ###
 
-
-### Compile from source: ###
-
+1. In the terminal run following command:
 ```bash
-git clone https://github.com/groupon/Selenium-Grid-Extras.git
-cd Selenium-Grid-Extras
-mvn package
+java -jar Selenium-Grid-Extras-Jar.jar
 ```
-After all the tests are finished running and all dependencies are downloaded, you will find 2 JAR files in SeleniumGridExtras/target/
-* SeleniumGridExtras-X.X.X-SNAPSHOT-jar-with-dependencies.jar
-* SeleniumGridExtras-X.X.X-SNAPSHOT.jar
+
+2. You will be prompted with several questions, first one will ask you if you want to set this computer as a HUB, Node, or both. Answer 2 for HUB
+
+3. Leave the Host name for Grid Hub as default 127.0.0.1
+
+4. Set port to be used by Selenium Grid Hub, default is 4444
+
+5. You will be asked if you wish to auto update Selenium. If you answer yes, then every time Selenium Grid Extras is started it will check fo the latest version of Selenium Stand Alone Server, IEDriver, and ChromeDriver. If you choose to not auto update, you will be asked what versions of each driver to lock into.
 
 
-### [Change log](https://github.com/groupon/Selenium-Grid-Extras/blob/master/CHANGELOG.txt) ###
+### Setting up Grid Node ###
+
+1. In the terminal run following command:
+```bash
+java -jar Selenium-Grid-Extras-Jar.jar
+```
+
+2. You will be asked if you wish to use this computer as HUB or Node, select 1 for Node
+
+3. You will be asked for the host name of the HUB computer, type in the IP or hostname of the HUB computer
+
+4. When prompted for the port used by the HUB, enter that value
+
+5. Selenium Grid Extras will attempt to guess the Operating System of the current computer, if it's wrong please enter the correct value
+
+6. You will be asked what Browsers this Node will host, choose the ones that apply
+
+7. You will be asked how often to restart your whole computer. By default after 10 tests Selenium Grid Extras will attempt to restart the Node, provided the node is idle. Choose 0 if you do not wish to have the computer automatically restart.
+
+8. You will be asked if Selenium Grid Extras should automatically check for updates of IEDriver, ChromeDriver and Selenium Stand Alone Server. If you answer no, you will be asked what version to lock into.
+
+9. Finally, you will be asked if you wish to store all of the Node configs on the HUB. If you answer yes, Selenium Grid Extras will attempt to push Node's configs to the HUB. If it is successful, Selenium Grid Extras will attempt to download all of the configs from the HUB before it starts. This way all of the Node configs can be controlled directly from the HUB.
+
+
+
+
 
 Auto Restarting Nodes
 -------------------
