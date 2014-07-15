@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras;
 import com.google.gson.GsonBuilder;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
 import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
@@ -63,6 +64,7 @@ public class SeleniumGridExtras {
     PropertyConfigurator.configure(SeleniumGridExtras.class.getClassLoader().getResource(filename));
     logger.info("Loaded Grid Logger from " + filename);
 
+    new ConfigPuller().updateFromRemote();
     RuntimeConfig.load();
 
     SelfHealingGrid.checkStatus(RuntimeConfig.getGridExtrasPort(), RuntimeConfig.getConfig());
