@@ -1,4 +1,5 @@
-1.3.0 - Switching to Semantic Versioning
+1.3.0 - Nodes store all of the configs on the HUB and update from the HUB everytime they are started
+      - Switching to Semantic Versioning
       - Adding ability to reboot grid node after a certain session limit has been reached.
       - Removed log4j from the proxy, it seems to bottleneck requests
       - Update the new session timeout setting to be 2 minutes instead of infinite
