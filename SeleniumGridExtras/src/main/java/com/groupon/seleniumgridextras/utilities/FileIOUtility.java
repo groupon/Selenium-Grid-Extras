@@ -62,6 +62,7 @@ public class FileIOUtility {
 
   public static void writePrettyJsonToFile(File filename, String content) throws IOException{
     Map parsedJson = new Gson().fromJson(content, HashMap.class);
+    DoubleToIntConverter.convertAllDoublesToInt(parsedJson);
     writeToFile(filename, new GsonBuilder().setPrettyPrinting().create().toJson(parsedJson));
   }
 
