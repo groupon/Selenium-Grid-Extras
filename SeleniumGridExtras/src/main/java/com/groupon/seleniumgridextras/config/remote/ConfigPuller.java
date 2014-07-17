@@ -48,7 +48,7 @@ public class ConfigPuller {
         String
             message =
             "Checking central Config repository for " + RuntimeConfig.getOS().getHostName()
-            + " node's config. This may take a while...";
+            + " node's config from "+ url +" . This may take a while...";
         logger.info(message);
         System.out.println(message);
         downloadRemoteConfigs(new URL(url));
