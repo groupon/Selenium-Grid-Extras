@@ -44,6 +44,7 @@ import com.google.gson.JsonParser;
 
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 
+import org.apache.log4j.Logger;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
 
 
@@ -65,10 +66,12 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   private boolean available = true;
   private boolean restarting = false;
 
+  private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
+
 
   public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
     super(request, registry);
-    System.out.println("Attaching a node: " + getHost());
+    writeProxyLog("Attaching a node: " + getHost());
   }
 
   @Override
@@ -77,10 +80,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
       if (timeToReboot() && !this.isBusy()) {
         setAvailable(false);
         setRestarting(false);
-        killBrowserForCurrentSession();
+//        killBrowserForCurrentSession();
         stopGridNode();
         rebootGridExtrasNode();
-        unregister();
       }
 
       if (isAvailable()) {
@@ -111,22 +113,23 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   }
 
   protected void stopGridNode() {
-    System.out.println("Asking " + getHost() + " to stop grid node politely");
-    System.out.println(callRemoteGridExtras("stop_grid?port=5555"));
+    writeProxyLog("Asking " + getHost() + " to stop grid node politely");
+    writeProxyLog(callRemoteGridExtras("stop_grid?port=5555"));
+    unregister();
   }
 
   protected void killBrowserForCurrentSession() {
-    System.out.println("Asking " + getHost() + " to politely kill all browsers");
+    writeProxyLog("Asking " + getHost() + " to politely kill all browsers");
 
-    System.out.println(callRemoteGridExtras("kill_ie"));
-    System.out.println(callRemoteGridExtras("kill_safari"));
-    System.out.println(callRemoteGridExtras("kill_chrome"));
-    System.out.println(callRemoteGridExtras("kill_firefox"));
+    writeProxyLog(callRemoteGridExtras("kill_ie"));
+    writeProxyLog(callRemoteGridExtras("kill_safari"));
+    writeProxyLog(callRemoteGridExtras("kill_chrome"));
+    writeProxyLog(callRemoteGridExtras("kill_firefox"));
   }
 
   private void rebootGridExtrasNode() {
-    System.out.println("Asking SeleniumGridExtras to reboot " + getHost());
-    System.out.println(callRemoteGridExtras("reboot"));
+    writeProxyLog("Asking SeleniumGridExtras to reboot " + getHost());
+    writeProxyLog(callRemoteGridExtras("reboot"));
   }
 
   private JsonObject callRemoteGridExtras(String action) {
@@ -138,16 +141,17 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
           new URL("http://" + getHost() + ":3000/" + action));
 
       JsonParser j = new JsonParser();
+      logger.info(returnedString);
       return (JsonObject) j.parse(returnedString);
 
     } catch (MalformedURLException e) {
-      System.out.println(e.toString());
+      writeProxyLog(e.toString());
       e.printStackTrace();
     } catch (ProtocolException e) {
-      System.out.println(e.toString());
+      writeProxyLog(e.toString());
       e.printStackTrace();
     } catch (IOException e) {
-      System.out.println(e.toString());
+      writeProxyLog(e.toString());
       e.printStackTrace();
     }
 
@@ -174,7 +178,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     int sessionLimit = status.get("node_sessions_limit").getAsInt();
 
     if (!nodeRunning) {
-      System.out.println("The grid node on " + getHost() + " does not seem to be running");
+      writeProxyLog("The grid node on " + getHost() + " does not seem to be running");
     } else if (sessionLimit == 0) {
       return false;
     } else if (sessionsStarted >= sessionLimit) {
@@ -190,7 +194,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   }
 
   public void unregister() {
-    System.out.println("Sending Un register command for " + getHost());
+    writeProxyLog("Sending Un register command for " + getHost());
     addNewEvent(new RemoteUnregisterException("Unregistering the node."));
   }
 
@@ -200,6 +204,10 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
   public void setRestarting(boolean restarting) {
     this.restarting = restarting;
+  }
+
+  private void writeProxyLog(Object logItem){
+    logger.info(logItem.toString());
   }
 
 }

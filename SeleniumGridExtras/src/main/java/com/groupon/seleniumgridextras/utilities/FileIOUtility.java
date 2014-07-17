@@ -55,9 +55,13 @@ public class FileIOUtility {
     return readString;
   }
 
-  public static void writeToFile(File filename, String content) throws IOException {
+  public static void writeToFile(File filename, String content, boolean append) throws IOException {
     logger.debug("Writing to " + filename.getAbsolutePath() + " following content\n" + content);
-    FileUtils.writeStringToFile(filename, content);
+    FileUtils.writeStringToFile(filename, content, append);
+  }
+
+  public static void writeToFile(File filename, String content) throws IOException {
+    FileIOUtility.writeToFile(filename, content, false);
   }
 
   public static void writePrettyJsonToFile(File filename, String content) throws IOException{
