@@ -10,17 +10,30 @@ import java.util.Set;
  */
 public class DoubleToIntConverter {
 
-  public static void convertAllDoublesToInt(Map foo){
-    for (String key : (Set<String>) foo.keySet()){
-      if(foo.get(key) instanceof Double){
-        if ((Double)foo.get(key) % 1 == 0){
-          foo.put(key, ((Double) foo.get(key)).intValue());
+  public static void convertAllDoublesToInt(Map inputMap) {
+    for (String key : (Set<String>) inputMap.keySet()) {
+      if (inputMap.get(key) instanceof Double) {
+        if ((Double) inputMap.get(key) % 1 == 0) {
+          inputMap.put(key, ((Double) inputMap.get(key)).intValue());
         }
-      } else if (foo.get(key) instanceof Map){
-        DoubleToIntConverter.convertAllDoublesToInt((Map)foo.get(key));
+      } else if (inputMap.get(key) instanceof List) {
+        DoubleToIntConverter.convertAllDoublesToInt((List) inputMap.get(key));
+      } else if (inputMap.get(key) instanceof Map) {
+        DoubleToIntConverter.convertAllDoublesToInt((Map) inputMap.get(key));
       }
     }
+  }
 
+  public static void convertAllDoublesToInt(List inputList) {
+    for (int i = 0; i < inputList.size(); i++) {
+      if (inputList.get(i) instanceof Double) {
+        if ((Double) inputList.get(i) % 1 == 0) {
+          inputList.set(i, ((Double) inputList.get(i)).intValue());
+        }
+      } else if (inputList.get(i) instanceof Map) {
+        DoubleToIntConverter.convertAllDoublesToInt((Map) inputList.get(i));
+      }
+    }
   }
 
 }
