@@ -34,7 +34,7 @@ public class GridStarter {
         logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
     command.append(logCommand);
-    command.append(" -newSessionWaitTimeout 120000");
+    command.append(" -newSessionWaitTimeout 120000 -browserTimeout 120");
 
     logger.info("Hub Start Command: \n\n" + String.valueOf(command));
     return String.valueOf(command);
