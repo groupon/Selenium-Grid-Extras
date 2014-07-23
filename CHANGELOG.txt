@@ -1,3 +1,4 @@
+1.3.4 - [Bug Fix] Set the new browser timeout to 120 instead of infinite
 1.3.3 - Fixed an issue where the node will attempt to reboot and will be stuck in an endless loop trying to kill safari and never rebooting. Fixing the issue by commenting out the kill browsers command and just sending a reboot command
 1.3.2 - Fixing a bug where node config JSON have all Integers converted to Doubles by Gson, which prevents nodes from starting
 1.3.1 - When sending config to HUB and reciving it from HUB, parse the config and pretty print it into the file
