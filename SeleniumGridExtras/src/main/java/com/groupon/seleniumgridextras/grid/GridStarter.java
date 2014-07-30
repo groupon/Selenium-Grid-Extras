@@ -20,7 +20,7 @@ public class GridStarter {
   public static String getOsSpecificHubStartCommand(Boolean windows) {
 
     StringBuilder command = new StringBuilder();
-    command.append("java ");
+    command.append(getJavaExe() + " ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
     command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
@@ -130,7 +130,7 @@ public class GridStarter {
     }
 
     StringBuilder command = new StringBuilder();
-    command.append("java ");
+    command.append(getJavaExe() + " ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
 
     if (RuntimeConfig.getOS().isWindows()) {
@@ -205,6 +205,19 @@ public class GridStarter {
       logger.fatal("Could not write default config file, exit with error " + error.toString());
       System.exit(1);
     }
+  }
+
+  private static String getJavaExe(){
+    String javaHome = System.getProperty("java.home");
+    File f = new File(javaHome);
+    f = new File(f, "bin");
+    f = new File(f, "java");
+
+    if (RuntimeConfig.getOS().isWindows()){
+      f = new File(f, ".exe");
+    }
+
+    return f.getAbsolutePath();
   }
 
 
