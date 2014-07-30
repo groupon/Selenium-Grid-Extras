@@ -22,7 +22,7 @@ public class GridStarter {
     StringBuilder command = new StringBuilder();
     command.append(getJavaExe() + " ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-    command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
+    command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
 
@@ -207,17 +207,16 @@ public class GridStarter {
     }
   }
 
-  private static String getJavaExe(){
-    String javaHome = System.getProperty("java.home");
-    File f = new File(javaHome);
-    f = new File(f, "bin");
-    f = new File(f, "java");
-
-    if (RuntimeConfig.getOS().isWindows()){
-      f = new File(f, ".exe");
+  private static String getJavaExe() {
+    if (RuntimeConfig.getOS().isWindows()) {
+      return "java";
+    } else {
+      String javaHome = System.getProperty("java.home");
+      File f = new File(javaHome);
+      f = new File(f, "bin");
+      f = new File(f, "java");
+      return f.getAbsolutePath();
     }
-
-    return f.getAbsolutePath();
   }
 
 
