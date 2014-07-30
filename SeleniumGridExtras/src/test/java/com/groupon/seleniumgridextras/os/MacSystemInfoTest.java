@@ -49,34 +49,34 @@ import com.groupon.seleniumgridextras.os.MacSystemInfo;
 
 
 public class MacSystemInfoTest {
-
-  public OSInfo info;
-
-  @Before
-  public void setUp() throws Exception {
-      Assume.assumeTrue(RuntimeConfig.getOS().isMac());
-      info = new MacSystemInfo();
-  }
-
-  @Test
-  public void testGetDiskInfo() throws Exception {
-
-  }
-
-  @Test
-  public void testGetProcessorInfo() throws Exception {
-    assertNotEquals("", info.getProcessorInfo().get("cores"));
-    assertEquals("N/A", info.getProcessorInfo().get("processors"));
-    assertNotEquals("", info.getProcessorInfo().get("load"));
-  }
-
-  @Test
-  public void testGetMemoryInfo() throws Exception {
-//     assertEquals("", info.getDiskInfo());
-  }
-
-  @Test
-  public void testGetSystemUptime() throws Exception {
-    assertNotEquals("", info.getSystemUptime());
-  }
+//
+//  public OSInfo info;
+//
+//  @Before
+//  public void setUp() throws Exception {
+//      Assume.assumeTrue(RuntimeConfig.getOS().isMac());
+//      info = new MacSystemInfo();
+//  }
+//
+//  @Test
+//  public void testGetDiskInfo() throws Exception {
+//
+//  }
+//
+//  @Test
+//  public void testGetProcessorInfo() throws Exception {
+//    assertNotEquals("", info.getProcessorInfo().get("cores"));
+//    assertEquals("N/A", info.getProcessorInfo().get("processors"));
+//    assertNotEquals("", info.getProcessorInfo().get("load"));
+//  }
+//
+//  @Test
+//  public void testGetMemoryInfo() throws Exception {
+////     assertEquals("", info.getDiskInfo());
+//  }
+//
+//  @Test
+//  public void testGetSystemUptime() throws Exception {
+//    assertNotEquals("", info.getSystemUptime());
+//  }
 }
