@@ -71,7 +71,7 @@ public class KillAllIE extends KillAllByName {
 
   @Override
   public JsonObject execute(String param) {
-
+    //TODO: Make this work like killAllSafari and KillAllFirefox works
     if (RuntimeConfig.getOS().isWindows()) {
       return killIEAndIEDriver();
     } else {

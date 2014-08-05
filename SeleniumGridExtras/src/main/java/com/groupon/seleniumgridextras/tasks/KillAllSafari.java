@@ -37,70 +37,38 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OS;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-public class KillAllChrome extends KillAllByName {
+public class KillAllSafari extends KillAllByName {
 
-  public KillAllChrome() {
-    setEndpoint("/kill_chrome");
-    setDescription("Executes os level kill command on all instance of Google Chrome");
+  public KillAllSafari() {
+    setEndpoint("/kill_safari");
+    setDescription("Executes os level kill command on all instance of Safari");
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-danger");
-    setButtonText("Kill all chrome");
+    setButtonText("Kill all Safari");
     setEnabledInGui(true);
   }
 
 
   @Override
-  public JsonObject execute(String param) {
-    //TODO: Make this work like killAllSafari and KillAllFirefox works
-    if (RuntimeConfig.getOS().isWindows()) {
-      return killChromeOnWindows();
-    } else if (RuntimeConfig.getOS().isMac()) {
-      return killChromeOnMac();
-    } else {
-      return killChromeOnLinux();
-    }
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("Safari.exe");
   }
 
-
-  private JsonObject killChromeOnLinux() {
-    return ExecuteCommand.execRuntime(getLinuxCommand("[Cc]hrome"));
+  @Override
+  public String getLinuxCommand() {
+    return getMacCommand();
   }
 
-  private JsonObject killChromeOnMac() {
-    return ExecuteCommand.execRuntime(getMacCommand("[Cc]hrome"));
-  }
-
-  private JsonObject killChromeOnWindows() {
-
-    JsonObject killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe"));
-
-    JsonObject
-        killDriverResult =
-        ExecuteCommand.execRuntime(
-            getWindowsKillCommand(RuntimeConfig.getConfig().getChromeDriver().getExecutableName()));
-
-    JsonArray response = new JsonArray();
-    response.add(killBrowserResult);
-    response.add(killDriverResult);
-
-    if (killBrowserResult.get("exit_code").equals("0") && killDriverResult.get("exit_code")
-        .equals("0")) {
-      getJsonResponse().addKeyValues("out", response);
-    } else {
-      getJsonResponse().addKeyValues("error", response);
-    }
-
-    return getJsonResponse().getJson();
-
+  @Override
+  public String getMacCommand() {
+    return super.getMacCommand("Safari");
   }
 }

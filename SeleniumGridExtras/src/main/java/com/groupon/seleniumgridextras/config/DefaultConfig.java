@@ -131,9 +131,12 @@ public class DefaultConfig {
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Teardown");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.MoveMouse");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.RebootNode");
+
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllIE");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllFirefox");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllChrome");
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllSafari");
+
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.GetProcesses");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillPid");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.Netstat");
