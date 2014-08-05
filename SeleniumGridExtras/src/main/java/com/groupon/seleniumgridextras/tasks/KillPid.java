@@ -89,6 +89,6 @@ public class KillPid extends ExecuteOSTask {
 
   @Override
   public String getLinuxCommand(String parameter) {
-    return "kill " + parameter;
+    return "kill -9 " + parameter;
   }
 }
