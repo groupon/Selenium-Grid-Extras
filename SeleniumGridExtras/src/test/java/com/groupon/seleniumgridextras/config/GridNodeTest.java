@@ -40,13 +40,13 @@ public class GridNodeTest {
     expectedConfiguration.put("maxSession", 3);
     expectedConfiguration.put("port", 5555);
     expectedConfiguration.put("register", true);
-//    expectedConfiguration.put("registerCycle", 10000);
+//    expectedConfiguration.put("browserTimeout", 120);
+//    expectedConfiguration.put("timeout", 120);
     expectedConfiguration.put("hubPort", 4444);
     expectedConfiguration.put("hubHost", "google.com");
-    expectedConfiguration.put("nodeTimeout", 120);
-    expectedConfiguration.put("unregisterIfStillDownAfter", 20000);
-//    expectedConfiguration.put("cleanupCycle", 10000);
-//    expectedConfiguration.put("nodePolling", 10000);
+    expectedConfiguration.put("unregisterIfStillDownAfter", 10000);
+    expectedConfiguration.put("nodeStatusCheckTimeout", 10000);
+    expectedConfiguration.put("downPollingLimit", 0);
 
     expectedCapabilities = new LinkedList<Capability>();
     expectedCapabilities.add(new Firefox());
@@ -82,7 +82,7 @@ public class GridNodeTest {
     assertEquals(1, nodeFromFile.getCapabilities().size());
     assertEquals(expectedCapabilities, nodeFromFile.getCapabilities());
 
-    //Find lowest common denamitator of comparison which is a HasMap, convert everything into that andd run test
+    //Find lowest common denominator of comparison which is a HasMap, convert everything into that andd run test
     Map expected = new Gson().fromJson(new Gson().toJson(expectedConfiguration), HashMap.class);
     Map
         actual =

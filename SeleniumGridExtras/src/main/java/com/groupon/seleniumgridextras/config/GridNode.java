@@ -154,13 +154,20 @@ public class GridNode {
     private int maxSession = 3;
     private int port;
     private boolean register = true;
-//    private int nodePolling = 10000;
-//    private int registerCycle = 10000;
-//    private int cleanupCycle = 10000;
-    private int unregisterIfStillDownAfter = 20000;
+    private int unregisterIfStillDownAfter = 10000;
     private int hubPort;
-    private int nodeTimeout = 120;
     private String hubHost;
+//    private int browserTimeout = 120;
+//    private int timeout = 120;
+    private int nodeStatusCheckTimeout = 10000;
+
+    //Only test the node status 1 time, since the limit checker is
+    //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
+    private int downPollingLimit = 0;
+
+
+
+    //java -jar 2.41.0.jar -role node -hub http://192.168.168.17:4444 -maxSession 3 -register true -unregisterIfStillDownAfter 20000 -browserTimeout 120 -timeout 120 -port
 
 
     public int getPort() {
