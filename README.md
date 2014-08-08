@@ -6,10 +6,10 @@ Selenium Grid Extras is a project that helps you set up and manage your local Se
 Setup of Grid Extras is made to be simple, just run the packaged JAR file and point the node at the HUB location, Grid Extras will take care of the rest for you.
 Here are the features you get by using Selenium Grid Extras vs Selenium Grid alone:
 * Ability to control individual grid nodes, following is an incomplete list of OS level tasks:
-** Killing any browser instance by name
-** Stopping any Process by PID
-** Moving mouse to specific location
-** Get Memory usage and disk statistics
+  * Killing any browser instance by name
+  * Stopping any Process by PID
+  * Moving mouse to specific location
+  * Get Memory usage and disk statistics
 * Automatically upgrade WebDriver binaries
 * Restart node after a set number of test executions
 * Central storage of configurations for all nodes on the HUB server
