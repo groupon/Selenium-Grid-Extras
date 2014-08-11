@@ -100,10 +100,10 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   private JsonObject startNodes() {
-	File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
-	if (configsDirectory.exists()) {
-	  new ConfigPuller().updateFromRemote();
-	}
+    File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
+    if (configsDirectory.exists()) {
+      new ConfigPuller().updateFromRemote();
+    }
     System.out.println("Attempting to start Grid Nodes");
     return GridStarter.startAllNodes(getJsonResponse());
   }
