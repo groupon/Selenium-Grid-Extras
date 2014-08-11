@@ -41,12 +41,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
 import com.groupon.seleniumgridextras.grid.GridStarter;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
@@ -99,6 +100,10 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   private JsonObject startNodes() {
+	File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
+	if (configsDirectory.exists()) {
+	  new ConfigPuller().updateFromRemote();
+	}
     System.out.println("Attempting to start Grid Nodes");
     return GridStarter.startAllNodes(getJsonResponse());
   }
