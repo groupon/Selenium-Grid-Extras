@@ -39,7 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -106,8 +106,6 @@ public class IEProtectedMode extends ExecuteOSTask {
     return String.format(regLocation, zoneId);
   }
 
-  ;
-
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
@@ -119,14 +117,24 @@ public class IEProtectedMode extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    return getAllProtectedStatus();
+    if (RuntimeConfig.getOS().isWindows()) {
+      return getAllProtectedStatus();
+    } else {
+      getJsonResponse().addKeyValues("error", "IE Protected Mode command is only implemented in Windows");
+      return getJsonResponse().getJson();
+    }
   }
 
   @Override
   public JsonObject execute(String status) {
-    setAllProtectedStatuses(status.equals("1") ? true : false);
-    getJsonResponse().addKeyValues("out", "IE needs to restart before you see the changes");
-    return getAllProtectedStatus();
+    if (RuntimeConfig.getOS().isWindows()) {
+      setAllProtectedStatuses(status.equals("1") ? true : false);
+      getJsonResponse().addKeyValues("out", "IE needs to restart before you see the changes");
+      return getAllProtectedStatus();
+    } else {
+      getJsonResponse().addKeyValues("error", "IE Protected Mode command is only implemented in Windows");
+      return getJsonResponse().getJson();
+    }
   }
 
   private void setAllProtectedStatuses(boolean value) {
@@ -141,8 +149,6 @@ public class IEProtectedMode extends ExecuteOSTask {
       e.printStackTrace();
     }
   }
-
-  ;
 
 
   private Boolean getProtectedEnabledForZone(String zone) {
