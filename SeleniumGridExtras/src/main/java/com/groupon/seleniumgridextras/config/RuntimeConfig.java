@@ -59,7 +59,6 @@ public class RuntimeConfig {
   private static String configFile = "selenium_grid_extras_config.json";
   private static Config config = null;
   private static OS currentOS = new OS();
-  private final static String version = "1.2.1";
   private final static int gridExtrasPort = 3000;
   private static Logger logger = Logger.getLogger(RuntimeConfig.class);
   private static WebDriverReleaseManager releaseManager;
@@ -100,10 +99,6 @@ public class RuntimeConfig {
 
   public RuntimeConfig() {
     config = new Config();
-  }
-
-  public static String getVersion() {
-    return version;
   }
 
 
