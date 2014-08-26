@@ -81,7 +81,7 @@ public class ScreenshotTest {
   @Test
   public void testGetJsonResponse() throws Exception {
     assertEquals(
-        new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"file\":[\"\"],\"image\":[\"\"],\"file_type\":[\"\"],\"out\":[]}"),
+        new JsonParser().parse("{\"exit_code\":0,\"out\":[],\"error\":[],\"file_type\":[\"\"],\"file\":[\"\"],\"image\":[\"\"],\"hostname\":[\"\"],\"ip\":[\"\"],\"timestamp\":[\"\"]}"),
         task.getJsonResponse().getJson());
   }
 
@@ -93,7 +93,13 @@ public class ScreenshotTest {
         task.getJsonResponse().getKeyDescriptions().get("file_type").getAsString());
     assertEquals("Name of the file saved on the NodeConfig's HD",
         task.getJsonResponse().getKeyDescriptions().get("file").getAsString());
-    assertEquals(6, task.getJsonResponse().getKeyDescriptions().entrySet().size());
+    assertEquals("Human readable machine name",
+                 task.getJsonResponse().getKeyDescriptions().get("hostname").getAsString());
+    assertEquals("IP Address of current machine",
+                 task.getJsonResponse().getKeyDescriptions().get("ip").getAsString());
+    assertEquals("Timestamp of the screenshot",
+                 task.getJsonResponse().getKeyDescriptions().get("timestamp").getAsString());
+    assertEquals(9, task.getJsonResponse().getKeyDescriptions().entrySet().size());
   }
 
 }

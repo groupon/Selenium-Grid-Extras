@@ -48,7 +48,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -74,6 +76,9 @@ public class Screenshot extends ExecuteOSTask {
     addResponseDescription("file_type", "Type of file returned (PNG/JPG/GIF)");
     addResponseDescription("file", "Name of the file saved on the NodeConfig's HD");
     addResponseDescription("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
+    addResponseDescription("hostname", "Human readable machine name");
+    addResponseDescription("ip", "IP Address of current machine");
+    addResponseDescription("timestamp", "Timestamp of the screenshot");
 
   }
 
@@ -119,6 +124,12 @@ public class Screenshot extends ExecuteOSTask {
       getJsonResponse().addKeyValues("file",
           RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator() + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
+
+      getJsonResponse().addKeyValues("hostname", RuntimeConfig.getOS().getHostName());
+      getJsonResponse().addKeyValues("ip", RuntimeConfig.getOS().getHostName());
+      Date newTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+      getJsonResponse().addKeyValues("timestamp", newTimestamp.toString());
+
       return getJsonResponse().getJson();
     } catch (AWTException error) {
       getJsonResponse().addKeyValues("error", "Error with AWT Robot\n" + error);
