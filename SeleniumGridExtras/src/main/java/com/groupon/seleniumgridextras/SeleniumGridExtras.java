@@ -87,8 +87,9 @@ public class SeleniumGridExtras {
           @Override
           String execute(Map params) {
 
-            logger.info("End-point " + task.getEndpoint() + " was called with HTTP params " + params
-                .toString());
+            logger.debug(
+                "End-point " + task.getEndpoint() + " was called with HTTP params " + params
+                    .toString());
             String
                 result =
                 new GsonBuilder().setPrettyPrinting().create().toJson(task.execute(params));
