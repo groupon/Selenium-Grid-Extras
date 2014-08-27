@@ -59,4 +59,8 @@ public class ImageUtils {
     return imageString;
   }
 
+  public static BufferedImage readImage(File image) throws IOException {
+    return ImageIO.read(image);
+  }
+
 }
