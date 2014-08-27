@@ -106,6 +106,12 @@
                     <include>*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources/video_recording</directory>
+                <includes>
+                    <include>*</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 </project>
