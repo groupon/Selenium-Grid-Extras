@@ -126,7 +126,7 @@ public class Screenshot extends ExecuteOSTask {
       getJsonResponse().addKeyValues("image", encodedImage);
 
       getJsonResponse().addKeyValues("hostname", RuntimeConfig.getOS().getHostName());
-      getJsonResponse().addKeyValues("ip", RuntimeConfig.getOS().getHostName());
+      getJsonResponse().addKeyValues("ip", RuntimeConfig.getOS().getHostIp());
       Date newTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
       getJsonResponse().addKeyValues("timestamp", newTimestamp.toString());
 
