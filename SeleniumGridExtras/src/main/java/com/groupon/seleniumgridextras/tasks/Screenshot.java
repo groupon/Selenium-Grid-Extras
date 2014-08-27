@@ -38,11 +38,16 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -58,6 +63,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Screenshot extends ExecuteOSTask {
+
+  private static Logger logger = Logger.getLogger(Screenshot.class);
 
   public Screenshot() {
     setEndpoint("/screenshot");
@@ -92,7 +99,9 @@ public class Screenshot extends ExecuteOSTask {
 
     int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
     int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
-    boolean keepFile = parameter.containsKey("keep") ? Boolean.parseBoolean(parameter.get("keep")) : true;
+    boolean
+        keepFile =
+        parameter.containsKey("keep") ? Boolean.parseBoolean(parameter.get("keep")) : true;
     return createScreenshot(width, height, keepFile);
   }
 
@@ -122,7 +131,8 @@ public class Screenshot extends ExecuteOSTask {
       }
       getJsonResponse().addKeyValues("file_type", "PNG");
       getJsonResponse().addKeyValues("file",
-          RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator() + filename);
+                                     RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig
+                                         .getOS().getFileSeparator() + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
 
       getJsonResponse().addKeyValues("hostname", RuntimeConfig.getOS().getHostName());
@@ -137,7 +147,8 @@ public class Screenshot extends ExecuteOSTask {
     }
   }
 
-  private String encodeStreamToBase64(ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+  private String encodeStreamToBase64(ByteArrayOutputStream byteArrayOutputStream)
+      throws IOException {
     String encodedImage;
     Base64 base = new Base64(false);
     encodedImage = base.encodeToString(byteArrayOutputStream.toByteArray());
@@ -197,4 +208,20 @@ public class Screenshot extends ExecuteOSTask {
     localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
     return localDependencies;
   }
+
+  @Override
+  public boolean initialize() {
+
+    try {
+      logger.debug("Starting the AWT service");
+      this.execute();
+      printInitilizedSuccessAndRegisterWithAPI();
+      return true;
+    } catch (NullPointerException error) {
+      printInitilizedFailure();
+      logger.error(error);
+      return false;
+    }
+  }
+
 }
