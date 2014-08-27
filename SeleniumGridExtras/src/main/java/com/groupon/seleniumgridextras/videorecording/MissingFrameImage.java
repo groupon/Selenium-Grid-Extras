@@ -5,6 +5,7 @@ import com.groupon.seleniumgridextras.utilities.ImageUtils;
 
 import org.apache.log4j.Logger;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -16,10 +17,14 @@ public class MissingFrameImage {
   private static Logger logger = Logger.getLogger(MissingFrameImage.class);
   final protected static File missingFrameImage = new File(SeleniumGridExtras.class.getClassLoader().getResource("frame_missing_image.png")
                                                                .getFile());
-  public static String getMissingFrame(){
 
+  public static BufferedImage getMissingFrameAsBufferedImage() throws IOException {
+    return ImageUtils.readImage(missingFrameImage);
+  }
+
+  public static String getMissingFrame(){
     try {
-      return ImageUtils.encodeToString(ImageUtils.readImage(missingFrameImage), "PNG");
+      return ImageUtils.encodeToString(getMissingFrameAsBufferedImage(), "PNG");
     } catch (IOException e) {
       logger.warn("Could not read the missingFrameIMage " + missingFrameImage.getAbsolutePath());
       logger.warn(e);

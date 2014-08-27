@@ -10,12 +10,12 @@ import com.groupon.seleniumgridextras.utilities.ImageUtils;
 
 import org.junit.Test;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MissingFrameImageTest {
 
@@ -30,6 +30,19 @@ public class MissingFrameImageTest {
                  MissingFrameImage.getMissingFrame());
 
 
+  }
+
+  @Test
+  public void testGetMissingBufferedImage() throws Exception {
+    File
+        imageFile =
+        new File(SeleniumGridExtras.class.getClassLoader().getResource("frame_missing_image.png")
+                     .getFile());
+
+    //Not sure how to compare 2 buffered images, but i'll assume that if it read the file in just fine
+    //than we are probably safe. The other test will check for the content
+    MissingFrameImage.getMissingFrameAsBufferedImage();
+    assertTrue(true);
   }
 
 }
