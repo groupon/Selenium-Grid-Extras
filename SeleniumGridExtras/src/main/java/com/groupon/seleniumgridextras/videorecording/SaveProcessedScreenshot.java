@@ -21,10 +21,10 @@ public class SaveProcessedScreenshot implements Callable{
   protected String line3;
   protected String line4;
 
-  public SaveProcessedScreenshot(String outputFile, Dimension dimension, String line1, String line2,
+  public SaveProcessedScreenshot(File outputFile, Dimension dimension, String line1, String line2,
                                  String line3,
                                  String line4) {
-    this.output = new File(outputFile);
+    this.output = outputFile;
     this.dimension = dimension;
     this.line1 = line1;
     this.line2 = line2;

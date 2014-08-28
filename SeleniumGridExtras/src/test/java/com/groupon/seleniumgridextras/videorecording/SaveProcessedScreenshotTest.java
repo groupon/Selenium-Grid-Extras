@@ -41,9 +41,8 @@ public class SaveProcessedScreenshotTest {
 
     SaveProcessedScreenshot
         imageSaver =
-        new SaveProcessedScreenshot(output.getAbsolutePath(), dimension, "line1", "line2", "line3",
-                             "line4");
-
+        new SaveProcessedScreenshot(output, dimension, "line1", "line2", "line3",
+                                    "line4");
 
     ExecutorService cachedPool = Executors.newCachedThreadPool();
     try {
