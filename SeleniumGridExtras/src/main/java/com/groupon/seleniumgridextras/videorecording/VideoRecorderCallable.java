@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.videorecording;
 
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.utilities.ImageUtils;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
@@ -31,14 +30,16 @@ public class VideoRecorderCallable implements Callable {
 
   protected String nodeName;
   protected String lastCommand;
+  protected int idleTimeout;
 
 
   final private static IRational FRAME_RATE = IRational.make(5, 1); //5 frames for every 1 second
   private static Dimension dimension;
 
 
-  public VideoRecorderCallable(String sessionID) {
+  public VideoRecorderCallable(String sessionID, int timeout) {
     this.sessionId = sessionID;
+    this.idleTimeout = timeout;
     setOutputDirExists(this.sessionId);
     dynamicallySetDimension();
   }
@@ -80,7 +81,7 @@ public class VideoRecorderCallable implements Callable {
       long startTime = System.nanoTime();
       addTitleFrame(writer);
 
-      while (isRecording() && getTimeoutNotReached()) {
+      while (stopActionNotCalled() && idleTimeoutNotReached()) {
 
         // take the screen shot
         BufferedImage
@@ -108,10 +109,7 @@ public class VideoRecorderCallable implements Callable {
       }
     } finally {
       writer.close();
-
     }
-
-//    logger.info("Captured " + imageFrame + " frames");
 
     return getSessionId();
   }
@@ -153,14 +151,24 @@ public class VideoRecorderCallable implements Callable {
           "Root Video output dir does not exist, creating it here " + outputDir.getAbsolutePath());
       outputDir.mkdir();
     }
-
   }
 
-  protected boolean getTimeoutNotReached() {
-    return true;
+
+  protected boolean idleTimeoutNotReached() {
+    if (this.lastActionTimestamp == null) {
+      this.lastActionTimestamp = getTimestamp();
+    }
+
+    long seconds = (getTimestamp().getTime() - this.lastActionTimestamp.getTime()) / 1000;
+
+    if (seconds < this.idleTimeout) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
-  protected boolean isRecording() {
+  protected boolean stopActionNotCalled() {
     return recording;
   }
 

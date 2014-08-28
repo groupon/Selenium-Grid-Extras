@@ -25,7 +25,7 @@ public class VideoRecorderCallableTest {
   @Test
   public void testRecordVideo() throws Exception {
 
-    VideoRecorderCallable video = new VideoRecorderCallable(session);
+    VideoRecorderCallable video = new VideoRecorderCallable(session, 60);
 
     ExecutorService cachedPool = Executors.newCachedThreadPool();
 
@@ -46,6 +46,50 @@ public class VideoRecorderCallableTest {
       assertTrue(output.exists());
       assertTrue(output.length() > 110000);
 
+    } finally {
+      cachedPool.shutdown();
+    }
+  }
+
+  @Test
+  public void testTimeout() throws Exception{
+    VideoRecorderCallable video = new VideoRecorderCallable(session, 2);
+
+    ExecutorService cachedPool = Executors.newCachedThreadPool();
+
+    try {
+      Future<String> future = cachedPool.submit(video);
+      Thread.sleep(6000);
+      assertTrue(future.isDone());
+    } finally {
+      cachedPool.shutdown();
+    }
+  }
+
+  @Test
+  public void testTimeoutExtended() throws Exception{
+    VideoRecorderCallable video = new VideoRecorderCallable(session, 2);
+
+    ExecutorService cachedPool = Executors.newCachedThreadPool();
+
+    try {
+      Future<String> future = cachedPool.submit(video);
+      video.lastAction("action");
+      assertTrue(!future.isDone());
+      Thread.sleep(1000);
+      video.lastAction("action");
+      assertTrue(!future.isDone());
+      Thread.sleep(1000);
+      video.lastAction("action");
+      assertTrue(!future.isDone());
+      Thread.sleep(1000);
+      video.lastAction("action");
+      assertTrue(!future.isDone());
+      Thread.sleep(1000);
+      video.lastAction("action");
+      assertTrue(!future.isDone());
+      Thread.sleep(3000);
+      assertTrue(future.isDone());
     } finally {
       cachedPool.shutdown();
     }
