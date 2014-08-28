@@ -4,10 +4,7 @@ import com.groupon.seleniumgridextras.utilities.ImageUtils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 
 public class ImageProcessor {
 
@@ -43,6 +40,29 @@ public class ImageProcessor {
     return image;
 
 
+  }
+
+  public static BufferedImage createTitleFrame(Dimension dimension, int imageType, String line1, String line2,
+                                               String line3){
+    BufferedImage image = new BufferedImage(dimension.width, dimension.height, imageType);
+
+    Graphics g = image.getGraphics();
+    g.setColor(
+        new Color(129, 182, 64, 128)); //Set the rectangle color to Groupon green and transperent
+
+    int height = image.getHeight();
+    int width  = image.getWidth();
+    int firstLineX = ((Double) ( width * 0.1)).intValue();
+    int firstLineY = ((Double) ( width * 0.1)).intValue();
+    int secondLineY = firstLineY + 50;
+    int thirdLineY = secondLineY + 50;
+
+    g.setFont(g.getFont().deriveFont(40f));
+    g.drawString(line1, firstLineX, firstLineY );
+    g.drawString(line2, firstLineX, secondLineY);
+    g.drawString(line3, firstLineX, thirdLineY);
+
+    return image;
   }
 
 }

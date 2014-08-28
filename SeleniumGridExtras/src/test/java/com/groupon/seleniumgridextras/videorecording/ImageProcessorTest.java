@@ -5,6 +5,7 @@ import com.groupon.seleniumgridextras.utilities.ImageUtils;
 
 import org.junit.Test;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -37,6 +38,25 @@ public class ImageProcessorTest {
         new File(ClassLoader.getSystemResource("fixtures/expected_processed_image.png").getFile());
 
     assertEquals(ImageUtils.encodeToString(ImageUtils.readImage(expectedFile), "PNG"), actual);
+  }
+
+  @Test
+  public void testCreateTitleFrame() throws Exception {
+    Dimension size = new Dimension(1024, 768);
+
+    BufferedImage image = ImageProcessor
+        .createTitleFrame(size, BufferedImage.TYPE_3BYTE_BGR, "Line 1", "Line 2", "Line 3");
+
+    // Uncomment this line after updating ImageProcessor class, to generate a new expected image
+//    ImageUtils.saveImage(new File("SeleniumGridExtras/src/test/resources/fixtures/expected_title_image.png"), image);
+
+    final File
+        expectedFile =
+        new File(ClassLoader.getSystemResource("fixtures/expected_title_image.png").getFile());
+
+    assertEquals(ImageUtils.encodeToString(ImageUtils.readImage(expectedFile), "PNG"),
+                 ImageUtils.encodeToString(image, "PNG"));
+
   }
 
 }
