@@ -54,6 +54,9 @@ public class VideoRecordingThreadPoolTest {
 
     VideoRecordingThreadPool.waitForThreadToStop(session3);
 
+    VideoRecordingThreadPool.removeSession(session1);
+    VideoRecordingThreadPool.removeSession(session2);
+    VideoRecordingThreadPool.removeSession(session3);
 
     assertTrue(session1File.exists());
     assertTrue(session2File.exists());

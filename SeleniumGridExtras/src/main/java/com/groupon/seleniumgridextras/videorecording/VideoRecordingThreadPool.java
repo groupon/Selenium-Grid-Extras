@@ -25,18 +25,20 @@ public class VideoRecordingThreadPool {
       new HashMap<String, VideoRecorderCallable>();
 
 
-  public static void startVideoRecording(String sessionName)
-      throws URISyntaxException {
-
+  public static void startVideoRecording(String sessionName, int timeout) {
     if (cachedPool == null) {
       initializeThreadPool();
     }
 
-    VideoRecorderCallable aCallable = new VideoRecorderCallable(sessionName);
+    VideoRecorderCallable aCallable = new VideoRecorderCallable(sessionName, timeout);
 
     Future callableFuture = cachedPool.submit(aCallable);
     futures.put(sessionName, callableFuture);
     videos.put(sessionName, aCallable);
+  }
+
+  public static void startVideoRecording(String sessionName) {
+    startVideoRecording(sessionName, 120);
   }
 
   public static void stopVideoRecording(String sessionName) {
@@ -62,21 +64,27 @@ public class VideoRecordingThreadPool {
         logger.warn("Have to force cancel video for session " + sessionName);
         future.cancel(true);
 
-        if (!future.isCancelled()){
+        if (!future.isCancelled()) {
           logger.warn("Seems to be a runaway thread " + sessionName);
           logger.warn(future);
           logger.warn(video);
         }
       }
-
     }
+
+
   }
 
-  public static VideoRecorderCallable getVideo(String sessionName){
+  public static void removeSession(String sessionName) {
+    futures.remove(sessionName);
+    videos.remove(sessionName);
+  }
+
+  public static VideoRecorderCallable getVideo(String sessionName) {
     return videos.get(sessionName);
   }
 
-  public static void waitForThreadToStop(String sessionName){
+  public static void waitForThreadToStop(String sessionName) {
     try {
       futures.get(sessionName).get();
     } catch (InterruptedException e) {
