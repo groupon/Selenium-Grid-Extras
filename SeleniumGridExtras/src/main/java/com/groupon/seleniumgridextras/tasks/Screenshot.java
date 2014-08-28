@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -109,10 +110,7 @@ public class Screenshot extends ExecuteOSTask {
     String filename;
     String encodedImage;
     try {
-      BufferedImage screenshot = takeScreenshot();
-      if (width > 0 || height > 0) {
-        screenshot = createThumbnail(screenshot, width, height);
-      }
+      BufferedImage screenshot = ScreenshotUtility.getResizedScreenshot(width, height);
       try {
         if (keepFile) {
           filename = writeImageToDisk(screenshot);
@@ -181,24 +179,6 @@ public class Screenshot extends ExecuteOSTask {
     String formattedTimestamp = sdf.format(date);
     filename = "screenshot_" + formattedTimestamp + ".png";
     return filename;
-  }
-
-  private BufferedImage takeScreenshot() throws AWTException {
-    Robot robot = new Robot();
-    Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-    return robot.createScreenCapture(captureSize);
-  }
-
-  private BufferedImage createThumbnail(BufferedImage originalImage, int width, int height) {
-    BufferedImage thumbnail = null;
-    try {
-      thumbnail = Thumbnails.of(originalImage)
-          .size(width, height)
-          .asBufferedImage();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return thumbnail;
   }
 
   @Override
