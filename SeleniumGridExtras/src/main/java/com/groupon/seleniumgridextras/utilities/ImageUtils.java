@@ -63,4 +63,8 @@ public class ImageUtils {
     return ImageIO.read(image);
   }
 
+  public static void saveImage(File filename, BufferedImage image) throws IOException {
+    ImageIO.write(image, "png", filename.getAbsoluteFile());
+  }
+
 }
