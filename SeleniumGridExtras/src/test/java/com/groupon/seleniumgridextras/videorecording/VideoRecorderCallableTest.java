@@ -1,5 +1,6 @@
 package com.groupon.seleniumgridextras.videorecording;
 
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
@@ -14,7 +15,14 @@ import static org.junit.Assert.assertTrue;
 public class VideoRecorderCallableTest {
 
   final private String session = "123456";
-  final private File outputDir = new File("video_output", session);
+  final private File output = new File("video_output", session + ".mp4");
+
+  @After
+  public void tearDown() throws Exception {
+    if (output.exists()){
+      output.delete();
+    }
+  }
 
   @Test
   public void testRecordVideo() throws Exception {
@@ -37,10 +45,9 @@ public class VideoRecorderCallableTest {
 
       future.get(); //wait for thread to finish
 
-      //We ran recording for 6 seconds but CPU might be slow so check that at least 4 seconds are captured
-      assertTrue(outputDir.listFiles().length > 4);
+      assertTrue(output.exists());
+      assertTrue(output.length() > 110000);
 
-      System.out.println(future.isDone());
     } finally {
       cachedPool.shutdown();
     }

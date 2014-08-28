@@ -2,17 +2,21 @@ package com.groupon.seleniumgridextras.videorecording;
 
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.ImageUtils;
+import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
+import com.xuggle.mediatool.IMediaWriter;
+import com.xuggle.mediatool.ToolFactory;
+import com.xuggle.xuggler.IRational;
+
 import org.apache.log4j.Logger;
+
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
-
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 
 public class VideoRecorderCallable implements Callable {
@@ -21,20 +25,22 @@ public class VideoRecorderCallable implements Callable {
   protected String lastAction;
   protected Date lastActionTimestamp;
   protected boolean recording = true;
-  protected URI targetURI;
   protected String sessionId;
   final protected File outputDir = new File("video_output");
-  protected File sessionOutputDir;
 
-  ExecutorService imageRetrivalThreadPool = Executors.newCachedThreadPool();
 
   protected String nodeName;
   protected String lastCommand;
 
 
+  final private static IRational FRAME_RATE = IRational.make(5, 1); //5 frames for every 1 second
+  private static Dimension dimension;
+
+
   public VideoRecorderCallable(String sessionID) {
     this.sessionId = sessionID;
     setOutputDirExists(this.sessionId);
+    dynamicallySetDimension();
   }
 
   @Override
@@ -45,34 +51,87 @@ public class VideoRecorderCallable implements Callable {
         + ")";
     this.lastCommand = null;
 
+    // This is the robot for taking a snapshot of the
+    // screen.  It's part of Java AWT
+    final Robot robot = new Robot();
+    final Toolkit toolkit = Toolkit.getDefaultToolkit();
+    final Rectangle screenBounds = new Rectangle(toolkit.getScreenSize());
+
+    screenBounds.setBounds(0, 0, dimension.width, dimension.height);
+    // First, let's make a IMediaWriter to write the file.
+    final
+    IMediaWriter
+        writer =
+        ToolFactory.makeWriter(new File(outputDir, sessionId + ".mp4").getAbsolutePath());
+
+    // We tell it we're going to add one video stream, with id 0,
+    // at position 0, and that it will have a fixed frame rate of
+    // FRAME_RATE.
+    writer.addVideoStream(0, 0,
+                          FRAME_RATE,
+                          screenBounds.width, screenBounds.height);
+
     logger
         .info("Starting video recording for session " + getSessionId() + " to " + outputDir
             .getAbsolutePath());
-    int imageFrame = 1;
+
     try {
+      int imageFrame = 1;
+      long startTime = System.nanoTime();
+      addTitleFrame(writer);
+
       while (isRecording() && getTimeoutNotReached()) {
-        SaveProcessedScreenshot
+
+        // take the screen shot
+        BufferedImage
             screenshot =
-            new SaveProcessedScreenshot(new File(sessionOutputDir, imageFrame + ".png"),
-                                        new Dimension(1024, 768),
-                                        "",
-                                        this.nodeName,
-                                        "Timestamp: " + getTimestamp().toString(),
-                                        this.lastAction
-            );
+            ScreenshotUtility.getResizedScreenshot(dimension.width, dimension.height);
 
-        Future<String> future = imageRetrivalThreadPool.submit(screenshot);
+        screenshot = ImageProcessor.addTextCaption(screenshot,
+                                                   "Session: " + this.sessionId,
+                                                   "Host: " + this.nodeName,
+                                                   "Timestamp: " + getTimestamp().toString(),
+                                                   this.lastAction
+        );
 
-        Thread.sleep(1000);
-        imageFrame++;
+        // convert to the right image type
+        BufferedImage bgrScreen = convertToType(screenshot,
+                                                BufferedImage.TYPE_3BYTE_BGR);
+
+        // encode the image
+        writer.encodeVideo(0, bgrScreen,
+                           System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
+
+        // sleep for framerate milliseconds
+        Thread.sleep((long) (1000 / FRAME_RATE.getDouble()));
+
       }
     } finally {
-      imageRetrivalThreadPool.shutdown();
+      writer.close();
+
     }
 
-    logger.info("Captured " + imageFrame + " frames");
+//    logger.info("Captured " + imageFrame + " frames");
 
     return getSessionId();
+  }
+
+  protected void addTitleFrame(IMediaWriter writer) {
+    writer.encodeVideo(0,
+                       ImageProcessor
+                           .createTitleFrame(dimension,
+                                             BufferedImage.TYPE_3BYTE_BGR,
+                                             "Session :" + this.sessionId,
+                                             "Host :" + RuntimeConfig.getOS().getHostName() + " ("
+                                             + RuntimeConfig.getOS().getHostIp() + ")",
+                                             RuntimeConfig.getOS().getHostIp()),
+                       0,
+                       TimeUnit.NANOSECONDS);
+    try {
+      Thread.sleep(2);
+    } catch (InterruptedException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
   }
 
 
@@ -86,7 +145,6 @@ public class VideoRecorderCallable implements Callable {
   }
 
   public void stop() {
-    System.out.println("Stop called");
     this.recording = false;
   }
 
@@ -97,12 +155,6 @@ public class VideoRecorderCallable implements Callable {
       outputDir.mkdir();
     }
 
-    sessionOutputDir = new File(outputDir, sessionId);
-    if (!sessionOutputDir.exists()) {
-      System.out.println("Creating output dir for session: " + sessionId + " in " + sessionOutputDir
-          .getAbsolutePath());
-      sessionOutputDir.mkdir();
-    }
   }
 
   protected boolean getTimeoutNotReached() {
@@ -116,5 +168,51 @@ public class VideoRecorderCallable implements Callable {
 
   protected String getSessionId() {
     return sessionId;
+  }
+
+  protected void dynamicallySetDimension() {
+    try {
+      BufferedImage sample = ScreenshotUtility.getResizedScreenshot(1024, 768);
+      dimension = new Dimension(sample.getWidth(), sample.getHeight());
+    } catch (AWTException e) {
+      e.printStackTrace();
+      logger.equals(e);
+      dimension = new Dimension(1024, 768);
+    }
+
+  }
+
+  /**
+   * Convert a {@link BufferedImage} of any type, to {@link BufferedImage} of a specified type. If
+   * the source image is the same type as the target type, then original image is returned,
+   * otherwise new image of the correct type is created and the content of the source image is
+   * copied into the new image.
+   *
+   * @param sourceImage the image to be converted
+   * @param targetType  the desired BufferedImage type
+   * @return a BufferedImage of the specifed target type.
+   * @see BufferedImage
+   */
+
+  public static BufferedImage convertToType(BufferedImage sourceImage,
+                                            int targetType) {
+    BufferedImage image;
+
+    // if the source image is already the target type, return the source image
+
+    if (sourceImage.getType() == targetType) {
+      image = sourceImage;
+    }
+
+    // otherwise create a new image of the target type and draw the new
+    // image
+
+    else {
+      image = new BufferedImage(sourceImage.getWidth(),
+                                sourceImage.getHeight(), targetType);
+      image.getGraphics().drawImage(sourceImage, 0, 0, null);
+    }
+
+    return image;
   }
 }
