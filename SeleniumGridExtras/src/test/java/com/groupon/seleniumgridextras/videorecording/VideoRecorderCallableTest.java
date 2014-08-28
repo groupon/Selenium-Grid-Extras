@@ -4,12 +4,10 @@ import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class VideoRecorderCallableTest {
@@ -19,7 +17,7 @@ public class VideoRecorderCallableTest {
 
   @After
   public void tearDown() throws Exception {
-    if (output.exists()){
+    if (output.exists()) {
       output.delete();
     }
   }

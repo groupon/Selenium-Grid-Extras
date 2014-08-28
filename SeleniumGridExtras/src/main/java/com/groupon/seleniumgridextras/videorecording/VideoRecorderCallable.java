@@ -119,12 +119,11 @@ public class VideoRecorderCallable implements Callable {
   protected void addTitleFrame(IMediaWriter writer) {
     writer.encodeVideo(0,
                        ImageProcessor
-                           .createTitleFrame(dimension,
-                                             BufferedImage.TYPE_3BYTE_BGR,
+                           .createTitleFrame(dimension, BufferedImage.TYPE_3BYTE_BGR,
                                              "Session :" + this.sessionId,
                                              "Host :" + RuntimeConfig.getOS().getHostName() + " ("
                                              + RuntimeConfig.getOS().getHostIp() + ")",
-                                             RuntimeConfig.getOS().getHostIp()),
+                                             getTimestamp().toString()),
                        0,
                        TimeUnit.NANOSECONDS);
     try {
