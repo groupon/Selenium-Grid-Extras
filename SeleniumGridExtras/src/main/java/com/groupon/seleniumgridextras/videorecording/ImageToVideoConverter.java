@@ -1,3 +1,5 @@
+//Ended up not using this guy, maybe find use for it later
+
 package com.groupon.seleniumgridextras.videorecording;
 
 import java.awt.Dimension;
