@@ -36,11 +36,11 @@ public class VideoRecorderCallableTest {
 
       video.lastAction("Last action");
       Thread.sleep(2000);
-      video.lastAction("Last Last action");
+//      video.lastAction("Last Last action");
       Thread.sleep(2000);
       video.lastAction("Maybe not");
       Thread.sleep(2000);
-      video.lastAction("Who knows");
+//      video.lastAction("Who knows");
       video.stop();
 
       future.get(); //wait for thread to finish

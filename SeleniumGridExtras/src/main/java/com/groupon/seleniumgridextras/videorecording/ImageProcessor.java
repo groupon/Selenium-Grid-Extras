@@ -32,10 +32,10 @@ public class ImageProcessor {
       g.setColor(Color.white); //Set text font color
       g.setFont(g.getFont().deriveFont(12f)); //Set text size
 
-      g.drawString(line1, textLeftStartPosition, firstLineStartHeight + 12);
-      g.drawString(line2, textLeftStartPosition, firstLineStartHeight + 24);
-      g.drawString(line3, textLeftStartPosition, firstLineStartHeight + 36);
-      g.drawString(line4, textLeftStartPosition, firstLineStartHeight + 48);
+      g.drawString("" + line1, textLeftStartPosition, firstLineStartHeight + 12);
+      g.drawString("" + line2, textLeftStartPosition, firstLineStartHeight + 24);
+      g.drawString("" + line3, textLeftStartPosition, firstLineStartHeight + 36);
+      g.drawString("" + line4, textLeftStartPosition, firstLineStartHeight + 48);
       g.dispose();
 
     } catch (Exception e) {
@@ -67,10 +67,10 @@ public class ImageProcessor {
     int thirdLineY = secondLineY + 12;
 
     g.setFont(g.getFont().deriveFont(20f));
-    g.drawString(line1, firstLineX, firstLineY);
+    g.drawString("" + line1, firstLineX, firstLineY);
     g.setFont(g.getFont().deriveFont(12f));
-    g.drawString(line2, firstLineX, secondLineY);
-    g.drawString(line3, firstLineX, thirdLineY);
+    g.drawString("" + line2, firstLineX, secondLineY);
+    g.drawString("" + line3, firstLineX, thirdLineY);
 
     return image;
   }
