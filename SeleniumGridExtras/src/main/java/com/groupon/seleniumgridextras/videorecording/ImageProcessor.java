@@ -54,11 +54,12 @@ public class ImageProcessor {
     int width  = image.getWidth();
     int firstLineX = ((Double) ( width * 0.1)).intValue();
     int firstLineY = ((Double) ( width * 0.1)).intValue();
-    int secondLineY = firstLineY + 50;
-    int thirdLineY = secondLineY + 50;
+    int secondLineY = firstLineY + 20;
+    int thirdLineY = secondLineY + 12;
 
-    g.setFont(g.getFont().deriveFont(40f));
+    g.setFont(g.getFont().deriveFont(20f));
     g.drawString(line1, firstLineX, firstLineY );
+    g.setFont(g.getFont().deriveFont(12f));
     g.drawString(line2, firstLineX, secondLineY);
     g.drawString(line3, firstLineX, thirdLineY);
 
