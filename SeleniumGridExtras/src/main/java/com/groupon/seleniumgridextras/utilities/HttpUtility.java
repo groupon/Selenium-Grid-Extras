@@ -20,8 +20,7 @@ public class HttpUtility {
   private static Logger logger = Logger.getLogger(HttpUtility.class);
 
 
-  public static String getRequestAsString(URI uri)
-      throws IOException, URISyntaxException {
+  public static String getRequestAsString(URI uri) throws IOException, URISyntaxException {
     return getRequestAsString(uri.toURL());
   }
 
@@ -42,10 +41,10 @@ public class HttpUtility {
   }
 
   public static HttpURLConnection getRequest(URL url) throws IOException {
-    logger.info("Making GET request to " + url);
+    logger.debug("Making GET request to " + url);
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
-    logger.info("Response code is " + conn.getResponseCode());
+    logger.debug("Response code is " + conn.getResponseCode());
     return conn;
   }
 

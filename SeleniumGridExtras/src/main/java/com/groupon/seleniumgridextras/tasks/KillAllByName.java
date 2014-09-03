@@ -41,6 +41,8 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 public class KillAllByName extends ExecuteOSTask {
 
   public KillAllByName() {
@@ -75,6 +77,17 @@ public class KillAllByName extends ExecuteOSTask {
   @Override
   public String getLinuxCommand(String parameter) {
     return getLinuxKillCommand(parameter);
+  }
+
+  @Override
+  public JsonObject execute() {
+    String command;
+    if (RuntimeConfig.getOS().isWindows()){
+      command = getWindowsCommand();
+    } else {
+      command = getMacCommand();
+    }
+    return execute(command);
   }
 
   @Override

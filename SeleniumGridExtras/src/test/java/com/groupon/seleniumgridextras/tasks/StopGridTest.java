@@ -42,7 +42,7 @@ public class StopGridTest {
 
   @Test
   public void testGetLinuxCommand() throws Exception {
-    String expected = "kill " + RuntimeConfig.getOS().getCurrentPid();
+    String expected = "kill -9 " + RuntimeConfig.getOS().getCurrentPid();
     assertEquals(expected, task.getLinuxCommand(port));
 
     final String portToNeverBeFound = "4444444444444444444444444444444";

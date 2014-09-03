@@ -38,17 +38,25 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
+
 import net.coobird.thumbnailator.Thumbnails;
+
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 
 import javax.imageio.ImageIO;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -56,6 +64,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Screenshot extends ExecuteOSTask {
+
+  private static Logger logger = Logger.getLogger(Screenshot.class);
 
   public Screenshot() {
     setEndpoint("/screenshot");
@@ -74,6 +84,9 @@ public class Screenshot extends ExecuteOSTask {
     addResponseDescription("file_type", "Type of file returned (PNG/JPG/GIF)");
     addResponseDescription("file", "Name of the file saved on the NodeConfig's HD");
     addResponseDescription("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
+    addResponseDescription("hostname", "Human readable machine name");
+    addResponseDescription("ip", "IP Address of current machine");
+    addResponseDescription("timestamp", "Timestamp of the screenshot");
 
   }
 
@@ -87,7 +100,9 @@ public class Screenshot extends ExecuteOSTask {
 
     int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
     int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
-    boolean keepFile = parameter.containsKey("keep") ? Boolean.parseBoolean(parameter.get("keep")) : true;
+    boolean
+        keepFile =
+        parameter.containsKey("keep") ? Boolean.parseBoolean(parameter.get("keep")) : true;
     return createScreenshot(width, height, keepFile);
   }
 
@@ -95,10 +110,7 @@ public class Screenshot extends ExecuteOSTask {
     String filename;
     String encodedImage;
     try {
-      BufferedImage screenshot = takeScreenshot();
-      if (width > 0 || height > 0) {
-        screenshot = createThumbnail(screenshot, width, height);
-      }
+      BufferedImage screenshot = ScreenshotUtility.getResizedScreenshot(width, height);
       try {
         if (keepFile) {
           filename = writeImageToDisk(screenshot);
@@ -117,8 +129,15 @@ public class Screenshot extends ExecuteOSTask {
       }
       getJsonResponse().addKeyValues("file_type", "PNG");
       getJsonResponse().addKeyValues("file",
-          RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig.getOS().getFileSeparator() + filename);
+                                     RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig
+                                         .getOS().getFileSeparator() + filename);
       getJsonResponse().addKeyValues("image", encodedImage);
+
+      getJsonResponse().addKeyValues("hostname", RuntimeConfig.getOS().getHostName());
+      getJsonResponse().addKeyValues("ip", RuntimeConfig.getOS().getHostIp());
+      Date newTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+      getJsonResponse().addKeyValues("timestamp", newTimestamp.toString());
+
       return getJsonResponse().getJson();
     } catch (AWTException error) {
       getJsonResponse().addKeyValues("error", "Error with AWT Robot\n" + error);
@@ -126,7 +145,8 @@ public class Screenshot extends ExecuteOSTask {
     }
   }
 
-  private String encodeStreamToBase64(ByteArrayOutputStream byteArrayOutputStream) throws IOException {
+  private String encodeStreamToBase64(ByteArrayOutputStream byteArrayOutputStream)
+      throws IOException {
     String encodedImage;
     Base64 base = new Base64(false);
     encodedImage = base.encodeToString(byteArrayOutputStream.toByteArray());
@@ -161,24 +181,6 @@ public class Screenshot extends ExecuteOSTask {
     return filename;
   }
 
-  private BufferedImage takeScreenshot() throws AWTException {
-    Robot robot = new Robot();
-    Rectangle captureSize = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-    return robot.createScreenCapture(captureSize);
-  }
-
-  private BufferedImage createThumbnail(BufferedImage originalImage, int width, int height) {
-    BufferedImage thumbnail = null;
-    try {
-      thumbnail = Thumbnails.of(originalImage)
-          .size(width, height)
-          .asBufferedImage();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return thumbnail;
-  }
-
   @Override
   public List<String> getDependencies() {
     List<String> localDependencies = new LinkedList<String>();
@@ -186,4 +188,20 @@ public class Screenshot extends ExecuteOSTask {
     localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
     return localDependencies;
   }
+
+  @Override
+  public boolean initialize() {
+
+    try {
+      logger.debug("Starting the AWT service");
+      this.execute();
+      printInitilizedSuccessAndRegisterWithAPI();
+      return true;
+    } catch (NullPointerException error) {
+      printInitilizedFailure();
+      logger.error(error);
+      return false;
+    }
+  }
+
 }

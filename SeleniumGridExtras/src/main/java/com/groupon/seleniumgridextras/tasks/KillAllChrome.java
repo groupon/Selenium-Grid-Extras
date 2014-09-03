@@ -61,7 +61,7 @@ public class KillAllChrome extends KillAllByName {
 
   @Override
   public JsonObject execute(String param) {
-
+    //TODO: Make this work like killAllSafari and KillAllFirefox works
     if (RuntimeConfig.getOS().isWindows()) {
       return killChromeOnWindows();
     } else if (RuntimeConfig.getOS().isMac()) {

@@ -113,7 +113,7 @@ public class Setup extends ExecuteOSTask {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         setupTasks.add(task);
-        logger.info("    " + task.getClass().getSimpleName());
+        logger.debug("    " + task.getClass().getSimpleName());
       } catch (ClassNotFoundException error) {
         logger.error(module + "   " + error);
         initialized = false;

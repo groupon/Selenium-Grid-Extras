@@ -20,9 +20,9 @@ public class GridStarter {
   public static String getOsSpecificHubStartCommand(Boolean windows) {
 
     StringBuilder command = new StringBuilder();
-    command.append("java ");
+    command.append(getJavaExe() + " ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-    command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
+    command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
 
@@ -34,7 +34,7 @@ public class GridStarter {
         logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
     command.append(logCommand);
-    command.append(" -newSessionWaitTimeout 120000 -browserTimeout 120");
+    command.append(" -newSessionWaitTimeout 120000 -browserTimeout 120 -timeout 120");
 
     logger.info("Hub Start Command: \n\n" + String.valueOf(command));
     return String.valueOf(command);
@@ -130,7 +130,7 @@ public class GridStarter {
     }
 
     StringBuilder command = new StringBuilder();
-    command.append("java ");
+    command.append(getJavaExe() + " ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
 
     if (RuntimeConfig.getOS().isWindows()) {
@@ -204,6 +204,18 @@ public class GridStarter {
     } catch (Exception error) {
       logger.fatal("Could not write default config file, exit with error " + error.toString());
       System.exit(1);
+    }
+  }
+
+  private static String getJavaExe() {
+    if (RuntimeConfig.getOS().isWindows()) {
+      return "java";
+    } else {
+      String javaHome = System.getProperty("java.home");
+      File f = new File(javaHome);
+      f = new File(f, "bin");
+      f = new File(f, "java");
+      return f.getAbsolutePath();
     }
   }
 
