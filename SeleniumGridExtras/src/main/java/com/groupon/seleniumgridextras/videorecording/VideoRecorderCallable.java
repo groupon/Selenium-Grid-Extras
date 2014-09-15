@@ -5,6 +5,7 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
+import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IRational;
 
 import org.apache.log4j.Logger;
@@ -68,7 +69,7 @@ public class VideoRecorderCallable implements Callable {
     // We tell it we're going to add one video stream, with id 0,
     // at position 0, and that it will have a fixed frame rate of
     // FRAME_RATE.
-    writer.addVideoStream(0, 0,
+    writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
                           FRAME_RATE,
                           screenBounds.width, screenBounds.height);
 
