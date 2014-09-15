@@ -132,6 +132,8 @@ public class DefaultConfig {
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.MoveMouse");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.RebootNode");
 
+    config.addActivatedModules("com.groupon.seleniumgridextras.tasks.VideoRecorder");
+
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllIE");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllFirefox");
     config.addActivatedModules("com.groupon.seleniumgridextras.tasks.KillAllChrome");
