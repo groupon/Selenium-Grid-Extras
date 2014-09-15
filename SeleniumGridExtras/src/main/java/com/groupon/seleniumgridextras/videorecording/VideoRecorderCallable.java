@@ -164,6 +164,7 @@ public class VideoRecorderCallable implements Callable {
     if (seconds < this.idleTimeout) {
       return true;
     } else {
+      logger.info("Video Timeout Reached for " + this.sessionId);
       return false;
     }
   }
