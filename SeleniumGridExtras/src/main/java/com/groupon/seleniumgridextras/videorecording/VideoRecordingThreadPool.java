@@ -71,8 +71,10 @@ public class VideoRecordingThreadPool {
         }
       }
     }
+  }
 
-
+  public static void addNewDescriptionToLowerThird(String sessionName, String newDescription) {
+    getVideo(sessionName).lastAction(newDescription);
   }
 
   public static void removeSession(String sessionName) {

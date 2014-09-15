@@ -48,11 +48,11 @@ public class VideoRecorder extends ExecuteOSTask {
         VideoRecordingThreadPool.startVideoRecording(session, 120);
         getJsonResponse().addKeyValues("out", "Starting Video Recording");
       } else if (action.equals("stop")) {
-        getJsonResponse().addKeyValues("out", "Stoping Video Recording");
+        getJsonResponse().addKeyValues("out", "Stopping Video Recording");
         VideoRecordingThreadPool.stopVideoRecording(session);
       } else if (action.equals("heartbeat")) {
+        VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
         getJsonResponse().addKeyValues("out", "Updating lower 3rd description");
-
       } else {
         getJsonResponse().addKeyValues("error", "Unrecognized action '" + action
                                                 + "', only acceptable actions are start, stop, heartbeat");
