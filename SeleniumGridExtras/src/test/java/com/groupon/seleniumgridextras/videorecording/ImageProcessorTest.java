@@ -1,8 +1,11 @@
 package com.groupon.seleniumgridextras.videorecording;
 
-import com.groupon.seleniumgridextras.SeleniumGridExtras;
+import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ImageUtils;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
@@ -11,11 +14,29 @@ import java.io.File;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created with IntelliJ IDEA. User: dima Date: 8/26/14 Time: 5:33 PM To change this template use
- * File | Settings | File Templates.
- */
+
 public class ImageProcessorTest {
+
+  private static final String IMAGE_PROCESSOR_TEST_JSON = "image_processor_test.json";
+
+  @Before
+  public void setUp() throws Exception {
+    RuntimeConfig.setConfigFile(IMAGE_PROCESSOR_TEST_JSON);
+    Config config = new Config(true);
+    config.writeToDisk(RuntimeConfig.getConfigFile());
+    RuntimeConfig.load();
+
+    RuntimeConfig.getConfig().getVideoRecording().setTitleFrameFontColor(129, 182, 64,128);
+    RuntimeConfig.getConfig().getVideoRecording().setLowerThirdBackgroundColor(129, 182, 64,128);
+
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    File config = new File(IMAGE_PROCESSOR_TEST_JSON);
+    config.delete();
+    new File(IMAGE_PROCESSOR_TEST_JSON + ".example").delete();
+  }
 
 
   @Test
@@ -42,6 +63,7 @@ public class ImageProcessorTest {
 
   @Test
   public void testCreateTitleFrame() throws Exception {
+    System.out.println(Color.black);
     Dimension size = new Dimension(1024, 768);
 
     BufferedImage image = ImageProcessor

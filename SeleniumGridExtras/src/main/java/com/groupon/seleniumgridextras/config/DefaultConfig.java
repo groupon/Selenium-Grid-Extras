@@ -71,6 +71,10 @@ public class DefaultConfig {
     config.getVideoRecording().setOutputDir("video_output");
     config.getVideoRecording().setIdleTimeout(120);
 
+    config.getVideoRecording().setTitleFrameFontColor(129, 182, 64, 128);
+    config.getVideoRecording().setLowerThirdBackgroundColor(0,0,0,128);
+    config.getVideoRecording().setLowerThirdFontColor(255,255,255,255);
+
   }
 
   public static boolean getAutoUpdateDrivers(){

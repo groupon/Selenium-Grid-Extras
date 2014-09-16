@@ -1,6 +1,6 @@
 package com.groupon.seleniumgridextras.videorecording;
 
-import com.groupon.seleniumgridextras.utilities.ImageUtils;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
 
@@ -24,12 +24,12 @@ public class ImageProcessor {
       final int textLeftStartPosition = 40;
 
       g.setColor(
-          new Color(129, 182, 64, 128)); //Set the rectangle color to Groupon green and transperent
+          RuntimeConfig.getConfig().getVideoRecording().getLowerThirdBackgroundColor());
 
       g.fillRect(0, firstLineStartHeight, imageWidth,
                  borderHeight); //Add rectangle at the very bottom of the screen
 
-      g.setColor(Color.white); //Set text font color
+      g.setColor(RuntimeConfig.getConfig().getVideoRecording().getLowerThirdFontColor());
       g.setFont(g.getFont().deriveFont(12f)); //Set text size
 
       g.drawString("" + line1, textLeftStartPosition, firstLineStartHeight + 12);
@@ -57,7 +57,7 @@ public class ImageProcessor {
 
     Graphics g = image.getGraphics();
     g.setColor(
-        new Color(129, 182, 64, 128)); //Set the rectangle color to Groupon green and transperent
+        RuntimeConfig.getConfig().getVideoRecording().getTitleFrameFontColor());
 
     int height = image.getHeight();
     int width = image.getWidth();
