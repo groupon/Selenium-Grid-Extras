@@ -53,12 +53,20 @@ import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
+import org.openqa.jetty.http.HttpFields;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
@@ -97,6 +105,80 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
       }
 
     }
+  }
+
+//  @Override
+//  public void beforeCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
+//
+//    session.put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executed.");
+//  }
+
+  @Override
+  public void beforeCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
+
+    try {
+      URL url = new URL("http://localhost/request.getPathInfo()");
+
+      writeProxyLog("Dima Path: " + url.getPath());
+//      writeProxyLog(url.get);
+    } catch (MalformedURLException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+
+
+
+    writeProxyLog("Dima Path: " + request.getPathInfo());
+    Enumeration<HttpFields> foo = request.getHeaderNames();
+
+    try {
+      writeProxyLog("Dima body: " + getBody(request));
+    } catch (IOException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+
+    while (foo.hasMoreElements()){
+      Object bar = foo.nextElement();
+      writeProxyLog("Element: " + bar + " " + request.getHeader(bar.toString()));
+    }
+
+
+
+
+    session.put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executed.");
+  }
+
+  public static String getBody(HttpServletRequest request) throws IOException {
+
+    String body = null;
+    StringBuilder stringBuilder = new StringBuilder();
+    BufferedReader bufferedReader = null;
+
+    try {
+      InputStream inputStream = request.getInputStream();
+      if (inputStream != null) {
+        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        char[] charBuffer = new char[128];
+        int bytesRead = -1;
+        while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
+          stringBuilder.append(charBuffer, 0, bytesRead);
+        }
+      } else {
+        stringBuilder.append("");
+      }
+    } catch (IOException ex) {
+      throw ex;
+    } finally {
+      if (bufferedReader != null) {
+        try {
+          bufferedReader.close();
+        } catch (IOException ex) {
+          throw ex;
+        }
+      }
+    }
+
+    body = stringBuilder.toString();
+    return body;
   }
 
 
@@ -141,7 +223,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
           new URL("http://" + getHost() + ":3000/" + action));
 
       JsonParser j = new JsonParser();
-      logger.info(returnedString);
+      logger.debug(returnedString);
       return (JsonObject) j.parse(returnedString);
 
     } catch (MalformedURLException e) {

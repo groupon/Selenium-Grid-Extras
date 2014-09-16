@@ -44,7 +44,10 @@ public class Config {
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
 
   public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
-  private static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
+  public static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
+
+  public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
+
 
   private static Logger logger = Logger.getLogger(Config.class);
 
@@ -112,6 +115,7 @@ public class Config {
     getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
 
     getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
+    initializeVideoRecorder();
 
   }
 
@@ -133,6 +137,9 @@ public class Config {
   }
 
 
+  public void initializeVideoRecorder(){
+    getConfigMap().put(VIDEO_RECORDING_OPTIONS, new VideoRecordingOptions());
+  }
   private void initializeIEDriver() {
     getConfigMap().put(IEDRIVER, new IEDriver());
   }
@@ -177,6 +184,10 @@ public class Config {
     }
   }
 
+
+  public VideoRecordingOptions getVideoRecording() {
+    return (VideoRecordingOptions) getConfigMap().get(VIDEO_RECORDING_OPTIONS);
+  }
 
   public List<String> getActivatedModules() {
     return (List<String>) getConfigMap().get(ACTIVATE_MODULES);

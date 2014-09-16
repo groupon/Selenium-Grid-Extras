@@ -8,11 +8,13 @@ import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IRational;
 
+import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -26,7 +28,7 @@ public class VideoRecorderCallable implements Callable {
   protected Date lastActionTimestamp;
   protected boolean recording = true;
   protected String sessionId;
-  final protected File outputDir = new File("video_output");
+  final protected File outputDir = RuntimeConfig.getConfig().getVideoRecording().getOutputDir();
 
 
   protected String nodeName;
@@ -34,7 +36,11 @@ public class VideoRecorderCallable implements Callable {
   protected int idleTimeout;
 
 
-  final private static IRational FRAME_RATE = IRational.make(5, 1); //5 frames for every 1 second
+  final private static
+  IRational
+      FRAME_RATE =
+      IRational.make(RuntimeConfig.getConfig().getVideoRecording().getFrames(),
+                     RuntimeConfig.getConfig().getVideoRecording().getSecondsPerFrame());
   private static Dimension dimension;
 
 
@@ -43,6 +49,7 @@ public class VideoRecorderCallable implements Callable {
     this.idleTimeout = timeout;
     setOutputDirExists(this.sessionId);
     dynamicallySetDimension();
+    deleteOldMovies();
   }
 
   @Override
@@ -181,12 +188,18 @@ public class VideoRecorderCallable implements Callable {
 
   protected void dynamicallySetDimension() {
     try {
-      BufferedImage sample = ScreenshotUtility.getResizedScreenshot(1024, 768);
+      BufferedImage
+          sample =
+          ScreenshotUtility
+              .getResizedScreenshot(RuntimeConfig.getConfig().getVideoRecording().getWidth(),
+                                    RuntimeConfig.getConfig().getVideoRecording().getHeight());
       dimension = new Dimension(sample.getWidth(), sample.getHeight());
     } catch (AWTException e) {
       e.printStackTrace();
       logger.equals(e);
-      dimension = new Dimension(1024, 768);
+      dimension =
+          new Dimension(RuntimeConfig.getConfig().getVideoRecording().getWidth(),
+                        RuntimeConfig.getConfig().getVideoRecording().getHeight());
     }
 
   }
@@ -223,5 +236,26 @@ public class VideoRecorderCallable implements Callable {
     }
 
     return image;
+  }
+
+  protected void deleteOldMovies() {
+    File[] files = outputDir.listFiles();
+    //TODO: This is tested, but don't you dare modify this without writing a new test!
+    int filesToKeep = RuntimeConfig.getConfig().getVideoRecording().getVideosToKeep();
+    int currentFileCount = files.length;
+
+    if (currentFileCount > filesToKeep) {
+      Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_COMPARATOR);
+      int
+          filesToDelete = currentFileCount - filesToKeep;
+
+      for (int i = 0; i < filesToDelete; i++) {
+        logger.info("Cleaning up recorded video: " + files[i].getAbsolutePath());
+        files[i].delete();
+      }
+
+
+    }
+
   }
 }

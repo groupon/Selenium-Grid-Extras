@@ -77,6 +77,8 @@ public class FirstTimeRunConfig {
 
     setDriverAutoUpdater(defaultConfig);
 
+    askToRecordVideo(defaultConfig);
+
     final
     String
         thankYouMessage =
@@ -91,6 +93,30 @@ public class FirstTimeRunConfig {
     }
 
     return defaultConfig;
+  }
+
+  private static void askToRecordVideo(Config defaultConfig) {
+    String answer = askQuestion("Should this Node record test runs? (1-yes/0-no)", "1");
+
+    if (answer.equals("1")) {
+      logger.info("Setting node to record videos");
+
+      answer =
+          askQuestion("How many videos should node keep in history?",
+                      "10");
+
+      logger.info("Will keep " + answer + " videos");
+      if (!answer.equals("10")) {
+        //10 is default, so if we are going with that, no reason to keep it explicitly
+        defaultConfig.initializeVideoRecorder();
+        defaultConfig.getVideoRecording().setVideosToKeep(Integer.valueOf(answer));
+      }
+    } else {
+      logger.info("This node will not record test videos");
+      defaultConfig.initializeVideoRecorder();
+      defaultConfig.getVideoRecording().setRecordTestVideos(false);
+    }
+
   }
 
   private static void askToStoreConfigsOnHub(Config defaultConfig, String hubHost) {

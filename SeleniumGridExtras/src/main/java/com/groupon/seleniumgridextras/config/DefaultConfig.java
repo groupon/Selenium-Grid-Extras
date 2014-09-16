@@ -58,8 +58,19 @@ public class DefaultConfig {
     loadSharedDir();
     setAutoUpdateDrivers("1");
     setRebootAfterSessionCount("10");
+    loadDefaultVideoRecordingOptions();
 
     return config;
+  }
+
+  private static void loadDefaultVideoRecordingOptions() {
+    config.getVideoRecording().setRecordTestVideos(true);
+    config.getVideoRecording().setFrameRate(5,1);
+    config.getVideoRecording().setOutputDimensions(1024, 768);
+    config.getVideoRecording().setVideosToKeep(10);
+    config.getVideoRecording().setOutputDir("video_output");
+    config.getVideoRecording().setIdleTimeout(120);
+
   }
 
   public static boolean getAutoUpdateDrivers(){

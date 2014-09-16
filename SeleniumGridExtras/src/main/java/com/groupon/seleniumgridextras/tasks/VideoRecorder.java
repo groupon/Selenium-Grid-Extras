@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
 
 import java.util.Map;
@@ -33,6 +34,12 @@ public class VideoRecorder extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
+    if (!RuntimeConfig.getConfig().getVideoRecording().getRecordTestVideos()){
+      getJsonResponse().addKeyValues("error", "Video Recording is disabled on this node");
+      return getJsonResponse().getJson();
+    }
+
+
     if (!parameter.isEmpty() && parameter.containsKey("session") && parameter
         .containsKey("action")) {
 
@@ -45,7 +52,9 @@ public class VideoRecorder extends ExecuteOSTask {
       getJsonResponse().addKeyValues("description", "" + userDescription);
 
       if (action.equals("start")) {
-        VideoRecordingThreadPool.startVideoRecording(session, 120);
+        VideoRecordingThreadPool.startVideoRecording(session,
+                                                     RuntimeConfig.getConfig().getVideoRecording()
+                                                         .getIdleTimeout());
         getJsonResponse().addKeyValues("out", "Starting Video Recording");
       } else if (action.equals("stop")) {
         getJsonResponse().addKeyValues("out", "Stopping Video Recording");
