@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -84,6 +85,10 @@ public class VideoRecordingThreadPool {
 
   public static VideoRecorderCallable getVideo(String sessionName) {
     return videos.get(sessionName);
+  }
+
+  public static Set<String> getAllVideos(){
+    return videos.keySet();
   }
 
   public static void waitForThreadToStop(String sessionName) {

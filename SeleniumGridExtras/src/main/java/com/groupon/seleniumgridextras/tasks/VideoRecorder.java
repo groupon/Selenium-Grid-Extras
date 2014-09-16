@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class VideoRecorder extends ExecuteOSTask {
@@ -15,7 +17,7 @@ public class VideoRecorder extends ExecuteOSTask {
     setDescription("Starts and stops video recording");
     JsonObject params = new JsonObject();
     params.addProperty("session", "(Required) - Session name of the test being recorded");
-    params.addProperty("action", "(Required) - Action to perform (start|stop|heartbeat)");
+    params.addProperty("action", "(Required) - Action to perform (start|stop|heartbeat|status)");
     params.addProperty("description",
                        "Description to appear in lower 3rd of the video");
     setAcceptedParams(params);
@@ -25,7 +27,8 @@ public class VideoRecorder extends ExecuteOSTask {
 
     addResponseDescription("session", "Session on which the current action was performed");
     addResponseDescription("action", "Action performed on current Video");
-    addResponseDescription("description", "Update");
+    addResponseDescription("description", "Update of last action performed by test to be displayed in lower third");
+    addResponseDescription("current_videos", "List of videos currently being recorded, retrieved with 'status' action");
 
     setEnabledInGui(false);
   }
@@ -62,6 +65,11 @@ public class VideoRecorder extends ExecuteOSTask {
       } else if (action.equals("heartbeat")) {
         VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
         getJsonResponse().addKeyValues("out", "Updating lower 3rd description");
+
+      } else if (action.equals("status")){
+        List<String> listOfVideos = new LinkedList<String>();
+        listOfVideos.addAll(VideoRecordingThreadPool.getAllVideos());
+        getJsonResponse().addKeyValues("current_videos", listOfVideos);
       } else {
         getJsonResponse().addKeyValues("error", "Unrecognized action '" + action
                                                 + "', only acceptable actions are start, stop, heartbeat");
