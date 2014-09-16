@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras;
 
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.RebootNode;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,7 +58,6 @@ public class RebootNodeTest {
 
   @Test
   public void testGetDescription() throws Exception {
-
     assertEquals("Restart the host node", task.getDescription());
   }
 
