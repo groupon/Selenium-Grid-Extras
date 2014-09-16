@@ -1,4 +1,6 @@
-1.5.0 - Adding /kill_safari end point to kill instance of Safari Browser
+1.5.0 - Automatically record video of a running test
+      - Daily rolling logs for grid extras
+      - Adding /kill_safari end point to kill instance of Safari Browser
       - Fixing the /kill_firefox endpoint, it was broken for some reason
 1.4.0 - Modifying system timeouts, such as browser idle timeout, new session timeout, and grid status checking timeouts
       - When launching grid, use absolute path to java not just "java" alias which might not be declared in the PATH if you are using a Daemon (Non Windows OS only)
