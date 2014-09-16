@@ -63,7 +63,6 @@ public class ImageProcessorTest {
 
   @Test
   public void testCreateTitleFrame() throws Exception {
-    System.out.println(Color.black);
     Dimension size = new Dimension(1024, 768);
 
     BufferedImage image = ImageProcessor
