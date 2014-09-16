@@ -43,6 +43,7 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
+import com.groupon.seleniumgridextras.videorecording.VideoShutdownHook;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
 
@@ -132,6 +133,9 @@ public class SeleniumGridExtras {
     server.setExecutor(null);
     server.start();
     logger.info("Server has been started");
+
+    VideoShutdownHook videoShutdownHook = new VideoShutdownHook();
+    videoShutdownHook.attachShutDownHook();
   }
 }
 

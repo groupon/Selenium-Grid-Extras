@@ -6,8 +6,6 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class VideoRecorder extends ExecuteOSTask {
@@ -17,7 +15,7 @@ public class VideoRecorder extends ExecuteOSTask {
     setDescription("Starts and stops video recording");
     JsonObject params = new JsonObject();
     params.addProperty("session", "(Required) - Session name of the test being recorded");
-    params.addProperty("action", "(Required) - Action to perform (start|stop|heartbeat|status)");
+    params.addProperty("action", "(Required) - Action to perform (start|stop|heartbeat|status|stop_all)");
     params.addProperty("description",
                        "Description to appear in lower 3rd of the video");
     setAcceptedParams(params);
@@ -67,6 +65,9 @@ public class VideoRecorder extends ExecuteOSTask {
         getJsonResponse().addKeyValues("out", "Updating lower 3rd description");
       } else if (action.equals("status")){
         getJsonResponse().addKeyValues("current_videos", VideoRecordingThreadPool.getAllVideos());
+      } else if (action.equals("stop_all")){
+        VideoRecordingThreadPool.stopAndFinalizeAllVideos();
+        getJsonResponse().addKeyValues("out", "Calling stop all videos command");
       } else {
         getJsonResponse().addKeyValues("error", "Unrecognized action '" + action
                                                 + "', only acceptable actions are start, stop, heartbeat");

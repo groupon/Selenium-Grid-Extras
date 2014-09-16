@@ -87,10 +87,22 @@ public class VideoRecordingThreadPool {
     return videos.get(sessionName);
   }
 
-  public static List<String> getAllVideos(){
+  public static List<String> getAllVideos() {
     List<String> listOfVideos = new LinkedList<String>();
     listOfVideos.addAll(videos.keySet());
     return listOfVideos;
+  }
+
+  public static void stopAndFinalizeAllVideos() {
+    for (String session : getAllVideos()) {
+      stopVideoRecording(session);
+    }
+
+    System.out.println("Please wait while we stop all videos being recorded");
+    for (String session : getAllVideos()) {
+      logger.info("Waiting for session video to finalize for session: " + session);
+      waitForThreadToStop(session);
+    }
   }
 
   public static void waitForThreadToStop(String sessionName) {
@@ -107,6 +119,8 @@ public class VideoRecordingThreadPool {
   protected static void initializeThreadPool() {
     logger.info("Initializing a new thread pool");
     cachedPool = Executors.newCachedThreadPool();
+
+
   }
 
 
