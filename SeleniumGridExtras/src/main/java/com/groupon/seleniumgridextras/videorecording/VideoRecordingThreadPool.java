@@ -87,8 +87,10 @@ public class VideoRecordingThreadPool {
     return videos.get(sessionName);
   }
 
-  public static Set<String> getAllVideos(){
-    return videos.keySet();
+  public static List<String> getAllVideos(){
+    List<String> listOfVideos = new LinkedList<String>();
+    listOfVideos.addAll(videos.keySet());
+    return listOfVideos;
   }
 
   public static void waitForThreadToStop(String sessionName) {

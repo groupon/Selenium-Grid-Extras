@@ -65,11 +65,8 @@ public class VideoRecorder extends ExecuteOSTask {
       } else if (action.equals("heartbeat")) {
         VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
         getJsonResponse().addKeyValues("out", "Updating lower 3rd description");
-
       } else if (action.equals("status")){
-        List<String> listOfVideos = new LinkedList<String>();
-        listOfVideos.addAll(VideoRecordingThreadPool.getAllVideos());
-        getJsonResponse().addKeyValues("current_videos", listOfVideos);
+        getJsonResponse().addKeyValues("current_videos", VideoRecordingThreadPool.getAllVideos());
       } else {
         getJsonResponse().addKeyValues("error", "Unrecognized action '" + action
                                                 + "', only acceptable actions are start, stop, heartbeat");
