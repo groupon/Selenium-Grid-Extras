@@ -23,13 +23,23 @@ public class ImageProcessor {
       final int firstLineStartHeight = imageHeight - borderHeight;
       final int textLeftStartPosition = 40;
 
-      g.setColor(
-          RuntimeConfig.getConfig().getVideoRecording().getLowerThirdBackgroundColor());
+      Color backgroundColor;
+      Color fontColor;
+      if (RuntimeConfig.getConfig() != null) {
+        backgroundColor =
+            RuntimeConfig.getConfig().getVideoRecording().getLowerThirdBackgroundColor();
+        fontColor = RuntimeConfig.getConfig().getVideoRecording().getLowerThirdFontColor();
+      } else {
+        backgroundColor = new Color(0, 0, 0, 200);
+        fontColor = new Color(255, 255, 255, 255);
+      }
 
-      g.fillRect(0, firstLineStartHeight, imageWidth,
-                 borderHeight); //Add rectangle at the very bottom of the screen
+      g.setColor(backgroundColor);
 
-      g.setColor(RuntimeConfig.getConfig().getVideoRecording().getLowerThirdFontColor());
+      //Add rectangle at the very bottom of the screen
+      g.fillRect(0, firstLineStartHeight, imageWidth, borderHeight);
+
+      g.setColor(fontColor);
       g.setFont(g.getFont().deriveFont(12f)); //Set text size
 
       g.drawString("" + line1, textLeftStartPosition, firstLineStartHeight + 12);
