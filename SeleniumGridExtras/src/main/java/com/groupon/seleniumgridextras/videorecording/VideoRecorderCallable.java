@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.videorecording;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
+import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
@@ -146,7 +147,7 @@ public class VideoRecorderCallable implements Callable {
   }
 
   protected Date getTimestamp() {
-    return new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
+    return TimeStampUtility.getTimestamp();
   }
 
   public void stop() {
