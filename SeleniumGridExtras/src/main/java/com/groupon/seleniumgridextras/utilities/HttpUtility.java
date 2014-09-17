@@ -1,23 +1,23 @@
 package com.groupon.seleniumgridextras.utilities;
 
-import org.apache.http.HttpResponse;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-/**
- * Created with IntelliJ IDEA. User: dima Date: 7/8/14 Time: 3:23 PM To change this template use
- * File | Settings | File Templates.
- */
+
 public class HttpUtility {
 
   private static Logger logger = Logger.getLogger(HttpUtility.class);
+  protected static ExecutorService cachedPool;
 
 
   public static String getRequestAsString(URI uri) throws IOException, URISyntaxException {
@@ -46,6 +46,20 @@ public class HttpUtility {
     conn.setRequestMethod("GET");
     logger.debug("Response code is " + conn.getResponseCode());
     return conn;
+  }
+
+  public static Future<String> makeAsyncGetRequest(URI uri) {
+    if (cachedPool == null) {
+      initializeThreadPool();
+    }
+
+    AsyncHttpRequestCallable callable = new AsyncHttpRequestCallable(uri);
+    return cachedPool.submit(callable);
+  }
+
+  protected static void initializeThreadPool() {
+    logger.info("Initializing a new thread for Async Get Requests");
+    cachedPool = Executors.newCachedThreadPool();
   }
 
 }
