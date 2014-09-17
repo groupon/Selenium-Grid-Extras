@@ -29,14 +29,19 @@ public class JsonWireCommandTranslator {
   }
 
   public String toString() {
+    return getCommandName() + ": " + getBody();
+  }
+
+  public String getCommandName(){
     JsonHttpCommandCodec codec = new JsonHttpCommandCodec();
     Command translatedCommand;
     try{
-    translatedCommand = codec.decode(getRequest());
+      translatedCommand = codec.decode(getRequest());
     } catch (UnsupportedCommandException e){
       translatedCommand = new Command(new SessionId(""), this.url);
     }
-    return translatedCommand.getName() + ": " + getBody();
+
+    return translatedCommand.getName();
   }
 
   public HttpRequest getRequest(){
