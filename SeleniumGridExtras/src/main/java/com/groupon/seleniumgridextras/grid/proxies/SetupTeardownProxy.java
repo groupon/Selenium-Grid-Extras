@@ -65,6 +65,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
@@ -76,6 +78,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
   private boolean available = true;
   private boolean restarting = false;
+  private List<String> sessionsRecording = new LinkedList<String>();
 
   private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
 
@@ -101,12 +104,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         if (session == null) {
           return null;
         } else {
-          Map<String, String> params = new HashMap<String, String>();
-          params.put("session", session.getInternalKey());
-          params.put("action", "start");
-
-          callRemoteGridExtrasAsync("video", params);
-
           return session;
         }
       } else {
@@ -121,26 +118,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   public void beforeCommand(TestSession session, HttpServletRequest request,
                             HttpServletResponse response) {
 
-    String
-        command =
-        new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
-                                      JsonWireCommandTranslator.getBodyAsString(request))
-            .toString();
+    if (session.getExternalKey() != null) {
+      if (!alreadyRecordingCurrentSession(session.getExternalKey().getKey())) {
+        startVideoRecording(session.getExternalKey().getKey());
+      }
 
-    try {
-      command = URLEncoder.encode(command, "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      logger.warn("Encoding with UTF-8 Failed, falling back to depricated method");
-      command = URLEncoder.encode(command);
-
+      updateLastCommand(session.getExternalKey().getKey(), request);
     }
-
-    Map<String, String> params = new HashMap<String, String>();
-    params.put("session", session.getInternalKey());
-    params.put("action", "heartbeat");
-    params.put("description", command);
-
-    callRemoteGridExtrasAsync("video", params);
 
     session.put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executed.");
   }
@@ -154,13 +138,52 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
   @Override
   public void afterSession(TestSession session) {
     super.afterSession(session);
+    stopVideoRecording(session.getExternalKey().getKey());
+    callRemoteGridExtrasAsync("teardown", new HashMap<String, String>());
+  }
 
+  private boolean alreadyRecordingCurrentSession(String session) {
+    return this.sessionsRecording.contains(session);
+  }
+
+
+  private void startVideoRecording(String session) {
     Map<String, String> params = new HashMap<String, String>();
-    params.put("session", session.getInternalKey());
+    params.put("session", session);
+    params.put("action", "start");
+
+    callRemoteGridExtrasAsync("video", params);
+    this.sessionsRecording.add(session);
+  }
+
+  private void stopVideoRecording(String session) {
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("session", session);
     params.put("action", "stop");
     callRemoteGridExtrasAsync("video", params);
+  }
 
-    callRemoteGridExtrasAsync("teardown", new HashMap<String, String>());
+  private void updateLastCommand(String session, HttpServletRequest request) {
+    String
+        command =
+        new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
+                                      JsonWireCommandTranslator.getBodyAsString(request))
+            .toString();
+
+    try {
+      command = URLEncoder.encode(command, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      logger.warn("Encoding with UTF-8 Failed, falling back to deprecated method");
+      command = URLEncoder.encode(command);
+
+    }
+
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("session", session);
+    params.put("action", "heartbeat");
+    params.put("description", command);
+
+    callRemoteGridExtrasAsync("video", params);
   }
 
   protected void stopGridNode() {
@@ -174,7 +197,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     writeProxyLog(callRemoteGridExtras("reboot"));
   }
 
-  private Future<String> callRemoteGridExtrasAsync(String action, Map<String, String> params){
+  private Future<String> callRemoteGridExtrasAsync(String action, Map<String, String> params) {
     Future<String> returnedFuture;
     String parameters = "";
 
@@ -191,7 +214,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
     try {
 
-      returnedFuture = HttpUtility.makeAsyncGetRequest(new URI("http://" + getHost() + ":3000/" + action + parameters));
+      returnedFuture =
+          HttpUtility
+              .makeAsyncGetRequest(new URI("http://" + getHost() + ":3000/" + action + parameters));
     } catch (URISyntaxException e) {
       logger.warn(e);
       return null;
