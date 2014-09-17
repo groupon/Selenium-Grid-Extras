@@ -43,8 +43,10 @@ import com.google.gson.JsonParser;
 
 
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
+import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.util.URIUtil;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
 
 
@@ -53,17 +55,18 @@ import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
-import org.openqa.jetty.http.HttpFields;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Enumeration;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -98,6 +101,12 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         if (session == null) {
           return null;
         } else {
+          Map<String, String> params = new HashMap<String, String>();
+          params.put("session", session.getInternalKey());
+          params.put("action", "start");
+
+          callRemoteGridExtrasAsync("video", params);
+
           return session;
         }
       } else {
@@ -107,91 +116,51 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
   }
 
-//  @Override
-//  public void beforeCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
-//
-//    session.put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executed.");
-//  }
 
   @Override
-  public void beforeCommand(TestSession session, HttpServletRequest request, HttpServletResponse response) {
+  public void beforeCommand(TestSession session, HttpServletRequest request,
+                            HttpServletResponse response) {
+
+    String
+        command =
+        new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
+                                      JsonWireCommandTranslator.getBodyAsString(request))
+            .toString();
 
     try {
-      URL url = new URL("http://localhost/request.getPathInfo()");
+      command = URLEncoder.encode(command, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      logger.warn("Encoding with UTF-8 Failed, falling back to depricated method");
+      command = URLEncoder.encode(command);
 
-      writeProxyLog("Dima Path: " + url.getPath());
-//      writeProxyLog(url.get);
-    } catch (MalformedURLException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
 
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("session", session.getInternalKey());
+    params.put("action", "heartbeat");
+    params.put("description", command);
 
-
-    writeProxyLog("Dima Path: " + request.getPathInfo());
-    Enumeration<HttpFields> foo = request.getHeaderNames();
-
-    try {
-      writeProxyLog("Dima body: " + getBody(request));
-    } catch (IOException e) {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
-
-    while (foo.hasMoreElements()){
-      Object bar = foo.nextElement();
-      writeProxyLog("Element: " + bar + " " + request.getHeader(bar.toString()));
-    }
-
-
-
+    callRemoteGridExtrasAsync("video", params);
 
     session.put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executed.");
   }
 
-  public static String getBody(HttpServletRequest request) throws IOException {
-
-    String body = null;
-    StringBuilder stringBuilder = new StringBuilder();
-    BufferedReader bufferedReader = null;
-
-    try {
-      InputStream inputStream = request.getInputStream();
-      if (inputStream != null) {
-        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        char[] charBuffer = new char[128];
-        int bytesRead = -1;
-        while ((bytesRead = bufferedReader.read(charBuffer)) > 0) {
-          stringBuilder.append(charBuffer, 0, bytesRead);
-        }
-      } else {
-        stringBuilder.append("");
-      }
-    } catch (IOException ex) {
-      throw ex;
-    } finally {
-      if (bufferedReader != null) {
-        try {
-          bufferedReader.close();
-        } catch (IOException ex) {
-          throw ex;
-        }
-      }
-    }
-
-    body = stringBuilder.toString();
-    return body;
-  }
-
-
   @Override
   public void beforeSession(TestSession session) {
     super.beforeSession(session);
-    callRemoteGridExtras("setup");
+    callRemoteGridExtrasAsync("setup", new HashMap<String, String>());
   }
 
   @Override
   public void afterSession(TestSession session) {
     super.afterSession(session);
-    callRemoteGridExtras("teardown");
+
+    Map<String, String> params = new HashMap<String, String>();
+    params.put("session", session.getInternalKey());
+    params.put("action", "stop");
+    callRemoteGridExtrasAsync("video", params);
+
+    callRemoteGridExtrasAsync("teardown", new HashMap<String, String>());
   }
 
   protected void stopGridNode() {
@@ -200,18 +169,37 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     unregister();
   }
 
-  protected void killBrowserForCurrentSession() {
-    writeProxyLog("Asking " + getHost() + " to politely kill all browsers");
-
-    writeProxyLog(callRemoteGridExtras("kill_ie"));
-    writeProxyLog(callRemoteGridExtras("kill_safari"));
-    writeProxyLog(callRemoteGridExtras("kill_chrome"));
-    writeProxyLog(callRemoteGridExtras("kill_firefox"));
-  }
-
   private void rebootGridExtrasNode() {
     writeProxyLog("Asking SeleniumGridExtras to reboot " + getHost());
     writeProxyLog(callRemoteGridExtras("reboot"));
+  }
+
+  private Future<String> callRemoteGridExtrasAsync(String action, Map<String, String> params){
+    Future<String> returnedFuture;
+    String parameters = "";
+
+    if (!params.isEmpty()) {
+      StringBuilder parameterBuilder = new StringBuilder();
+      parameterBuilder.append("?");
+
+      for (String currentParam : params.keySet()) {
+        parameterBuilder.append(currentParam + "=" + params.get(currentParam) + "&");
+      }
+
+      parameters = parameterBuilder.toString().replaceAll("&$", "");
+    }
+
+    try {
+
+      returnedFuture = HttpUtility.makeAsyncGetRequest(new URI("http://" + getHost() + ":3000/" + action + parameters));
+    } catch (URISyntaxException e) {
+      logger.warn(e);
+      return null;
+    }
+
+    JsonParser j = new JsonParser();
+    logger.info("Async Request is done: " + returnedFuture.isDone());
+    return returnedFuture;
   }
 
   private JsonObject callRemoteGridExtras(String action) {
@@ -233,7 +221,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
       writeProxyLog(e.toString());
       e.printStackTrace();
     } catch (IOException e) {
-      writeProxyLog(e.toString());
       e.printStackTrace();
     }
 
@@ -288,7 +275,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     this.restarting = restarting;
   }
 
-  private void writeProxyLog(Object logItem){
+  private void writeProxyLog(Object logItem) {
     logger.info(logItem.toString());
   }
 
