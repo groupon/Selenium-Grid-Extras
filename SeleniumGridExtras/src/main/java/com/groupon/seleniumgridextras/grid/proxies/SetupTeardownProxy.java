@@ -38,12 +38,16 @@
 
 package com.groupon.seleniumgridextras.grid.proxies;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
+import com.groupon.seleniumgridextras.utilities.ImageUtils;
 import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
+import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
+import com.groupon.seleniumgridextras.videorecording.ImageProcessor;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jetty.util.URIUtil;
@@ -55,7 +59,10 @@ import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
+import org.openqa.grid.web.servlet.handler.SeleniumBasedResponse;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -113,6 +120,67 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
   }
 
+  protected HttpServletResponse getEnhancedScreenshot(HttpServletResponse response) {
+
+    SeleniumBasedResponse seleniumBasedResponse = (SeleniumBasedResponse) response;
+    try {
+
+      Map
+          parsedPayload =
+          new Gson().fromJson(seleniumBasedResponse.getForwardedContent(), HashMap.class);
+      writeProxyLog("Parsing Json");
+
+      if (parsedPayload.containsKey("value")) {
+        BufferedImage image = ImageUtils.decodeToImage((String) parsedPayload.get("value"));
+        writeProxyLog("Processing image");
+        image = ImageProcessor.addTextCaption(image,
+                                              (String) parsedPayload.get("sessionId"),
+                                              getHost(),
+                                              TimeStampUtility.getTimestampAsString(),
+                                              "");
+
+        writeProxyLog("Putting image into hash");
+        parsedPayload.put("value", ImageUtils.encodeToString(image, "png"));
+
+        Gson gson = new Gson();
+        String json = gson.toJson(parsedPayload);
+
+        writeProxyLog("convert image to string");
+
+        seleniumBasedResponse.setForwardedContent(json.getBytes());
+        seleniumBasedResponse.flushBuffer();
+
+        writeProxyLog("set response");
+
+        ImageUtils.saveImage(new File("captured.png"), image);
+        writeProxyLog("return response");
+
+      }
+
+
+    } catch (Exception e) {
+      logger.warn("Failed to create an enhanced screenshot");
+      logger.warn(e);
+      return response;
+    }
+
+    return seleniumBasedResponse;
+  }
+
+
+  @Override
+  public void afterCommand(TestSession session, HttpServletRequest request,
+                           HttpServletResponse response) {
+
+    if (getCommandNameFromRequestInfo(request).equals("screenshot")) {
+      response = getEnhancedScreenshot(response);
+
+    }
+
+    session
+        .put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executing ...");
+  }
+
 
   @Override
   public void beforeCommand(TestSession session, HttpServletRequest request,
@@ -163,12 +231,8 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     callRemoteGridExtrasAsync("video", params);
   }
 
-  private void updateLastCommand(String session, HttpServletRequest request) {
-    String
-        command =
-        new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
-                                      JsonWireCommandTranslator.getBodyAsString(request))
-            .toString();
+  protected void updateLastCommand(String session, HttpServletRequest request) {
+    String command = getCommandNameAndBodyFromRequestInfo(request);
 
     try {
       command = URLEncoder.encode(command, "UTF-8");
@@ -186,6 +250,18 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     callRemoteGridExtrasAsync("video", params);
   }
 
+  protected String getCommandNameAndBodyFromRequestInfo(HttpServletRequest request) {
+    return new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
+                                         JsonWireCommandTranslator.getBodyAsString(request))
+        .toString();
+  }
+
+  protected String getCommandNameFromRequestInfo(HttpServletRequest request) {
+    return new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
+                                         JsonWireCommandTranslator.getBodyAsString(request))
+        .getCommandName();
+  }
+
   protected void stopGridNode() {
     writeProxyLog("Asking " + getHost() + " to stop grid node politely");
     writeProxyLog(callRemoteGridExtras("stop_grid?port=5555"));
@@ -199,24 +275,12 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
   private Future<String> callRemoteGridExtrasAsync(String action, Map<String, String> params) {
     Future<String> returnedFuture;
-    String parameters = "";
-
-    if (!params.isEmpty()) {
-      StringBuilder parameterBuilder = new StringBuilder();
-      parameterBuilder.append("?");
-
-      for (String currentParam : params.keySet()) {
-        parameterBuilder.append(currentParam + "=" + params.get(currentParam) + "&");
-      }
-
-      parameters = parameterBuilder.toString().replaceAll("&$", "");
-    }
-
     try {
 
       returnedFuture =
           HttpUtility
-              .makeAsyncGetRequest(new URI("http://" + getHost() + ":3000/" + action + parameters));
+              .makeAsyncGetRequest(new URI(
+                  "http://" + getHost() + ":3000/" + action + convertParamsToURIString(params)));
     } catch (URISyntaxException e) {
       logger.warn(e);
       return null;
@@ -227,11 +291,24 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     return returnedFuture;
   }
 
-  private JsonObject callRemoteGridExtras(String action) {
+  private String convertParamsToURIString(Map<String, String> params) {
+    StringBuilder parameterBuilder = new StringBuilder();
+    if (!params.isEmpty()) {
+      parameterBuilder.append("?");
+
+      for (String currentParam : params.keySet()) {
+        parameterBuilder.append(currentParam + "=" + params.get(currentParam) + "&");
+      }
+
+      return parameterBuilder.toString().replaceAll("&$", "");
+    }
+
+    return parameterBuilder.toString();
+  }
+
+  private JsonObject callRemoteGridExtras(String action, Map<String, String> params) {
     String returnedString;
-
     try {
-
       returnedString = HttpUtility.getRequestAsString(
           new URL("http://" + getHost() + ":3000/" + action));
 
@@ -250,6 +327,10 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
 
     return null;
+  }
+
+  private JsonObject callRemoteGridExtras(String action) {
+    return callRemoteGridExtras(action, new HashMap<String, String>());
   }
 
   protected String getHost() {
