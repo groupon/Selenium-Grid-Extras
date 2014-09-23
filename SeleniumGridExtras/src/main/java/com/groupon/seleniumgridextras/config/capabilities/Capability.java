@@ -4,11 +4,14 @@ import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.GridNode;
 
+import org.apache.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class Capability extends HashMap {
+  private static Logger logger = Logger.getLogger(Capability.class);
 
   public Capability() {
     this.put("maxInstances", 3);
@@ -43,6 +46,8 @@ public abstract class Capability extends HashMap {
         try {
           return key.newInstance();
         } catch (Exception e) {
+          logger.error("Can't load capability from file, exiting with 1");
+          logger.equals(e);
           e.printStackTrace();
           System.exit(1);
         }
