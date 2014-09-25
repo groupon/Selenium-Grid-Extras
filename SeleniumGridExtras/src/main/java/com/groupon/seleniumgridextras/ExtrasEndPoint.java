@@ -5,6 +5,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class ExtrasEndPoint {
 
+  private static final String ENDPOINT = "endpoint";
+  private static final String DESCRIPTION = "description";
+  private static final String CLASS = "class";
+  private static final String ACCEPTED_PARAMS = "accepted_params";
+  private static final String HTTP_TYPE = "http_type";
+  private static final String RESPONSE_TYPE = "response_type";
+  private static final String RESPONSE_DESCRIPTION = "response_description";
+  private static final String CSS_CLASS = "css_class";
+  private static final String ENABLED_IN_GUI = "enabled_in_gui";
+  private static final String BUTTON_TEXT = "button_text";
   private String response_type;
   private String request_type;
   private JsonObject accepted_params;
@@ -119,16 +129,16 @@ public class ExtrasEndPoint {
     this.getJsonResponse();
 
     JsonObject apiDescription = new JsonObject();
-    apiDescription.addProperty("endpoint", getEndpoint());
-    apiDescription.addProperty("description", getDescription());
-    apiDescription.addProperty("class", getClassname());
-    apiDescription.add("accepted_params", getAcceptedParams());
-    apiDescription.addProperty("http_type", getRequestType());
-    apiDescription.addProperty("response_type", getResponseType());
-    apiDescription.add("response_description", getResponseDescription());
-    apiDescription.addProperty("css_class", getCssClass());
-    apiDescription.addProperty("enabled_in_gui", getEnabledInGui());
-    apiDescription.addProperty("button_text", getButtonText());
+    apiDescription.addProperty(ENDPOINT, getEndpoint());
+    apiDescription.addProperty(DESCRIPTION, getDescription());
+    apiDescription.addProperty(CLASS, getClassname());
+    apiDescription.add(ACCEPTED_PARAMS, getAcceptedParams());
+    apiDescription.addProperty(HTTP_TYPE, getRequestType());
+    apiDescription.addProperty(RESPONSE_TYPE, getResponseType());
+    apiDescription.add(RESPONSE_DESCRIPTION, getResponseDescription());
+    apiDescription.addProperty(CSS_CLASS, getCssClass());
+    apiDescription.addProperty(ENABLED_IN_GUI, getEnabledInGui());
+    apiDescription.addProperty(BUTTON_TEXT, getButtonText());
 
     ApiDocumentation.registerApiEndPoint(apiDescription);
   }

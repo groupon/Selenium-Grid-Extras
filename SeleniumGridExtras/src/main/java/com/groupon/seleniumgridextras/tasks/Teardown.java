@@ -40,6 +40,8 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
@@ -49,6 +51,8 @@ import java.util.List;
 
 public class Teardown extends ExecuteOSTask {
 
+  private static final String CLASSES_TO_EXECUTE = "classes_to_execute";
+  private static final String RESULTS = "results";
   private List<ExecuteOSTask> teardownTasks;
   private static Logger logger = Logger.getLogger(Teardown.class);
 
@@ -64,9 +68,9 @@ public class Teardown extends ExecuteOSTask {
     setButtonText("Teardown");
     setEnabledInGui(false);
 
-    addResponseDescription("classes_to_execute",
+    addResponseDescription(CLASSES_TO_EXECUTE,
         "List of full canonical classes to execute on Tear-Down");
-    addResponseDescription("results", "Hash object of tasks ran and their results");
+    addResponseDescription(RESULTS, "Hash object of tasks ran and their results");
   }
 
   private JsonArray getClassesToRun() {
@@ -87,11 +91,11 @@ public class Teardown extends ExecuteOSTask {
         r.add(task.getClass().getSimpleName(), task.execute());
       }
 
-      getJsonResponse().addKeyValues("results", r);
+      getJsonResponse().addKeyValues(RESULTS, r);
 
       return getJsonResponse().getJson();
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }
@@ -125,7 +129,7 @@ public class Teardown extends ExecuteOSTask {
     }
 
 
-    getJsonResponse().addKeyValues("classes_to_execute", getClassesToRun());
+    getJsonResponse().addKeyValues(CLASSES_TO_EXECUTE, getClassesToRun());
     return true;
 
   }

@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.IEDownloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -50,15 +51,21 @@ import java.util.Map;
 
 public class DownloadIEDriver extends ExecuteOSTask {
 
-  private String bit = "Win32";
+  private static final String BIT = "bit";
+  private static final String WIN32 = "Win32";
+  private static final String VERSION = "version";
+  private static final String SOURCE_URL = "source_url";
+  private static final String FILE_FULL_PATH = "file_full_path";
+  private static final String FILE = "file";
+  private String bit = WIN32;
   private static Logger logger = Logger.getLogger(DownloadIEDriver.class);
 
   public DownloadIEDriver() {
     setEndpoint("/download_iedriver");
     setDescription("Downloads a version of IEDriver.exe to local machine");
     JsonObject params = new JsonObject();
-    params.addProperty("version", "Version of IEDriver to download, such as 2.33.0");
-    params.addProperty("bit", "Bit version of IEDriver Win32/x64 - (default: Win32)");
+    params.addProperty(VERSION, "Version of IEDriver to download, such as 2.33.0");
+    params.addProperty(BIT, "Bit version of IEDriver Win32/x64 - (default: Win32)");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -68,15 +75,15 @@ public class DownloadIEDriver extends ExecuteOSTask {
     setEnabledInGui(true);
 
     addResponseDescription("root_dir", "Directory to which EXE file was saved to");
-    addResponseDescription("file", "Relative path to file on the node");
-    addResponseDescription("file_full_path", "Full path to file on node");
-    addResponseDescription("source_url",
+    addResponseDescription(FILE, "Relative path to file on the node");
+    addResponseDescription(FILE_FULL_PATH, "Full path to file on node");
+    addResponseDescription(SOURCE_URL,
                            "Url from which the EXE was downloaded. If file already exists, this will be blank, and download will be skipped");
 
     this.bit = RuntimeConfig.getConfig().getIEdriver().getBit();
     getJsonResponse()
         .addKeyValues("root_dir", RuntimeConfig.getConfig().getIEdriver().getDirectory());
-    getJsonResponse().addKeyValues("source_url", "");
+    getJsonResponse().addKeyValues(SOURCE_URL, "");
 
   }
 
@@ -88,17 +95,17 @@ public class DownloadIEDriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey("version")) {
+    if (parameter.isEmpty() || !parameter.containsKey(VERSION)) {
       return execute();
     } else {
 
-      if (parameter.containsKey("bit")) {
-        this.bit = parameter.get("bit").toString();
+      if (parameter.containsKey(BIT)) {
+        this.bit = parameter.get(BIT).toString();
       } else {
-        this.bit = "Win32";
+        this.bit = WIN32;
       }
 
-      return execute(parameter.get("version").toString());
+      return execute(parameter.get(VERSION).toString());
     }
   }
 
@@ -111,22 +118,22 @@ public class DownloadIEDriver extends ExecuteOSTask {
 
     if (!new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
-      getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
+      getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
-        getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
+        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, downloader.getErrorMessage());
       }
     } else {
       logger.debug("No need for download");
-      getJsonResponse().addKeyValues("out", "File already downloaded, will not download again");
+      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "File already downloaded, will not download again");
     }
 
     getJsonResponse()
-        .addKeyValues("file_full_path",
+        .addKeyValues(FILE_FULL_PATH,
                       downloader.getDestinationFileFullPath().getAbsolutePath());
 
     getJsonResponse()
-        .addKeyValues("file", downloader.getDestinationFileFullPath().getName());
+        .addKeyValues(FILE, downloader.getDestinationFileFullPath().getName());
 
 
     return getJsonResponse().getJson();

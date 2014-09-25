@@ -38,6 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.WdDownloader;
 import java.io.File;
@@ -50,13 +51,17 @@ import java.util.Map;
 
 public class DownloadWebdriver extends ExecuteOSTask {
 
+  private static final String FILE = "file";
+  private static final String FILE_FULL_PATH = "file_full_path";
+  private static final String SOURCE_URL = "source_url";
+  private static final String VERSION = "version";
   private static Logger logger = Logger.getLogger(DownloadWebdriver.class);
 
   public DownloadWebdriver() {
     setEndpoint("/download_webdriver");
     setDescription("Downloads a version of WebDriver jar to local machine");
     JsonObject params = new JsonObject();
-    params.addProperty("version", "Version of WebDriver to download, such as 2.33.0");
+    params.addProperty(VERSION, "Version of WebDriver to download, such as 2.33.0");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -66,13 +71,13 @@ public class DownloadWebdriver extends ExecuteOSTask {
     setEnabledInGui(true);
 
     addResponseDescription("root_dir", "Directory to which JAR file was saved to");
-    addResponseDescription("file", "Relative path to file on the node");
-    addResponseDescription("file_full_path", "Full path to file on node");
-    addResponseDescription("source_url",
+    addResponseDescription(FILE, "Relative path to file on the node");
+    addResponseDescription(FILE_FULL_PATH, "Full path to file on node");
+    addResponseDescription(SOURCE_URL,
                            "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
 
     getJsonResponse()
-        .addKeyValues("file_full_path", RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
+        .addKeyValues(FILE_FULL_PATH, RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
 
     getJsonResponse().addKeyValues("root_dir", RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
@@ -88,19 +93,19 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public JsonObject execute(String version) {
     Downloader downloader = new WdDownloader(version);
 
-    getJsonResponse().addKeyValues("file", downloader.getDestinationFile());
+    getJsonResponse().addKeyValues(FILE, downloader.getDestinationFile());
     getJsonResponse()
-        .addKeyValues("file_full_path", downloader.getDestinationFileFullPath().getAbsolutePath());
+        .addKeyValues(FILE_FULL_PATH, downloader.getDestinationFileFullPath().getAbsolutePath());
 
     if (!downloader.getDestinationFileFullPath().exists()) {
       Boolean downloaded = downloader.download();
-      getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
+      getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
-        getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
+        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, downloader.getErrorMessage());
       }
     } else {
-      getJsonResponse().addKeyValues("out", "File already downloaded, will not download again");
+      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "File already downloaded, will not download again");
     }
 
     return getJsonResponse().getJson();
@@ -109,10 +114,10 @@ public class DownloadWebdriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey("version")) {
+    if (parameter.isEmpty() || !parameter.containsKey(VERSION)) {
       return execute();
     } else {
-      return execute(parameter.get("version").toString());
+      return execute(parameter.get(VERSION).toString());
     }
   }
 

@@ -40,6 +40,8 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
@@ -49,6 +51,8 @@ import java.util.List;
 
 public class Setup extends ExecuteOSTask {
 
+  private static final String CLASSES_TO_EXECUTE = "classes_to_execute";
+  private static final String RESULTS = "results";
   private List<ExecuteOSTask> setupTasks;
   private final
   String
@@ -69,9 +73,9 @@ public class Setup extends ExecuteOSTask {
     setButtonText("setup");
     setEnabledInGui(false);
 
-    addResponseDescription("classes_to_execute",
+    addResponseDescription(CLASSES_TO_EXECUTE,
         "List of full canonical classes to execute on Setup");
-    addResponseDescription("results", "Hash object of tasks ran and their results");
+    addResponseDescription(RESULTS, "Hash object of tasks ran and their results");
 
   }
 
@@ -95,11 +99,11 @@ public class Setup extends ExecuteOSTask {
         results.add(task.getClass().getSimpleName(), task.execute());
       }
 
-      getJsonResponse().addKeyValues("results", results);
+      getJsonResponse().addKeyValues(RESULTS, results);
 
       return getJsonResponse().getJson();
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }
@@ -131,7 +135,7 @@ public class Setup extends ExecuteOSTask {
       System.exit(1);
     }
 
-    getJsonResponse().addKeyValues("classes_to_execute", getClassesToRun());
+    getJsonResponse().addKeyValues(CLASSES_TO_EXECUTE, getClassesToRun());
     return true;
 
   }

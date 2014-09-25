@@ -39,7 +39,10 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
 import com.groupon.seleniumgridextras.grid.GridStarter;
@@ -51,6 +54,13 @@ import java.util.Map;
 
 public class StartGrid extends ExecuteOSTask {
 
+  private static final String ATTEMPTING_TO_START_GRID_NODES = "Attempting to start Grid Nodes";
+  private static final String ATTEMPTING_TO_START_GRID_HUB = "Attempting to start Grid Hub";
+  private static final
+  String CANT_LAUNCH_ERROR = "Something didn't go right in launching service";
+  private static final
+  String UPDATING_BROWSER_VERSIONS = "Updating browser capabilities, this may take some time";
+  private static final String ROLE = "role";
   private static Logger logger = Logger.getLogger(StartGrid.class);
 
   public StartGrid() {
@@ -59,7 +69,7 @@ public class StartGrid extends ExecuteOSTask {
     setEndpoint("/start_grid");
     setDescription("Starts an instance of Selenium Grid Hub or NodeConfig");
     JsonObject params = new JsonObject();
-    params.addProperty("role", "hub|node - defaults to 'default_role' param in config file");
+    params.addProperty(ROLE, "hub|node - defaults to 'default_role' param in config file");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -84,17 +94,17 @@ public class StartGrid extends ExecuteOSTask {
       }
 
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey("role")) {
+    if (parameter.isEmpty() || !parameter.containsKey(ROLE)) {
       return execute();
     } else {
-      return execute(parameter.get("role").toString());
+      return execute(parameter.get(ROLE).toString());
     }
   }
 
@@ -103,12 +113,18 @@ public class StartGrid extends ExecuteOSTask {
     if (configsDirectory.exists()) {
       new ConfigPuller().updateFromRemote();
     }
-    System.out.println("Attempting to start Grid Nodes");
+
+    System.out.println(UPDATING_BROWSER_VERSIONS);
+    logger.info(UPDATING_BROWSER_VERSIONS);
+    new BrowserVersionDetector(RuntimeConfig.getConfig().getNodes()).updateVersions();
+
+    System.out.println(ATTEMPTING_TO_START_GRID_NODES);
+    logger.info(ATTEMPTING_TO_START_GRID_NODES);
     return GridStarter.startAllNodes(getJsonResponse());
   }
 
   private JsonObject startHub() {
-    System.out.println("Attempting to start Grid Hub");
+    System.out.println(ATTEMPTING_TO_START_GRID_HUB);
 
     JsonObject serviceStartResponse = ExecuteCommand.execRuntime(
         GridStarter.getOsSpecificHubStartCommand(RuntimeConfig.getOS().isWindows())
@@ -116,13 +132,13 @@ public class StartGrid extends ExecuteOSTask {
 
     logger.info(serviceStartResponse);
 
-    if (serviceStartResponse.get("exit_code").toString().equals("0")) {
-      getJsonResponse().addKeyValues("out",
+    if (serviceStartResponse.get(JsonResponseBuilder.EXIT_CODE).toString().equals("0")) {
+      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT,
                                      "Service start command sent, might take as long as 10 seconds to spin up");
     } else {
-      logger.error("Something didn't go right in launching service");
+      logger.error(CANT_LAUNCH_ERROR);
       logger.error(serviceStartResponse);
-      getJsonResponse().addKeyValues("error", (JsonArray) serviceStartResponse.get("error"));
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, (JsonArray) serviceStartResponse.get(JsonResponseBuilder.ERROR));
     }
 
     return getJsonResponse().getJson();

@@ -48,10 +48,14 @@ import java.util.regex.Pattern;
 
 public class PortChecker {
 
+  private static final String PID = "pid";
+  private static final String PROCESS = "process";
+  private static final String USER = "user";
+
   public static JsonObject getParsedPortInfo(String port) {
 
     JsonObject status = getPortInfo(port);
-    JsonArray standardOut = (JsonArray) status.get("out");
+    JsonArray standardOut = (JsonArray) status.get(JsonResponseBuilder.OUT);
 
     if (RuntimeConfig.getOS().isWindows()) {
       return parseWindowsInfo(standardOut);
@@ -80,15 +84,15 @@ public class PortChecker {
 
   private static JsonObject parseLinuxInfo(JsonArray status) {
     JsonObject info = new JsonObject();
-    info.addProperty("out", status.toString());
+    info.addProperty(JsonResponseBuilder.OUT, status.toString());
 
     for (JsonElement line : status) {
       Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(
           line.getAsString());
       if (m.find()) {
-        info.addProperty("process", m.group(1));
-        info.addProperty("pid", m.group(2));
-        info.addProperty("user", m.group(3));
+        info.addProperty(PROCESS, m.group(1));
+        info.addProperty(PID, m.group(2));
+        info.addProperty(USER, m.group(3));
         break;
       }
     }
@@ -105,7 +109,7 @@ public class PortChecker {
           Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(LISTENING)\\s*(\\d*)")
               .matcher(line.getAsString());
       if (m.find()) {
-        info.addProperty("pid", m.group(5));
+        info.addProperty(PID, m.group(5));
         break;
       }
     }

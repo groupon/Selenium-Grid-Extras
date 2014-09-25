@@ -50,6 +50,7 @@ import java.util.List;
 
 public class ExposeDirectory extends ExecuteOSTask {
 
+  private static final String FILES = "files";
   public File sharedDir;
   private static Logger logger = Logger.getLogger(ExposeDirectory.class);
 
@@ -63,7 +64,7 @@ public class ExposeDirectory extends ExecuteOSTask {
     setButtonText("List Shared Dir");
     setEnabledInGui(true);
 
-    addResponseDescription("files", "Array list of files in the shared directory");
+    addResponseDescription(FILES, "Array list of files in the shared directory");
   }
 
 
@@ -75,7 +76,7 @@ public class ExposeDirectory extends ExecuteOSTask {
     for (File f : files) {
       filesToString.add(f.toString());
     }
-    getJsonResponse().addKeyValues("files", filesToString);
+    getJsonResponse().addKeyValues(FILES, filesToString);
     return getJsonResponse().getJson();
   }
 

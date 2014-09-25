@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
@@ -56,6 +57,15 @@ import java.util.List;
 import java.util.Map;
 
 public class SystemInfo extends ExecuteOSTask {
+
+  private static final String DRIVES = "drives";
+  private static final String PROCESSOR = "processor";
+  private static final String RAM = "ram";
+  private static final String UPTIME = "uptime";
+  private static final String HOSTNAME = "hostname";
+  private static final String IP = "ip";
+  private static final String N_A = "N/A";
+  private static final String HOSTNAME_CAN_NOT_BE_RESOLVED = "Hostname can not be resolved";
   private static Logger logger = Logger.getLogger(SystemInfo.class);
 
   public SystemInfo() {
@@ -70,13 +80,13 @@ public class SystemInfo extends ExecuteOSTask {
     setButtonText("System Info");
     setEnabledInGui(true);
 
-    addResponseDescription("drives", "Hash of all mounted drives and their info");
-    addResponseDescription("processor", "Info about processors on machine");
-    addResponseDescription("ram", "Info in bytes on how much RAM machine has/uses");
-    addResponseDescription("uptime", "System uptime since last reboot in seconds");
+    addResponseDescription(DRIVES, "Hash of all mounted drives and their info");
+    addResponseDescription(PROCESSOR, "Info about processors on machine");
+    addResponseDescription(RAM, "Info in bytes on how much RAM machine has/uses");
+    addResponseDescription(UPTIME, "System uptime since last reboot in seconds");
 
-    addResponseDescription("hostname", "Host name");
-    addResponseDescription("ip", "Host ip");
+    addResponseDescription(HOSTNAME, "Host name");
+    addResponseDescription(IP, "Host ip");
 
   }
 
@@ -94,17 +104,17 @@ public class SystemInfo extends ExecuteOSTask {
         info = new LinuxSystemInfo();
       }
 
-      getJsonResponse().addListOfHashes("drives", info.getDiskInfo());
-      getJsonResponse().addKeyValues("processor", info.getProcessorInfo());
-      getJsonResponse().addKeyValues("ram", info.getMemoryInfo());
-      getJsonResponse().addKeyValues("uptime", info.getSystemUptime());
+      getJsonResponse().addListOfHashes(DRIVES, info.getDiskInfo());
+      getJsonResponse().addKeyValues(PROCESSOR, info.getProcessorInfo());
+      getJsonResponse().addKeyValues(RAM, info.getMemoryInfo());
+      getJsonResponse().addKeyValues(UPTIME, info.getSystemUptime());
     } catch (Exception e) {
-      getJsonResponse().addKeyValues("error", e.toString());
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, e.toString());
     }
 
     List<String> hostNetworking = getComputerNetworkInfo();
-    getJsonResponse().addKeyValues("hostname", hostNetworking.get(0));
-    getJsonResponse().addKeyValues("ip", hostNetworking.get(1));
+    getJsonResponse().addKeyValues(HOSTNAME, hostNetworking.get(0));
+    getJsonResponse().addKeyValues(IP, hostNetworking.get(1));
 
     return getJsonResponse().getJson();
   }
@@ -123,9 +133,9 @@ public class SystemInfo extends ExecuteOSTask {
       host.add(addr.getHostName());
       host.add(addr.getHostAddress());
     } catch (UnknownHostException ex) {
-      logger.debug("Hostname can not be resolved");
-      host.add("N/A");
-      host.add("N/A");
+      logger.debug(HOSTNAME_CAN_NOT_BE_RESOLVED);
+      host.add(N_A);
+      host.add(N_A);
     }
 
     return host;

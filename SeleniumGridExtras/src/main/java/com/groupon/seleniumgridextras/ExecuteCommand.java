@@ -71,7 +71,7 @@ public class ExecuteCommand {
       }
     } catch (IOException e) {
       final String message = "Problems in running " + cmd + "\n" + e.toString();
-      jsonResponse.addKeyValues("error", message);
+      jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, message);
       logger.warn(message);
       return jsonResponse.getJson();
     }
@@ -84,29 +84,29 @@ public class ExecuteCommand {
         logger.debug("Command Finished");
       } catch (InterruptedException e) {
         final String message = "Interrupted running " + cmd + "\n" + e.toString();
-        jsonResponse.addKeyValues("error", message);
+        jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, message);
         logger.warn(message);
         return jsonResponse.getJson();
       }
     } else {
       logger.debug("Not waiting for finish");
-      jsonResponse.addKeyValues("out", "Background process started");
+      jsonResponse.addKeyValues(JsonResponseBuilder.OUT, "Background process started");
       return jsonResponse.getJson();
     }
 
     try {
       String output = StreamUtility.inputStreamToString(process.getInputStream());
       String error = StreamUtility.inputStreamToString(process.getErrorStream());
-      jsonResponse.addKeyValues("exit_code", exitCode);
-      jsonResponse.addKeyValues("out", output);
+      jsonResponse.addKeyValues(JsonResponseBuilder.EXIT_CODE, exitCode);
+      jsonResponse.addKeyValues(JsonResponseBuilder.OUT, output);
       if (!error.equals("")) {
         //Only add error if there is one, this way we have a nice empty array instead of [""]
-        jsonResponse.addKeyValues("error", error);
+        jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, error);
       }
       return jsonResponse.getJson();
     } catch (IOException e) {
       final String message = "Problems reading stdout and stderr from " + cmd + "\n" + e.toString();
-      jsonResponse.addKeyValues("error", message);
+      jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, message);
       logger.warn(message);
       return jsonResponse.getJson();
 

@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
@@ -50,6 +51,7 @@ import java.util.Map;
 
 public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
+  private static final String PARAMETER = "parameter";
   final private
   String
       notImplementedError =
@@ -63,8 +65,8 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   }
 
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey("parameter")) {
-      return execute(parameter.get("parameter").toString());
+    if (!parameter.isEmpty() && parameter.containsKey(PARAMETER)) {
+      return execute(parameter.get(PARAMETER).toString());
     } else {
       return execute();
     }
@@ -87,7 +89,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   public String getWindowsCommand(String parameter) {
 
-    getJsonResponse().addKeyValues("error",
+    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR,
         notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
@@ -99,7 +101,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   }
 
   public String getLinuxCommand(String parameter) {
-    getJsonResponse().addKeyValues("error",
+    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR,
         notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();

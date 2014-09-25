@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
 
@@ -10,23 +11,33 @@ import java.util.Map;
 
 public class VideoRecorder extends ExecuteOSTask {
 
+  private static final String SESSION = "session";
+  private static final String ACTION = "action";
+  private static final String DESCRIPTION = "description";
+  private static final String CURRENT_VIDEOS = "current_videos";
+  private static final String START = "start";
+  private static final String STOP = "stop";
+  private static final String HEARTBEAT = "heartbeat";
+  private static final String STATUS = "status";
+  private static final String STOP_ALL = "stop_all";
+
   public VideoRecorder() {
     setEndpoint("/video");
     setDescription("Starts and stops video recording");
     JsonObject params = new JsonObject();
-    params.addProperty("session", "(Required) - Session name of the test being recorded");
-    params.addProperty("action", "(Required) - Action to perform (start|stop|heartbeat|status|stop_all)");
-    params.addProperty("description",
+    params.addProperty(SESSION, "(Required) - Session name of the test being recorded");
+    params.addProperty(ACTION, "(Required) - Action to perform (start|stop|heartbeat|status|stop_all)");
+    params.addProperty(DESCRIPTION,
                        "Description to appear in lower 3rd of the video");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
 
-    addResponseDescription("session", "Session on which the current action was performed");
-    addResponseDescription("action", "Action performed on current Video");
-    addResponseDescription("description", "Update of last action performed by test to be displayed in lower third");
-    addResponseDescription("current_videos", "List of videos currently being recorded, retrieved with 'status' action");
+    addResponseDescription(SESSION, "Session on which the current action was performed");
+    addResponseDescription(ACTION, "Action performed on current Video");
+    addResponseDescription(DESCRIPTION, "Update of last action performed by test to be displayed in lower third");
+    addResponseDescription(CURRENT_VIDEOS, "List of videos currently being recorded, retrieved with 'status' action");
 
     setEnabledInGui(false);
   }
@@ -36,40 +47,40 @@ public class VideoRecorder extends ExecuteOSTask {
   public JsonObject execute(Map<String, String> parameter) {
 
     if (!RuntimeConfig.getConfig().getVideoRecording().getRecordTestVideos()){
-      getJsonResponse().addKeyValues("error", "Video Recording is disabled on this node");
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Video Recording is disabled on this node");
       return getJsonResponse().getJson();
     }
 
 
-    if (!parameter.isEmpty() && parameter.containsKey("session") && parameter
-        .containsKey("action")) {
+    if (!parameter.isEmpty() && parameter.containsKey(SESSION) && parameter
+        .containsKey(ACTION)) {
 
-      String session = parameter.get("session");
-      String action = parameter.get("action");
-      String userDescription = parameter.get("description");
+      String session = parameter.get(SESSION);
+      String action = parameter.get(ACTION);
+      String userDescription = parameter.get(DESCRIPTION);
 
-      getJsonResponse().addKeyValues("session", "" + session);
-      getJsonResponse().addKeyValues("action", "" + action);
-      getJsonResponse().addKeyValues("description", "" + userDescription);
+      getJsonResponse().addKeyValues(SESSION, "" + session);
+      getJsonResponse().addKeyValues(ACTION, "" + action);
+      getJsonResponse().addKeyValues(DESCRIPTION, "" + userDescription);
 
-      if (action.equals("start")) {
+      if (action.equals(START)) {
         VideoRecordingThreadPool.startVideoRecording(session,
                                                      RuntimeConfig.getConfig().getVideoRecording()
                                                          .getIdleTimeout());
-        getJsonResponse().addKeyValues("out", "Starting Video Recording");
-      } else if (action.equals("stop")) {
-        getJsonResponse().addKeyValues("out", "Stopping Video Recording");
+        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Starting Video Recording");
+      } else if (action.equals(STOP)) {
+        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Stopping Video Recording");
         VideoRecordingThreadPool.stopVideoRecording(session);
-      } else if (action.equals("heartbeat")) {
+      } else if (action.equals(HEARTBEAT)) {
         VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
-        getJsonResponse().addKeyValues("out", "Updating lower 3rd description");
-      } else if (action.equals("status")){
-        getJsonResponse().addKeyValues("current_videos", VideoRecordingThreadPool.getAllVideos());
-      } else if (action.equals("stop_all")){
+        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Updating lower 3rd description");
+      } else if (action.equals(STATUS)){
+        getJsonResponse().addKeyValues(CURRENT_VIDEOS, VideoRecordingThreadPool.getAllVideos());
+      } else if (action.equals(STOP_ALL)){
         VideoRecordingThreadPool.stopAndFinalizeAllVideos();
-        getJsonResponse().addKeyValues("out", "Calling stop all videos command");
+        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Calling stop all videos command");
       } else {
-        getJsonResponse().addKeyValues("error", "Unrecognized action '" + action
+        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Unrecognized action '" + action
                                                 + "', only acceptable actions are start, stop, heartbeat");
 
       }
@@ -86,7 +97,7 @@ public class VideoRecorder extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues("error",
+    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR,
                                    "Cannot call this endpoint without required parameters: session & action");
     return getJsonResponse().getJson();
   }

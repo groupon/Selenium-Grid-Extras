@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -50,15 +51,22 @@ import java.util.Map;
 
 public class DownloadChromeDriver extends ExecuteOSTask {
 
-  private String bit = "32";
+  private static final String ROOT_DIR = "root_dir";
+  private static final String FILE = "file";
+  private static final String FILE_FULL_PATH = "file_full_path";
+  private static final String SOURCE_URL = "source_url";
+  private static final String BIT = "bit";
+  private static final String VERSION = "version";
+  private static final String STRING = "32";
+  private String bit = STRING;
   private static Logger logger = Logger.getLogger(DownloadChromeDriver.class);
 
   public DownloadChromeDriver() {
     setEndpoint("/download_chromedriver");
     setDescription("Downloads a version of ChromeDriver to local machine");
     JsonObject params = new JsonObject();
-    params.addProperty("version", "Version of ChromeDriver to download, such as 2.6");
-    params.addProperty("bit", "Bit Version of ChromeDriver 32/64 - (default: 32)");
+    params.addProperty(VERSION, "Version of ChromeDriver to download, such as 2.6");
+    params.addProperty(BIT, "Bit Version of ChromeDriver 32/64 - (default: 32)");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -67,10 +75,10 @@ public class DownloadChromeDriver extends ExecuteOSTask {
     setButtonText("Download Chrome-Driver");
     setEnabledInGui(true);
 
-    addResponseDescription("root_dir", "Directory to which executable file was saved to");
-    addResponseDescription("file", "Relative path to file on the node");
-    addResponseDescription("file_full_path", "Full path to file on node");
-    addResponseDescription("source_url",
+    addResponseDescription(ROOT_DIR, "Directory to which executable file was saved to");
+    addResponseDescription(FILE, "Relative path to file on the node");
+    addResponseDescription(FILE_FULL_PATH, "Full path to file on node");
+    addResponseDescription(SOURCE_URL,
                            "Url from which the executable was downloaded. If file already exists, this will be blank, and download will be skipped");
 
     // bit value should be initialized from configuration
@@ -78,8 +86,8 @@ public class DownloadChromeDriver extends ExecuteOSTask {
 
     logger.debug(RuntimeConfig.getConfig());
     getJsonResponse()
-        .addKeyValues("root_dir", RuntimeConfig.getConfig().getChromeDriver().getDirectory());
-    getJsonResponse().addKeyValues("source_url", "");
+        .addKeyValues(ROOT_DIR, RuntimeConfig.getConfig().getChromeDriver().getDirectory());
+    getJsonResponse().addKeyValues(SOURCE_URL, "");
 
   }
 
@@ -91,13 +99,13 @@ public class DownloadChromeDriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (!parameter.isEmpty() && parameter.containsKey("version")) {
-      if (parameter.containsKey("bit")) {
-        this.bit = parameter.get("bit").toString();
+    if (!parameter.isEmpty() && parameter.containsKey(VERSION)) {
+      if (parameter.containsKey(BIT)) {
+        this.bit = parameter.get(BIT).toString();
       } else {
-        this.bit = "32";
+        this.bit = STRING;
       }
-      return execute(parameter.get("version").toString());
+      return execute(parameter.get(VERSION).toString());
     } else {
       return execute();
     }
@@ -113,22 +121,22 @@ public class DownloadChromeDriver extends ExecuteOSTask {
 
     if (!new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
-      getJsonResponse().addKeyValues("source_url", downloader.getSourceURL());
+      getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
-        getJsonResponse().addKeyValues("error", downloader.getErrorMessage());
+        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, downloader.getErrorMessage());
       }
     } else {
       logger.debug("No need for download");
-      getJsonResponse().addKeyValues("out", "File already downloaded, will not download again");
+      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "File already downloaded, will not download again");
     }
 
     getJsonResponse()
-        .addKeyValues("file_full_path",
+        .addKeyValues(FILE_FULL_PATH,
                       downloader.getDestinationFileFullPath().getAbsolutePath());
 
     getJsonResponse()
-        .addKeyValues("file", downloader.getDestinationFileFullPath().getName());
+        .addKeyValues(FILE, downloader.getDestinationFileFullPath().getName());
 
 
     return getJsonResponse().getJson();

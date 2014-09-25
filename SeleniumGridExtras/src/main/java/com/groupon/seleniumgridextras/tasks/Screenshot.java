@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 
@@ -65,14 +66,24 @@ import java.util.Map;
 
 public class Screenshot extends ExecuteOSTask {
 
+  private static final String WIDTH = "width";
+  private static final String HEIGHT = "height";
+  private static final String KEEP = "keep";
+  private static final String FILE_TYPE = "file_type";
+  private static final String FILE = "file";
+  private static final String IMAGE = "image";
+  private static final String HOSTNAME = "hostname";
+  private static final String IP = "ip";
+  private static final String TIMESTAMP = "timestamp";
+  private static final String PNG = "png";
   private static Logger logger = Logger.getLogger(Screenshot.class);
 
   public Screenshot() {
     setEndpoint("/screenshot");
     setDescription("Take a full OS screen Screen Shot of the node");
     JsonObject params = new JsonObject();
-    params.addProperty("width", "width");
-    params.addProperty("height", "height");
+    params.addProperty(WIDTH, WIDTH);
+    params.addProperty(HEIGHT, HEIGHT);
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -81,12 +92,12 @@ public class Screenshot extends ExecuteOSTask {
     setButtonText("screenshot");
     setEnabledInGui(true);
 
-    addResponseDescription("file_type", "Type of file returned (PNG/JPG/GIF)");
-    addResponseDescription("file", "Name of the file saved on the NodeConfig's HD");
-    addResponseDescription("image", "Base64 URL Encoded (ISO-8859-1) string of the image");
-    addResponseDescription("hostname", "Human readable machine name");
-    addResponseDescription("ip", "IP Address of current machine");
-    addResponseDescription("timestamp", "Timestamp of the screenshot");
+    addResponseDescription(FILE_TYPE, "Type of file returned (PNG/JPG/GIF)");
+    addResponseDescription(FILE, "Name of the file saved on the NodeConfig's HD");
+    addResponseDescription(IMAGE, "Base64 URL Encoded (ISO-8859-1) string of the image");
+    addResponseDescription(HOSTNAME, "Human readable machine name");
+    addResponseDescription(IP, "IP Address of current machine");
+    addResponseDescription(TIMESTAMP, "Timestamp of the screenshot");
 
   }
 
@@ -98,11 +109,11 @@ public class Screenshot extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    int width = parameter.containsKey("width") ? Integer.parseInt(parameter.get("width")) : 0;
-    int height = parameter.containsKey("height") ? Integer.parseInt(parameter.get("height")) : 0;
+    int width = parameter.containsKey(WIDTH) ? Integer.parseInt(parameter.get(WIDTH)) : 0;
+    int height = parameter.containsKey(HEIGHT) ? Integer.parseInt(parameter.get(HEIGHT)) : 0;
     boolean
         keepFile =
-        parameter.containsKey("keep") ? Boolean.parseBoolean(parameter.get("keep")) : true;
+        parameter.containsKey(KEEP) ? Boolean.parseBoolean(parameter.get(KEEP)) : true;
     return createScreenshot(width, height, keepFile);
   }
 
@@ -124,23 +135,23 @@ public class Screenshot extends ExecuteOSTask {
         encodedImage = java.net.URLEncoder.encode(encodedImage, "ISO-8859-1");
 
       } catch (IOException e) {
-        getJsonResponse().addKeyValues("error", "Error Saving image to file\n " + e);
+        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Error Saving image to file\n " + e);
         return getJsonResponse().getJson();
       }
-      getJsonResponse().addKeyValues("file_type", "PNG");
-      getJsonResponse().addKeyValues("file",
+      getJsonResponse().addKeyValues(FILE_TYPE, "PNG");
+      getJsonResponse().addKeyValues(FILE,
                                      RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig
                                          .getOS().getFileSeparator() + filename);
-      getJsonResponse().addKeyValues("image", encodedImage);
+      getJsonResponse().addKeyValues(IMAGE, encodedImage);
 
-      getJsonResponse().addKeyValues("hostname", RuntimeConfig.getOS().getHostName());
-      getJsonResponse().addKeyValues("ip", RuntimeConfig.getOS().getHostIp());
+      getJsonResponse().addKeyValues(HOSTNAME, RuntimeConfig.getOS().getHostName());
+      getJsonResponse().addKeyValues(IP, RuntimeConfig.getOS().getHostIp());
       Date newTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-      getJsonResponse().addKeyValues("timestamp", newTimestamp.toString());
+      getJsonResponse().addKeyValues(TIMESTAMP, newTimestamp.toString());
 
       return getJsonResponse().getJson();
     } catch (AWTException error) {
-      getJsonResponse().addKeyValues("error", "Error with AWT Robot\n" + error);
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Error with AWT Robot\n" + error);
       return getJsonResponse().getJson();
     }
   }
@@ -156,7 +167,7 @@ public class Screenshot extends ExecuteOSTask {
 
   private ByteArrayOutputStream writeImageToStream(BufferedImage screenshot) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ImageIO.write(screenshot, "png", baos);
+    ImageIO.write(screenshot, PNG, baos);
     baos.flush();
     return baos;
   }
@@ -168,7 +179,7 @@ public class Screenshot extends ExecuteOSTask {
     String fullPath = directory + RuntimeConfig.getOS().getFileSeparator() + filename;
     File outputFile = new File(fullPath);
     outputFile.mkdirs();
-    ImageIO.write(screenshot, "png", outputFile);
+    ImageIO.write(screenshot, PNG, outputFile);
     return filename;
   }
 
@@ -177,7 +188,7 @@ public class Screenshot extends ExecuteOSTask {
     Date date = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
     String formattedTimestamp = sdf.format(date);
-    filename = "screenshot_" + formattedTimestamp + ".png";
+    filename = "screenshot_" + formattedTimestamp + "." + PNG;
     return filename;
   }
 

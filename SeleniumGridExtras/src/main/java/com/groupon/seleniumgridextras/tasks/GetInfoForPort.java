@@ -40,17 +40,24 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 
 import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
+  private static final String PROCESS_NAME = "process_name";
+  private static final String PID = "pid";
+  private static final String USER = "user";
+  private static final String PORT = "port";
+  private static final String PROCESS = "process";
+
   public GetInfoForPort() {
     setEndpoint("/port_info");
     setDescription("Returns parsed information on a PID occupying a given port");
     JsonObject params = new JsonObject();
-    params.addProperty("port", "(Required) Port to be used");
+    params.addProperty(PORT, "(Required) Port to be used");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -59,31 +66,31 @@ public class GetInfoForPort extends ExecuteOSTask {
     setButtonText("Get Info for Port");
     setEnabledInGui(true);
 
-    addResponseDescription("process_name", "Process name/type (ie java, ruby, etc..)");
-    addResponseDescription("pid", "Process ID");
-    addResponseDescription("user", "User who is running process");
-    addResponseDescription("port", "Port searched for");
+    addResponseDescription(PROCESS_NAME, "Process name/type (ie java, ruby, etc..)");
+    addResponseDescription(PID, "Process ID");
+    addResponseDescription(USER, "User who is running process");
+    addResponseDescription(PORT, "Port searched for");
   }
 
 
   @Override
   public JsonObject getAcceptedParams() {
     JsonObject params = new JsonObject();
-    params.addProperty("port", "(Required) Port to be used");
+    params.addProperty(PORT, "(Required) Port to be used");
     return params;
   }
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues("error", "Port parameter is required");
+    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Port parameter is required");
     return getJsonResponse().getJson();
   }
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (!parameter.isEmpty() && parameter.containsKey("port")) {
-      return execute(parameter.get("port").toString());
+    if (!parameter.isEmpty() && parameter.containsKey(PORT)) {
+      return execute(parameter.get(PORT).toString());
     } else {
       return execute();
     }
@@ -103,33 +110,33 @@ public class GetInfoForPort extends ExecuteOSTask {
       String out = "";
 
       try {
-        process = portInfo.get("process").getAsString();
+        process = portInfo.get(PROCESS).getAsString();
       } catch (NullPointerException error) {
       }
       try {
-        pid = portInfo.get("pid").getAsString();
+        pid = portInfo.get(PID).getAsString();
       } catch (NullPointerException error) {
       }
       try {
-        user = portInfo.get("user").getAsString();
+        user = portInfo.get(USER).getAsString();
       } catch (NullPointerException error) {
       }
 
       try {
-        out = portInfo.get("out").getAsString();
+        out = portInfo.get(JsonResponseBuilder.OUT).getAsString();
       } catch (NullPointerException error) {
       }
 
-      getJsonResponse().addKeyValues("process_name", process);
-      getJsonResponse().addKeyValues("pid", pid);
-      getJsonResponse().addKeyValues("user", user);
-      getJsonResponse().addKeyValues("port", port);
-      getJsonResponse().addKeyValues("out", out);
+      getJsonResponse().addKeyValues(PROCESS_NAME, process);
+      getJsonResponse().addKeyValues(PID, pid);
+      getJsonResponse().addKeyValues(USER, user);
+      getJsonResponse().addKeyValues(PORT, port);
+      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, out);
       return getJsonResponse().getJson();
 
     } catch (Exception error) {
       //Big try catch to see if anything at all went wrong
-      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
 

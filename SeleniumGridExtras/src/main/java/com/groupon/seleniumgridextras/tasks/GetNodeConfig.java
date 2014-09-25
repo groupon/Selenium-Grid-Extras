@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
@@ -17,6 +18,7 @@ import java.util.Map;
 
 public class GetNodeConfig extends ExecuteOSTask {
 
+  private static final String NODE = "node";
   private static Logger logger = Logger.getLogger(GetNodeConfig.class);
 
   public GetNodeConfig() {
@@ -24,7 +26,7 @@ public class GetNodeConfig extends ExecuteOSTask {
     setDescription("Provides the grid node config from central location");
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    params.addProperty("node", "(Required) -  Computer name of desired node.");
+    params.addProperty(NODE, "(Required) -  Computer name of desired node.");
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
@@ -50,7 +52,7 @@ public class GetNodeConfig extends ExecuteOSTask {
         try {
           addFileContentsToResponse(file.getName(), FileIOUtility.getAsString(file));
         } catch (Exception error) {
-          getJsonResponse().addKeyValues("error", error.toString());
+          getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
           logger.warn(error.toString());
         }
       }
@@ -59,7 +61,7 @@ public class GetNodeConfig extends ExecuteOSTask {
           error =
           "Config directory for '" + node + "' node does not exist in " + node_specific_config_dir
               .getAbsolutePath();
-      getJsonResponse().addKeyValues("error", error);
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error);
       logger.info(error);
     }
 
@@ -73,7 +75,7 @@ public class GetNodeConfig extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues("error", "Cannot call this end point without 'node' parameter");
+    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Cannot call this end point without 'node' parameter");
     return getJsonResponse().getJson();
   }
 
@@ -81,15 +83,15 @@ public class GetNodeConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey("node") ) {
+    if (parameter.isEmpty() || !parameter.containsKey(NODE) ) {
       return execute();
     } else if (!configDirExist()) {
-      getJsonResponse().addKeyValues("error", "This node does not contain the following directory: "
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "This node does not contain the following directory: "
                                               + RuntimeConfig.getConfig().getConfigsDirectory()
           .getName());
       return getJsonResponse().getJson();
     } else {
-      return execute(parameter.get("node").toString());
+      return execute(parameter.get(NODE).toString());
     }
   }
 

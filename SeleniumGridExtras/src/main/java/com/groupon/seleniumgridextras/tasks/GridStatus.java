@@ -39,10 +39,19 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class GridStatus extends ExecuteOSTask {
+
+  private static final String HUB_RUNNING = "hub_running";
+  private static final String NODE_RUNNING = "node_running";
+  private static final String HUB_INFO = "hub_info";
+  private static final String NODE_INFO = "node_info";
+  private static final String NODE_SESSIONS_STARTED = "node_sessions_started";
+  private static final String NODE_SESSIONS_CLOSED = "node_sessions_closed";
+  private static final String NODE_SESSIONS_LIMIT = "node_sessions_limit";
 
   public GridStatus() {
     setEndpoint("/grid_status");
@@ -57,16 +66,16 @@ public class GridStatus extends ExecuteOSTask {
     setButtonText("Grid Status");
     setEnabledInGui(true);
 
-    addResponseDescription("hub_running", "Boolean if hub is running on given port");
-    addResponseDescription("node_running", "Boolean if node is running on given port");
-    addResponseDescription("hub_info", "Hash object describing the Hub Process");
-    addResponseDescription("node_info", "Hash object describing the NodeConfig Process");
+    addResponseDescription(HUB_RUNNING, "Boolean if hub is running on given port");
+    addResponseDescription(NODE_RUNNING, "Boolean if node is running on given port");
+    addResponseDescription(HUB_INFO, "Hash object describing the Hub Process");
+    addResponseDescription(NODE_INFO, "Hash object describing the NodeConfig Process");
 
-    addResponseDescription("node_sessions_started",
+    addResponseDescription(NODE_SESSIONS_STARTED,
                            "Integer how many times grid connected to this computer");
-    addResponseDescription("node_sessions_closed",
+    addResponseDescription(NODE_SESSIONS_CLOSED,
                            "Integer how many sessions where properly closed");
-    addResponseDescription("node_sessions_limit", "Integer upper limit before the box reboots");
+    addResponseDescription(NODE_SESSIONS_LIMIT, "Integer upper limit before the box reboots");
 
   }
 
@@ -77,21 +86,21 @@ public class GridStatus extends ExecuteOSTask {
       JsonObject hubInfo = PortChecker.getParsedPortInfo(4444);
       JsonObject nodeInfo = PortChecker.getParsedPortInfo(5555);
 
-      getJsonResponse().addKeyValues("hub_running", hubInfo.isJsonNull() ? false : true);
-      getJsonResponse().addKeyValues("node_running", nodeInfo.isJsonNull() ? false : true);
-      getJsonResponse().addKeyValues("hub_info", hubInfo);
-      getJsonResponse().addKeyValues("node_info", nodeInfo);
+      getJsonResponse().addKeyValues(HUB_RUNNING, hubInfo.isJsonNull() ? false : true);
+      getJsonResponse().addKeyValues(NODE_RUNNING, nodeInfo.isJsonNull() ? false : true);
+      getJsonResponse().addKeyValues(HUB_INFO, hubInfo);
+      getJsonResponse().addKeyValues(NODE_INFO, nodeInfo);
 
-      getJsonResponse().addKeyValues("node_sessions_started",
+      getJsonResponse().addKeyValues(NODE_SESSIONS_STARTED,
                                      RuntimeConfig.getTestSessionTracker().getSessionsStarted());
-      getJsonResponse().addKeyValues("node_sessions_closed",
+      getJsonResponse().addKeyValues(NODE_SESSIONS_CLOSED,
                                      RuntimeConfig.getTestSessionTracker().getSessionsEnded());
       getJsonResponse()
-          .addKeyValues("node_sessions_limit", RuntimeConfig.getConfig().getRebootAfterSessions());
+          .addKeyValues(NODE_SESSIONS_LIMIT, RuntimeConfig.getConfig().getRebootAfterSessions());
 
       return getJsonResponse().getJson();
     } catch (Exception error) {
-      getJsonResponse().addKeyValues("error", error.toString());
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }

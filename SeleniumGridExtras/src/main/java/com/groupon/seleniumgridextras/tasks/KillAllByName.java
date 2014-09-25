@@ -46,11 +46,15 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class KillAllByName extends ExecuteOSTask {
 
+  private static final String COMMAND = "command";
+  private static final String WAIT_TO_FINISH = "wait_to_finish";
+  private static final String NAME = "name";
+
   public KillAllByName() {
     setEndpoint("/kill_all_by_name");
     setDescription("Executes os level kill command on a given PID name");
     JsonObject params = new JsonObject();
-    params.addProperty("name", "Name of process");
+    params.addProperty(NAME, "Name of process");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -93,16 +97,16 @@ public class KillAllByName extends ExecuteOSTask {
 
     JsonObject response = ExecuteCommand.execRuntime(finalCommand, waitToFinishTask);
 
-    response.addProperty("command", finalCommand);
-    response.addProperty("wait_to_finish", waitToFinishTask);
+    response.addProperty(COMMAND, finalCommand);
+    response.addProperty(WAIT_TO_FINISH, waitToFinishTask);
 
     return response;
   }
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey("name")) {
-      return execute(parameter.get("name").toString());
+    if (!parameter.isEmpty() && parameter.containsKey(NAME)) {
+      return execute(parameter.get(NAME).toString());
     }
     return execute();
   }

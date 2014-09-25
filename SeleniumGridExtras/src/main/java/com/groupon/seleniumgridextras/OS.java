@@ -47,35 +47,43 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class OS {
+
+  private static final String WINDOWS = "Windows";
+  private static final String MAC = "Mac";
+  private static final String OS_NAME = "os.name";
+  private static final String USER_HOME = "user.home";
+  private static final String USER_NAME = "user.name";
+  private static final String FILE_SEPARATOR = "file.separator";
+  private static final String PATH_SEPARATOR = "path.separator";
   private static Logger logger = Logger.getLogger(OS.class);
 
 
   public boolean isWindows() {
-    return getOSName().startsWith("Windows");
+    return getOSName().startsWith(WINDOWS);
   }
 
   public boolean isMac() {
-    return getOSName().startsWith("Mac");
+    return getOSName().startsWith(MAC);
   }
 
   public String getOSName() {
-    return System.getProperty("os.name");
+    return System.getProperty(OS_NAME);
   }
 
   public String getUserHome() {
-    return System.getProperty("user.home");
+    return System.getProperty(USER_HOME);
   }
 
   public String getUserName() {
-    return System.getProperty("user.name");
+    return System.getProperty(USER_NAME);
   }
 
   public String getFileSeparator() {
-    return System.getProperty("file.separator");
+    return System.getProperty(FILE_SEPARATOR);
   }
 
   public String getPathSeparator() {
-    return System.getProperty("path.separator");
+    return System.getProperty(PATH_SEPARATOR);
   }
 
   public String getCurrentPid(){

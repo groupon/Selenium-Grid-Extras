@@ -47,15 +47,18 @@ import java.util.Map;
 
 public class JsonResponseBuilder {
 
+  public static final String OUT = "out";
+  public static final String ERROR = "error";
+  public static final String EXIT_CODE = "exit_code";
 
   private JsonObject keyDescriptions;
   private JsonObject keyValues;
 
   public JsonResponseBuilder() {
     keyDescriptions = new JsonObject();
-    keyDescriptions.addProperty("error", "Error received during execution of command");
-    keyDescriptions.addProperty("exit_code", "Exit code for operation");
-    keyDescriptions.addProperty("out", "All of the StandardOut received from the system");
+    keyDescriptions.addProperty(JsonResponseBuilder.ERROR, "Error received during execution of command");
+    keyDescriptions.addProperty(JsonResponseBuilder.EXIT_CODE, "Exit code for operation");
+    keyDescriptions.addProperty(JsonResponseBuilder.OUT, "All of the StandardOut received from the system");
     clearValues();
   }
 
@@ -66,9 +69,9 @@ public class JsonResponseBuilder {
     JsonArray out = new JsonArray();
     JsonArray error = new JsonArray();
 
-    addKeyValues("exit_code", 0);
-    addKeyValues("out", out);
-    addKeyValues("error", error);
+    addKeyValues(EXIT_CODE, 0);
+    addKeyValues(OUT, out);
+    addKeyValues(ERROR, error);
   }
 
   public void addKeyDescriptions(String key, String description) {
@@ -89,10 +92,10 @@ public class JsonResponseBuilder {
       valueArray.add(new JsonPrimitive(value));
     }
 
-    if (key.equals("out")) {
+    if (key.equals(JsonResponseBuilder.OUT)) {
       addKeyValues(key, valueArray);
-    } else if (key.equals("error")) {
-      addKeyValues("exit_code", 1);
+    } else if (key.equals(JsonResponseBuilder.ERROR)) {
+      addKeyValues(JsonResponseBuilder.EXIT_CODE, 1);
       addKeyValues(key, valueArray);
     } else {
       keyValues.add(key, valueArray);

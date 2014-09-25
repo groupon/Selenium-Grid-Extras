@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,6 +50,16 @@ import com.sun.jna.platform.win32.WinReg;
 import org.apache.log4j.Logger;
 
 public class IEProtectedMode extends ExecuteOSTask {
+
+  private static final String KEY = "1";
+  private static final String KEY1 = "2";
+  private static final String KEY2 = "3";
+  private static final String KEY3 = "4";
+  private static final String INTERNET = "Internet";
+  private static final String LOCAL_INTRANET = "Local Intranet";
+  private static final String TRUSTED_SITES = "Trusted Sites";
+  private static final String RESTRICTED_SITES = "Restricted Sites";
+  private static final String ENABLED = "enabled";
   private static Logger logger = Logger.getLogger(IEProtectedMode.class);
 
   public IEProtectedMode() {
@@ -56,7 +67,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     setDescription(
         "Changes protected mode for Internet Explorer on/off. No param for current status");
     JsonObject params = new JsonObject();
-    params.addProperty("enabled",
+    params.addProperty(ENABLED,
                        "(Optional)1 for enabling protected mode for all zones, 0 for disabling");
     setAcceptedParams(params);
     setRequestType("GET");
@@ -66,11 +77,11 @@ public class IEProtectedMode extends ExecuteOSTask {
     setButtonText("Enanble/Disable Protected Mode");
     setEnabledInGui(true);
 
-    getJsonResponse().addKeyDescriptions("Internet", "Current setting for Internet");
-    getJsonResponse().addKeyDescriptions("Local Intranet", "Current setting for Local Intranet");
-    getJsonResponse().addKeyDescriptions("Trusted Sites", "Current setting for Trusted Sites");
+    getJsonResponse().addKeyDescriptions(INTERNET, "Current setting for Internet");
+    getJsonResponse().addKeyDescriptions(LOCAL_INTRANET, "Current setting for Local Intranet");
+    getJsonResponse().addKeyDescriptions(TRUSTED_SITES, "Current setting for Trusted Sites");
     getJsonResponse()
-        .addKeyDescriptions("Restricted Sites", "Current setting for Restricted Sites");
+        .addKeyDescriptions(RESTRICTED_SITES, "Current setting for Restricted Sites");
   }
 
 
@@ -81,10 +92,10 @@ public class IEProtectedMode extends ExecuteOSTask {
 
   public final HashMap<String, String> zone = new HashMap<String, String>() {
     {
-      put("1", "Internet");
-      put("2", "Local Intranet");
-      put("3", "Trusted Sites");
-      put("4", "Restricted Sites");
+      put(KEY, INTERNET);
+      put(KEY1, LOCAL_INTRANET);
+      put(KEY2, TRUSTED_SITES);
+      put(KEY3, RESTRICTED_SITES);
     }
   };
 
@@ -108,8 +119,8 @@ public class IEProtectedMode extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey("enabled")) {
-      return execute(parameter.get("enabled").toString());
+    if (!parameter.isEmpty() && parameter.containsKey(ENABLED)) {
+      return execute(parameter.get(ENABLED).toString());
     }
     return execute();
   }
@@ -119,7 +130,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     if (RuntimeConfig.getOS().isWindows()) {
       return getAllProtectedStatus();
     } else {
-      getJsonResponse().addKeyValues("error", "IE Protected Mode command is only implemented in Windows");
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "IE Protected Mode command is only implemented in Windows");
       return getJsonResponse().getJson();
     }
   }
@@ -127,11 +138,11 @@ public class IEProtectedMode extends ExecuteOSTask {
   @Override
   public JsonObject execute(String status) {
     if (RuntimeConfig.getOS().isWindows()) {
-      setAllProtectedStatuses(status.equals("1") ? true : false);
-      getJsonResponse().addKeyValues("out", "IE needs to restart before you see the changes");
+      setAllProtectedStatuses(status.equals(KEY) ? true : false);
+      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "IE needs to restart before you see the changes");
       return getAllProtectedStatus();
     } else {
-      getJsonResponse().addKeyValues("error", "IE Protected Mode command is only implemented in Windows");
+      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "IE Protected Mode command is only implemented in Windows");
       return getJsonResponse().getJson();
     }
   }

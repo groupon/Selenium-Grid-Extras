@@ -44,16 +44,20 @@ import java.util.Map;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class StopGrid extends ExecuteOSTask {
 
+  private static final String PORT = "port";
+  private static final String PID = "pid";
+
   public StopGrid() {
     setEndpoint("/stop_grid");
     setDescription("Stops grid or node process");
     JsonObject params = new JsonObject();
-    params.addProperty("port", "(Required) Port on which the node/hub is running.");
+    params.addProperty(PORT, "(Required) Port on which the node/hub is running.");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -66,13 +70,13 @@ public class StopGrid extends ExecuteOSTask {
   @Override
   public JsonObject getAcceptedParams() {
     JsonObject params = new JsonObject();
-    params.addProperty("port", "(Required) Port on which the node/hub is running");
+    params.addProperty(PORT, "(Required) Port on which the node/hub is running");
     return params;
   }
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues("error", "Port parameter is required");
+    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Port parameter is required");
     return getJsonResponse().getJson();
   }
 
@@ -99,9 +103,9 @@ public class StopGrid extends ExecuteOSTask {
   public String getLinuxCommand(String port) {
     JsonObject status = PortChecker.getParsedPortInfo(port);
 
-    if (status.has("pid")){
+    if (status.has(PID)){
       KillPid killer = new KillPid();
-      return killer.getLinuxCommand(status.get("pid").getAsString());
+      return killer.getLinuxCommand(status.get(PID).getAsString());
     }
 
       return "";
@@ -110,10 +114,10 @@ public class StopGrid extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey("port")) {
+    if (parameter.isEmpty() || !parameter.containsKey(PORT)) {
       return execute();
     } else {
-      return this.execute(parameter.get("port").toString());
+      return this.execute(parameter.get(PORT).toString());
     }
   }
 

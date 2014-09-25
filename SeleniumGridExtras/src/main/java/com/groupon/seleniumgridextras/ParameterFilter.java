@@ -52,6 +52,8 @@ import java.util.Map;
 
 public class ParameterFilter extends Filter {
 
+  private static final String PARAMETERS = "parameters";
+
   @Override
   public String description() {
     return "Parses the requested URI for parameters";
@@ -72,13 +74,13 @@ public class ParameterFilter extends Filter {
     URI requestedUri = exchange.getRequestURI();
     String query = requestedUri.getRawQuery();
     parseQuery(query, parameters);
-    exchange.setAttribute("parameters", parameters);
+    exchange.setAttribute(PARAMETERS, parameters);
   }
 
   private void parsePostParameters(HttpExchange exchange) throws IOException {
     @SuppressWarnings("unchecked")
     Map parameters =
-        (Map) exchange.getAttribute("parameters");
+        (Map) exchange.getAttribute(PARAMETERS);
     InputStreamReader isr =
         new InputStreamReader(exchange.getRequestBody(), "utf-8");
     BufferedReader br = new BufferedReader(isr);

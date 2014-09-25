@@ -39,6 +39,7 @@
 package com.groupon.seleniumgridextras.os;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.JsonResponseBuilder;
 
 import org.apache.log4j.Logger;
 
@@ -121,7 +122,7 @@ public class UnixDFParser {
   }
 
   protected static String dfCommand() {
-    return ExecuteCommand.execRuntime("df -h").get("out").toString();
+    return ExecuteCommand.execRuntime("df -h").get(JsonResponseBuilder.OUT).toString();
   }
 
   protected static LinkedList<String> dfHeaders(String input) {
