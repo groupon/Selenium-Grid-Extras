@@ -1,39 +1,64 @@
 package com.groupon.seleniumgridextras.config.capabilities;
 
-import com.google.gson.internal.StringMap;
-
-import com.groupon.seleniumgridextras.config.GridNode;
 
 import org.apache.log4j.Logger;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public abstract class Capability extends HashMap {
+
+  private static final String MAX_INSTANCES = "maxInstances";
+  private static final String SELENIUM_PROTOCOL = "seleniumProtocol";
+  private static final String VERSION = "version";
+  private static final String PLATFORM = "platform";
+  private static final String BROWSER_NAME = "browserName";
+  private static final String FIREFOX = "firefox";
+  private static final String INTERNET_EXPLORER = "internet explorer";
+  private static final String CHROME = "chrome";
+  private static final String SAFARI = "safari";
   private static Logger logger = Logger.getLogger(Capability.class);
 
   public Capability() {
-    this.put("maxInstances", 3);
-    this.put("seleniumProtocol", "WebDriver");
+    this.put(MAX_INSTANCES, 3);
+    this.put(SELENIUM_PROTOCOL, "WebDriver");
     setBrowser(getWDStyleName());
   }
 
-  public void setBrowserVersion(String version) {
-    this.put("version", version);
+  public String getBrowserVersion() {
+    return String.valueOf(this.get(VERSION));
   }
 
   public void setPlatform(String platform) {
-    this.put("platform", platform);
+    this.put(PLATFORM, platform);
   }
 
   protected void setBrowser(String browser) {
-    this.put("browserName", browser);
+    this.put(BROWSER_NAME, browser);
   }
 
-  public String getBrowserName() {
-    return this.getClass().getSimpleName();
+  public static Capability getCapabilityFor(String browserName, Map capabilityMap) {
+    Capability cap = getCapabilityFor(browserName);
+    for (Object capabilityKey : capabilityMap.keySet()) {
+
+      Object value = capabilityMap.get(capabilityKey);
+      if (value instanceof Number){
+        //GSON library always converts ints into doubles :(
+        value = ((Number) value).intValue();
+      }
+
+      if (capabilityKey.equals(VERSION)){
+        //Explicitly convert the Version of the browser into a string instead of an int or double.
+        //If we don't do that, then the grid cannot find the provided version :(
+        value = String.valueOf(value);
+      }
+
+      cap.put(capabilityKey, value);
+    }
+
+
+    return cap;
   }
+
 
   public static Capability getCapabilityFor(String browserName) {
 
@@ -61,10 +86,10 @@ public abstract class Capability extends HashMap {
   public static Map<Class, String> getSupportedCapabilities() {
     Map<Class, String> capabilityHash = new HashMap<Class, String>();
 
-    capabilityHash.put(Firefox.class, "firefox");
-    capabilityHash.put(InternetExplorer.class, "internet explorer");
-    capabilityHash.put(Chrome.class, "chrome");
-    capabilityHash.put(Safari.class, "safari");
+    capabilityHash.put(Firefox.class, FIREFOX);
+    capabilityHash.put(InternetExplorer.class, INTERNET_EXPLORER);
+    capabilityHash.put(Chrome.class, CHROME);
+    capabilityHash.put(Safari.class, SAFARI);
 
     return capabilityHash;
   }

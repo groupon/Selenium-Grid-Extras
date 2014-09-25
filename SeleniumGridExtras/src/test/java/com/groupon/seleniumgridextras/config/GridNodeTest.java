@@ -30,6 +30,7 @@ public class GridNodeTest {
   private GridNode node;
   private Map expectedConfiguration;
   private List<Capability> expectedCapabilities;
+  private Capability expectedFirefoxCapability;
 
   @Before
   public void setUp() throws Exception {
@@ -49,14 +50,19 @@ public class GridNodeTest {
     expectedConfiguration.put("downPollingLimit", 0);
 
     expectedCapabilities = new LinkedList<Capability>();
-    expectedCapabilities.add(new Firefox());
+    expectedFirefoxCapability = new Firefox();
+    expectedFirefoxCapability.put("version", "12");
+    expectedCapabilities.add(expectedFirefoxCapability);
 
     node = new GridNode();
     node.getConfiguration().setHubHost("google.com");
     node.getConfiguration().setHubPort(4444);
     node.getConfiguration().setPort(5555);
 
-    node.getCapabilities().add(new Firefox());
+    Capability toFileCap = new Firefox();
+    toFileCap.put("version", "12");
+    node.getCapabilities().add(toFileCap);
+
 
     node.writeToFile(fileaname);
 
@@ -96,7 +102,7 @@ public class GridNodeTest {
   public void testGetCapabilities() throws Exception {
 
     LinkedList<Capability> expected = new LinkedList<Capability>();
-    expected.add(new Firefox());
+    expected.add(expectedFirefoxCapability);
     assertEquals(expected, node.getCapabilities());
 
   }
@@ -123,6 +129,7 @@ public class GridNodeTest {
     expectedFirefox.put("browserName", "firefox");
     expectedFirefox.put("maxInstances", 3);
     expectedFirefox.put("seleniumProtocol", "WebDriver");
+    expectedFirefox.put("version", 12); //Grumble Grumble, this should be a string not an int
 
     assertEquals(expectedFirefox, actualCapability);
   }

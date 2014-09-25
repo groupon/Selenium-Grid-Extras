@@ -55,7 +55,7 @@ public class GridNode {
 
     for (StringMap cap : capabilitiesFromFile){
       if (cap.containsKey("browserName")){
-        filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName")));
+        filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName"), cap));
       }
 
     }
