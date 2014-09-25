@@ -69,6 +69,8 @@ public class FirstTimeRunConfig {
     String hubHost = getGridHubHost();
     String hubPort = getGridHubPort();
 
+    configureHub(hubHost, hubPort, defaultConfig);
+
     List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
@@ -258,6 +260,19 @@ public class FirstTimeRunConfig {
 
     node.writeToFile(configFileName);
     defaultConfig.addNode(node, configFileName);
+  }
+
+  private static void configureHub(String host, String port,
+                                   Config defaultConfig) {
+    GridHub hub = new GridHub();
+
+//    hub.getConfiguration().setHost(host); // Should this always be null ?
+    hub.getConfiguration().setPort(Integer.parseInt(port));
+
+    String configFileName = "hub_" + port + ".json";
+
+    hub.writeToFile(configFileName);
+    defaultConfig.addHub(hub, configFileName);
   }
 
 

@@ -39,6 +39,7 @@ public class Config {
   public static final String DEFAULT_ROLE = "default_role";
   public static final String HUB_CONFIG = "hub_config";
   public static final String NODE_CONFIG_FILES = "node_config_files";
+  public static final String HUB_CONFIG_FILES = "hub_config_files";
 
   public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
@@ -54,18 +55,23 @@ public class Config {
 
   protected Map theConfigMap;
   protected List<GridNode> gridNodeList;
+  protected List<GridHub> gridHubList;
 
   public Config() {
     theConfigMap = new HashMap();
     gridNodeList = new LinkedList<GridNode>();
+    gridHubList = new LinkedList<GridHub>();
     getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
+    getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
     initialize();
   }
 
   public Config(Boolean emptyConfig) {
     theConfigMap = new HashMap();
     gridNodeList = new LinkedList<GridNode>();
+    gridHubList = new LinkedList<GridHub>();
     getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
+    getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
     if (!emptyConfig) {
       initialize();
     }
@@ -80,9 +86,22 @@ public class Config {
     return this.gridNodeList;
   }
 
+  public List<String> getHubConfigFiles() {
+    return (List<String>) getConfigMap().get(HUB_CONFIG_FILES);
+  }
+
+  public List<GridHub> getHubs() {
+    return this.gridHubList;
+  }
+
   public void addNode(GridNode node, String filename) {
     getNodes().add(node);
     addNodeConfigFile(filename);
+  }
+
+  public void addHub(GridHub hub, String filename) {
+    getHubs().add(hub);
+    addHubConfigFile(filename);
   }
 
   public void loadNodeClasses() {
@@ -92,6 +111,12 @@ public class Config {
     }
   }
 
+  public void loadHubClasses() { // TODO do I need this ?
+    for (String filename : getHubConfigFiles()) {
+      GridHub hub = GridHub.loadFromFile(filename);
+      getHubs().add(hub);
+    }
+  }
 
   private void initialize() {
     getConfigMap().put(ACTIVATE_MODULES, new ArrayList<String>());
@@ -106,6 +131,7 @@ public class Config {
     initializeChromeDriver();
 
     getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
+    getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
 
     initializeHubConfig();
 
@@ -151,6 +177,11 @@ public class Config {
   public void addNodeConfigFile(String filename) {
     LinkedList<String> files = (LinkedList<String>) getConfigMap().get(NODE_CONFIG_FILES);
     files.add(filename);
+  }
+
+  public void addHubConfigFile(String filename) {
+    LinkedList<String> hubFiles = (LinkedList<String>) getConfigMap().get(HUB_CONFIG_FILES);
+    hubFiles.add(filename);
   }
 
 

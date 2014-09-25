@@ -29,6 +29,7 @@ public class ConfigFileReaderTest {
 
     Map expectedNodeFiles = new HashMap();
     expectedNodeFiles.put("node_config_files", new LinkedList());
+    expectedNodeFiles.put("hub_config_files", new LinkedList());
 
     expectedHashMap = new HashMap();
     expectedHashMap.put("theConfigMap", expectedNodeFiles);
