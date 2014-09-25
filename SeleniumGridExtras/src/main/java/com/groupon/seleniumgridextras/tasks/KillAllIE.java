@@ -37,12 +37,8 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OS;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.google.gson.JsonObject;
 
 public class KillAllIE extends KillAllByName {
 
@@ -59,53 +55,19 @@ public class KillAllIE extends KillAllByName {
     setEnabledInGui(true);
   }
 
-  @Override
-  public String getEndpoint() {
-    return "/kill_ie";
-  }
 
   @Override
-  public String getDescription() {
-    return "Executes os level kill command on all instance of Internet Explorer";
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("iexplore.exe");
   }
 
   @Override
-  public JsonObject execute(String param) {
-    //TODO: Make this work like killAllSafari and KillAllFirefox works
-    if (RuntimeConfig.getOS().isWindows()) {
-      return killIEAndIEDriver();
-    } else {
-      getJsonResponse().addKeyValues("error", "Kill IE command is only implemented in Windows");
-      return getJsonResponse().getJson();
-    }
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("iexplore.exe");
   }
 
-
-  private JsonObject killIEAndIEDriver() {
-
-    JsonObject
-        killBrowserResult =
-        ExecuteCommand.execRuntime(getWindowsKillCommand("iexplore.exe"));
-
-    JsonObject
-        killDriverResult =
-        ExecuteCommand.execRuntime(
-            getWindowsKillCommand(RuntimeConfig.getConfig().getIEdriver().getExecutableName()));
-
-    JsonArray response = new JsonArray();
-    response.add(killBrowserResult);
-    response.add(killDriverResult);
-
-    if (killBrowserResult.get("exit_code").equals("0") && killDriverResult.get("exit_code")
-        .equals("0")) {
-      getJsonResponse().addKeyValues("out", response);
-    } else {
-      getJsonResponse().addKeyValues("error", response);
-    }
-
-    return getJsonResponse().getJson();
-
+  @Override
+  public String getMacCommand() {
+    return super.getMacCommand("iexplore.exe");
   }
-
-
 }

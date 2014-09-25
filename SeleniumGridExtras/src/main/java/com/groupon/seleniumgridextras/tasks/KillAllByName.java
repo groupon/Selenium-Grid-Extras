@@ -41,6 +41,7 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class KillAllByName extends ExecuteOSTask {
@@ -80,14 +81,22 @@ public class KillAllByName extends ExecuteOSTask {
   }
 
   @Override
-  public JsonObject execute() {
-    String command;
+  public JsonObject execute(String parameter) {
+    String command = "";
     if (RuntimeConfig.getOS().isWindows()){
       command = getWindowsCommand();
     } else {
       command = getMacCommand();
     }
-    return execute(command);
+
+    String finalCommand = command + parameter;
+
+    JsonObject response = ExecuteCommand.execRuntime(finalCommand, waitToFinishTask);
+
+    response.addProperty("command", finalCommand);
+    response.addProperty("wait_to_finish", waitToFinishTask);
+
+    return response;
   }
 
   @Override

@@ -1,3 +1,4 @@
+1.5.1 - [BUG] Firefox on windows was not getting terminated with /kill_firefox command
 1.5.0 - Automatically record video of a running test
       - Daily rolling logs for grid extras
       - Adding /kill_safari end point to kill instance of Safari Browser

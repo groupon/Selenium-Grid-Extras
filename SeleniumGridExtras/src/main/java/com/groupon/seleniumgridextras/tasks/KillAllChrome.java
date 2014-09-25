@@ -37,11 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.OS;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class KillAllChrome extends KillAllByName {
 
@@ -58,49 +54,18 @@ public class KillAllChrome extends KillAllByName {
     setEnabledInGui(true);
   }
 
+  @Override
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("chrome.exe");
+  }
 
   @Override
-  public JsonObject execute(String param) {
-    //TODO: Make this work like killAllSafari and KillAllFirefox works
-    if (RuntimeConfig.getOS().isWindows()) {
-      return killChromeOnWindows();
-    } else if (RuntimeConfig.getOS().isMac()) {
-      return killChromeOnMac();
-    } else {
-      return killChromeOnLinux();
-    }
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("[Cc]hrome");
   }
 
-
-  private JsonObject killChromeOnLinux() {
-    return ExecuteCommand.execRuntime(getLinuxCommand("[Cc]hrome"));
-  }
-
-  private JsonObject killChromeOnMac() {
-    return ExecuteCommand.execRuntime(getMacCommand("[Cc]hrome"));
-  }
-
-  private JsonObject killChromeOnWindows() {
-
-    JsonObject killBrowserResult = ExecuteCommand.execRuntime(getWindowsKillCommand("chrome.exe"));
-
-    JsonObject
-        killDriverResult =
-        ExecuteCommand.execRuntime(
-            getWindowsKillCommand(RuntimeConfig.getConfig().getChromeDriver().getExecutableName()));
-
-    JsonArray response = new JsonArray();
-    response.add(killBrowserResult);
-    response.add(killDriverResult);
-
-    if (killBrowserResult.get("exit_code").equals("0") && killDriverResult.get("exit_code")
-        .equals("0")) {
-      getJsonResponse().addKeyValues("out", response);
-    } else {
-      getJsonResponse().addKeyValues("error", response);
-    }
-
-    return getJsonResponse().getJson();
-
+  @Override
+  public String getMacCommand() {
+    return super.getMacCommand("[Cc]hrome");
   }
 }
