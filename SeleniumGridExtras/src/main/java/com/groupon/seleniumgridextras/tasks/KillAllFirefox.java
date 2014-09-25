@@ -63,7 +63,7 @@ public class KillAllFirefox extends KillAllByName {
   public String getLinuxCommand() {
     return super.getLinuxCommand("[Ff]irefox");
   }
-  
+
   @Override
   public String getMacCommand() {
     return super.getMacCommand("[Ff]irefox");
