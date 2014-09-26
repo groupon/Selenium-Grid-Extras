@@ -235,8 +235,8 @@ public class DefaultConfig {
     config.getHub().setRole(JsonCodec.WebDriver.Grid.HUB);
     config.getHub().setPort(DEFAULT_HUB_PORT);
     config.getHub().setServlets(
-        SeleniumGridExtrasServlet.class.getCanonicalName() + "," + ProxyStatusJsonServlet.class
-            .getCanonicalName());
+        "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet,"
+        + "com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
 
     String hostIp = RuntimeConfig.getOS().getHostIp();
     if (hostIp != null) {
