@@ -75,6 +75,10 @@ import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 public class DefaultConfig {
 
+  public static final String VIDEO_OUTPUT_DIRECTORY = "video_output";
+  public static final String REBOOT_AFTER_THIS_MANY_SESSIONS = "10";
+  public static final String DEFAULT_HUB_PORT = "4444";
+  public static final String DEFAULT_SHARED_DIRECTORY = "shared";
   private static Config config;
   private static final String webDriverDefaultVersion = "2.41.0";
   private static final String ieDriverDefaultVersion = "2.41.0";
@@ -92,8 +96,8 @@ public class DefaultConfig {
     loadTeardownConfig();
     loadGridConfig();
     loadSharedDir();
-    setAutoUpdateDrivers("1");
-    setRebootAfterSessionCount("10");
+    setAutoUpdateDrivers(JsonCodec.TRUE_INT);
+    setRebootAfterSessionCount(REBOOT_AFTER_THIS_MANY_SESSIONS);
     loadDefaultVideoRecordingOptions();
 
     return config;
@@ -104,7 +108,7 @@ public class DefaultConfig {
     config.getVideoRecording().setFrameRate(5, 1);
     config.getVideoRecording().setOutputDimensions(1024, 768);
     config.getVideoRecording().setVideosToKeep(10);
-    config.getVideoRecording().setOutputDir("video_output");
+    config.getVideoRecording().setOutputDir(VIDEO_OUTPUT_DIRECTORY);
     config.getVideoRecording().setIdleTimeout(120);
 
     config.getVideoRecording().setTitleFrameFontColor(129, 182, 64, 128);
@@ -163,7 +167,7 @@ public class DefaultConfig {
 
     config.getIEdriver().setDirectory(tmpDir + "iedriver");
     config.getIEdriver().setVersion(getIeDriverDefaultVersion());
-    config.getIEdriver().setBit("Win32");
+    config.getIEdriver().setBit(JsonCodec.WebDriver.Downloader.WIN32);
   }
 
   private static void loadChromeDriverInfo() {
@@ -173,7 +177,7 @@ public class DefaultConfig {
 
     config.getChromeDriver().setDirectory(tmpDir + "chromedriver");
     config.getChromeDriver().setVersion(getChromeDriverDefaultVersion());
-    config.getChromeDriver().setBit("32");
+    config.getChromeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
   }
 
 
@@ -229,7 +233,7 @@ public class DefaultConfig {
 
   private static void setGridHubConfig() {
     config.getHub().setRole(JsonCodec.WebDriver.Grid.HUB);
-    config.getHub().setPort("4444");
+    config.getHub().setPort(DEFAULT_HUB_PORT);
     config.getHub().setServlets(
         SeleniumGridExtrasServlet.class.getCanonicalName() + "," + ProxyStatusJsonServlet.class
             .getCanonicalName());
@@ -241,7 +245,7 @@ public class DefaultConfig {
   }
 
   private static void loadSharedDir() {
-    config.setSharedDir("shared");
+    config.setSharedDir(DEFAULT_SHARED_DIRECTORY);
   }
 
   public static void setRebootAfterSessionCount(String sessionCount) {
