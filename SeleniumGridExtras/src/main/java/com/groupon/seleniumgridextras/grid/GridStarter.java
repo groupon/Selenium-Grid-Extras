@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.grid;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.commons.io.FileUtils;

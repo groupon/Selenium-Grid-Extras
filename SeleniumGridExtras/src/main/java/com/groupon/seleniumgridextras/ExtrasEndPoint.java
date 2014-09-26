@@ -3,6 +3,8 @@ package com.groupon.seleniumgridextras;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
+
 public class ExtrasEndPoint {
 
   private static final String ENDPOINT = "endpoint";

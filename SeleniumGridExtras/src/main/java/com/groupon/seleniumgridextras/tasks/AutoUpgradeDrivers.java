@@ -1,18 +1,14 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.ConfigFileReader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverRelease;
 
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class AutoUpgradeDrivers extends ExecuteOSTask {

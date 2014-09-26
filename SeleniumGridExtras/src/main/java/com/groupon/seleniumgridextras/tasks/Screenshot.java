@@ -39,11 +39,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
-
-import net.coobird.thumbnailator.Thumbnails;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -55,7 +53,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

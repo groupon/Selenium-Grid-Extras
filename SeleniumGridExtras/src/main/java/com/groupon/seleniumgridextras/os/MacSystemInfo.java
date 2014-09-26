@@ -40,7 +40,7 @@ package com.groupon.seleniumgridextras.os;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.util.List;
 import java.util.Map;

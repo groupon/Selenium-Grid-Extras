@@ -2,7 +2,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;

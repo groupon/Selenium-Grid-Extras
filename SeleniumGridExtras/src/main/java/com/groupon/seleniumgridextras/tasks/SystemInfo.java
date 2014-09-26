@@ -40,8 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
-import com.groupon.seleniumgridextras.OS;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
 import com.groupon.seleniumgridextras.os.MacSystemInfo;

@@ -1,9 +1,8 @@
 package com.groupon.seleniumgridextras.config.remote;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;

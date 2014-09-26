@@ -38,7 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-import com.groupon.seleniumgridextras.JsonResponseBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.WdDownloader;
 import java.io.File;

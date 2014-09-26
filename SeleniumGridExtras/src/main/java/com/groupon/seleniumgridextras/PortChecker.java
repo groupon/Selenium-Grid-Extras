@@ -42,6 +42,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

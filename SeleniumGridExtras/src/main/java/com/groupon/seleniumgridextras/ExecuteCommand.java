@@ -41,11 +41,11 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.StreamUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 
 public class ExecuteCommand {
