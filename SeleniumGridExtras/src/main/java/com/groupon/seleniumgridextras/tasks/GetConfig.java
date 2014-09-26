@@ -37,21 +37,23 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 public class GetConfig extends ExecuteOSTask {
 
   public GetConfig() {
-    setEndpoint("/config");
-    setDescription("Returns JSON view of the full configuration of the Selenium Grid Extras");
+    setEndpoint(TaskDescriptions.Endpoints.CONFIG);
+    setDescription(TaskDescriptions.Description.CONFIG);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Get Config");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.CONFIG);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.Config.CONFIG_FILE, "Config that currently lives saved on file");

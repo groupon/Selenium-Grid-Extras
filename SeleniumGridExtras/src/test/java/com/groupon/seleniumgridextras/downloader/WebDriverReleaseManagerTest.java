@@ -1,6 +1,7 @@
 package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
+
 import org.junit.Before;
 import org.junit.Test;
 

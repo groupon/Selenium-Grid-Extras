@@ -41,8 +41,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -55,15 +56,15 @@ public class Teardown extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(Teardown.class);
 
   public Teardown() {
-    setEndpoint("/teardown");
-    setDescription("Calls several pre-defined tasks to act as teardown after build");
+    setEndpoint(TaskDescriptions.Endpoints.TEARDOWN);
+    setDescription(TaskDescriptions.Description.TEARDOWN);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-info");
-    setButtonText("Teardown");
+    setButtonText(TaskDescriptions.UI.ButtonText.TEARDOWN);
     setEnabledInGui(false);
 
     addResponseDescription(JsonCodec.SetupTeardown.CLASSES_TO_EXECUTE,

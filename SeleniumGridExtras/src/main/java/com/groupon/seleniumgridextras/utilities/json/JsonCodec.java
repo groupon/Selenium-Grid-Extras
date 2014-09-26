@@ -1,9 +1,5 @@
 package com.groupon.seleniumgridextras.utilities.json;
 
-import com.groupon.seleniumgridextras.tasks.IEProtectedMode;
-
-import org.apache.log4j.Logger;
-
 public class JsonCodec {
 
   public static final String OUT = "out";

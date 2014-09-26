@@ -40,21 +40,23 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+
 import java.util.LinkedList;
 import java.util.List;
 
 public class GetFile extends ExecuteOSTask {
 
   public GetFile() {
-    setEndpoint("/get_file");
-    setDescription("(Not yet implemented) - Retrives a file from shared Directory");
+    setEndpoint(TaskDescriptions.Endpoints.GET_FILE);
+    setDescription(TaskDescriptions.Description.GET_FILE);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Get File");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.GET_FILE);
     setEnabledInGui(true);
   }
 

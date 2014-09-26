@@ -2,9 +2,10 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
@@ -21,28 +22,32 @@ public class UpdateNodeConfig extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(UpdateNodeConfig.class);
 
   public UpdateNodeConfig() {
-    setEndpoint("/update_node_config");
-    setDescription("Send the current config to the central location to be stored");
+    setEndpoint(TaskDescriptions.Endpoints.UPDATE_NODE_CONFIG);
+    setDescription(TaskDescriptions.Description.UPDATE_NODE_CONFIG);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    params.addProperty(JsonCodec.WebDriver.Grid.NODE, "(Required) -  Name of the node who's config needs to be updated");
+    params.addProperty(JsonCodec.WebDriver.Grid.NODE,
+                       "(Required) -  Name of the node who's config needs to be updated");
     params.addProperty(JsonCodec.Config.FILENAME, "(Required) -  Name of the config to be update");
     params.addProperty(JsonCodec.Config.CONTENT, "(Required) -  Base64 encoded string of content");
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-success");
-    setButtonText("Get Node Config");
+    setButtonText(TaskDescriptions.UI.ButtonText.UPDATE_NODE_CONFIG);
     setEnabledInGui(true);
 
-    getJsonResponse().addKeyDescriptions(JsonCodec.WebDriver.Grid.NODE, "Node for which config was updated");
-    getJsonResponse().addKeyDescriptions(JsonCodec.Config.FILENAME, "Name of the config file updated");
+    getJsonResponse()
+        .addKeyDescriptions(JsonCodec.WebDriver.Grid.NODE, "Node for which config was updated");
+    getJsonResponse()
+        .addKeyDescriptions(JsonCodec.Config.FILENAME, "Name of the config file updated");
 
   }
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues(JsonCodec.ERROR, "node, filename, content are required parameters");
+    getJsonResponse()
+        .addKeyValues(JsonCodec.ERROR, "node, filename, content are required parameters");
     return getJsonResponse().getJson();
   }
 
@@ -50,8 +55,9 @@ public class UpdateNodeConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.WebDriver.Grid.NODE) || !parameter.containsKey(
-        JsonCodec.Config.FILENAME)
+    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.WebDriver.Grid.NODE) || !parameter
+        .containsKey(
+            JsonCodec.Config.FILENAME)
         || !parameter.containsKey(JsonCodec.Config.CONTENT)) {
       return execute();
     } else {
@@ -93,8 +99,8 @@ public class UpdateNodeConfig extends ExecuteOSTask {
     }
   }
 
-  protected void createConfigsDirIfNotExisting(File config){
-    if(!config.exists()){
+  protected void createConfigsDirIfNotExisting(File config) {
+    if (!config.exists()) {
       logger.info("Configs dir didn't exist so we will create it");
       config.mkdir();
     }

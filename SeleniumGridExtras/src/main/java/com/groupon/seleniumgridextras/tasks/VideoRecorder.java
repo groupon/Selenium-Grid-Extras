@@ -3,8 +3,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
 
 import java.util.Map;
@@ -12,11 +13,13 @@ import java.util.Map;
 public class VideoRecorder extends ExecuteOSTask {
 
   public VideoRecorder() {
-    setEndpoint("/video");
-    setDescription("Starts and stops video recording");
+    setEndpoint(TaskDescriptions.Endpoints.VIDEO);
+    setDescription(TaskDescriptions.Description.VIDEO);
     JsonObject params = new JsonObject();
-    params.addProperty(JsonCodec.Video.SESSION, "(Required) - Session name of the test being recorded");
-    params.addProperty(JsonCodec.Video.ACTION, "(Required) - Action to perform (start|stop|heartbeat|status|stop_all)");
+    params.addProperty(JsonCodec.Video.SESSION,
+                       "(Required) - Session name of the test being recorded");
+    params.addProperty(JsonCodec.Video.ACTION,
+                       "(Required) - Action to perform (start|stop|heartbeat|status|stop_all)");
     params.addProperty(JsonCodec.Video.DESCRIPTION,
                        "Description to appear in lower 3rd of the video");
     setAcceptedParams(params);
@@ -24,10 +27,13 @@ public class VideoRecorder extends ExecuteOSTask {
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
 
-    addResponseDescription(JsonCodec.Video.SESSION, "Session on which the current action was performed");
+    addResponseDescription(JsonCodec.Video.SESSION,
+                           "Session on which the current action was performed");
     addResponseDescription(JsonCodec.Video.ACTION, "Action performed on current Video");
-    addResponseDescription(JsonCodec.Video.DESCRIPTION, "Update of last action performed by test to be displayed in lower third");
-    addResponseDescription(JsonCodec.Video.CURRENT_VIDEOS, "List of videos currently being recorded, retrieved with 'status' action");
+    addResponseDescription(JsonCodec.Video.DESCRIPTION,
+                           "Update of last action performed by test to be displayed in lower third");
+    addResponseDescription(JsonCodec.Video.CURRENT_VIDEOS,
+                           "List of videos currently being recorded, retrieved with 'status' action");
 
     setEnabledInGui(false);
   }
@@ -36,11 +42,10 @@ public class VideoRecorder extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (!RuntimeConfig.getConfig().getVideoRecording().getRecordTestVideos()){
+    if (!RuntimeConfig.getConfig().getVideoRecording().getRecordTestVideos()) {
       getJsonResponse().addKeyValues(JsonCodec.ERROR, "Video Recording is disabled on this node");
       return getJsonResponse().getJson();
     }
-
 
     if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.Video.SESSION) && parameter
         .containsKey(JsonCodec.Video.ACTION)) {
@@ -64,14 +69,15 @@ public class VideoRecorder extends ExecuteOSTask {
       } else if (action.equals(JsonCodec.Video.HEARTBEAT)) {
         VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
         getJsonResponse().addKeyValues(JsonCodec.OUT, "Updating lower 3rd description");
-      } else if (action.equals(JsonCodec.Video.STATUS)){
-        getJsonResponse().addKeyValues(JsonCodec.Video.CURRENT_VIDEOS, VideoRecordingThreadPool.getAllVideos());
-      } else if (action.equals(JsonCodec.Video.STOP_ALL)){
+      } else if (action.equals(JsonCodec.Video.STATUS)) {
+        getJsonResponse()
+            .addKeyValues(JsonCodec.Video.CURRENT_VIDEOS, VideoRecordingThreadPool.getAllVideos());
+      } else if (action.equals(JsonCodec.Video.STOP_ALL)) {
         VideoRecordingThreadPool.stopAndFinalizeAllVideos();
         getJsonResponse().addKeyValues(JsonCodec.OUT, "Calling stop all videos command");
       } else {
         getJsonResponse().addKeyValues(JsonCodec.ERROR, "Unrecognized action '" + action
-                                                + "', only acceptable actions are start, stop, heartbeat");
+                                                        + "', only acceptable actions are start, stop, heartbeat");
 
       }
 

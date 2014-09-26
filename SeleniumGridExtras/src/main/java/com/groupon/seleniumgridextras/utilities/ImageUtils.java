@@ -1,13 +1,14 @@
 package com.groupon.seleniumgridextras.utilities;
 
-import java.io.IOException;
-
-import sun.misc.BASE64Encoder;
 import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.awt.image.BufferedImage;
+import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 public class ImageUtils {

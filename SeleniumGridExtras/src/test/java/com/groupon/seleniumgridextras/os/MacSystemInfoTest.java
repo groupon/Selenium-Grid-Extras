@@ -36,18 +36,6 @@
  */
 package com.groupon.seleniumgridextras.os;
 
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import org.junit.Assume;
-import org.junit.Test;
-
-import org.junit.Before;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-import com.groupon.seleniumgridextras.os.MacSystemInfo;
-
-
 public class MacSystemInfoTest {
 //
 //  public OSInfo info;

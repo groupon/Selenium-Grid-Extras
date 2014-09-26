@@ -41,11 +41,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
 import com.groupon.seleniumgridextras.grid.GridStarter;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -65,8 +66,8 @@ public class StartGrid extends ExecuteOSTask {
   public StartGrid() {
     waitToFinishTask = false;
 
-    setEndpoint("/start_grid");
-    setDescription("Starts an instance of Selenium Grid Hub or NodeConfig");
+    setEndpoint(TaskDescriptions.Endpoints.START_GRID);
+    setDescription(TaskDescriptions.Description.START_GRID);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.WebDriver.Grid.ROLE, "hub|node - defaults to 'default_role' param in config file");
     setAcceptedParams(params);
@@ -74,7 +75,7 @@ public class StartGrid extends ExecuteOSTask {
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-info");
-    setButtonText("StartGrid");
+    setButtonText(TaskDescriptions.UI.ButtonText.START_GRID);
     setEnabledInGui(false);
   }
 

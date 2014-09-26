@@ -38,18 +38,20 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+
 public class RebootNode extends ExecuteOSTask {
 
   public RebootNode() {
-    setEndpoint("/reboot");
-    setDescription("Restart the host node");
+    setEndpoint(TaskDescriptions.Endpoints.REBOOT);
+    setDescription(TaskDescriptions.Description.REBOOT);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("reboot");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.REBOOT);
     setEnabledInGui(true);
   }
 

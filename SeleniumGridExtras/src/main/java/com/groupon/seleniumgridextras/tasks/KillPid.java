@@ -39,16 +39,17 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import java.util.Map;
 
 public class KillPid extends ExecuteOSTask {
 
   public KillPid() {
-    setEndpoint("/kill_pid");
-    setDescription("Kills a given process id");
+    setEndpoint(TaskDescriptions.Endpoints.KILL_PID);
+    setDescription(TaskDescriptions.Description.KILL_PID);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.KillCommands.ID, "(Required) -  Process ID (PID) to terminate.");
     params.addProperty(JsonCodec.OS.KillCommands.SIGNAL, "(unix only) - Signal Term number such as 1, 2...9");
@@ -56,8 +57,8 @@ public class KillPid extends ExecuteOSTask {
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Kill PID");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_PID);
     setEnabledInGui(false);
   }
 

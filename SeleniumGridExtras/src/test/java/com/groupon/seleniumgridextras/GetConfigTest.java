@@ -38,9 +38,11 @@
 package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonParser;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.GetConfig;
+
 import org.junit.Before;
 import org.junit.Test;
 

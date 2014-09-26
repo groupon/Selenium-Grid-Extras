@@ -37,27 +37,28 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import java.util.Map;
-
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+
+import java.util.Map;
 
 public class KillAllByName extends ExecuteOSTask {
 
   public KillAllByName() {
-    setEndpoint("/kill_all_by_name");
-    setDescription("Executes os level kill command on a given PID name");
+    setEndpoint(TaskDescriptions.Endpoints.KILL_ALL_BY_NAME);
+    setDescription(TaskDescriptions.Description.KILL_ALL_BY_NAME);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.KillCommands.NAME, "Name of process");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Kill all by name");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_ALL_BY_NAME);
     setEnabledInGui(true);
   }
 

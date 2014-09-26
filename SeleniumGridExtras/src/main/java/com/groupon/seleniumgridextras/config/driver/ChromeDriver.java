@@ -36,7 +36,6 @@
  */
 package com.groupon.seleniumgridextras.config.driver;
 
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class ChromeDriver extends DriverInfo {

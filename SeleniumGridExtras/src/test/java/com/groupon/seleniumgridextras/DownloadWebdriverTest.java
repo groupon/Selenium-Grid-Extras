@@ -39,10 +39,12 @@ package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.DownloadWebdriver;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

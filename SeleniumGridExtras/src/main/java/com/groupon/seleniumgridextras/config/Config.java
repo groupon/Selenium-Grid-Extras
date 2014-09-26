@@ -12,7 +12,6 @@ import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;

@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import java.awt.*;
@@ -48,8 +49,8 @@ import java.util.Map;
 public class MoveMouse extends ExecuteOSTask {
 
   public MoveMouse() {
-    setEndpoint("/move_mouse");
-    setDescription("Moves the computers mouse to x and y location. (Default 0,0)");
+    setEndpoint(TaskDescriptions.Endpoints.MOVE_MOUSE);
+    setDescription(TaskDescriptions.Description.MOVE_MOUSE);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.Mouse.X, "X - Coordinate");
     params.addProperty(JsonCodec.OS.Mouse.Y, "Y - Coordinate");
@@ -57,8 +58,8 @@ public class MoveMouse extends ExecuteOSTask {
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-succes");
-    setButtonText("Move mouse");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.MOVE_MOUSE);
 
     addResponseDescription(JsonCodec.OS.Mouse.X, "Current X postion of the mouse");
     addResponseDescription(JsonCodec.OS.Mouse.Y, "Current Y postion of the mouse");

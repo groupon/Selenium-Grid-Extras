@@ -3,7 +3,6 @@ package com.groupon.seleniumgridextras.utilities;
 import org.junit.Test;
 
 import java.net.ConnectException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
 

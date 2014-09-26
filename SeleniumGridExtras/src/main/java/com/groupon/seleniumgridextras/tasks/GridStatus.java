@@ -39,23 +39,24 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 public class GridStatus extends ExecuteOSTask {
 
   public GridStatus() {
-    setEndpoint("/grid_status");
+    setEndpoint(TaskDescriptions.Endpoints.GRID_STATUS);
     setDescription(
-        "Returns status of the Selenium Grid hub/node. If currently running and what is the PID");
+        TaskDescriptions.Description.GRID_STATUS);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-success");
-    setButtonText("Grid Status");
+    setButtonText(TaskDescriptions.UI.ButtonText.GRID_STATUS);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.WebDriver.Grid.HUB_RUNNING, "Boolean if hub is running on given port");

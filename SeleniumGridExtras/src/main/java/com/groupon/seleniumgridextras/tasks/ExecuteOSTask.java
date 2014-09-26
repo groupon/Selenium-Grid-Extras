@@ -38,10 +38,11 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -75,13 +76,13 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   public JsonObject execute(String parameter) {
     String command;
 
-     if (RuntimeConfig.getOS().isWindows()){
-        command = getWindowsCommand(parameter);
-     } else if (RuntimeConfig.getOS().isMac()){
-        command = getMacCommand(parameter);
-     } else {
-        command = getLinuxCommand(parameter);
-     }
+    if (RuntimeConfig.getOS().isWindows()) {
+      command = getWindowsCommand(parameter);
+    } else if (RuntimeConfig.getOS().isMac()) {
+      command = getMacCommand(parameter);
+    } else {
+      command = getLinuxCommand(parameter);
+    }
 
     return ExecuteCommand.execRuntime(command + parameter, waitToFinishTask);
   }
@@ -89,7 +90,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   public String getWindowsCommand(String parameter) {
 
     getJsonResponse().addKeyValues(JsonCodec.ERROR,
-        notImplementedError + " " + this.getClass().getCanonicalName());
+                                   notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -101,7 +102,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   public String getLinuxCommand(String parameter) {
     getJsonResponse().addKeyValues(JsonCodec.ERROR,
-        notImplementedError + " " + this.getClass().getCanonicalName());
+                                   notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
 
@@ -158,7 +159,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
         logger.info(this.getClass().getSimpleName() + " is enabled");
       } else {
         logger.info("  " + this.getClass().getSimpleName() + " depends on " + module
-            + " but it is not activated");
+                    + " but it is not activated");
         returnValue = false;
       }
     }
@@ -171,7 +172,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
     return dependencies;
   }
 
-  protected void systemAndLog(String output){
+  protected void systemAndLog(String output) {
     System.out.println(output);
     logger.info(output);
   }

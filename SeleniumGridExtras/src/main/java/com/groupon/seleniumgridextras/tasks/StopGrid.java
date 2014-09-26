@@ -39,28 +39,29 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-import java.util.Map;
-
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+
+import java.util.Map;
 
 public class StopGrid extends ExecuteOSTask {
 
   public StopGrid() {
-    setEndpoint("/stop_grid");
-    setDescription("Stops grid or node process");
+    setEndpoint(TaskDescriptions.Endpoints.STOP_GRID);
+    setDescription(TaskDescriptions.Description.STOP_GRID);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.PORT, "(Required) Port on which the node/hub is running.");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-info");
-    setButtonText("Stop Grid");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.STOP_GRID);
     setEnabledInGui(false);
   }
 

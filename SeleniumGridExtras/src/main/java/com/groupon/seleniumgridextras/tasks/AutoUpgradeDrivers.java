@@ -3,9 +3,10 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.ConfigFileReader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -21,11 +22,11 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
 
 
   public AutoUpgradeDrivers() {
-    setEndpoint("/auto_upgrade_webdriver");
+    setEndpoint(TaskDescriptions.Endpoints.AUTO_UPGRADE_WEBDRIVER);
     setDescription(
-        "Automatically checks the latest versions of all drivers and upgrades the current config to use them");
-    setRequestType("GET");
-    setResponseType("json");
+        TaskDescriptions.Description.AUTO_UPGRADE_WEBDRIVER);
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
 
     addResponseDescription(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, "Old version of WebDriver Jar");

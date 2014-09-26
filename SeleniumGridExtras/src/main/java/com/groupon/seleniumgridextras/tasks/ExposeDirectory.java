@@ -39,7 +39,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.commons.io.FileUtils;
@@ -56,13 +58,14 @@ public class ExposeDirectory extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(ExposeDirectory.class);
 
   public ExposeDirectory() {
-    setEndpoint("/dir");
-    setDescription("Gives accesses to a shared directory, user has access to put files into it and get files from it. Directory deleted on restart.");
-    setRequestType("GET");
-    setResponseType("json");
+    setEndpoint(TaskDescriptions.Endpoints.DIR);
+    setDescription(
+        TaskDescriptions.Description.DIR);
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("List Shared Dir");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.DIR);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.FILES, "Array list of files in the shared directory");

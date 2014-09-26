@@ -1,7 +1,5 @@
 package com.groupon.seleniumgridextras.utilities;
 
-import org.apache.commons.collections.*;
-
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -11,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA. User: dima Date: 7/16/14 Time: 12:25 PM To change this template use

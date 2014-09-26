@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.downloader.webdriverreleasemanager;
 
 import org.junit.Test;
 
-
 import static org.junit.Assert.assertEquals;
 
 public class WebDriverReleaseTest {

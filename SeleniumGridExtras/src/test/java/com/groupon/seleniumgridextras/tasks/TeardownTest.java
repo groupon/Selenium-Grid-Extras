@@ -45,6 +45,7 @@ import com.google.gson.JsonPrimitive;
 
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

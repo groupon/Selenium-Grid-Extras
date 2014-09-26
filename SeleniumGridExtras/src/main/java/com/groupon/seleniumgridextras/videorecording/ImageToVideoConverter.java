@@ -2,17 +2,6 @@
 
 package com.groupon.seleniumgridextras.videorecording;
 
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ImageUtils;
 import com.xuggle.mediatool.IMediaWriter;
@@ -21,6 +10,16 @@ import com.xuggle.xuggler.ICodec;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 public class ImageToVideoConverter implements Callable {
 

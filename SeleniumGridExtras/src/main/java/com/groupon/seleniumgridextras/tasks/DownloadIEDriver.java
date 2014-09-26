@@ -39,10 +39,11 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.IEDownloader;
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -55,17 +56,17 @@ public class DownloadIEDriver extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(DownloadIEDriver.class);
 
   public DownloadIEDriver() {
-    setEndpoint("/download_iedriver");
-    setDescription("Downloads a version of IEDriver.exe to local machine");
+    setEndpoint(TaskDescriptions.Endpoints.DOWNLOAD_IEDRIVER);
+    setDescription(TaskDescriptions.Description.DOWNLOAD_IEDRIVER);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.WebDriver.Downloader.VERSION, "Version of IEDriver to download, such as 2.33.0");
     params.addProperty(JsonCodec.WebDriver.Downloader.BIT, "Bit version of IEDriver Win32/x64 - (default: Win32)");
     setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Download IE-Driver");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_IEDRIVER);
     setEnabledInGui(true);
 
     addResponseDescription("root_dir", "Directory to which EXE file was saved to");

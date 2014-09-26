@@ -38,6 +38,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
@@ -48,15 +49,16 @@ public class StopGridExtras extends ExecuteOSTask {
 
   private static Logger logger = Logger.getLogger(StopGridExtras.class);
   public StopGridExtras(){
-    setEndpoint("/stop_extras");
-    setDescription("Shuts down Grid Extras service");
+    setEndpoint(TaskDescriptions.Endpoints.STOP_GRID_EXTRAS);
+    setDescription(TaskDescriptions.Description.STOP_GRID_EXTRAS);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.CONFIRM, "(Required) Will ignore request unless true is passed here");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setButtonText("Shut Down Grid Extras");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.STOP_GRID_EXTRAS);
     setEnabledInGui(true);
   }
 

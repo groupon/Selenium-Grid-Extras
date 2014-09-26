@@ -39,18 +39,20 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+
 public class KillAllChrome extends KillAllByName {
 
   public KillAllChrome() {
-    setEndpoint("/kill_chrome");
-    setDescription("Executes os level kill command on all instance of Google Chrome");
+    setEndpoint(TaskDescriptions.Endpoints.KILL_CHROME);
+    setDescription(TaskDescriptions.Description.KILL_CHROME);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Kill all chrome");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_CHROME);
     setEnabledInGui(true);
   }
 

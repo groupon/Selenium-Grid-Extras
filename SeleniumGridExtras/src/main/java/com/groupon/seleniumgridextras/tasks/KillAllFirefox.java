@@ -39,18 +39,20 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+
 public class KillAllFirefox extends KillAllByName {
 
   public KillAllFirefox() {
-    setEndpoint("/kill_firefox");
-    setDescription("Executes os level kill command on all instance of Firefox");
+    setEndpoint(TaskDescriptions.Endpoints.KILL_FIREFOX);
+    setDescription(TaskDescriptions.Description.KILL_FIREFOX);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Kill all firefox");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_FIREFOX);
     setEnabledInGui(true);
   }
 

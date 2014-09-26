@@ -40,18 +40,20 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+
 public class KillAllIE extends KillAllByName {
 
   public KillAllIE() {
-    setEndpoint("/kill_ie");
-    setDescription("Executes os level kill command on all instance of Internet Explorer");
+    setEndpoint(TaskDescriptions.Endpoints.KILL_IE);
+    setDescription(TaskDescriptions.Description.KILL_IE);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Kill all IE");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_IE);
     setEnabledInGui(true);
   }
 

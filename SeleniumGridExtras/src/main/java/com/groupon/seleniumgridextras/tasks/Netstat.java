@@ -41,21 +41,22 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 
 import java.util.Map;
 
 public class Netstat extends ExecuteOSTask {
 
   public Netstat() {
-    setEndpoint("/netstat");
-    setDescription("Returns a system call for all ports. Use /port_info to get parsed details");
+    setEndpoint(TaskDescriptions.Endpoints.NETSTAT);
+    setDescription(TaskDescriptions.Description.NETSTAT);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-info");
-    setButtonText("netstat");
+    setCssClass(TaskDescriptions.UI.BTN_INFO);
+    setButtonText(TaskDescriptions.UI.ButtonText.NETSTAT);
     setEnabledInGui(true);
   }
 

@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.browser;
 
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.config.capabilities.Capability;
 
 import java.io.File;
 import java.util.List;

@@ -40,12 +40,13 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
 import com.groupon.seleniumgridextras.os.MacSystemInfo;
 import com.groupon.seleniumgridextras.os.OSInfo;
 import com.groupon.seleniumgridextras.os.WindowsSystemInfo;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -61,15 +62,15 @@ public class SystemInfo extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(SystemInfo.class);
 
   public SystemInfo() {
-    setEndpoint("/system");
-    setDescription("Returns system details about the current node");
+    setEndpoint(TaskDescriptions.Endpoints.SYSTEM);
+    setDescription(TaskDescriptions.Description.SYSTEM);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-info");
-    setButtonText("System Info");
+    setButtonText(TaskDescriptions.UI.ButtonText.SYSTEM);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.OS.Hardware.DRIVES, "Hash of all mounted drives and their info");

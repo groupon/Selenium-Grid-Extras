@@ -4,10 +4,9 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.sun.net.httpserver.HttpServer;
 
 import org.junit.After;
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 
-import java.lang.management.ManagementFactory;
 import java.net.InetSocketAddress;
 
 import static org.junit.Assert.assertEquals;

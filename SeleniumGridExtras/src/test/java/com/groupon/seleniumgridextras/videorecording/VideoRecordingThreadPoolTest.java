@@ -2,13 +2,10 @@ package com.groupon.seleniumgridextras.videorecording;
 
 
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-
 
 import java.io.File;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class VideoRecordingThreadPoolTest {

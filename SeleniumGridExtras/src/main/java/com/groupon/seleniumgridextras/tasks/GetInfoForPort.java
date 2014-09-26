@@ -40,24 +40,25 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.PortChecker;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
   public GetInfoForPort() {
-    setEndpoint("/port_info");
-    setDescription("Returns parsed information on a PID occupying a given port");
+    setEndpoint(TaskDescriptions.Endpoints.PORT_INFO);
+    setDescription(TaskDescriptions.Description.PORT_INFO);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.PORT, "(Required) Port to be used");
     setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Get Info for Port");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.PORT_INFO);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.OS.PROCESS_NAME, "Process name/type (ie java, ruby, etc..)");

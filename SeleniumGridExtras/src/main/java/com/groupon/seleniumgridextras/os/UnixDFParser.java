@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.os;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import org.apache.log4j.Logger;
 

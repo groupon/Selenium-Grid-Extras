@@ -40,18 +40,20 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+
 public class GetProcesses extends ExecuteOSTask {
 
   public GetProcesses() {
-    setEndpoint("/ps");
-    setDescription("Gets a list of currently running processes");
+    setEndpoint(TaskDescriptions.Endpoints.PS);
+    setDescription(TaskDescriptions.Description.PS);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Get Processes");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.PS);
     setEnabledInGui(true);
   }
 

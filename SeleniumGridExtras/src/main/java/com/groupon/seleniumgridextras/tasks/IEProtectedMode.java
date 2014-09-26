@@ -39,24 +39,25 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.logging.Logger;
-
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.sun.jna.platform.win32.Advapi32Util;
 import com.sun.jna.platform.win32.WinReg;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class IEProtectedMode extends ExecuteOSTask {
+
   private static
   org.apache.log4j.Logger
       logger = org.apache.log4j.Logger.getLogger(DownloadIEDriver.class);
+
   public IEProtectedMode() {
-    setEndpoint("/ie_protected_mode");
+    setEndpoint(TaskDescriptions.Endpoints.IE_PROTECTED_MODE);
     setDescription(
-        "Changes protected mode for Internet Explorer on/off. No param for current status");
+        TaskDescriptions.Description.IE_PROTECTED_MODE);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.InternetExplorer.ENABLED,
                        "(Optional)1 for enabling protected mode for all zones, 0 for disabling");
@@ -64,8 +65,8 @@ public class IEProtectedMode extends ExecuteOSTask {
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Enanble/Disable Protected Mode");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.IE_PROTECTED_MODE);
     setEnabledInGui(true);
 
     getJsonResponse()

@@ -1,11 +1,10 @@
 package com.groupon.seleniumgridextras.browser;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.junit.After;
 import org.junit.Before;

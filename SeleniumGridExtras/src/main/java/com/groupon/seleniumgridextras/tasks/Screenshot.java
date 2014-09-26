@@ -39,14 +39,13 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-
-import javax.imageio.ImageIO;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -61,13 +60,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
+
 public class Screenshot extends ExecuteOSTask {
 
   private static Logger logger = Logger.getLogger(Screenshot.class);
 
   public Screenshot() {
-    setEndpoint("/screenshot");
-    setDescription("Take a full OS screen Screen Shot of the node");
+    setEndpoint(TaskDescriptions.Endpoints.SCREENSHOT);
+    setDescription(TaskDescriptions.Description.SCREENSHOT);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.Images.WIDTH, JsonCodec.Images.WIDTH);
     params.addProperty(JsonCodec.Images.HEIGHT, JsonCodec.Images.HEIGHT);
@@ -76,7 +77,7 @@ public class Screenshot extends ExecuteOSTask {
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass("btn-info");
-    setButtonText("screenshot");
+    setButtonText(TaskDescriptions.UI.ButtonText.SCREENSHOT);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.Images.FILE_TYPE, "Type of file returned (PNG/JPG/GIF)");

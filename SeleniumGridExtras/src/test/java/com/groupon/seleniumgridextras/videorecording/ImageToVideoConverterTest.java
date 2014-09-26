@@ -1,9 +1,6 @@
 package com.groupon.seleniumgridextras.videorecording;
 
-import com.groupon.seleniumgridextras.tasks.MoveMouse;
-
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;

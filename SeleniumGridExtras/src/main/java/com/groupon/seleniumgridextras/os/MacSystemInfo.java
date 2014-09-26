@@ -41,7 +41,6 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.util.List;
 import java.util.Map;

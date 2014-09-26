@@ -38,18 +38,17 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.downloader.Downloader;
-import com.groupon.seleniumgridextras.downloader.WdDownloader;
-
-import java.io.File;
-
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.downloader.Downloader;
+import com.groupon.seleniumgridextras.downloader.WdDownloader;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.Map;
 
 public class DownloadWebdriver extends ExecuteOSTask {
@@ -57,17 +56,17 @@ public class DownloadWebdriver extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(DownloadWebdriver.class);
 
   public DownloadWebdriver() {
-    setEndpoint("/download_webdriver");
-    setDescription("Downloads a version of WebDriver jar to local machine");
+    setEndpoint(TaskDescriptions.Endpoints.DOWNLOAD_WEBDRIVER);
+    setDescription(TaskDescriptions.Description.DOWNLOAD_WEBDRIVER);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.WebDriver.Downloader.VERSION,
                        "Version of WebDriver to download, such as 2.33.0");
     setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Download WebDriver");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_WEBDRIVER);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.WebDriver.Downloader.ROOT_DIR,

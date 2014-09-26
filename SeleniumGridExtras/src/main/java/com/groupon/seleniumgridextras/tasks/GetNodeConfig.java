@@ -2,9 +2,10 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -21,16 +22,16 @@ public class GetNodeConfig extends ExecuteOSTask {
   private static Logger logger = Logger.getLogger(GetNodeConfig.class);
 
   public GetNodeConfig() {
-    setEndpoint("/get_node_config");
-    setDescription("Provides the grid node config from central location");
+    setEndpoint(TaskDescriptions.Endpoints.GET_NODE_CONFIG);
+    setDescription(TaskDescriptions.Description.GET_NODE_CONFIG);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     params.addProperty(JsonCodec.WebDriver.Grid.NODE, "(Required) -  Computer name of desired node.");
-    setRequestType("GET");
-    setResponseType("json");
+    setRequestType(TaskDescriptions.HTTP.GET);
+    setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText("Get Node Config");
+    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+    setButtonText(TaskDescriptions.UI.ButtonText.GET_NODE_CONFIG);
     setEnabledInGui(true);
   }
 

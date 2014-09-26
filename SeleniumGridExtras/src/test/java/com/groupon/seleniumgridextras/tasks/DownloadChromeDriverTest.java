@@ -39,7 +39,6 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.Gson;
 
-import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;

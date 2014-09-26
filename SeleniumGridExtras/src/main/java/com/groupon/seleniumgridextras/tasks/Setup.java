@@ -41,8 +41,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
@@ -52,23 +53,19 @@ import java.util.List;
 public class Setup extends ExecuteOSTask {
 
   private List<ExecuteOSTask> setupTasks;
-  private final
-  String
-      shortDescription =
-      "Calls several pre-defined tasks to act as setup before build";
 
   private static Logger logger = Logger.getLogger(Setup.class);
 
   public Setup() {
-    setEndpoint("/setup");
-    setDescription(shortDescription);
+    setEndpoint(TaskDescriptions.Endpoints.SETUP);
+    setDescription(TaskDescriptions.Description.SETUP);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn");
-    setButtonText("setup");
+    setCssClass(TaskDescriptions.UI.BTN);
+    setButtonText(TaskDescriptions.UI.ButtonText.SETUP);
     setEnabledInGui(false);
 
     addResponseDescription(JsonCodec.SetupTeardown.CLASSES_TO_EXECUTE,

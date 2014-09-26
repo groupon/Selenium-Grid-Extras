@@ -39,20 +39,20 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 
 public class KillAllSafari extends KillAllByName {
 
   public KillAllSafari() {
-    setEndpoint("/kill_safari");
-    setDescription("Executes os level kill command on all instance of Safari");
+    setEndpoint(TaskDescriptions.Endpoints.KILL_SAFARI);
+    setDescription(TaskDescriptions.Description.KILL_SAFARI);
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-danger");
-    setButtonText("Kill all Safari");
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_SAFARI);
     setEnabledInGui(true);
   }
 

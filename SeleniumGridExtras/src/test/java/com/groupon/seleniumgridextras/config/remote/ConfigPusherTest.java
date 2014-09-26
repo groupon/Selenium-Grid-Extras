@@ -1,18 +1,14 @@
 package com.groupon.seleniumgridextras.config.remote;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.utils.URIBuilder;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
