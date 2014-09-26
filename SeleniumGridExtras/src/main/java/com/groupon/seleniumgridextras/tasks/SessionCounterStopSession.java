@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -26,7 +27,7 @@ public class SessionCounterStopSession extends ExecuteOSTask {
         + " sessions";
 
     logger.info(message);
-    getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, message);
+    getJsonResponse().addKeyValues(JsonCodec.OUT, message);
 
     return getJsonResponse().getJson();
   }

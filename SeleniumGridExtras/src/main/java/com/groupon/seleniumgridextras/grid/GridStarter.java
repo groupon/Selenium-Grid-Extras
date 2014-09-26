@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.grid;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -58,15 +59,17 @@ public class GridStarter {
         JsonObject startResponse = startOneNode(command);
         logger.info(startResponse);
 
-        if (!startResponse.get(JsonResponseBuilder.EXIT_CODE).toString().equals("0")) {
+        if (!startResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
           jsonResponseBuilder
-              .addKeyValues(JsonResponseBuilder.ERROR, "Error running " + startResponse.get(JsonResponseBuilder.ERROR).toString());
+              .addKeyValues(JsonCodec
+                                .ERROR,
+                            "Error running " + startResponse.get(JsonCodec.ERROR).toString());
         }
       } catch (Exception e) {
         jsonResponseBuilder
-            .addKeyValues(JsonResponseBuilder.ERROR, "Error running " + command);
+            .addKeyValues(JsonCodec.ERROR, "Error running " + command);
         jsonResponseBuilder
-            .addKeyValues(JsonResponseBuilder.ERROR, e.toString());
+            .addKeyValues(JsonCodec.ERROR, e.toString());
 
         e.printStackTrace();
       }

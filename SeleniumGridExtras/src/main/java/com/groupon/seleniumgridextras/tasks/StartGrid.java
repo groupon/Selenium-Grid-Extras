@@ -41,6 +41,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -94,7 +95,7 @@ public class StartGrid extends ExecuteOSTask {
       }
 
     } catch (Exception error) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }
@@ -132,13 +133,13 @@ public class StartGrid extends ExecuteOSTask {
 
     logger.info(serviceStartResponse);
 
-    if (serviceStartResponse.get(JsonResponseBuilder.EXIT_CODE).toString().equals("0")) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT,
+    if (serviceStartResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
+      getJsonResponse().addKeyValues(JsonCodec.OUT,
                                      "Service start command sent, might take as long as 10 seconds to spin up");
     } else {
       logger.error(CANT_LAUNCH_ERROR);
       logger.error(serviceStartResponse);
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, (JsonArray) serviceStartResponse.get(JsonResponseBuilder.ERROR));
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, (JsonArray) serviceStartResponse.get(JsonCodec.ERROR));
     }
 
     return getJsonResponse().getJson();

@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
@@ -45,7 +46,7 @@ public class UpdateNodeConfig extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "node, filename, content are required parameters");
+    getJsonResponse().addKeyValues(JsonCodec.ERROR, "node, filename, content are required parameters");
     return getJsonResponse().getJson();
   }
 
@@ -80,7 +81,7 @@ public class UpdateNodeConfig extends ExecuteOSTask {
         getJsonResponse().addKeyValues(FILENAME, filename.getAbsolutePath());
       } catch (Exception error) {
         logger.warn(error.toString());
-        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+        getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
       }
 
       return getJsonResponse().getJson();

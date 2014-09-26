@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.config.remote;
 
 import com.google.gson.Gson;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
@@ -72,14 +73,14 @@ public class ConfigPuller {
       logger.debug(rawJson);
       Map remoteConfigs = new Gson().fromJson(rawJson, HashMap.class);
       logger.debug(remoteConfigs);
-      if (remoteConfigs.containsKey(JsonResponseBuilder.EXIT_CODE)) {
-        Integer exitCode = ((Double) remoteConfigs.get(JsonResponseBuilder.EXIT_CODE)).intValue();
+      if (remoteConfigs.containsKey(JsonCodec.EXIT_CODE)) {
+        Integer exitCode = ((Double) remoteConfigs.get(JsonCodec.EXIT_CODE)).intValue();
         logger.info("Remote server responded with this exit code to our request " + exitCode);
         if (exitCode == 0) {
           saveIndividualFiles(remoteConfigs);
         } else {
           logger.info("Remote config request had an error, will skip update from remote source");
-          logger.info(remoteConfigs.get(JsonResponseBuilder.ERROR));
+          logger.info(remoteConfigs.get(JsonCodec.ERROR));
         }
       }
 
@@ -96,7 +97,7 @@ public class ConfigPuller {
   protected void saveIndividualFiles(Map config) {
 
     for (String filename : (Set<String>) config.keySet()) {
-      if (!filename.equals(JsonResponseBuilder.EXIT_CODE) && !filename.equals(JsonResponseBuilder.OUT) && !filename.equals(JsonResponseBuilder.ERROR)) {
+      if (!filename.equals(JsonCodec.EXIT_CODE) && !filename.equals(JsonCodec.OUT) && !filename.equals(JsonCodec.ERROR)) {
         try {
           String fileContents = (String) (((ArrayList) config.get(filename)).get(0));
 

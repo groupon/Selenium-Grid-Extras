@@ -38,6 +38,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import org.apache.log4j.Logger;
@@ -76,7 +77,7 @@ public class StopGridExtras extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(String port) {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Pass in confirm=true");
+    getJsonResponse().addKeyValues(JsonCodec.ERROR, "Pass in confirm=true");
     return getJsonResponse().getJson();
   }
 

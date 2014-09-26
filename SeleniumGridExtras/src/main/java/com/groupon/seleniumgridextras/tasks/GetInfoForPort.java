@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 
@@ -82,7 +83,7 @@ public class GetInfoForPort extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Port parameter is required");
+    getJsonResponse().addKeyValues(JsonCodec.ERROR, "Port parameter is required");
     return getJsonResponse().getJson();
   }
 
@@ -123,7 +124,7 @@ public class GetInfoForPort extends ExecuteOSTask {
       }
 
       try {
-        out = portInfo.get(JsonResponseBuilder.OUT).getAsString();
+        out = portInfo.get(JsonCodec.OUT).getAsString();
       } catch (NullPointerException error) {
       }
 
@@ -131,12 +132,12 @@ public class GetInfoForPort extends ExecuteOSTask {
       getJsonResponse().addKeyValues(PID, pid);
       getJsonResponse().addKeyValues(USER, user);
       getJsonResponse().addKeyValues(PORT, port);
-      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, out);
+      getJsonResponse().addKeyValues(JsonCodec.OUT, out);
       return getJsonResponse().getJson();
 
     } catch (Exception error) {
       //Big try catch to see if anything at all went wrong
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
 

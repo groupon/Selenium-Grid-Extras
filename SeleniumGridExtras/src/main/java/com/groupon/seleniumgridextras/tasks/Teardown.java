@@ -41,6 +41,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -95,7 +96,7 @@ public class Teardown extends ExecuteOSTask {
 
       return getJsonResponse().getJson();
     } catch (Exception error) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }

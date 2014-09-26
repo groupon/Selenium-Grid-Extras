@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import java.util.HashMap;
@@ -130,7 +131,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     if (RuntimeConfig.getOS().isWindows()) {
       return getAllProtectedStatus();
     } else {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "IE Protected Mode command is only implemented in Windows");
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, "IE Protected Mode command is only implemented in Windows");
       return getJsonResponse().getJson();
     }
   }
@@ -139,10 +140,10 @@ public class IEProtectedMode extends ExecuteOSTask {
   public JsonObject execute(String status) {
     if (RuntimeConfig.getOS().isWindows()) {
       setAllProtectedStatuses(status.equals(KEY) ? true : false);
-      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "IE needs to restart before you see the changes");
+      getJsonResponse().addKeyValues(JsonCodec.OUT, "IE needs to restart before you see the changes");
       return getAllProtectedStatus();
     } else {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "IE Protected Mode command is only implemented in Windows");
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, "IE Protected Mode command is only implemented in Windows");
       return getJsonResponse().getJson();
     }
   }

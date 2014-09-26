@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -22,7 +23,7 @@ public class SessionCounterStartSession extends ExecuteOSTask {
 
     String message = "This node has started " + RuntimeConfig.getTestSessionTracker().getSessionsStarted() + " sessions";
     logger.info( message );
-    getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, message);
+    getJsonResponse().addKeyValues(JsonCodec.OUT, message);
 
 
     return getJsonResponse().getJson();

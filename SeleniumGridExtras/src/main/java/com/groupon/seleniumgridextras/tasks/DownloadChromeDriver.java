@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.Downloader;
@@ -124,11 +125,11 @@ public class DownloadChromeDriver extends ExecuteOSTask {
       getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
-        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, downloader.getErrorMessage());
+        getJsonResponse().addKeyValues(JsonCodec.ERROR, downloader.getErrorMessage());
       }
     } else {
       logger.debug("No need for download");
-      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "File already downloaded, will not download again");
+      getJsonResponse().addKeyValues(JsonCodec.OUT, "File already downloaded, will not download again");
     }
 
     getJsonResponse()

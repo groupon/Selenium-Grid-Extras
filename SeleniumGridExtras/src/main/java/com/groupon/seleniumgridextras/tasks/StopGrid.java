@@ -44,6 +44,7 @@ import java.util.Map;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -76,7 +77,7 @@ public class StopGrid extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Port parameter is required");
+    getJsonResponse().addKeyValues(JsonCodec.ERROR, "Port parameter is required");
     return getJsonResponse().getJson();
   }
 

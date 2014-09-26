@@ -41,6 +41,7 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.StreamUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import org.apache.log4j.Logger;
@@ -71,7 +72,7 @@ public class ExecuteCommand {
       }
     } catch (IOException e) {
       final String message = "Problems in running " + cmd + "\n" + e.toString();
-      jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, message);
+      jsonResponse.addKeyValues(JsonCodec.ERROR, message);
       logger.warn(message);
       return jsonResponse.getJson();
     }
@@ -84,29 +85,29 @@ public class ExecuteCommand {
         logger.debug("Command Finished");
       } catch (InterruptedException e) {
         final String message = "Interrupted running " + cmd + "\n" + e.toString();
-        jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, message);
+        jsonResponse.addKeyValues(JsonCodec.ERROR, message);
         logger.warn(message);
         return jsonResponse.getJson();
       }
     } else {
       logger.debug("Not waiting for finish");
-      jsonResponse.addKeyValues(JsonResponseBuilder.OUT, "Background process started");
+      jsonResponse.addKeyValues(JsonCodec.OUT, "Background process started");
       return jsonResponse.getJson();
     }
 
     try {
       String output = StreamUtility.inputStreamToString(process.getInputStream());
       String error = StreamUtility.inputStreamToString(process.getErrorStream());
-      jsonResponse.addKeyValues(JsonResponseBuilder.EXIT_CODE, exitCode);
-      jsonResponse.addKeyValues(JsonResponseBuilder.OUT, output);
+      jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
+      jsonResponse.addKeyValues(JsonCodec.OUT, output);
       if (!error.equals("")) {
         //Only add error if there is one, this way we have a nice empty array instead of [""]
-        jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, error);
+        jsonResponse.addKeyValues(JsonCodec.ERROR, error);
       }
       return jsonResponse.getJson();
     } catch (IOException e) {
       final String message = "Problems reading stdout and stderr from " + cmd + "\n" + e.toString();
-      jsonResponse.addKeyValues(JsonResponseBuilder.ERROR, message);
+      jsonResponse.addKeyValues(JsonCodec.ERROR, message);
       logger.warn(message);
       return jsonResponse.getJson();
 

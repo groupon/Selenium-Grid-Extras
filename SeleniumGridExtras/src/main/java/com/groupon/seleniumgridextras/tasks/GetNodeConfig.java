@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
@@ -52,7 +53,7 @@ public class GetNodeConfig extends ExecuteOSTask {
         try {
           addFileContentsToResponse(file.getName(), FileIOUtility.getAsString(file));
         } catch (Exception error) {
-          getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+          getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
           logger.warn(error.toString());
         }
       }
@@ -61,7 +62,7 @@ public class GetNodeConfig extends ExecuteOSTask {
           error =
           "Config directory for '" + node + "' node does not exist in " + node_specific_config_dir
               .getAbsolutePath();
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error);
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
       logger.info(error);
     }
 
@@ -75,7 +76,7 @@ public class GetNodeConfig extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Cannot call this end point without 'node' parameter");
+    getJsonResponse().addKeyValues(JsonCodec.ERROR, "Cannot call this end point without 'node' parameter");
     return getJsonResponse().getJson();
   }
 
@@ -86,7 +87,7 @@ public class GetNodeConfig extends ExecuteOSTask {
     if (parameter.isEmpty() || !parameter.containsKey(NODE) ) {
       return execute();
     } else if (!configDirExist()) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "This node does not contain the following directory: "
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, "This node does not contain the following directory: "
                                               + RuntimeConfig.getConfig().getConfigsDirectory()
           .getName());
       return getJsonResponse().getJson();

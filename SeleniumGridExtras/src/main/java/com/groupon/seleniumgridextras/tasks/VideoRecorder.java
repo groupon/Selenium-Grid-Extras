@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
@@ -47,7 +48,7 @@ public class VideoRecorder extends ExecuteOSTask {
   public JsonObject execute(Map<String, String> parameter) {
 
     if (!RuntimeConfig.getConfig().getVideoRecording().getRecordTestVideos()){
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Video Recording is disabled on this node");
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, "Video Recording is disabled on this node");
       return getJsonResponse().getJson();
     }
 
@@ -67,20 +68,20 @@ public class VideoRecorder extends ExecuteOSTask {
         VideoRecordingThreadPool.startVideoRecording(session,
                                                      RuntimeConfig.getConfig().getVideoRecording()
                                                          .getIdleTimeout());
-        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Starting Video Recording");
+        getJsonResponse().addKeyValues(JsonCodec.OUT, "Starting Video Recording");
       } else if (action.equals(STOP)) {
-        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Stopping Video Recording");
+        getJsonResponse().addKeyValues(JsonCodec.OUT, "Stopping Video Recording");
         VideoRecordingThreadPool.stopVideoRecording(session);
       } else if (action.equals(HEARTBEAT)) {
         VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
-        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Updating lower 3rd description");
+        getJsonResponse().addKeyValues(JsonCodec.OUT, "Updating lower 3rd description");
       } else if (action.equals(STATUS)){
         getJsonResponse().addKeyValues(CURRENT_VIDEOS, VideoRecordingThreadPool.getAllVideos());
       } else if (action.equals(STOP_ALL)){
         VideoRecordingThreadPool.stopAndFinalizeAllVideos();
-        getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, "Calling stop all videos command");
+        getJsonResponse().addKeyValues(JsonCodec.OUT, "Calling stop all videos command");
       } else {
-        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Unrecognized action '" + action
+        getJsonResponse().addKeyValues(JsonCodec.ERROR, "Unrecognized action '" + action
                                                 + "', only acceptable actions are start, stop, heartbeat");
 
       }
@@ -97,7 +98,7 @@ public class VideoRecorder extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR,
+    getJsonResponse().addKeyValues(JsonCodec.ERROR,
                                    "Cannot call this endpoint without required parameters: session & action");
     return getJsonResponse().getJson();
   }

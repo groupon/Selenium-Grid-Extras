@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
@@ -108,7 +109,7 @@ public class SystemInfo extends ExecuteOSTask {
       getJsonResponse().addKeyValues(RAM, info.getMemoryInfo());
       getJsonResponse().addKeyValues(UPTIME, info.getSystemUptime());
     } catch (Exception e) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, e.toString());
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, e.toString());
     }
 
     List<String> hostNetworking = getComputerNetworkInfo();

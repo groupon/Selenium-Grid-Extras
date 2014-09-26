@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.os;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class MacSystemInfo implements OSInfo {
   private String df;
 
   public MacSystemInfo() {
-    top = ExecuteCommand.execRuntime("top -l 1").get(JsonResponseBuilder.OUT).toString();
+    top = ExecuteCommand.execRuntime("top -l 1").get(JsonCodec.OUT).toString();
     lines = top.split("\",\"");
     memoryLine = lines[6];
     cpuLine = lines[3];
@@ -77,7 +78,7 @@ public class MacSystemInfo implements OSInfo {
   public Map<String, String> getProcessorInfo() throws Exception {
     String
         coreCount =
-        ExecuteCommand.execRuntime("sysctl hw.ncpu").get(JsonResponseBuilder.OUT).toString()
+        ExecuteCommand.execRuntime("sysctl hw.ncpu").get(JsonCodec.OUT).toString()
             .replaceAll("hw.ncpu:\\s*", "");
     Float idle = Float.parseFloat(cpuLine.split(" ")[6].replaceAll("\\%", ""));
 

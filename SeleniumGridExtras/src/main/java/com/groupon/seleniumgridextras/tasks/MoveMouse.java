@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.awt.*;
@@ -97,7 +98,7 @@ public class MoveMouse extends ExecuteOSTask {
       getJsonResponse().addKeyValues(Y, y);
       return getJsonResponse().getJson();
     } catch (AWTException error) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }

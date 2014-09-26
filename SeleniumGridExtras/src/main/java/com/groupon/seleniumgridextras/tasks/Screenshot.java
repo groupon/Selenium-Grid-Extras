@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
@@ -132,7 +133,7 @@ public class Screenshot extends ExecuteOSTask {
         encodedImage = java.net.URLEncoder.encode(encodedImage, "ISO-8859-1");
 
       } catch (IOException e) {
-        getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Error Saving image to file\n " + e);
+        getJsonResponse().addKeyValues(JsonCodec.ERROR, "Error Saving image to file\n " + e);
         return getJsonResponse().getJson();
       }
       getJsonResponse().addKeyValues(FILE_TYPE, "PNG");
@@ -148,7 +149,7 @@ public class Screenshot extends ExecuteOSTask {
 
       return getJsonResponse().getJson();
     } catch (AWTException error) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, "Error with AWT Robot\n" + error);
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, "Error with AWT Robot\n" + error);
       return getJsonResponse().getJson();
     }
   }

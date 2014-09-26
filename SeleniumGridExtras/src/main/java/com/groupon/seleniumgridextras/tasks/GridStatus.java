@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -100,7 +101,7 @@ public class GridStatus extends ExecuteOSTask {
 
       return getJsonResponse().getJson();
     } catch (Exception error) {
-      getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR, error.toString());
+      getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
       return getJsonResponse().getJson();
     }
   }

@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -89,7 +90,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   public String getWindowsCommand(String parameter) {
 
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR,
+    getJsonResponse().addKeyValues(JsonCodec.ERROR,
         notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();
@@ -101,7 +102,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   }
 
   public String getLinuxCommand(String parameter) {
-    getJsonResponse().addKeyValues(JsonResponseBuilder.ERROR,
+    getJsonResponse().addKeyValues(JsonCodec.ERROR,
         notImplementedError + " " + this.getClass().getCanonicalName());
 
     return getJsonResponse().toString();

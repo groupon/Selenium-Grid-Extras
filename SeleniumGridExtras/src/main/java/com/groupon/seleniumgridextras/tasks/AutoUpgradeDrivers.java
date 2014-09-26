@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.ConfigFileReader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -106,7 +107,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
           "Update was detected for one or more versions of the drivers. You may need to restart Grid Extras for new versions to work";
 
       systemAndLog(message);
-      getJsonResponse().addKeyValues(JsonResponseBuilder.OUT, message);
+      getJsonResponse().addKeyValues(JsonCodec.OUT, message);
 
       logger.info(configOnDisk.toHashMap());
       configOnDisk.overwriteExistingConfig(configHash);

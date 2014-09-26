@@ -42,6 +42,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.util.regex.Matcher;
@@ -56,7 +57,7 @@ public class PortChecker {
   public static JsonObject getParsedPortInfo(String port) {
 
     JsonObject status = getPortInfo(port);
-    JsonArray standardOut = (JsonArray) status.get(JsonResponseBuilder.OUT);
+    JsonArray standardOut = (JsonArray) status.get(JsonCodec.OUT);
 
     if (RuntimeConfig.getOS().isWindows()) {
       return parseWindowsInfo(standardOut);
@@ -85,7 +86,7 @@ public class PortChecker {
 
   private static JsonObject parseLinuxInfo(JsonArray status) {
     JsonObject info = new JsonObject();
-    info.addProperty(JsonResponseBuilder.OUT, status.toString());
+    info.addProperty(JsonCodec.OUT, status.toString());
 
     for (JsonElement line : status) {
       Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(
