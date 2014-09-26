@@ -43,16 +43,11 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PortChecker {
-
-  private static final String PID = "pid";
-  private static final String PROCESS = "process";
-  private static final String USER = "user";
 
   public static JsonObject getParsedPortInfo(String port) {
 
@@ -92,9 +87,9 @@ public class PortChecker {
       Matcher m = Pattern.compile("(\\w*)\\s*(\\d*)\\s*(\\w*)\\s*.*(\\(LISTEN\\))").matcher(
           line.getAsString());
       if (m.find()) {
-        info.addProperty(PROCESS, m.group(1));
-        info.addProperty(PID, m.group(2));
-        info.addProperty(USER, m.group(3));
+        info.addProperty(JsonCodec.OS.PROCESS, m.group(1));
+        info.addProperty(JsonCodec.OS.PID, m.group(2));
+        info.addProperty(JsonCodec.OS.USER, m.group(3));
         break;
       }
     }
@@ -111,7 +106,7 @@ public class PortChecker {
           Pattern.compile("\\s*(TCP)\\s*([0-9.:]*)\\s*([0-9.:]*)\\s*(LISTENING)\\s*(\\d*)")
               .matcher(line.getAsString());
       if (m.find()) {
-        info.addProperty(PID, m.group(5));
+        info.addProperty(JsonCodec.OS.PID, m.group(5));
         break;
       }
     }

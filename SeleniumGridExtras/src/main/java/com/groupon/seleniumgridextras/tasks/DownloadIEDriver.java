@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.IEDownloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -52,21 +51,15 @@ import java.util.Map;
 
 public class DownloadIEDriver extends ExecuteOSTask {
 
-  private static final String BIT = "bit";
-  private static final String WIN32 = "Win32";
-  private static final String VERSION = "version";
-  private static final String SOURCE_URL = "source_url";
-  private static final String FILE_FULL_PATH = "file_full_path";
-  private static final String FILE = "file";
-  private String bit = WIN32;
+  private String bit = JsonCodec.WebDriver.Downloader.WIN32;
   private static Logger logger = Logger.getLogger(DownloadIEDriver.class);
 
   public DownloadIEDriver() {
     setEndpoint("/download_iedriver");
     setDescription("Downloads a version of IEDriver.exe to local machine");
     JsonObject params = new JsonObject();
-    params.addProperty(VERSION, "Version of IEDriver to download, such as 2.33.0");
-    params.addProperty(BIT, "Bit version of IEDriver Win32/x64 - (default: Win32)");
+    params.addProperty(JsonCodec.WebDriver.Downloader.VERSION, "Version of IEDriver to download, such as 2.33.0");
+    params.addProperty(JsonCodec.WebDriver.Downloader.BIT, "Bit version of IEDriver Win32/x64 - (default: Win32)");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -76,15 +69,16 @@ public class DownloadIEDriver extends ExecuteOSTask {
     setEnabledInGui(true);
 
     addResponseDescription("root_dir", "Directory to which EXE file was saved to");
-    addResponseDescription(FILE, "Relative path to file on the node");
-    addResponseDescription(FILE_FULL_PATH, "Full path to file on node");
-    addResponseDescription(SOURCE_URL,
+    addResponseDescription(JsonCodec.WebDriver.Downloader.FILE, "Relative path to file on the node");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH, "Full path to file on node");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.SOURCE_URL,
                            "Url from which the EXE was downloaded. If file already exists, this will be blank, and download will be skipped");
 
     this.bit = RuntimeConfig.getConfig().getIEdriver().getBit();
     getJsonResponse()
         .addKeyValues("root_dir", RuntimeConfig.getConfig().getIEdriver().getDirectory());
-    getJsonResponse().addKeyValues(SOURCE_URL, "");
+    getJsonResponse().addKeyValues(
+        JsonCodec.WebDriver.Downloader.SOURCE_URL, "");
 
   }
 
@@ -96,17 +90,18 @@ public class DownloadIEDriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey(VERSION)) {
+    if (parameter.isEmpty() || !parameter.containsKey(
+        JsonCodec.WebDriver.Downloader.VERSION)) {
       return execute();
     } else {
 
-      if (parameter.containsKey(BIT)) {
-        this.bit = parameter.get(BIT).toString();
+      if (parameter.containsKey(JsonCodec.WebDriver.Downloader.BIT)) {
+        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT).toString();
       } else {
-        this.bit = WIN32;
+        this.bit = JsonCodec.WebDriver.Downloader.WIN32;
       }
 
-      return execute(parameter.get(VERSION).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
     }
   }
 
@@ -119,7 +114,8 @@ public class DownloadIEDriver extends ExecuteOSTask {
 
     if (!new File(RuntimeConfig.getConfig().getIEdriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
-      getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
+      getJsonResponse().addKeyValues(
+          JsonCodec.WebDriver.Downloader.SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
         getJsonResponse().addKeyValues(JsonCodec.ERROR, downloader.getErrorMessage());
@@ -130,11 +126,11 @@ public class DownloadIEDriver extends ExecuteOSTask {
     }
 
     getJsonResponse()
-        .addKeyValues(FILE_FULL_PATH,
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH,
                       downloader.getDestinationFileFullPath().getAbsolutePath());
 
     getJsonResponse()
-        .addKeyValues(FILE, downloader.getDestinationFileFullPath().getName());
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE, downloader.getDestinationFileFullPath().getName());
 
 
     return getJsonResponse().getJson();

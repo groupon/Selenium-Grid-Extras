@@ -41,7 +41,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
 import com.groupon.seleniumgridextras.os.MacSystemInfo;
@@ -58,13 +57,6 @@ import java.util.Map;
 
 public class SystemInfo extends ExecuteOSTask {
 
-  private static final String DRIVES = "drives";
-  private static final String PROCESSOR = "processor";
-  private static final String RAM = "ram";
-  private static final String UPTIME = "uptime";
-  private static final String HOSTNAME = "hostname";
-  private static final String IP = "ip";
-  private static final String N_A = "N/A";
   private static final String HOSTNAME_CAN_NOT_BE_RESOLVED = "Hostname can not be resolved";
   private static Logger logger = Logger.getLogger(SystemInfo.class);
 
@@ -80,13 +72,13 @@ public class SystemInfo extends ExecuteOSTask {
     setButtonText("System Info");
     setEnabledInGui(true);
 
-    addResponseDescription(DRIVES, "Hash of all mounted drives and their info");
-    addResponseDescription(PROCESSOR, "Info about processors on machine");
-    addResponseDescription(RAM, "Info in bytes on how much RAM machine has/uses");
-    addResponseDescription(UPTIME, "System uptime since last reboot in seconds");
+    addResponseDescription(JsonCodec.OS.Hardware.DRIVES, "Hash of all mounted drives and their info");
+    addResponseDescription(JsonCodec.OS.Hardware.PROCESSOR, "Info about processors on machine");
+    addResponseDescription(JsonCodec.OS.Hardware.RAM, "Info in bytes on how much RAM machine has/uses");
+    addResponseDescription(JsonCodec.OS.UPTIME, "System uptime since last reboot in seconds");
 
-    addResponseDescription(HOSTNAME, "Host name");
-    addResponseDescription(IP, "Host ip");
+    addResponseDescription(JsonCodec.OS.HOSTNAME, "Host name");
+    addResponseDescription(JsonCodec.OS.IP, "Host ip");
 
   }
 
@@ -104,17 +96,17 @@ public class SystemInfo extends ExecuteOSTask {
         info = new LinuxSystemInfo();
       }
 
-      getJsonResponse().addListOfHashes(DRIVES, info.getDiskInfo());
-      getJsonResponse().addKeyValues(PROCESSOR, info.getProcessorInfo());
-      getJsonResponse().addKeyValues(RAM, info.getMemoryInfo());
-      getJsonResponse().addKeyValues(UPTIME, info.getSystemUptime());
+      getJsonResponse().addListOfHashes(JsonCodec.OS.Hardware.DRIVES, info.getDiskInfo());
+      getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.PROCESSOR, info.getProcessorInfo());
+      getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.RAM, info.getMemoryInfo());
+      getJsonResponse().addKeyValues(JsonCodec.OS.UPTIME, info.getSystemUptime());
     } catch (Exception e) {
       getJsonResponse().addKeyValues(JsonCodec.ERROR, e.toString());
     }
 
     List<String> hostNetworking = getComputerNetworkInfo();
-    getJsonResponse().addKeyValues(HOSTNAME, hostNetworking.get(0));
-    getJsonResponse().addKeyValues(IP, hostNetworking.get(1));
+    getJsonResponse().addKeyValues(JsonCodec.OS.HOSTNAME, hostNetworking.get(0));
+    getJsonResponse().addKeyValues(JsonCodec.OS.IP, hostNetworking.get(1));
 
     return getJsonResponse().getJson();
   }
@@ -134,8 +126,8 @@ public class SystemInfo extends ExecuteOSTask {
       host.add(addr.getHostAddress());
     } catch (UnknownHostException ex) {
       logger.debug(HOSTNAME_CAN_NOT_BE_RESOLVED);
-      host.add(N_A);
-      host.add(N_A);
+      host.add(JsonCodec.N_A);
+      host.add(JsonCodec.N_A);
     }
 
     return host;

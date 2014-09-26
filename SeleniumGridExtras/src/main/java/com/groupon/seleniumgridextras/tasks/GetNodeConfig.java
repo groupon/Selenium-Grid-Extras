@@ -3,7 +3,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
@@ -19,7 +18,6 @@ import java.util.Map;
 
 public class GetNodeConfig extends ExecuteOSTask {
 
-  private static final String NODE = "node";
   private static Logger logger = Logger.getLogger(GetNodeConfig.class);
 
   public GetNodeConfig() {
@@ -27,7 +25,7 @@ public class GetNodeConfig extends ExecuteOSTask {
     setDescription("Provides the grid node config from central location");
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    params.addProperty(NODE, "(Required) -  Computer name of desired node.");
+    params.addProperty(JsonCodec.WebDriver.Grid.NODE, "(Required) -  Computer name of desired node.");
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
@@ -84,7 +82,7 @@ public class GetNodeConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey(NODE) ) {
+    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.WebDriver.Grid.NODE) ) {
       return execute();
     } else if (!configDirExist()) {
       getJsonResponse().addKeyValues(JsonCodec.ERROR, "This node does not contain the following directory: "
@@ -92,7 +90,7 @@ public class GetNodeConfig extends ExecuteOSTask {
           .getName());
       return getJsonResponse().getJson();
     } else {
-      return execute(parameter.get(NODE).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Grid.NODE).toString());
     }
   }
 

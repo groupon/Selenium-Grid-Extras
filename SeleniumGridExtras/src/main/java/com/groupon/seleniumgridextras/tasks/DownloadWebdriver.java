@@ -39,11 +39,13 @@ package com.groupon.seleniumgridextras.tasks;
 
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.WdDownloader;
+
 import java.io.File;
+
 import com.google.gson.JsonObject;
+
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
@@ -52,17 +54,14 @@ import java.util.Map;
 
 public class DownloadWebdriver extends ExecuteOSTask {
 
-  private static final String FILE = "file";
-  private static final String FILE_FULL_PATH = "file_full_path";
-  private static final String SOURCE_URL = "source_url";
-  private static final String VERSION = "version";
   private static Logger logger = Logger.getLogger(DownloadWebdriver.class);
 
   public DownloadWebdriver() {
     setEndpoint("/download_webdriver");
     setDescription("Downloads a version of WebDriver jar to local machine");
     JsonObject params = new JsonObject();
-    params.addProperty(VERSION, "Version of WebDriver to download, such as 2.33.0");
+    params.addProperty(JsonCodec.WebDriver.Downloader.VERSION,
+                       "Version of WebDriver to download, such as 2.33.0");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -71,16 +70,21 @@ public class DownloadWebdriver extends ExecuteOSTask {
     setButtonText("Download WebDriver");
     setEnabledInGui(true);
 
-    addResponseDescription("root_dir", "Directory to which JAR file was saved to");
-    addResponseDescription(FILE, "Relative path to file on the node");
-    addResponseDescription(FILE_FULL_PATH, "Full path to file on node");
-    addResponseDescription(SOURCE_URL,
+    addResponseDescription(JsonCodec.WebDriver.Downloader.ROOT_DIR,
+                           "Directory to which JAR file was saved to");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.FILE,
+                           "Relative path to file on the node");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH,
+                           "Full path to file on node");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.SOURCE_URL,
                            "Url from which the JAR was downloaded. If JAR file already exists, this will be blank, and download will be skipped");
 
     getJsonResponse()
-        .addKeyValues(FILE_FULL_PATH, RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH,
+                      RuntimeConfig.getConfig().getWebdriver().getExecutablePath());
 
-    getJsonResponse().addKeyValues("root_dir", RuntimeConfig.getConfig().getWebdriver().getDirectory());
+    getJsonResponse()
+        .addKeyValues("root_dir", RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
 
   }
@@ -94,19 +98,23 @@ public class DownloadWebdriver extends ExecuteOSTask {
   public JsonObject execute(String version) {
     Downloader downloader = new WdDownloader(version);
 
-    getJsonResponse().addKeyValues(FILE, downloader.getDestinationFile());
     getJsonResponse()
-        .addKeyValues(FILE_FULL_PATH, downloader.getDestinationFileFullPath().getAbsolutePath());
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE, downloader.getDestinationFile());
+    getJsonResponse()
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH,
+                      downloader.getDestinationFileFullPath().getAbsolutePath());
 
     if (!downloader.getDestinationFileFullPath().exists()) {
       Boolean downloaded = downloader.download();
-      getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
+      getJsonResponse().addKeyValues(
+          JsonCodec.WebDriver.Downloader.SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
         getJsonResponse().addKeyValues(JsonCodec.ERROR, downloader.getErrorMessage());
       }
     } else {
-      getJsonResponse().addKeyValues(JsonCodec.OUT, "File already downloaded, will not download again");
+      getJsonResponse()
+          .addKeyValues(JsonCodec.OUT, "File already downloaded, will not download again");
     }
 
     return getJsonResponse().getJson();
@@ -115,10 +123,11 @@ public class DownloadWebdriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey(VERSION)) {
+    if (parameter.isEmpty() || !parameter.containsKey(
+        JsonCodec.WebDriver.Downloader.VERSION)) {
       return execute();
     } else {
-      return execute(parameter.get(VERSION).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
     }
   }
 
@@ -137,7 +146,8 @@ public class DownloadWebdriver extends ExecuteOSTask {
       }
 
       if (!webdriverJar.exists()) {
-        systemAndLog("Downloading WebDriver Jar " + RuntimeConfig.getConfig().getWebdriver().getVersion());
+        systemAndLog(
+            "Downloading WebDriver Jar " + RuntimeConfig.getConfig().getWebdriver().getVersion());
         logger.info(execute().toString());
       }
 

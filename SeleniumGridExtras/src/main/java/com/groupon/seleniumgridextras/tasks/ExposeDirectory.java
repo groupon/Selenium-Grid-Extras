@@ -40,6 +40,8 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -50,7 +52,6 @@ import java.util.List;
 
 public class ExposeDirectory extends ExecuteOSTask {
 
-  private static final String FILES = "files";
   public File sharedDir;
   private static Logger logger = Logger.getLogger(ExposeDirectory.class);
 
@@ -64,7 +65,7 @@ public class ExposeDirectory extends ExecuteOSTask {
     setButtonText("List Shared Dir");
     setEnabledInGui(true);
 
-    addResponseDescription(FILES, "Array list of files in the shared directory");
+    addResponseDescription(JsonCodec.FILES, "Array list of files in the shared directory");
   }
 
 
@@ -76,7 +77,7 @@ public class ExposeDirectory extends ExecuteOSTask {
     for (File f : files) {
       filesToString.add(f.toString());
     }
-    getJsonResponse().addKeyValues(FILES, filesToString);
+    getJsonResponse().addKeyValues(JsonCodec.FILES, filesToString);
     return getJsonResponse().getJson();
   }
 

@@ -39,7 +39,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import org.apache.log4j.Logger;
 
@@ -47,14 +46,12 @@ import java.util.Map;
 
 public class StopGridExtras extends ExecuteOSTask {
 
-  private static final String CONFIRM = "confirm";
-  private static final String TRUE = "true";
   private static Logger logger = Logger.getLogger(StopGridExtras.class);
   public StopGridExtras(){
     setEndpoint("/stop_extras");
     setDescription("Shuts down Grid Extras service");
     JsonObject params = new JsonObject();
-    params.addProperty(CONFIRM, "(Required) Will ignore request unless true is passed here");
+    params.addProperty(JsonCodec.CONFIRM, "(Required) Will ignore request unless true is passed here");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -66,7 +63,7 @@ public class StopGridExtras extends ExecuteOSTask {
   @Override
   public JsonObject getAcceptedParams() {
     JsonObject params = new JsonObject();
-    params.addProperty(CONFIRM, "(Required) Will ignore request unless true is passed here");
+    params.addProperty(JsonCodec.CONFIRM, "(Required) Will ignore request unless true is passed here");
     return params;
   }
 
@@ -85,8 +82,9 @@ public class StopGridExtras extends ExecuteOSTask {
 
     @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey(CONFIRM) && parameter.get(CONFIRM).equals(
-        TRUE)) {
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.CONFIRM) && parameter.get(
+        JsonCodec.CONFIRM).equals(
+        JsonCodec.TRUE)) {
       logger.info("Shutdown command received, shutting down.");
       System.exit(0);
     }

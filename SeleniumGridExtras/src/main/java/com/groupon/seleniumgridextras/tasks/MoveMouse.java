@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -48,15 +47,12 @@ import java.util.Map;
 
 public class MoveMouse extends ExecuteOSTask {
 
-  private static final String X = "x";
-  private static final String Y = "y";
-
   public MoveMouse() {
     setEndpoint("/move_mouse");
     setDescription("Moves the computers mouse to x and y location. (Default 0,0)");
     JsonObject params = new JsonObject();
-    params.addProperty(X, "X - Coordinate");
-    params.addProperty(Y, "Y - Coordinate");
+    params.addProperty(JsonCodec.OS.Mouse.X, "X - Coordinate");
+    params.addProperty(JsonCodec.OS.Mouse.Y, "Y - Coordinate");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -64,8 +60,8 @@ public class MoveMouse extends ExecuteOSTask {
     setCssClass("btn-succes");
     setButtonText("Move mouse");
 
-    addResponseDescription(X, "Current X postion of the mouse");
-    addResponseDescription(Y, "Current Y postion of the mouse");
+    addResponseDescription(JsonCodec.OS.Mouse.X, "Current X postion of the mouse");
+    addResponseDescription(JsonCodec.OS.Mouse.Y, "Current Y postion of the mouse");
 
     setEnabledInGui(true);
   }
@@ -76,9 +72,10 @@ public class MoveMouse extends ExecuteOSTask {
     int x = 0;
     int y = 0;
 
-    if (!parameter.isEmpty() && parameter.containsKey(X) && parameter.containsKey(Y)) {
-      x = Integer.parseInt(parameter.get(X));
-      y = Integer.parseInt(parameter.get(Y));
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.Mouse.X) && parameter.containsKey(
+        JsonCodec.OS.Mouse.Y)) {
+      x = Integer.parseInt(parameter.get(JsonCodec.OS.Mouse.X));
+      y = Integer.parseInt(parameter.get(JsonCodec.OS.Mouse.Y));
     }
 
     return moveMouse(x, y);
@@ -94,8 +91,8 @@ public class MoveMouse extends ExecuteOSTask {
     try {
       Robot moveMouse = new Robot();
       moveMouse.mouseMove(x, y);
-      getJsonResponse().addKeyValues(X, x);
-      getJsonResponse().addKeyValues(Y, y);
+      getJsonResponse().addKeyValues(JsonCodec.OS.Mouse.X, x);
+      getJsonResponse().addKeyValues(JsonCodec.OS.Mouse.Y, y);
       return getJsonResponse().getJson();
     } catch (AWTException error) {
       getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());

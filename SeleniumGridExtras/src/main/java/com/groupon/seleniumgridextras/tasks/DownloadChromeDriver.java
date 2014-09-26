@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -52,22 +51,15 @@ import java.util.Map;
 
 public class DownloadChromeDriver extends ExecuteOSTask {
 
-  private static final String ROOT_DIR = "root_dir";
-  private static final String FILE = "file";
-  private static final String FILE_FULL_PATH = "file_full_path";
-  private static final String SOURCE_URL = "source_url";
-  private static final String BIT = "bit";
-  private static final String VERSION = "version";
-  private static final String STRING = "32";
-  private String bit = STRING;
+  private String bit = JsonCodec.WebDriver.Downloader.BIT_32;
   private static Logger logger = Logger.getLogger(DownloadChromeDriver.class);
 
   public DownloadChromeDriver() {
     setEndpoint("/download_chromedriver");
     setDescription("Downloads a version of ChromeDriver to local machine");
     JsonObject params = new JsonObject();
-    params.addProperty(VERSION, "Version of ChromeDriver to download, such as 2.6");
-    params.addProperty(BIT, "Bit Version of ChromeDriver 32/64 - (default: 32)");
+    params.addProperty(JsonCodec.WebDriver.Downloader.VERSION, "Version of ChromeDriver to download, such as 2.6");
+    params.addProperty(JsonCodec.WebDriver.Downloader.BIT, "Bit Version of ChromeDriver 32/64 - (default: 32)");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -76,10 +68,10 @@ public class DownloadChromeDriver extends ExecuteOSTask {
     setButtonText("Download Chrome-Driver");
     setEnabledInGui(true);
 
-    addResponseDescription(ROOT_DIR, "Directory to which executable file was saved to");
-    addResponseDescription(FILE, "Relative path to file on the node");
-    addResponseDescription(FILE_FULL_PATH, "Full path to file on node");
-    addResponseDescription(SOURCE_URL,
+    addResponseDescription(JsonCodec.WebDriver.Downloader.ROOT_DIR, "Directory to which executable file was saved to");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.FILE, "Relative path to file on the node");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH, "Full path to file on node");
+    addResponseDescription(JsonCodec.WebDriver.Downloader.SOURCE_URL,
                            "Url from which the executable was downloaded. If file already exists, this will be blank, and download will be skipped");
 
     // bit value should be initialized from configuration
@@ -87,8 +79,9 @@ public class DownloadChromeDriver extends ExecuteOSTask {
 
     logger.debug(RuntimeConfig.getConfig());
     getJsonResponse()
-        .addKeyValues(ROOT_DIR, RuntimeConfig.getConfig().getChromeDriver().getDirectory());
-    getJsonResponse().addKeyValues(SOURCE_URL, "");
+        .addKeyValues(JsonCodec.WebDriver.Downloader.ROOT_DIR, RuntimeConfig.getConfig().getChromeDriver().getDirectory());
+    getJsonResponse().addKeyValues(
+        JsonCodec.WebDriver.Downloader.SOURCE_URL, "");
 
   }
 
@@ -100,13 +93,14 @@ public class DownloadChromeDriver extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (!parameter.isEmpty() && parameter.containsKey(VERSION)) {
-      if (parameter.containsKey(BIT)) {
-        this.bit = parameter.get(BIT).toString();
+    if (!parameter.isEmpty() && parameter.containsKey(
+        JsonCodec.WebDriver.Downloader.VERSION)) {
+      if (parameter.containsKey(JsonCodec.WebDriver.Downloader.BIT)) {
+        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT).toString();
       } else {
-        this.bit = STRING;
+        this.bit = JsonCodec.WebDriver.Downloader.BIT_32;
       }
-      return execute(parameter.get(VERSION).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
     } else {
       return execute();
     }
@@ -122,7 +116,8 @@ public class DownloadChromeDriver extends ExecuteOSTask {
 
     if (!new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
-      getJsonResponse().addKeyValues(SOURCE_URL, downloader.getSourceURL());
+      getJsonResponse().addKeyValues(
+          JsonCodec.WebDriver.Downloader.SOURCE_URL, downloader.getSourceURL());
 
       if (!downloaded) {
         getJsonResponse().addKeyValues(JsonCodec.ERROR, downloader.getErrorMessage());
@@ -133,11 +128,11 @@ public class DownloadChromeDriver extends ExecuteOSTask {
     }
 
     getJsonResponse()
-        .addKeyValues(FILE_FULL_PATH,
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE_FULL_PATH,
                       downloader.getDestinationFileFullPath().getAbsolutePath());
 
     getJsonResponse()
-        .addKeyValues(FILE, downloader.getDestinationFileFullPath().getName());
+        .addKeyValues(JsonCodec.WebDriver.Downloader.FILE, downloader.getDestinationFileFullPath().getName());
 
 
     return getJsonResponse().getJson();

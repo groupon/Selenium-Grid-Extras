@@ -45,20 +45,16 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 public class StopGrid extends ExecuteOSTask {
 
-  private static final String PORT = "port";
-  private static final String PID = "pid";
-
   public StopGrid() {
     setEndpoint("/stop_grid");
     setDescription("Stops grid or node process");
     JsonObject params = new JsonObject();
-    params.addProperty(PORT, "(Required) Port on which the node/hub is running.");
+    params.addProperty(JsonCodec.OS.PORT, "(Required) Port on which the node/hub is running.");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -71,7 +67,7 @@ public class StopGrid extends ExecuteOSTask {
   @Override
   public JsonObject getAcceptedParams() {
     JsonObject params = new JsonObject();
-    params.addProperty(PORT, "(Required) Port on which the node/hub is running");
+    params.addProperty(JsonCodec.OS.PORT, "(Required) Port on which the node/hub is running");
     return params;
   }
 
@@ -104,9 +100,9 @@ public class StopGrid extends ExecuteOSTask {
   public String getLinuxCommand(String port) {
     JsonObject status = PortChecker.getParsedPortInfo(port);
 
-    if (status.has(PID)){
+    if (status.has(JsonCodec.OS.PID)){
       KillPid killer = new KillPid();
-      return killer.getLinuxCommand(status.get(PID).getAsString());
+      return killer.getLinuxCommand(status.get(JsonCodec.OS.PID).getAsString());
     }
 
       return "";
@@ -115,10 +111,10 @@ public class StopGrid extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey(PORT)) {
+    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.OS.PORT)) {
       return execute();
     } else {
-      return this.execute(parameter.get(PORT).toString());
+      return this.execute(parameter.get(JsonCodec.OS.PORT).toString());
     }
   }
 

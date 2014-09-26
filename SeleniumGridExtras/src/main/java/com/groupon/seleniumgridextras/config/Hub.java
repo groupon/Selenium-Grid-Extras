@@ -1,47 +1,44 @@
 package com.groupon.seleniumgridextras.config;
 
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+
 import java.util.HashMap;
 
 public class Hub extends HashMap<String, String> implements GridRole {
 
-  public static final String PORT = "port";
-  public static final String HOST = "host";
-  public static final String ROLE = "role";
-  public static final String SERVLETS = "servlets";
-
   @Override
   public String getPort() {
-    return this.get(PORT);
+    return this.get(JsonCodec.WebDriver.Grid.PORT);
   }
 
   public void setPort(String port) {
-    this.put(PORT, port);
+    this.put(JsonCodec.WebDriver.Grid.PORT, port);
   }
 
   @Override
   public String getHost() {
-    return this.get(HOST);
+    return this.get(JsonCodec.WebDriver.Grid.HOST);
   }
 
   public void setHost(String host) {
-    this.put(HOST,  host);
+    this.put(JsonCodec.WebDriver.Grid.HOST,  host);
   }
 
   public String getRole() {
-    return this.get(ROLE);
+    return this.get(JsonCodec.WebDriver.Grid.ROLE);
   }
 
   public void setRole(String role) {
-    this.put(ROLE, role);
+    this.put(JsonCodec.WebDriver.Grid.ROLE, role);
   }
 
   public String getServlets() {
-    return this.get(SERVLETS);
+    return this.get(JsonCodec.WebDriver.Grid.SERVLETS);
   }
 
   public void setServlets(String servlets) {
-    this.put(SERVLETS,  servlets);
+    this.put(JsonCodec.WebDriver.Grid.SERVLETS,  servlets);
   }
 
   @Override

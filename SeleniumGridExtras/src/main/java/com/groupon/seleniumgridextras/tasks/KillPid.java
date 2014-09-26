@@ -40,22 +40,18 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import java.util.Map;
 
 public class KillPid extends ExecuteOSTask {
 
-  private static final String SIGNAL = "signal";
-  private static final String ID = "id";
-
   public KillPid() {
     setEndpoint("/kill_pid");
     setDescription("Kills a given process id");
     JsonObject params = new JsonObject();
-    params.addProperty(ID, "(Required) -  Process ID (PID) to terminate.");
-    params.addProperty(SIGNAL, "(unix only) - Signal Term number such as 1, 2...9");
+    params.addProperty(JsonCodec.OS.KillCommands.ID, "(Required) -  Process ID (PID) to terminate.");
+    params.addProperty(JsonCodec.OS.KillCommands.SIGNAL, "(unix only) - Signal Term number such as 1, 2...9");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -75,13 +71,14 @@ public class KillPid extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey(ID)) {
+    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.OS.KillCommands.ID)) {
 
       return execute();
     } else {
-      String pid = parameter.get(ID).toString();
-      if (!RuntimeConfig.getOS().isWindows() && parameter.containsKey(SIGNAL)) {
-        pid = "-" + parameter.get(SIGNAL).toString() + " " + pid;
+      String pid = parameter.get(JsonCodec.OS.KillCommands.ID).toString();
+      if (!RuntimeConfig.getOS().isWindows() && parameter.containsKey(
+          JsonCodec.OS.KillCommands.SIGNAL)) {
+        pid = "-" + parameter.get(JsonCodec.OS.KillCommands.SIGNAL).toString() + " " + pid;
       }
 
       return execute(pid);

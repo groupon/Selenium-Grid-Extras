@@ -41,24 +41,17 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.PortChecker;
 
 import java.util.Map;
 
 public class GetInfoForPort extends ExecuteOSTask {
 
-  private static final String PROCESS_NAME = "process_name";
-  private static final String PID = "pid";
-  private static final String USER = "user";
-  private static final String PORT = "port";
-  private static final String PROCESS = "process";
-
   public GetInfoForPort() {
     setEndpoint("/port_info");
     setDescription("Returns parsed information on a PID occupying a given port");
     JsonObject params = new JsonObject();
-    params.addProperty(PORT, "(Required) Port to be used");
+    params.addProperty(JsonCodec.OS.PORT, "(Required) Port to be used");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -67,17 +60,17 @@ public class GetInfoForPort extends ExecuteOSTask {
     setButtonText("Get Info for Port");
     setEnabledInGui(true);
 
-    addResponseDescription(PROCESS_NAME, "Process name/type (ie java, ruby, etc..)");
-    addResponseDescription(PID, "Process ID");
-    addResponseDescription(USER, "User who is running process");
-    addResponseDescription(PORT, "Port searched for");
+    addResponseDescription(JsonCodec.OS.PROCESS_NAME, "Process name/type (ie java, ruby, etc..)");
+    addResponseDescription(JsonCodec.OS.PID, "Process ID");
+    addResponseDescription(JsonCodec.OS.USER, "User who is running process");
+    addResponseDescription(JsonCodec.OS.PORT, "Port searched for");
   }
 
 
   @Override
   public JsonObject getAcceptedParams() {
     JsonObject params = new JsonObject();
-    params.addProperty(PORT, "(Required) Port to be used");
+    params.addProperty(JsonCodec.OS.PORT, "(Required) Port to be used");
     return params;
   }
 
@@ -90,8 +83,8 @@ public class GetInfoForPort extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (!parameter.isEmpty() && parameter.containsKey(PORT)) {
-      return execute(parameter.get(PORT).toString());
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.PORT)) {
+      return execute(parameter.get(JsonCodec.OS.PORT).toString());
     } else {
       return execute();
     }
@@ -111,15 +104,15 @@ public class GetInfoForPort extends ExecuteOSTask {
       String out = "";
 
       try {
-        process = portInfo.get(PROCESS).getAsString();
+        process = portInfo.get(JsonCodec.OS.PROCESS).getAsString();
       } catch (NullPointerException error) {
       }
       try {
-        pid = portInfo.get(PID).getAsString();
+        pid = portInfo.get(JsonCodec.OS.PID).getAsString();
       } catch (NullPointerException error) {
       }
       try {
-        user = portInfo.get(USER).getAsString();
+        user = portInfo.get(JsonCodec.OS.USER).getAsString();
       } catch (NullPointerException error) {
       }
 
@@ -128,10 +121,10 @@ public class GetInfoForPort extends ExecuteOSTask {
       } catch (NullPointerException error) {
       }
 
-      getJsonResponse().addKeyValues(PROCESS_NAME, process);
-      getJsonResponse().addKeyValues(PID, pid);
-      getJsonResponse().addKeyValues(USER, user);
-      getJsonResponse().addKeyValues(PORT, port);
+      getJsonResponse().addKeyValues(JsonCodec.OS.PROCESS_NAME, process);
+      getJsonResponse().addKeyValues(JsonCodec.OS.PID, pid);
+      getJsonResponse().addKeyValues(JsonCodec.OS.USER, user);
+      getJsonResponse().addKeyValues(JsonCodec.OS.PORT, port);
       getJsonResponse().addKeyValues(JsonCodec.OUT, out);
       return getJsonResponse().getJson();
 

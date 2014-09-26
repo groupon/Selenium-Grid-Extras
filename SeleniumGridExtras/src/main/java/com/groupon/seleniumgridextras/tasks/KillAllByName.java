@@ -43,18 +43,15 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 public class KillAllByName extends ExecuteOSTask {
-
-  private static final String COMMAND = "command";
-  private static final String WAIT_TO_FINISH = "wait_to_finish";
-  private static final String NAME = "name";
 
   public KillAllByName() {
     setEndpoint("/kill_all_by_name");
     setDescription("Executes os level kill command on a given PID name");
     JsonObject params = new JsonObject();
-    params.addProperty(NAME, "Name of process");
+    params.addProperty(JsonCodec.OS.KillCommands.NAME, "Name of process");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -97,16 +94,16 @@ public class KillAllByName extends ExecuteOSTask {
 
     JsonObject response = ExecuteCommand.execRuntime(finalCommand, waitToFinishTask);
 
-    response.addProperty(COMMAND, finalCommand);
-    response.addProperty(WAIT_TO_FINISH, waitToFinishTask);
+    response.addProperty(JsonCodec.OS.KillCommands.COMMAND, finalCommand);
+    response.addProperty(JsonCodec.OS.KillCommands.WAIT_TO_FINISH, waitToFinishTask);
 
     return response;
   }
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey(NAME)) {
-      return execute(parameter.get(NAME).toString());
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.KillCommands.NAME)) {
+      return execute(parameter.get(JsonCodec.OS.KillCommands.NAME).toString());
     }
     return execute();
   }

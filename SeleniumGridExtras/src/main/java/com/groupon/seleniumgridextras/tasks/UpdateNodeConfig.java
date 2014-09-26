@@ -3,7 +3,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
@@ -19,9 +18,6 @@ import java.util.Map;
  */
 public class UpdateNodeConfig extends ExecuteOSTask {
 
-  private static final String CONTENT = "content";
-  private static final String NODE = "node";
-  private static final String FILENAME = "filename";
   private static Logger logger = Logger.getLogger(UpdateNodeConfig.class);
 
   public UpdateNodeConfig() {
@@ -29,9 +25,9 @@ public class UpdateNodeConfig extends ExecuteOSTask {
     setDescription("Send the current config to the central location to be stored");
     JsonObject params = new JsonObject();
     setAcceptedParams(params);
-    params.addProperty(NODE, "(Required) -  Name of the node who's config needs to be updated");
-    params.addProperty(FILENAME, "(Required) -  Name of the config to be update");
-    params.addProperty(CONTENT, "(Required) -  Base64 encoded string of content");
+    params.addProperty(JsonCodec.WebDriver.Grid.NODE, "(Required) -  Name of the node who's config needs to be updated");
+    params.addProperty(JsonCodec.Config.FILENAME, "(Required) -  Name of the config to be update");
+    params.addProperty(JsonCodec.Config.CONTENT, "(Required) -  Base64 encoded string of content");
     setRequestType("GET");
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
@@ -39,8 +35,8 @@ public class UpdateNodeConfig extends ExecuteOSTask {
     setButtonText("Get Node Config");
     setEnabledInGui(true);
 
-    getJsonResponse().addKeyDescriptions(NODE, "Node for which config was updated");
-    getJsonResponse().addKeyDescriptions(FILENAME, "Name of the config file updated");
+    getJsonResponse().addKeyDescriptions(JsonCodec.WebDriver.Grid.NODE, "Node for which config was updated");
+    getJsonResponse().addKeyDescriptions(JsonCodec.Config.FILENAME, "Name of the config file updated");
 
   }
 
@@ -54,22 +50,23 @@ public class UpdateNodeConfig extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    if (parameter.isEmpty() || !parameter.containsKey(NODE) || !parameter.containsKey(FILENAME)
-        || !parameter.containsKey(CONTENT)) {
+    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.WebDriver.Grid.NODE) || !parameter.containsKey(
+        JsonCodec.Config.FILENAME)
+        || !parameter.containsKey(JsonCodec.Config.CONTENT)) {
       return execute();
     } else {
-      byte[] decodedBytes = Base64.decodeBase64(parameter.get(CONTENT));
+      byte[] decodedBytes = Base64.decodeBase64(parameter.get(JsonCodec.Config.CONTENT));
       final String decodedString = new String(decodedBytes);
       logger.info(decodedString);
 
-      final String node = parameter.get(NODE);
+      final String node = parameter.get(JsonCodec.WebDriver.Grid.NODE);
       final
       File filename =
           new File(
               RuntimeConfig.getConfig().getConfigsDirectory() + RuntimeConfig.getOS()
                   .getFileSeparator() + node + RuntimeConfig
                   .getOS().getFileSeparator() + parameter
-                  .get(FILENAME));
+                  .get(JsonCodec.Config.FILENAME));
 
       createNodeDirIfNotExisting(filename);
       logger.info(
@@ -77,8 +74,8 @@ public class UpdateNodeConfig extends ExecuteOSTask {
       logger.debug(decodedString);
       try {
         FileIOUtility.writePrettyJsonToFile(filename, decodedString);
-        getJsonResponse().addKeyValues(NODE, node);
-        getJsonResponse().addKeyValues(FILENAME, filename.getAbsolutePath());
+        getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE, node);
+        getJsonResponse().addKeyValues(JsonCodec.Config.FILENAME, filename.getAbsolutePath());
       } catch (Exception error) {
         logger.warn(error.toString());
         getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());

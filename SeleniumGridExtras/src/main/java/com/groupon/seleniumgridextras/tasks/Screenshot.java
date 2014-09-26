@@ -40,7 +40,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 
@@ -64,24 +63,14 @@ import java.util.Map;
 
 public class Screenshot extends ExecuteOSTask {
 
-  private static final String WIDTH = "width";
-  private static final String HEIGHT = "height";
-  private static final String KEEP = "keep";
-  private static final String FILE_TYPE = "file_type";
-  private static final String FILE = "file";
-  private static final String IMAGE = "image";
-  private static final String HOSTNAME = "hostname";
-  private static final String IP = "ip";
-  private static final String TIMESTAMP = "timestamp";
-  private static final String PNG = "png";
   private static Logger logger = Logger.getLogger(Screenshot.class);
 
   public Screenshot() {
     setEndpoint("/screenshot");
     setDescription("Take a full OS screen Screen Shot of the node");
     JsonObject params = new JsonObject();
-    params.addProperty(WIDTH, WIDTH);
-    params.addProperty(HEIGHT, HEIGHT);
+    params.addProperty(JsonCodec.Images.WIDTH, JsonCodec.Images.WIDTH);
+    params.addProperty(JsonCodec.Images.HEIGHT, JsonCodec.Images.HEIGHT);
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -90,12 +79,12 @@ public class Screenshot extends ExecuteOSTask {
     setButtonText("screenshot");
     setEnabledInGui(true);
 
-    addResponseDescription(FILE_TYPE, "Type of file returned (PNG/JPG/GIF)");
-    addResponseDescription(FILE, "Name of the file saved on the NodeConfig's HD");
-    addResponseDescription(IMAGE, "Base64 URL Encoded (ISO-8859-1) string of the image");
-    addResponseDescription(HOSTNAME, "Human readable machine name");
-    addResponseDescription(IP, "IP Address of current machine");
-    addResponseDescription(TIMESTAMP, "Timestamp of the screenshot");
+    addResponseDescription(JsonCodec.Images.FILE_TYPE, "Type of file returned (PNG/JPG/GIF)");
+    addResponseDescription(JsonCodec.Images.FILE, "Name of the file saved on the NodeConfig's HD");
+    addResponseDescription(JsonCodec.Images.IMAGE, "Base64 URL Encoded (ISO-8859-1) string of the image");
+    addResponseDescription(JsonCodec.OS.HOSTNAME, "Human readable machine name");
+    addResponseDescription(JsonCodec.OS.IP, "IP Address of current machine");
+    addResponseDescription(JsonCodec.TIMESTAMP, "Timestamp of the screenshot");
 
   }
 
@@ -107,11 +96,14 @@ public class Screenshot extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
 
-    int width = parameter.containsKey(WIDTH) ? Integer.parseInt(parameter.get(WIDTH)) : 0;
-    int height = parameter.containsKey(HEIGHT) ? Integer.parseInt(parameter.get(HEIGHT)) : 0;
+    int width = parameter.containsKey(JsonCodec.Images.WIDTH) ? Integer.parseInt(parameter.get(
+        JsonCodec.Images.WIDTH)) : 0;
+    int height = parameter.containsKey(JsonCodec.Images.HEIGHT) ? Integer.parseInt(parameter.get(
+        JsonCodec.Images.HEIGHT)) : 0;
     boolean
         keepFile =
-        parameter.containsKey(KEEP) ? Boolean.parseBoolean(parameter.get(KEEP)) : true;
+        parameter.containsKey(JsonCodec.Images.KEEP) ? Boolean.parseBoolean(parameter.get(
+            JsonCodec.Images.KEEP)) : true;
     return createScreenshot(width, height, keepFile);
   }
 
@@ -136,16 +128,16 @@ public class Screenshot extends ExecuteOSTask {
         getJsonResponse().addKeyValues(JsonCodec.ERROR, "Error Saving image to file\n " + e);
         return getJsonResponse().getJson();
       }
-      getJsonResponse().addKeyValues(FILE_TYPE, "PNG");
-      getJsonResponse().addKeyValues(FILE,
+      getJsonResponse().addKeyValues(JsonCodec.Images.FILE_TYPE, "PNG");
+      getJsonResponse().addKeyValues(JsonCodec.Images.FILE,
                                      RuntimeConfig.getConfig().getSharedDirectory() + RuntimeConfig
                                          .getOS().getFileSeparator() + filename);
-      getJsonResponse().addKeyValues(IMAGE, encodedImage);
+      getJsonResponse().addKeyValues(JsonCodec.Images.IMAGE, encodedImage);
 
-      getJsonResponse().addKeyValues(HOSTNAME, RuntimeConfig.getOS().getHostName());
-      getJsonResponse().addKeyValues(IP, RuntimeConfig.getOS().getHostIp());
+      getJsonResponse().addKeyValues(JsonCodec.OS.HOSTNAME, RuntimeConfig.getOS().getHostName());
+      getJsonResponse().addKeyValues(JsonCodec.OS.IP, RuntimeConfig.getOS().getHostIp());
       Date newTimestamp = new java.sql.Timestamp(Calendar.getInstance().getTime().getTime());
-      getJsonResponse().addKeyValues(TIMESTAMP, newTimestamp.toString());
+      getJsonResponse().addKeyValues(JsonCodec.TIMESTAMP, newTimestamp.toString());
 
       return getJsonResponse().getJson();
     } catch (AWTException error) {
@@ -165,7 +157,7 @@ public class Screenshot extends ExecuteOSTask {
 
   private ByteArrayOutputStream writeImageToStream(BufferedImage screenshot) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ImageIO.write(screenshot, PNG, baos);
+    ImageIO.write(screenshot, JsonCodec.Images.PNG, baos);
     baos.flush();
     return baos;
   }
@@ -177,7 +169,7 @@ public class Screenshot extends ExecuteOSTask {
     String fullPath = directory + RuntimeConfig.getOS().getFileSeparator() + filename;
     File outputFile = new File(fullPath);
     outputFile.mkdirs();
-    ImageIO.write(screenshot, PNG, outputFile);
+    ImageIO.write(screenshot, JsonCodec.Images.PNG, outputFile);
     return filename;
   }
 
@@ -186,7 +178,7 @@ public class Screenshot extends ExecuteOSTask {
     Date date = new Date();
     SimpleDateFormat sdf = new SimpleDateFormat("MM_dd_yyyy_h_mm_ss_a");
     String formattedTimestamp = sdf.format(date);
-    filename = "screenshot_" + formattedTimestamp + "." + PNG;
+    filename = "screenshot_" + formattedTimestamp + "." + JsonCodec.Images.PNG;
     return filename;
   }
 

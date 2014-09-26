@@ -4,7 +4,6 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.ConfigFileReader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
@@ -14,12 +13,6 @@ import java.util.Map;
 
 public class AutoUpgradeDrivers extends ExecuteOSTask {
 
-  private static final String OLD_WEB_DRIVER_JAR = "old_web_driver_jar";
-  private static final String OLD_CHROME_DRIVER = "old_chrome_driver";
-  private static final String OLD_IE_DRIVER = "old_ie_driver";
-  private static final String NEW_WEB_DRIVER_JAR = "new_web_driver_jar";
-  private static final String NEW_CHROME_DRIVER = "new_chrome_driver";
-  private static final String NEW_IE_DRIVER = "new_ie_driver";
   private static Logger logger = Logger.getLogger(AutoUpgradeDrivers.class);
 
   private boolean updateWebDriver = false;
@@ -35,27 +28,27 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
     setResponseType("json");
     setClassname(this.getClass().getCanonicalName().toString());
 
-    addResponseDescription(OLD_WEB_DRIVER_JAR, "Old version of WebDriver Jar");
-    addResponseDescription(OLD_CHROME_DRIVER, "Old version of Chrome Driver");
-    addResponseDescription(OLD_IE_DRIVER, "Old version of IE Driver");
+    addResponseDescription(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, "Old version of WebDriver Jar");
+    addResponseDescription(JsonCodec.WebDriver.OLD_CHROME_DRIVER, "Old version of Chrome Driver");
+    addResponseDescription(JsonCodec.WebDriver.OLD_IE_DRIVER, "Old version of IE Driver");
 
-    addResponseDescription(NEW_WEB_DRIVER_JAR, "New versions of WebDriver Jar");
-    addResponseDescription(NEW_CHROME_DRIVER, "New version of Chrome Driver");
-    addResponseDescription(NEW_IE_DRIVER, "New version of IE Driver");
+    addResponseDescription(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, "New versions of WebDriver Jar");
+    addResponseDescription(JsonCodec.WebDriver.NEW_CHROME_DRIVER, "New version of Chrome Driver");
+    addResponseDescription(JsonCodec.WebDriver.NEW_IE_DRIVER, "New version of IE Driver");
 
     getJsonResponse()
-        .addKeyValues(OLD_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
-    getJsonResponse().addKeyValues(OLD_CHROME_DRIVER,
+        .addKeyValues(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_CHROME_DRIVER,
                                    RuntimeConfig.getConfig().getChromeDriver().getVersion());
     getJsonResponse()
-        .addKeyValues(OLD_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
+        .addKeyValues(JsonCodec.WebDriver.OLD_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
 
     getJsonResponse()
-        .addKeyValues(NEW_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
-    getJsonResponse().addKeyValues(NEW_CHROME_DRIVER,
+        .addKeyValues(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER,
                                    RuntimeConfig.getConfig().getChromeDriver().getVersion());
     getJsonResponse()
-        .addKeyValues(NEW_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
+        .addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
 
   }
 
@@ -77,7 +70,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       RuntimeConfig.getConfig().getChromeDriver().setVersion(newChromeDriverVersion);
 
       updateVersionFor(configHash, "chromedriver", newChromeDriverVersion);
-      getJsonResponse().addKeyValues(NEW_CHROME_DRIVER, newChromeDriverVersion);
+      getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER, newChromeDriverVersion);
     }
 
 
@@ -88,7 +81,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       logger.info("WebDriver JAR " + genericUpdate + " " + newWebDriverVersion);
       RuntimeConfig.getConfig().getWebdriver().setVersion(newWebDriverVersion);
       updateVersionFor(configHash, "webdriver", newWebDriverVersion);
-      getJsonResponse().addKeyValues(NEW_WEB_DRIVER_JAR, newWebDriverVersion);
+      getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, newWebDriverVersion);
     }
 
     if (updateIEDriver) {
@@ -98,7 +91,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       logger.info("IE Driver " + genericUpdate + " " + newIEDriverVersion);
       RuntimeConfig.getConfig().getIEdriver().setVersion(newIEDriverVersion);
       updateVersionFor(configHash, "iedriver", newIEDriverVersion);
-      getJsonResponse().addKeyValues(NEW_IE_DRIVER, newIEDriverVersion);
+      getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, newIEDriverVersion);
     }
 
     if (updateChromeDriver || updateIEDriver || updateWebDriver) {

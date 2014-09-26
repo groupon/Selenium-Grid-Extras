@@ -42,7 +42,6 @@ import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
@@ -61,7 +60,6 @@ public class StartGrid extends ExecuteOSTask {
   String CANT_LAUNCH_ERROR = "Something didn't go right in launching service";
   private static final
   String UPDATING_BROWSER_VERSIONS = "Updating browser capabilities, this may take some time";
-  private static final String ROLE = "role";
   private static Logger logger = Logger.getLogger(StartGrid.class);
 
   public StartGrid() {
@@ -70,7 +68,7 @@ public class StartGrid extends ExecuteOSTask {
     setEndpoint("/start_grid");
     setDescription("Starts an instance of Selenium Grid Hub or NodeConfig");
     JsonObject params = new JsonObject();
-    params.addProperty(ROLE, "hub|node - defaults to 'default_role' param in config file");
+    params.addProperty(JsonCodec.WebDriver.Grid.ROLE, "hub|node - defaults to 'default_role' param in config file");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -102,10 +100,10 @@ public class StartGrid extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (parameter.isEmpty() || !parameter.containsKey(ROLE)) {
+    if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.WebDriver.Grid.ROLE)) {
       return execute();
     } else {
-      return execute(parameter.get(ROLE).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Grid.ROLE).toString());
     }
   }
 

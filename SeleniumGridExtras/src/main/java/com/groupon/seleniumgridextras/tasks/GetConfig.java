@@ -38,12 +38,9 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 public class GetConfig extends ExecuteOSTask {
-
-  private static final String CONFIG_FILE = "config_file";
-  private static final String CONFIG_RUNTIME = "config_runtime";
-  private static final String FILENAME = "filename";
 
   public GetConfig() {
     setEndpoint("/config");
@@ -57,18 +54,18 @@ public class GetConfig extends ExecuteOSTask {
     setButtonText("Get Config");
     setEnabledInGui(true);
 
-    addResponseDescription(CONFIG_FILE, "Config that currently lives saved on file");
-    addResponseDescription(CONFIG_RUNTIME, "Runtime config that currently set in memory");
-    addResponseDescription(FILENAME, "Filename from which the config was read");
+    addResponseDescription(JsonCodec.Config.CONFIG_FILE, "Config that currently lives saved on file");
+    addResponseDescription(JsonCodec.Config.CONFIG_RUNTIME, "Runtime config that currently set in memory");
+    addResponseDescription(JsonCodec.Config.FILENAME, "Filename from which the config was read");
 
-    getJsonResponse().addKeyValues(FILENAME, RuntimeConfig.getConfigFile());
+    getJsonResponse().addKeyValues(JsonCodec.Config.FILENAME, RuntimeConfig.getConfigFile());
   }
 
   @Override
   public JsonObject execute(String param) {
 
-    getJsonResponse().addKeyValues(CONFIG_RUNTIME, RuntimeConfig.getConfig().asJsonObject());
-    getJsonResponse().addKeyValues(FILENAME, RuntimeConfig.getConfigFile());
+    getJsonResponse().addKeyValues(JsonCodec.Config.CONFIG_RUNTIME, RuntimeConfig.getConfig().asJsonObject());
+    getJsonResponse().addKeyValues(JsonCodec.Config.FILENAME, RuntimeConfig.getConfigFile());
 
     return getJsonResponse().getJson();
   }

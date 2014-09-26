@@ -41,7 +41,6 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.ExtrasEndPoint;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
@@ -52,7 +51,6 @@ import java.util.Map;
 
 public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
-  private static final String PARAMETER = "parameter";
   final private
   String
       notImplementedError =
@@ -66,8 +64,8 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
   }
 
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey(PARAMETER)) {
-      return execute(parameter.get(PARAMETER).toString());
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.PARAMETER)) {
+      return execute(parameter.get(JsonCodec.PARAMETER).toString());
     } else {
       return execute();
     }
