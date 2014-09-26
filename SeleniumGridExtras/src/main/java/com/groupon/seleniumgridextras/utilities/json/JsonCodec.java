@@ -11,6 +11,8 @@ public class JsonCodec {
   public static final String CONFIRM = "confirm";
   public static final String TRUE = "true";
   public static final String N_A = "N/A";
+  public static final String FALSE_INT = "0";
+  public static final String TRUE_INT = "1";
 
 
   public static class SetupTeardown{
@@ -118,6 +120,7 @@ public class JsonCodec {
       public static final String HOST = "host";
       public static final String ROLE = "role";
       public static final String SERVLETS = "servlets";
+      public static final String HUB = "hub";
     }
 
     public static class Downloader {
