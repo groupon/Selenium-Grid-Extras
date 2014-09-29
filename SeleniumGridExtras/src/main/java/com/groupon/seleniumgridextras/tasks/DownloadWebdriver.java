@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.downloader.WdDownloader;
@@ -149,6 +150,8 @@ public class DownloadWebdriver extends ExecuteOSTask {
             "Downloading WebDriver Jar " + RuntimeConfig.getConfig().getWebdriver().getVersion());
         logger.info(execute().toString());
       }
+
+      System.out.println(RuntimeConfig.getConfig().getNodes());
 
 
     } catch (NullPointerException error) {

@@ -13,11 +13,9 @@ public abstract class Capability extends HashMap {
   private static final String VERSION = "version";
   private static final String PLATFORM = "platform";
   private static final String BROWSER_NAME = "browserName";
-  private static final String FIREFOX = "firefox";
-  private static final String INTERNET_EXPLORER = "internet explorer";
-  private static final String CHROME = "chrome";
-  private static final String SAFARI = "safari";
   private static Logger logger = Logger.getLogger(Capability.class);
+
+  public abstract String getWebDriverClass();
 
   public Capability() {
     this.put(MAX_INSTANCES, 3);
@@ -87,10 +85,11 @@ public abstract class Capability extends HashMap {
   public static Map<Class, String> getSupportedCapabilities() {
     Map<Class, String> capabilityHash = new HashMap<Class, String>();
 
-    capabilityHash.put(Firefox.class, FIREFOX);
-    capabilityHash.put(InternetExplorer.class, INTERNET_EXPLORER);
-    capabilityHash.put(Chrome.class, CHROME);
-    capabilityHash.put(Safari.class, SAFARI);
+    capabilityHash.put(Firefox.class, BrowserType.FIREFOX);
+    capabilityHash.put(InternetExplorer.class, BrowserType.IE);
+    capabilityHash.put(Chrome.class, BrowserType.CHROME);
+    capabilityHash.put(Safari.class, BrowserType.SAFARI);
+
 
     return capabilityHash;
   }
