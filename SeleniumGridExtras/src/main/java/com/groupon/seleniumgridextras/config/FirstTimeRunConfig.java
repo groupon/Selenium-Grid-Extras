@@ -69,8 +69,10 @@ public class FirstTimeRunConfig {
     String hubHost = getGridHubHost();
     String hubPort = getGridHubPort();
 
-    configureHub(hubHost, hubPort, defaultConfig);
-
+    if (defaultConfig.getDefaultRole().equals("hub")) {
+      configureHub(hubHost, hubPort, defaultConfig);
+    }
+    
     List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
     configureNodes(caps, hubHost, hubPort, defaultConfig);
