@@ -99,9 +99,15 @@ public class DefaultConfig {
     setAutoUpdateDrivers(JsonCodec.TRUE_INT);
     setRebootAfterSessionCount(REBOOT_AFTER_THIS_MANY_SESSIONS);
     loadDefaultVideoRecordingOptions();
+    loadHTTPOptions();
 
     return config;
   }
+
+  public static void loadHTTPOptions(){
+    config.setHttpRequestTimeout(60000);
+  }
+
 
   private static void loadDefaultVideoRecordingOptions() {
     config.getVideoRecording().setRecordTestVideos(true);

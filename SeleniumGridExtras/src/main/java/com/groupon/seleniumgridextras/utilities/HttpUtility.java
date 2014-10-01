@@ -1,5 +1,7 @@
 package com.groupon.seleniumgridextras.utilities;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -23,7 +25,10 @@ public class HttpUtility {
   }
 
   public static String getRequestAsString(URL url) throws IOException {
+     return getRequestAsString(url, RuntimeConfig.getConfig().getHttpRequestTimeout());
+  }
 
+  public static String getRequestAsString(URL url, int timeout) throws IOException {
     HttpURLConnection conn = getRequest(url);
 
     if (conn.getResponseCode() == 200) {
@@ -31,7 +36,6 @@ public class HttpUtility {
     } else {
       return "";
     }
-
   }
 
   public static HttpURLConnection getRequest(URI uri) throws IOException {
@@ -39,9 +43,15 @@ public class HttpUtility {
   }
 
   public static HttpURLConnection getRequest(URL url) throws IOException {
-    logger.debug("Making GET request to " + url);
+    return getRequest(url, RuntimeConfig.getConfig().getHttpRequestTimeout());
+  }
+
+  public static HttpURLConnection getRequest(URL url, int timeout) throws IOException {
     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
     conn.setRequestMethod("GET");
+    conn.setConnectTimeout(timeout);
+    conn.setReadTimeout(timeout);
+
     logger.debug("Response code is " + conn.getResponseCode());
     return conn;
   }

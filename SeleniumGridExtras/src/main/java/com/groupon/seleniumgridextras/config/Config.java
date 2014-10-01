@@ -46,6 +46,7 @@ public class Config {
   public static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
 
   public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
+  public static final String HTTP_REQUEST_TIMEOUT = "http_request_timeout";
 
 
   private static Logger logger = Logger.getLogger(Config.class);
@@ -320,6 +321,13 @@ public class Config {
     return (JsonObject) new JsonParser().parse(this.toJsonString());
   }
 
+  public int getHttpRequestTimeout(){
+    return (Integer) getConfigMap().get(HTTP_REQUEST_TIMEOUT);
+  }
+
+  public void setHttpRequestTimeout(int timeout){
+    getConfigMap().put(HTTP_REQUEST_TIMEOUT, timeout);
+  }
 
   public void setDefaultRole(String defaultRole) {
     getConfigMap().put(DEFAULT_ROLE, defaultRole);
