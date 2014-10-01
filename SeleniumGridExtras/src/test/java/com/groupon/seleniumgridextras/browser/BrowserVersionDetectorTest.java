@@ -47,7 +47,14 @@ public class BrowserVersionDetectorTest {
   public void  testFoo() throws Exception{
 
     System.out.println(JsonCodec.OUT);
-    new BrowserVersionDetector(RuntimeConfig.getConfig().getNodes()).updateVersions();
+    BrowserVersionDetector foo = new BrowserVersionDetector(RuntimeConfig.getConfig().getNodes());
+    foo.setChromeDriverPath(new File("/private/tmp/webdriver/chromedriver/chromedriver_2.10_32bit"));
+    foo.setIeDriverPath(new File("/private/tmp/webdriver/iedriver/IEDriverServer.exe"));
+    foo.setJarPath(new File("/private/tmp/webdriver/2.43.1.jar"));
+
+//    WebDriver driver = new FirefoxDriver();
+
+    foo.updateVersions();
 
 //    GridNode node = RuntimeConfig.getConfig().getNodes().get(0);
 //
