@@ -137,6 +137,12 @@
                     <include>*</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources/www/bootstrap</directory>
+                <includes>
+                    <include>*</include>
+                </includes>
+            </resource>
         </resources>
     </build>
 </project>
