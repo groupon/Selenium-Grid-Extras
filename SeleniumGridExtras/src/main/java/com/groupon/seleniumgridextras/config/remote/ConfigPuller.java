@@ -19,12 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created with IntelliJ IDEA. User: dima Date: 7/8/14 Time: 3:16 PM To change this template use
- * File | Settings | File Templates.
- */
 public class ConfigPuller {
 
+  public static final int PULL_CONFIG_TIMEOUT = 5000;
   private File configFile;
   private static Logger logger = Logger.getLogger(ConfigPuller.class);
 
@@ -48,7 +45,7 @@ public class ConfigPuller {
         String
             message =
             "Checking central Config repository for " + RuntimeConfig.getOS().getHostName()
-            + " node's config from "+ url +" . This may take a while...";
+            + " node's config from " + url + " . (Timeout set to " + PULL_CONFIG_TIMEOUT + "ms)";
         logger.info(message);
         System.out.println(message);
         downloadRemoteConfigs(new URL(url));
@@ -68,7 +65,7 @@ public class ConfigPuller {
   protected void downloadRemoteConfigs(URL url) {
 
     try {
-      String rawJson = HttpUtility.getRequestAsString(url);
+      String rawJson = HttpUtility.getRequestAsString(url, PULL_CONFIG_TIMEOUT);
       logger.debug(rawJson);
       Map remoteConfigs = new Gson().fromJson(rawJson, HashMap.class);
       logger.debug(remoteConfigs);
@@ -85,10 +82,14 @@ public class ConfigPuller {
 
 
     } catch (IOException error) {
-      System.out.println(
-          "Reading config from central repository encountered an error: " + error.getMessage());
-      logger.warn("Problem reading the content from remote url " + url);
-      logger.warn(error);
+      String
+          message =
+          "Reading config from " + url + " central repository encountered an error: " + error
+              .getMessage()
+          + "\nWill use config which already exist on the node";
+      System.out.println(message);
+      logger.info(message);
+      logger.debug(error);
     }
 
   }
@@ -96,7 +97,8 @@ public class ConfigPuller {
   protected void saveIndividualFiles(Map config) {
 
     for (String filename : (Set<String>) config.keySet()) {
-      if (!filename.equals(JsonCodec.EXIT_CODE) && !filename.equals(JsonCodec.OUT) && !filename.equals(JsonCodec.ERROR)) {
+      if (!filename.equals(JsonCodec.EXIT_CODE) && !filename.equals(JsonCodec.OUT) && !filename
+          .equals(JsonCodec.ERROR)) {
         try {
           String fileContents = (String) (((ArrayList) config.get(filename)).get(0));
 
