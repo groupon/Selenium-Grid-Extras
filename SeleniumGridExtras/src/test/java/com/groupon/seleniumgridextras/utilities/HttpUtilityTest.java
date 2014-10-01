@@ -3,20 +3,21 @@ package com.groupon.seleniumgridextras.utilities;
 import org.junit.Test;
 
 import java.net.ConnectException;
+import java.net.ServerSocket;
 import java.net.URL;
 import java.net.UnknownHostException;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created with IntelliJ IDEA. User: dima Date: 7/8/14 Time: 4:09 PM To change this template use
- * File | Settings | File Templates.
- */
 public class HttpUtilityTest {
 
-  @Test(expected=ConnectException.class)
+  @Test(expected = ConnectException.class)
   public void testConnectionRefusedError() throws Exception {
-    HttpUtility.getRequest(new URL("http://localhost:9999")).getResponseCode();
+    ServerSocket serverSocket = new ServerSocket(0);
+    int port = serverSocket.getLocalPort();
+    serverSocket
+        .close(); //Find a garanteed open port by taking one and closing. Why doesn't Java allow me to get a list of open ports?
+    HttpUtility.getRequest(new URL("http://localhost:" + port)).getResponseCode();
   }
 
   @Test
@@ -35,7 +36,7 @@ public class HttpUtilityTest {
   }
 
   @Test
-  public void testGetAsString() throws Exception{
+  public void testGetAsString() throws Exception {
     assertEquals("", HttpUtility.getRequestAsString(new URL("http://xkcd.com/404")));
   }
 }
