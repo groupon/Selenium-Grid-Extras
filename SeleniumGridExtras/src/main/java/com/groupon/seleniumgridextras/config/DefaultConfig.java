@@ -106,6 +106,7 @@ public class DefaultConfig {
 
   public static void loadHTTPOptions(){
     config.setHttpRequestTimeout(60000);
+    config.setConfigPullerHttpTimeout(5000);
   }
 
 

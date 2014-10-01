@@ -21,7 +21,6 @@ import java.util.Set;
 
 public class ConfigPuller {
 
-  public static final int PULL_CONFIG_TIMEOUT = 5000;
   private File configFile;
   private static Logger logger = Logger.getLogger(ConfigPuller.class);
 
@@ -45,7 +44,8 @@ public class ConfigPuller {
         String
             message =
             "Checking central Config repository for " + RuntimeConfig.getOS().getHostName()
-            + " node's config from " + url + " . (Timeout set to " + PULL_CONFIG_TIMEOUT + "ms)";
+            + " node's config from " + url + " . (Timeout set to " + RuntimeConfig.getConfig()
+                .getConfigPullerHttpTimeout() + "ms)";
         logger.info(message);
         System.out.println(message);
         downloadRemoteConfigs(new URL(url));
@@ -65,7 +65,10 @@ public class ConfigPuller {
   protected void downloadRemoteConfigs(URL url) {
 
     try {
-      String rawJson = HttpUtility.getRequestAsString(url, PULL_CONFIG_TIMEOUT);
+      String
+          rawJson =
+          HttpUtility
+              .getRequestAsString(url, RuntimeConfig.getConfig().getConfigPullerHttpTimeout());
       logger.debug(rawJson);
       Map remoteConfigs = new Gson().fromJson(rawJson, HashMap.class);
       logger.debug(remoteConfigs);

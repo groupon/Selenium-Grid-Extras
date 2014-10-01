@@ -47,6 +47,7 @@ public class Config {
 
   public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
   public static final String HTTP_REQUEST_TIMEOUT = "http_request_timeout";
+  public static final String CONFIG_PULLER_HTTP_TIMEOUT = "config_puller_http_timeout";
 
 
   private static Logger logger = Logger.getLogger(Config.class);
@@ -327,6 +328,14 @@ public class Config {
 
   public void setHttpRequestTimeout(int timeout){
     getConfigMap().put(HTTP_REQUEST_TIMEOUT, timeout);
+  }
+
+  public void setConfigPullerHttpTimeout(int timeout){
+    getConfigMap().put(CONFIG_PULLER_HTTP_TIMEOUT, timeout);
+  }
+
+  public int getConfigPullerHttpTimeout(){
+    return (Integer) getConfigMap().get(CONFIG_PULLER_HTTP_TIMEOUT);
   }
 
   public void setDefaultRole(String defaultRole) {
