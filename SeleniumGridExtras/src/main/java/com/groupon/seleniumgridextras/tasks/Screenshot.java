@@ -119,9 +119,9 @@ public class Screenshot extends ExecuteOSTask {
         } else {
           filename = "not_saved";
         }
-        ByteArrayOutputStream baos = writeImageToStream(screenshot);
+        ByteArrayOutputStream baos = ScreenshotUtility.writeImageToStream(screenshot);
 
-        encodedImage = encodeStreamToBase64(baos);
+        encodedImage = ScreenshotUtility.encodeStreamToBase64(baos);
 
         encodedImage = java.net.URLEncoder.encode(encodedImage, "ISO-8859-1");
 
@@ -147,21 +147,9 @@ public class Screenshot extends ExecuteOSTask {
     }
   }
 
-  private String encodeStreamToBase64(ByteArrayOutputStream byteArrayOutputStream)
-      throws IOException {
-    String encodedImage;
-    Base64 base = new Base64(false);
-    encodedImage = base.encodeToString(byteArrayOutputStream.toByteArray());
-    byteArrayOutputStream.close();
-    return encodedImage;
-  }
 
-  private ByteArrayOutputStream writeImageToStream(BufferedImage screenshot) throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ImageIO.write(screenshot, JsonCodec.Images.PNG, baos);
-    baos.flush();
-    return baos;
-  }
+
+
 
   private String writeImageToDisk(BufferedImage screenshot) throws IOException {
     String filename;
