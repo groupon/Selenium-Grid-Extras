@@ -41,6 +41,7 @@ import com.google.gson.GsonBuilder;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
+import com.groupon.seleniumgridextras.homepage.HtmlRenderer;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.groupon.seleniumgridextras.videorecording.VideoShutdownHook;
@@ -94,6 +95,7 @@ public class SeleniumGridExtras {
             String
                 result =
                 new GsonBuilder().setPrettyPrinting().create().toJson(task.execute(params));
+            logger.debug(result);
             return result;
           }
         });
@@ -115,6 +117,14 @@ public class SeleniumGridExtras {
       }
     });
 
+    HttpContext homePageContext = server.createContext("/", new HtmlHttpExecutor() {
+      @Override
+      String execute(Map params) {
+        return new HtmlRenderer(params).toString();
+      }
+    });
+
+
     if (RuntimeConfig.getConfig().getAutoStartHub()) {
       logger.info("Grid Hub was set to Autostart");
       ExecuteOSTask grid = new StartGrid();
@@ -129,6 +139,7 @@ public class SeleniumGridExtras {
     }
 
     context.getFilters().add(new ParameterFilter());
+    homePageContext.getFilters().add(new ParameterFilter());
 
     server.setExecutor(null);
     server.start();
