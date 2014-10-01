@@ -29,7 +29,7 @@ public class HttpUtility {
   }
 
   public static String getRequestAsString(URL url, int timeout) throws IOException {
-    HttpURLConnection conn = getRequest(url);
+    HttpURLConnection conn = getRequest(url, timeout);
 
     if (conn.getResponseCode() == 200) {
       return StreamUtility.inputStreamToString(conn.getInputStream());
