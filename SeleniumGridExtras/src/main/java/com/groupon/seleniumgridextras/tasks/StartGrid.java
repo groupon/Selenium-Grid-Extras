@@ -113,10 +113,10 @@ public class StartGrid extends ExecuteOSTask {
     if (configsDirectory.exists()) {
       new ConfigPuller().updateFromRemote();
     }
-
-    System.out.println(UPDATING_BROWSER_VERSIONS);
-    logger.info(UPDATING_BROWSER_VERSIONS);
-    new BrowserVersionDetector(RuntimeConfig.getConfig().getNodes()).updateVersions();
+//    TODO: Uncomment this when browser detector is finished
+//    System.out.println(UPDATING_BROWSER_VERSIONS);
+//    logger.info(UPDATING_BROWSER_VERSIONS);
+//    new BrowserVersionDetector(RuntimeConfig.getConfig().getNodes()).updateVersions();
 
     System.out.println(ATTEMPTING_TO_START_GRID_NODES);
     logger.info(ATTEMPTING_TO_START_GRID_NODES);
