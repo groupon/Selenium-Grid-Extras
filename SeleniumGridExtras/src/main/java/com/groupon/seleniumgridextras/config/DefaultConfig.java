@@ -38,8 +38,6 @@ package com.groupon.seleniumgridextras.config;
 
 
 import com.groupon.seleniumgridextras.SeleniumGridExtras;
-import com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet;
-import com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet;
 import com.groupon.seleniumgridextras.tasks.AutoUpgradeDrivers;
 import com.groupon.seleniumgridextras.tasks.DownloadChromeDriver;
 import com.groupon.seleniumgridextras.tasks.DownloadIEDriver;
@@ -147,12 +145,10 @@ public class DefaultConfig {
                                                   .getResource(JQUERY_JS)
                                                   .getFile()).getAbsolutePath());
 
-
     config.getHtmlRender().setTemplateJs(new File(SeleniumGridExtras.class
                                                       .getClassLoader()
                                                       .getResource(BOOTSTRAP_TEMPLATE)
                                                       .getFile()).getAbsolutePath());
-
 
     //Set fallback sources
     config.getHtmlRender()
@@ -305,9 +301,8 @@ public class DefaultConfig {
   private static void setGridHubConfig() {
     config.getHub().setRole(JsonCodec.WebDriver.Grid.HUB);
     config.getHub().setPort(DEFAULT_HUB_PORT);
-    config.getHub().setServlets(
-        "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet,"
-        + "com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
+    config.getHub()
+        .setServlets("com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
 
     String hostIp = RuntimeConfig.getOS().getHostIp();
     if (hostIp != null) {

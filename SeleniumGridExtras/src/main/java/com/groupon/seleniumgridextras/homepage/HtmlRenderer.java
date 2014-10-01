@@ -16,7 +16,7 @@ public class HtmlRenderer {
   }
 
   public String toString() {
-    return "<html><body><h1>Hello world</h1>" + this.parameters + " </body></html>";
+    return new HtmlNodeRenderer().getFullHtml();
   }
 
 
