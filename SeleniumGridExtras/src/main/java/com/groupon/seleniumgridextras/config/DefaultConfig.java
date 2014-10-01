@@ -37,6 +37,7 @@
 package com.groupon.seleniumgridextras.config;
 
 
+import com.groupon.seleniumgridextras.SeleniumGridExtras;
 import com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet;
 import com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet;
 import com.groupon.seleniumgridextras.tasks.AutoUpgradeDrivers;
@@ -73,12 +74,36 @@ import com.groupon.seleniumgridextras.tasks.UpdateNodeConfig;
 import com.groupon.seleniumgridextras.tasks.VideoRecorder;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
+import java.io.File;
+
 public class DefaultConfig {
 
   public static final String VIDEO_OUTPUT_DIRECTORY = "video_output";
   public static final String REBOOT_AFTER_THIS_MANY_SESSIONS = "10";
   public static final String DEFAULT_HUB_PORT = "4444";
   public static final String DEFAULT_SHARED_DIRECTORY = "shared";
+
+  public static final String BOOTSTRAP_CSS = "bootstrap.3.2.0.min.css";
+  public static final String BOOTSTRAP_JS = "bootstrap.3.2.0.min.js";
+  public static final String JQUERY_JS = "jquery.1.11.1.min.js";
+  public static final String BOOTSTRAP_TEMPLATE = "jumbotron-narrow.css";
+
+  public static final
+  String
+      JQUERY_URL =
+      "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js";
+  public static final
+  String
+      BOOTSTRAP_CSS_URL =
+      "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css";
+  public static final
+  String
+      BOOTSTRAP_TEMPLATE_URL =
+      "http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css";
+  public static final
+  String
+      BOOTSTRAP_URL =
+      "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js";
   private static Config config;
   private static final String webDriverDefaultVersion = "2.41.0";
   private static final String ieDriverDefaultVersion = "2.41.0";
@@ -100,11 +125,50 @@ public class DefaultConfig {
     setRebootAfterSessionCount(REBOOT_AFTER_THIS_MANY_SESSIONS);
     loadDefaultVideoRecordingOptions();
     loadHTTPOptions();
+    loadHtmlRenderOptions();
 
     return config;
   }
 
-  public static void loadHTTPOptions(){
+  public static void loadHtmlRenderOptions() {
+    //Set the locally packed source files first
+    config.getHtmlRender().setMainCss(new File(SeleniumGridExtras.class
+                                                   .getClassLoader()
+                                                   .getResource(BOOTSTRAP_CSS)
+                                                   .getFile()).getAbsolutePath());
+
+    config.getHtmlRender().setMainJs(new File(SeleniumGridExtras.class
+                                                  .getClassLoader()
+                                                  .getResource(BOOTSTRAP_JS)
+                                                  .getFile()).getAbsolutePath());
+
+    config.getHtmlRender().setJquery(new File(SeleniumGridExtras.class
+                                                  .getClassLoader()
+                                                  .getResource(JQUERY_JS)
+                                                  .getFile()).getAbsolutePath());
+
+
+    config.getHtmlRender().setTemplateJs(new File(SeleniumGridExtras.class
+                                                      .getClassLoader()
+                                                      .getResource(BOOTSTRAP_TEMPLATE)
+                                                      .getFile()).getAbsolutePath());
+
+
+    //Set fallback sources
+    config.getHtmlRender()
+        .setJqueryFallBack(JQUERY_URL);
+
+    config.getHtmlRender().setFallBackCss(
+        BOOTSTRAP_CSS_URL);
+
+    config.getHtmlRender().setTemplateJsFallback(
+        BOOTSTRAP_TEMPLATE_URL);
+
+    config.getHtmlRender()
+        .setMainJsFallBack(BOOTSTRAP_URL);
+  }
+
+  public static void loadHTTPOptions() {
     config.setHttpRequestTimeout(60000);
     config.setConfigPullerHttpTimeout(5000);
   }

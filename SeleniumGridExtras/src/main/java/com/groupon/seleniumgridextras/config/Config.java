@@ -48,6 +48,7 @@ public class Config {
   public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
   public static final String HTTP_REQUEST_TIMEOUT = "http_request_timeout";
   public static final String CONFIG_PULLER_HTTP_TIMEOUT = "config_puller_http_timeout";
+  public static final String HTML_RENDER_OPTIONS = "html_render_options";
 
 
   private static Logger logger = Logger.getLogger(Config.class);
@@ -100,7 +101,6 @@ public class Config {
     getConfigMap().put(SETUP, new ArrayList<String>());
     getConfigMap().put(TEAR_DOWN, new ArrayList<String>());
 
-
     getConfigMap().put(GRID, new StringMap());
     initializeWebdriver();
     initializeIEDriver();
@@ -117,19 +117,20 @@ public class Config {
 
     getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
     initializeVideoRecorder();
+    getConfigMap().put(HTML_RENDER_OPTIONS, new HtmlConfig());
 
   }
 
-  public boolean getAutoUpdateDrivers(){
-    if (getConfigMap().get(AUTO_UPDATE_DRIVERS).equals("1")){
+  public boolean getAutoUpdateDrivers() {
+    if (getConfigMap().get(AUTO_UPDATE_DRIVERS).equals("1")) {
       return true;
     } else {
       return false;
     }
   }
 
-  public void setAutoUpdateDrivers(String input){
-    if (input.equals("1")){
+  public void setAutoUpdateDrivers(String input) {
+    if (input.equals("1")) {
       getConfigMap().put(AUTO_UPDATE_DRIVERS, input);
     } else {
       getConfigMap().put(AUTO_UPDATE_DRIVERS, "0");
@@ -138,9 +139,10 @@ public class Config {
   }
 
 
-  public void initializeVideoRecorder(){
+  public void initializeVideoRecorder() {
     getConfigMap().put(VIDEO_RECORDING_OPTIONS, new VideoRecordingOptions());
   }
+
   private void initializeIEDriver() {
     getConfigMap().put(IEDRIVER, new IEDriver());
   }
@@ -322,19 +324,19 @@ public class Config {
     return (JsonObject) new JsonParser().parse(this.toJsonString());
   }
 
-  public int getHttpRequestTimeout(){
+  public int getHttpRequestTimeout() {
     return (Integer) getConfigMap().get(HTTP_REQUEST_TIMEOUT);
   }
 
-  public void setHttpRequestTimeout(int timeout){
+  public void setHttpRequestTimeout(int timeout) {
     getConfigMap().put(HTTP_REQUEST_TIMEOUT, timeout);
   }
 
-  public void setConfigPullerHttpTimeout(int timeout){
+  public void setConfigPullerHttpTimeout(int timeout) {
     getConfigMap().put(CONFIG_PULLER_HTTP_TIMEOUT, timeout);
   }
 
-  public int getConfigPullerHttpTimeout(){
+  public int getConfigPullerHttpTimeout() {
     return (Integer) getConfigMap().get(CONFIG_PULLER_HTTP_TIMEOUT);
   }
 
@@ -427,19 +429,24 @@ public class Config {
     return (String) getConfigMap().get(DEFAULT_ROLE);
   }
 
-  public void setRebootAfterSessions(String sessions){
+  public void setRebootAfterSessions(String sessions) {
     getConfigMap().put(REBOOT_AFTER_SESSIONS, sessions);
   }
 
-  public int getRebootAfterSessions(){
-    return Integer.valueOf((String)getConfigMap().get(REBOOT_AFTER_SESSIONS));
+  public int getRebootAfterSessions() {
+    return Integer.valueOf((String) getConfigMap().get(REBOOT_AFTER_SESSIONS));
   }
 
-  public File getConfigsDirectory(){
+  public File getConfigsDirectory() {
     return new File("configs");
   }
 
-  public String getCentralConfigFileName(){
+  public String getCentralConfigFileName() {
     return "central_config_repo_config.txt";
   }
+
+  public HtmlConfig getHtmlRender() {
+    return (HtmlConfig) getConfigMap().get(HTML_RENDER_OPTIONS);
+  }
+
 }
