@@ -2,9 +2,11 @@ package com.groupon.seleniumgridextras.homepage;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.ResourceRetriever;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Map;
 
 public class HtmlRenderer {
@@ -17,29 +19,31 @@ public class HtmlRenderer {
 
   public static String getNavBar() {
     try {
-      return FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlNavBar());
-    } catch (FileNotFoundException e) {
+      return new ResourceRetriever().getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlNavBar());
+    } catch (IOException e) {
       return "";
     }
   }
 
   public static String getPageHead() {
     try {
-      return FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile());
-    } catch (FileNotFoundException e) {
+      return new ResourceRetriever().getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile());
+    } catch (IOException e) {
+      e.printStackTrace();
       return "<html><head></head><body>";
     }
   }
 
   public static String getPageFooter() {
     try {
-      return FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlFooter());
-    } catch (FileNotFoundException e) {
+      return new ResourceRetriever().getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlFooter());
+    } catch (IOException e) {
+      e.printStackTrace();
       return "\n\t</body>\n</html>";
     }
   }
 
-  public static String openDiv(String divClass){
+  public static String openDiv(String divClass) {
     return "\n<div class='" + divClass + "'>\n";
   }
 
@@ -54,7 +58,7 @@ public class HtmlRenderer {
 
   public static String getMainJs() {
     //TODO: Ignoring local JS for now, the find replace on string is not working, needs fixing
-    return getJsContent(new File(""),
+    return getJsContent("",
                         RuntimeConfig.getConfig().getHtmlRender().getMainJsFallBack());
   }
 
@@ -68,7 +72,7 @@ public class HtmlRenderer {
 
   public static String getJquery() {
     //TODO: Ignoring local JS for now, the find replace on string is not working, needs fixing
-    return getJsContent(new File(""),
+    return getJsContent("",
                         RuntimeConfig.getConfig().getHtmlRender().getJqueryFallBack());
   }
 
@@ -78,16 +82,15 @@ public class HtmlRenderer {
   }
 
 
-  protected static String getJsContent(File sourceFile, String fallback) {
+  protected static String getJsContent(String sourceFile, String fallback) {
     String returnString = null;
 
     try {
-      if (sourceFile.exists()) {
-        returnString =
-            "<script>" + FileIOUtility.getAsString(sourceFile) + "</script>";
-      }
 
-    } catch (Exception e) {
+      returnString =
+          "<script>" + new ResourceRetriever().getAsString(sourceFile) + "</script>";
+
+    } catch (IOException e) {
       //Do nothing
     }
 
@@ -98,16 +101,15 @@ public class HtmlRenderer {
     return returnString;
   }
 
-  protected static String getCssContent(File sourceFile, String fallback) {
+  protected static String getCssContent(String sourceFile, String fallback) {
     String returnString = null;
 
     try {
-      if (sourceFile.exists()) {
-        returnString =
-            "<style>" + FileIOUtility.getAsString(sourceFile) + "</style>";
-      }
+      returnString =
+          "<style>" + new ResourceRetriever().getAsString(sourceFile) + "</style>";
 
-    } catch (Exception e) {
+
+    } catch (IOException e) {
       //Do nothing
     }
 
