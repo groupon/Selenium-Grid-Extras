@@ -12,10 +12,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
 
-/**
- * Created with IntelliJ IDEA. User: dima Date: 7/1/14 Time: 3:27 PM To change this template use
- * File | Settings | File Templates.
- */
 public class FileIOUtility {
 
   private static Logger logger = Logger.getLogger(FileIOUtility.class);
