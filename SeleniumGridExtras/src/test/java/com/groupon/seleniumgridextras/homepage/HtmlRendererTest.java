@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.homepage;
 
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.ResourceRetriever;
 
 import org.junit.After;

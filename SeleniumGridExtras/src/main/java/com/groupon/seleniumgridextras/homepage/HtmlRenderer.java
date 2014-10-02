@@ -73,7 +73,7 @@ public class HtmlRenderer {
 
 
   public static String getMainJs() {
-    return getJsContent(RuntimeConfig.getConfig().getHtmlRender().getMainCss(),
+    return getJsContent(RuntimeConfig.getConfig().getHtmlRender().getMainJs(),
                         RuntimeConfig.getConfig().getHtmlRender().getMainJsFallBack());
   }
 
