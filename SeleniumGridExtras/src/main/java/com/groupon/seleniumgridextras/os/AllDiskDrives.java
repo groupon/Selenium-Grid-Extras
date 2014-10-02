@@ -41,6 +41,7 @@ import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,30 +49,46 @@ import java.util.Map;
 
 public class AllDiskDrives {
 
-  private List<DiskDrive> drives = new LinkedList<DiskDrive>();
   private static Logger logger = Logger.getLogger(AllDiskDrives.class);
 
-  public void addDisk(DiskDrive drive){
-    drives.add(drive);
-    logger.debug(drive.getName());
-    logger.debug(drive.getSize());
-    logger.debug(drive.getFree());
-  }
 
-  public List<Map<String, String>> toPreJsonArray(){
+  public static List<Map<String, String>> toPreJsonArray() {
     List<Map<String, String>> drivesInfo = new LinkedList<Map<String, String>>();
 
-    for(DiskDrive drive : drives){
+    for (File drive : getHds()) {
       Map<String, String> currentDrive = new HashMap<String, String>();
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.FREE, drive.getFree());
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.SIZE, drive.getSize());
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE, drive.getName());
-      drivesInfo.add(currentDrive);
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.FREE, humanReadableByteCount(
+          drive.getFreeSpace(), false));
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.SIZE, humanReadableByteCount(
+          drive.getTotalSpace(), false));
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.USABLE, humanReadableByteCount(
+          drive.getUsableSpace(), false));
 
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE,
+                       drive.getAbsolutePath() + " (" + drive.getName() + " " + drive
+                           .getAbsolutePath() + " )");
+
+      logger.debug(currentDrive);
+
+      drivesInfo.add(currentDrive);
     }
 
     return drivesInfo;
 
+  }
+
+  protected static File[] getHds() {
+    return File.listRoots();
+  }
+
+  public static String humanReadableByteCount(long bytes, boolean si) {
+    int unit = si ? 1000 : 1024;
+    if (bytes < unit) {
+      return bytes + " B";
+    }
+    int exp = (int) (Math.log(bytes) / Math.log(unit));
+    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
   }
 
 

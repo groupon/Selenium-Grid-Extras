@@ -45,7 +45,7 @@ import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import java.util.List;
 import java.util.Map;
 
-public class MacSystemInfo implements OSInfo {
+public class MacSystemInfo extends OSInfo {
 
   private String memoryLine;
   private String cpuLine;
@@ -67,11 +67,6 @@ public class MacSystemInfo implements OSInfo {
     return lines;
   }
 
-
-  @Override
-  public List<Map<String, String>> getDiskInfo() throws Exception {
-    return UnixDFParser.getSystemDrives().toPreJsonArray();
-  }
 
   @Override
   public Map<String, String> getProcessorInfo() throws Exception {

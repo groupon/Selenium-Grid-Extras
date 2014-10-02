@@ -40,13 +40,7 @@ package com.groupon.seleniumgridextras.os;
 import java.util.List;
 import java.util.Map;
 
-public class LinuxSystemInfo implements OSInfo{
-
-  @Override
-  public List<Map<String, String>> getDiskInfo() throws Exception {
-//    df -h
-    return null;  //To change body of implemented methods use File | Settings | File Templates.
-  }
+public class LinuxSystemInfo extends OSInfo{
 
   @Override
   public Map<String, String> getProcessorInfo() throws Exception {

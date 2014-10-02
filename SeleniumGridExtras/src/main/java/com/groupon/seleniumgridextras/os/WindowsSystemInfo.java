@@ -41,7 +41,7 @@ import com.groupon.seleniumgridextras.windows.jWMI;
 import java.util.List;
 import java.util.Map;
 
-public class WindowsSystemInfo implements OSInfo {
+public class WindowsSystemInfo extends OSInfo {
 
   public String getSystemUptime() throws Exception {
     return jWMI.getWMIValue("Select SystemUpTime From Win32_PerfFormattedData_PerfOS_System",
@@ -75,36 +75,5 @@ public class WindowsSystemInfo implements OSInfo {
                                        "LoadPercentage"));
 
     return processor.toHash();
-  }
-
-  public List<Map<String, String>> getDiskInfo() throws Exception {
-
-    String hdInfo = jWMI.getWMIValue("SELECT * FROM Win32_LogicalDisk",
-                                     "DeviceID,FreeSpace,Size");
-
-    AllDiskDrives allDisks = new AllDiskDrives();
-
-    final String[] diskDriveLines = hdInfo.split("[\\n]");
-    int counter = 0;
-
-    while (counter < diskDriveLines.length) {
-      if (diskDriveLines[counter].contains(":")) {
-
-        DiskDrive currentDrive = new DiskDrive(diskDriveLines[counter]);
-
-        if (!diskDriveLines[counter + 1].contains(":")) {
-          currentDrive.setFreeSpace(diskDriveLines[counter + 1]);
-          currentDrive.setSize(diskDriveLines[counter + 2]);
-        }
-
-        allDisks.addDisk(currentDrive);
-
-
-      }
-
-      counter++;
-    }
-
-    return allDisks.toPreJsonArray();
   }
 }

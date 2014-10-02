@@ -41,9 +41,11 @@ package com.groupon.seleniumgridextras.os;
 import java.util.List;
 import java.util.Map;
 
-public interface OSInfo {
+public abstract class OSInfo {
 
-  public abstract List<Map<String, String>> getDiskInfo() throws Exception;
+  public List<Map<String, String>> getDiskInfo() throws Exception {
+    return AllDiskDrives.toPreJsonArray();
+  }
 
   public abstract Map<String, String> getProcessorInfo() throws Exception;
 
