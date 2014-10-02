@@ -4,15 +4,47 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 public class HtmlRenderer {
 
   private Map parameters;
-  private static File bootstrapCss;
 
   public HtmlRenderer(Map params) {
     this.parameters = params;
+  }
+
+  public static String getNavBar() {
+    try {
+      return FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlNavBar());
+    } catch (FileNotFoundException e) {
+      return "";
+    }
+  }
+
+  public static String getPageHead() {
+    try {
+      return FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile());
+    } catch (FileNotFoundException e) {
+      return "<html><head></head><body>";
+    }
+  }
+
+  public static String getPageFooter() {
+    try {
+      return FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlFooter());
+    } catch (FileNotFoundException e) {
+      return "\n\t</body>\n</html>";
+    }
+  }
+
+  public static String openDiv(String divClass){
+    return "\n<div class='" + divClass + "'>\n";
+  }
+
+  public static String closeDiv(String comment) {
+    return "\n</div> <!-- " + comment + " -->\n";
   }
 
   public String toString() {
@@ -21,7 +53,8 @@ public class HtmlRenderer {
 
 
   public static String getMainJs() {
-    return getJsContent(RuntimeConfig.getConfig().getHtmlRender().getMainJs(),
+    //TODO: Ignoring local JS for now, the find replace on string is not working, needs fixing
+    return getJsContent(new File(""),
                         RuntimeConfig.getConfig().getHtmlRender().getMainJsFallBack());
   }
 
@@ -34,7 +67,8 @@ public class HtmlRenderer {
 
 
   public static String getJquery() {
-    return getJsContent(RuntimeConfig.getConfig().getHtmlRender().getJquery(),
+    //TODO: Ignoring local JS for now, the find replace on string is not working, needs fixing
+    return getJsContent(new File(""),
                         RuntimeConfig.getConfig().getHtmlRender().getJqueryFallBack());
   }
 
