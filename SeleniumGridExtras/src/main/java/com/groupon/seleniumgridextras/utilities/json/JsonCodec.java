@@ -82,7 +82,14 @@ public class JsonCodec {
 
     public static class Hardware{
 
-      public static final String RAM = "ram";
+      public static class Ram{
+
+        public static final String RAM = "ram";
+        public static final String TOTAL = "total";
+        public static final String FREE = "free";
+        public static final String TOTAL_SWAP = "total_swap";
+        public static final String FREE_SWAP = "free_swap";
+      }
 
       public static class HardDrive{
 

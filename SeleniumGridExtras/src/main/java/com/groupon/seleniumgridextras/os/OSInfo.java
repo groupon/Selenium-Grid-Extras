@@ -54,6 +54,7 @@ import javax.management.MBeanServerConnection;
 public class OSInfo {
 
   private OperatingSystemMXBean osMBean;
+  private com.sun.management.OperatingSystemMXBean mxbean;
 
   public OSInfo() {
     MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
@@ -61,6 +62,8 @@ public class OSInfo {
     try {
       osMBean = ManagementFactory.newPlatformMXBeanProxy(
           mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
+
+      mxbean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     } catch (IOException e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
@@ -87,7 +90,14 @@ public class OSInfo {
 
   public Map<String, String> getMemoryInfo() {
 
-    return null;
+    Map<String, String> ramInfo = new HashMap<String, String>();
+
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL, ValueConverter.bytesToHumanReadable(mxbean.getTotalPhysicalMemorySize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.FREE, ValueConverter.bytesToHumanReadable(mxbean.getFreePhysicalMemorySize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL_SWAP, ValueConverter.bytesToHumanReadable(mxbean.getTotalSwapSpaceSize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.FREE_SWAP, ValueConverter.bytesToHumanReadable(mxbean.getFreeSwapSpaceSize(), false));
+
+    return ramInfo;
   }
 
   public String getSystemUptime() {
