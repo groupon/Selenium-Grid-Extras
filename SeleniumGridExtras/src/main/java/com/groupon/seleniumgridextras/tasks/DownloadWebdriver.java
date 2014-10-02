@@ -151,9 +151,6 @@ public class DownloadWebdriver extends ExecuteOSTask {
         logger.info(execute().toString());
       }
 
-      System.out.println(RuntimeConfig.getConfig().getNodes());
-
-
     } catch (NullPointerException error) {
       printInitilizedFailure();
       logger.error(error);
