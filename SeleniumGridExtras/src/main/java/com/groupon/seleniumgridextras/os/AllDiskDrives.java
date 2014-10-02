@@ -65,9 +65,7 @@ public class AllDiskDrives {
       currentDrive.put(JsonCodec.OS.Hardware.HardDrive.USABLE, ValueConverter.bytesToHumanReadable(
           drive.getUsableSpace(), false));
 
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE,
-                       drive.getAbsolutePath() + " (" + drive.getName() + " " + drive
-                           .getAbsolutePath() + " )");
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE, drive.getAbsolutePath());
 
       logger.debug(currentDrive);
 
