@@ -37,6 +37,8 @@
 
 package com.groupon.seleniumgridextras.os;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -61,9 +63,9 @@ public class AllDiskDrives {
 
     for(DiskDrive drive : drives){
       Map<String, String> currentDrive = new HashMap<String, String>();
-      currentDrive.put("free", drive.getFree());
-      currentDrive.put("size", drive.getSize());
-      currentDrive.put("drive", drive.getName());
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.FREE, drive.getFree());
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.SIZE, drive.getSize());
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE, drive.getName());
       drivesInfo.add(currentDrive);
 
     }
