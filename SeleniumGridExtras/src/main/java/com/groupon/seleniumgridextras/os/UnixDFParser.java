@@ -122,7 +122,7 @@ public class UnixDFParser {
   }
 
   protected static String dfCommand() {
-    return ExecuteCommand.execRuntime("df -h").get(JsonCodec.OUT).toString();
+    return ExecuteCommand.execRuntime("df -hl").get(JsonCodec.OUT).toString();
   }
 
   protected static LinkedList<String> dfHeaders(String input) {
