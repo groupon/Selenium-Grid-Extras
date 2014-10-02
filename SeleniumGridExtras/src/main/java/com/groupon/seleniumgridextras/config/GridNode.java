@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -41,7 +42,7 @@ public class GridNode {
   public static GridNode loadFromFile(String filename) {
 
     String configString = readConfigFile(filename);
-    Map topLevelHash = getMapFromString(configString);
+    Map topLevelHash = JsonParserWrapper.stringToMap(configString);
 
     String configFromFile = topLevelHash.get("configuration").toString();
 
@@ -119,10 +120,6 @@ public class GridNode {
       System.exit(1);
     }
     return returnString;
-  }
-
-  public static Map getMapFromString(String input) {
-    return new Gson().fromJson(input, HashMap.class);
   }
 
 

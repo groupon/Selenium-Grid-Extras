@@ -6,6 +6,7 @@ import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.capabilities.Firefox;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -120,7 +121,7 @@ public class GridNodeTest {
     List actualCapabilities = (ArrayList) actual.get("capabilities");
     assertEquals(1, actualCapabilities.size());
 
-    Map actualCapability = GridNode.getMapFromString(actualCapabilities.get(0).toString());
+    Map actualCapability = JsonParserWrapper.stringToMap(actualCapabilities.get(0).toString());
 
     actualCapability = GridNode.doubleToIntConverter(actualCapability);
 
@@ -154,7 +155,7 @@ public class GridNodeTest {
 
   private Map getMapFromConfigFile(String filenameToUse) {
     String nodeConfigString = assertFileExistsAndRead(filenameToUse);
-    return GridNode.getMapFromString(nodeConfigString);
+    return JsonParserWrapper.stringToMap(nodeConfigString);
   }
 
 
