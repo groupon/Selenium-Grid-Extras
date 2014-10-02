@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.os;
 
+import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
@@ -57,11 +58,11 @@ public class AllDiskDrives {
 
     for (File drive : getHds()) {
       Map<String, String> currentDrive = new HashMap<String, String>();
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.FREE, humanReadableByteCount(
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.FREE, ValueConverter.bytesToHumanReadable(
           drive.getFreeSpace(), false));
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.SIZE, humanReadableByteCount(
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.SIZE, ValueConverter.bytesToHumanReadable(
           drive.getTotalSpace(), false));
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.USABLE, humanReadableByteCount(
+      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.USABLE, ValueConverter.bytesToHumanReadable(
           drive.getUsableSpace(), false));
 
       currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE,
@@ -79,16 +80,6 @@ public class AllDiskDrives {
 
   protected static File[] getHds() {
     return File.listRoots();
-  }
-
-  public static String humanReadableByteCount(long bytes, boolean si) {
-    int unit = si ? 1000 : 1024;
-    if (bytes < unit) {
-      return bytes + " B";
-    }
-    int exp = (int) (Math.log(bytes) / Math.log(unit));
-    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
-    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
   }
 
 
