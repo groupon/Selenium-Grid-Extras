@@ -93,7 +93,7 @@ public class OSInfo {
   public String getSystemUptime() {
     //Technically JVM uptime, not system, but in our case this is good since the node might have been restarted
     RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
-    return ValueConverter.millisecondsToHours(rb.getUptime());
+    return String.valueOf(ValueConverter.millisecondsToMinutes(rb.getUptime()));
 
   }
 

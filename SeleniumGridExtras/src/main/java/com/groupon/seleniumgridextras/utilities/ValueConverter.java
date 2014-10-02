@@ -1,5 +1,7 @@
 package com.groupon.seleniumgridextras.utilities;
 
+import java.util.concurrent.TimeUnit;
+
 public class ValueConverter {
 
   public static String bytesToHumanReadable(long bytes, boolean si){
@@ -12,8 +14,18 @@ public class ValueConverter {
     return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
   }
 
-  public static String millisecondsToHours(long milliseconds){
-    return String.valueOf(milliseconds % 24);
+  public static long millisecondsToHours(long milliseconds){
+    return millisecondsToMinutes(milliseconds);
   }
+
+  public static long millisecondsToSeconds(long milliseconds){
+    return TimeUnit.MILLISECONDS.toSeconds(milliseconds);
+  }
+
+  public static long millisecondsToMinutes(long milliseconds){
+    return TimeUnit.MILLISECONDS.toMinutes(milliseconds);
+  }
+
+
 
 }
