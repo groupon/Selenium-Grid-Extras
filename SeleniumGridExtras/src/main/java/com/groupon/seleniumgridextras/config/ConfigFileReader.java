@@ -1,10 +1,8 @@
 package com.groupon.seleniumgridextras.config;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -60,14 +58,13 @@ public class ConfigFileReader {
     }
 
     this.configString = readString;
-    this.parsedConfig = new Gson().fromJson(this.configString, HashMap.class);
+    this.parsedConfig = JsonParserWrapper.stringToMap(this.configString);
   }
 
   public void overwriteExistingConfig(Map outputMap) {
     try {
       File f = new File(filePath);
-      FileUtils.writeStringToFile(f, new GsonBuilder().setPrettyPrinting().create()
-          .toJson(outputMap));
+      FileUtils.writeStringToFile(f, JsonParserWrapper.mapToPrettyPrintJson(outputMap));
 
       readConfigFile();
     } catch (Exception error) {

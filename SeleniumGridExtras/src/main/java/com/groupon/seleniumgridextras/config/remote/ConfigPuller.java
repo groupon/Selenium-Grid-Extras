@@ -6,6 +6,7 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.apache.log4j.Logger;
 
@@ -70,7 +71,7 @@ public class ConfigPuller {
           HttpUtility
               .getRequestAsString(url, RuntimeConfig.getConfig().getConfigPullerHttpTimeout());
       logger.debug(rawJson);
-      Map remoteConfigs = new Gson().fromJson(rawJson, HashMap.class);
+      Map remoteConfigs = JsonParserWrapper.stringToMap(rawJson);
       logger.debug(remoteConfigs);
       if (remoteConfigs.containsKey(JsonCodec.EXIT_CODE)) {
         Integer exitCode = ((Double) remoteConfigs.get(JsonCodec.EXIT_CODE)).intValue();
