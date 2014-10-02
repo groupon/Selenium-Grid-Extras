@@ -40,16 +40,13 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.os.OSInfo;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import org.apache.log4j.Logger;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class SystemInfo extends ExecuteOSTask {
@@ -95,9 +92,8 @@ public class SystemInfo extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.ERROR, e.toString());
     }
 
-    List<String> hostNetworking = getComputerNetworkInfo();
-    getJsonResponse().addKeyValues(JsonCodec.OS.HOSTNAME, hostNetworking.get(0));
-    getJsonResponse().addKeyValues(JsonCodec.OS.IP, hostNetworking.get(1));
+    getJsonResponse().addKeyValues(JsonCodec.OS.HOSTNAME, RuntimeConfig.getOS().getHostName());
+    getJsonResponse().addKeyValues(JsonCodec.OS.IP, RuntimeConfig.getOS().getHostIp());
 
     return getJsonResponse().getJson();
   }
@@ -107,22 +103,6 @@ public class SystemInfo extends ExecuteOSTask {
     return execute();
   }
 
-  private List<String> getComputerNetworkInfo() {
-    List<String> host = new LinkedList<String>();
-
-    try {
-      InetAddress addr;
-      addr = InetAddress.getLocalHost();
-      host.add(addr.getHostName());
-      host.add(addr.getHostAddress());
-    } catch (UnknownHostException ex) {
-      logger.debug(HOSTNAME_CAN_NOT_BE_RESOLVED);
-      host.add(JsonCodec.N_A);
-      host.add(JsonCodec.N_A);
-    }
-
-    return host;
-  }
 
 
 }
