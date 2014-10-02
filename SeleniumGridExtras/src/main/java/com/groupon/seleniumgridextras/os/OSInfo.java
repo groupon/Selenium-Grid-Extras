@@ -63,7 +63,8 @@ public class OSInfo {
       osMBean = ManagementFactory.newPlatformMXBeanProxy(
           mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
 
-      mxbean = (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+      mxbean =
+          (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
     } catch (IOException e) {
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
@@ -92,12 +93,30 @@ public class OSInfo {
 
     Map<String, String> ramInfo = new HashMap<String, String>();
 
-    ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL, ValueConverter.bytesToHumanReadable(mxbean.getTotalPhysicalMemorySize(), false));
-    ramInfo.put(JsonCodec.OS.Hardware.Ram.FREE, ValueConverter.bytesToHumanReadable(mxbean.getFreePhysicalMemorySize(), false));
-    ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL_SWAP, ValueConverter.bytesToHumanReadable(mxbean.getTotalSwapSpaceSize(), false));
-    ramInfo.put(JsonCodec.OS.Hardware.Ram.FREE_SWAP, ValueConverter.bytesToHumanReadable(mxbean.getFreeSwapSpaceSize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL,
+                ValueConverter.bytesToHumanReadable(mxbean.getTotalPhysicalMemorySize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.FREE,
+                ValueConverter.bytesToHumanReadable(mxbean.getFreePhysicalMemorySize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL_SWAP,
+                ValueConverter.bytesToHumanReadable(mxbean.getTotalSwapSpaceSize(), false));
+    ramInfo.put(JsonCodec.OS.Hardware.Ram.FREE_SWAP,
+                ValueConverter.bytesToHumanReadable(mxbean.getFreeSwapSpaceSize(), false));
 
     return ramInfo;
+  }
+
+  public Map<String, String> getJvmMemoryInfo() {
+    Map<String, String> jvmInfo = new HashMap<String, String>();
+
+    jvmInfo.put(JsonCodec.OS.JVM.AVAILABLE_PROCESSORS_TO_JVM, "" + Runtime.getRuntime().availableProcessors());
+    jvmInfo.put(JsonCodec.OS.JVM.FREE_MEMORY_AVAILABLE_TO_JVM, ValueConverter.bytesToHumanReadable(Runtime.getRuntime().freeMemory(), false));
+
+    long maxMemory = Runtime.getRuntime().maxMemory();
+    jvmInfo.put(JsonCodec.OS.JVM.MAX_MEMORY, (maxMemory == Long.MAX_VALUE ? "no limit" : ValueConverter.bytesToHumanReadable(maxMemory, false)));
+
+    System.out.println(jvmInfo);
+
+    return jvmInfo;
   }
 
   public String getSystemUptime() {

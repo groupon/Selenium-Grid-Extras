@@ -54,6 +54,13 @@ public class JsonCodec {
     public static final String IP = "ip";
     public static final String UPTIME = "uptime";
 
+    public static class JVM{
+      public static final String JVM_INFO = "jvm";
+      public static final String AVAILABLE_PROCESSORS_TO_JVM = "available_processors";
+      public static final String FREE_MEMORY_AVAILABLE_TO_JVM = "free_memory";
+      public static final String MAX_MEMORY = "max_memory";
+    }
+
     public static class Mouse {
       public static final String X = "x";
       public static final String Y = "y";
@@ -83,7 +90,6 @@ public class JsonCodec {
     public static class Hardware{
 
       public static class Ram{
-
         public static final String RAM = "ram";
         public static final String TOTAL = "total";
         public static final String FREE = "free";

@@ -69,6 +69,7 @@ public class SystemInfo extends ExecuteOSTask {
     addResponseDescription(JsonCodec.OS.Hardware.HardDrive.DRIVES, "Hash of all mounted drives and their info");
     addResponseDescription(JsonCodec.OS.Hardware.Processor.PROCESSOR, "Info about processors on machine");
     addResponseDescription(JsonCodec.OS.Hardware.Ram.RAM, "Info in bytes on how much RAM machine has/uses");
+    addResponseDescription(JsonCodec.OS.Hardware.Ram.RAM, "JVM Info");
     addResponseDescription(JsonCodec.OS.UPTIME, "Uptime in minutes");
 
     addResponseDescription(JsonCodec.OS.HOSTNAME, "Host name");
@@ -87,6 +88,7 @@ public class SystemInfo extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.Processor.PROCESSOR, info.getProcessorInfo());
       getJsonResponse().addKeyValues(JsonCodec.OS.UPTIME, info.getSystemUptime());
       getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.Ram.RAM, info.getMemoryInfo());
+      getJsonResponse().addKeyValues(JsonCodec.OS.JVM.JVM_INFO, info.getJvmMemoryInfo());
     } catch (Exception e) {
       logger.error(e);
       getJsonResponse().addKeyValues(JsonCodec.ERROR, e.toString());
