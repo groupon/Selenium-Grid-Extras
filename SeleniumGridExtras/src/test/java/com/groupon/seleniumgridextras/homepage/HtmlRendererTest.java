@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.homepage;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.ResourceRetriever;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,7 +39,8 @@ public class HtmlRendererTest {
   @Test
   public void testGetHeadHtml() throws Exception {
     assertEquals(
-        FileIOUtility.getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile()),
+        new ResourceRetriever().getAsString(
+            RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile()),
         HtmlRenderer.getPageHead());
 
     RuntimeConfig.getConfig().getHtmlRender().setHtmlHeadFile(FILE_THAT_DOES_NOT_EXIST);
@@ -50,8 +52,8 @@ public class HtmlRendererTest {
 
   @Test
   public void testGeTemplateJs() throws Exception {
-    assertEquals("<style>" + FileIOUtility
-        .getAsString(RuntimeConfig.getConfig().getHtmlRender().getTemplateSource()) + "</style>",
+    assertEquals("<style>" + new ResourceRetriever().getAsString(
+        RuntimeConfig.getConfig().getHtmlRender().getTemplateSource()) + "</style>",
                  HtmlRenderer.getTemplateSource());
 
     RuntimeConfig.getConfig().getHtmlRender().setTemplateJs(FILE_THAT_DOES_NOT_EXIST);
@@ -63,11 +65,11 @@ public class HtmlRendererTest {
 
   @Test
   public void testGeJquery() throws Exception {
-//    assertEquals("<script>" + FileIOUtility
-//        .getAsString(RuntimeConfig.getConfig().getHtmlRender().getJquery()) + "</script>",
-//                 HtmlRenderer.getJquery());
-//
-//    RuntimeConfig.getConfig().getHtmlRender().setJquery(FILE_THAT_DOES_NOT_EXIST);
+    assertEquals("<script>" + new ResourceRetriever()
+        .getAsString(RuntimeConfig.getConfig().getHtmlRender().getJquery()) + "</script>",
+                 HtmlRenderer.getJquery());
+
+    RuntimeConfig.getConfig().getHtmlRender().setJquery(FILE_THAT_DOES_NOT_EXIST);
 
     assertEquals(
         "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>",
@@ -76,8 +78,8 @@ public class HtmlRendererTest {
 
   @Test
   public void testGetMainCss() throws Exception {
-    assertEquals("<style>" + FileIOUtility
-        .getAsString(RuntimeConfig.getConfig().getHtmlRender().getMainCss()) + "</style>",
+    assertEquals("<style>" + new ResourceRetriever().getAsString(
+        RuntimeConfig.getConfig().getHtmlRender().getMainCss()) + "</style>",
                  HtmlRenderer.getMainCss());
 
     RuntimeConfig.getConfig().getHtmlRender().setMainCss(FILE_THAT_DOES_NOT_EXIST);
@@ -90,11 +92,11 @@ public class HtmlRendererTest {
 
   @Test
   public void testGetMainJs() throws Exception {
-//    assertEquals("<script>" + FileIOUtility
-//        .getAsString(RuntimeConfig.getConfig().getHtmlRender().getMainJs()) + "</script>",
-//                 HtmlRenderer.getMainJs());
-//
-//    RuntimeConfig.getConfig().getHtmlRender().setMainJs(FILE_THAT_DOES_NOT_EXIST);
+    assertEquals("<script>" + new ResourceRetriever().getAsString(
+        RuntimeConfig.getConfig().getHtmlRender().getMainJs()) + "</script>",
+                 HtmlRenderer.getMainJs());
+
+    RuntimeConfig.getConfig().getHtmlRender().setMainJs(FILE_THAT_DOES_NOT_EXIST);
     assertEquals(
         "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js\"></script>",
         HtmlRenderer.getMainJs());

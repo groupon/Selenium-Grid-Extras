@@ -4,6 +4,8 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.ResourceRetriever;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.util.Map;
 public class HtmlRenderer {
 
   private Map parameters;
+  private static Logger logger = Logger.getLogger(HtmlRenderer.class);
 
   public HtmlRenderer(Map params) {
     this.parameters = params;
@@ -19,28 +22,41 @@ public class HtmlRenderer {
 
   public static String getNavBar() {
     try {
-      return new ResourceRetriever().getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlNavBar());
+      return new ResourceRetriever()
+          .getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlNavBar());
     } catch (IOException e) {
-      return "";
+      logger.warn(e);
+    } catch (NullPointerException e) {
+      //do nothing
     }
+
+    return "";
   }
 
   public static String getPageHead() {
     try {
-      return new ResourceRetriever().getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile());
+      return new ResourceRetriever().getAsString(
+          RuntimeConfig.getConfig().getHtmlRender().getHtmlHeadFile());
     } catch (IOException e) {
-      e.printStackTrace();
-      return "<html><head></head><body>";
+      logger.warn(e);
+    } catch (NullPointerException e) {
+      //do nothing
     }
+    return "<html><head></head><body>";
   }
 
   public static String getPageFooter() {
     try {
-      return new ResourceRetriever().getAsString(RuntimeConfig.getConfig().getHtmlRender().getHtmlFooter());
+      return new ResourceRetriever().getAsString(
+          RuntimeConfig.getConfig().getHtmlRender().getHtmlFooter());
     } catch (IOException e) {
-      e.printStackTrace();
-      return "\n\t</body>\n</html>";
+      logger.warn(e);
+
+    } catch (NullPointerException e) {
+      //do nothing
     }
+
+    return "\n\t</body>\n</html>";
   }
 
   public static String openDiv(String divClass) {
@@ -91,7 +107,9 @@ public class HtmlRenderer {
           "<script>" + new ResourceRetriever().getAsString(sourceFile) + "</script>";
 
     } catch (IOException e) {
-      //Do nothing
+      logger.warn(e);
+    } catch (NullPointerException e) {
+      //do nothing
     }
 
     if (returnString == null) {
@@ -110,7 +128,9 @@ public class HtmlRenderer {
 
 
     } catch (IOException e) {
-      //Do nothing
+      logger.warn(e);
+    } catch (NullPointerException e) {
+      //do nothing
     }
 
     if (returnString == null) {
