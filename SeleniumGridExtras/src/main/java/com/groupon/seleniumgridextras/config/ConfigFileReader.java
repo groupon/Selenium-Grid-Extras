@@ -58,13 +58,13 @@ public class ConfigFileReader {
     }
 
     this.configString = readString;
-    this.parsedConfig = JsonParserWrapper.stringToMap(this.configString);
+    this.parsedConfig = JsonParserWrapper.toHashMap(this.configString);
   }
 
   public void overwriteExistingConfig(Map outputMap) {
     try {
       File f = new File(filePath);
-      FileUtils.writeStringToFile(f, JsonParserWrapper.mapToPrettyPrintJson(outputMap));
+      FileUtils.writeStringToFile(f, JsonParserWrapper.prettyPrintString(outputMap));
 
       readConfigFile();
     } catch (Exception error) {

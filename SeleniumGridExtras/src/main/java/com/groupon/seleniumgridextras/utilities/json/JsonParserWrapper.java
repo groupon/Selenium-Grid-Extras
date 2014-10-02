@@ -17,9 +17,7 @@ public class JsonParserWrapper {
     return new Gson().fromJson(input, HashMap.class);
   }
 
-
-  public static String mapToPrettyPrintJson(Map input) {
+  public static String prettyPrintString(Object input) {
     return new GsonBuilder().setPrettyPrinting().create().toJson(input);
   }
-
 }

@@ -1,7 +1,6 @@
 package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.internal.StringMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -42,7 +41,7 @@ public class GridNode {
   public static GridNode loadFromFile(String filename) {
 
     String configString = readConfigFile(filename);
-    Map topLevelHash = JsonParserWrapper.stringToMap(configString);
+    Map topLevelHash = JsonParserWrapper.toHashMap(configString);
 
     String configFromFile = topLevelHash.get("configuration").toString();
 
@@ -100,7 +99,7 @@ public class GridNode {
   }
 
   private String toPrettyJsonString() {
-    return new GsonBuilder().setPrettyPrinting().create().toJson(this);
+    return JsonParserWrapper.prettyPrintString(this);
   }
 
 

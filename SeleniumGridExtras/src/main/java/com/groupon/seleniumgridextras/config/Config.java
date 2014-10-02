@@ -1,7 +1,6 @@
 package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.StringMap;
@@ -11,6 +10,7 @@ import com.groupon.seleniumgridextras.config.driver.DriverInfo;
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.apache.log4j.Logger;
 
@@ -312,7 +312,7 @@ public class Config {
   }
 
   public String toPrettyJsonString(Object object) {
-    return new GsonBuilder().setPrettyPrinting().create().toJson(object);
+    return JsonParserWrapper.prettyPrintString(object);
   }
 
   public boolean checkIfModuleEnabled(String module) {

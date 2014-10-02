@@ -37,13 +37,12 @@
 
 package com.groupon.seleniumgridextras;
 
-import com.google.gson.GsonBuilder;
-
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
 import com.groupon.seleniumgridextras.homepage.HtmlRenderer;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import com.groupon.seleniumgridextras.videorecording.VideoShutdownHook;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
@@ -93,9 +92,7 @@ public class SeleniumGridExtras {
             logger.debug(
                 "End-point " + task.getEndpoint() + " was called with HTTP params " + params
                     .toString());
-            String
-                result =
-                new GsonBuilder().setPrettyPrinting().create().toJson(task.execute(params));
+            String result = JsonParserWrapper.prettyPrintString(task.execute(params));
             logger.debug(result);
             return result;
           }

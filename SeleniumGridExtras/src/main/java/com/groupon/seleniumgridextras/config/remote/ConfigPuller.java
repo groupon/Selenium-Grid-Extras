@@ -1,7 +1,5 @@
 package com.groupon.seleniumgridextras.config.remote;
 
-import com.google.gson.Gson;
-
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -71,7 +68,7 @@ public class ConfigPuller {
           HttpUtility
               .getRequestAsString(url, RuntimeConfig.getConfig().getConfigPullerHttpTimeout());
       logger.debug(rawJson);
-      Map remoteConfigs = JsonParserWrapper.stringToMap(rawJson);
+      Map remoteConfigs = JsonParserWrapper.toHashMap(rawJson);
       logger.debug(remoteConfigs);
       if (remoteConfigs.containsKey(JsonCodec.EXIT_CODE)) {
         Integer exitCode = ((Double) remoteConfigs.get(JsonCodec.EXIT_CODE)).intValue();

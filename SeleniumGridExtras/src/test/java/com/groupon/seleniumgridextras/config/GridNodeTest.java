@@ -121,7 +121,7 @@ public class GridNodeTest {
     List actualCapabilities = (ArrayList) actual.get("capabilities");
     assertEquals(1, actualCapabilities.size());
 
-    Map actualCapability = JsonParserWrapper.stringToMap(actualCapabilities.get(0).toString());
+    Map actualCapability = JsonParserWrapper.toHashMap(actualCapabilities.get(0).toString());
 
     actualCapability = GridNode.doubleToIntConverter(actualCapability);
 
@@ -155,7 +155,7 @@ public class GridNodeTest {
 
   private Map getMapFromConfigFile(String filenameToUse) {
     String nodeConfigString = assertFileExistsAndRead(filenameToUse);
-    return JsonParserWrapper.stringToMap(nodeConfigString);
+    return JsonParserWrapper.toHashMap(nodeConfigString);
   }
 
 

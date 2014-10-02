@@ -1,7 +1,6 @@
 package com.groupon.seleniumgridextras.utilities;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -65,9 +63,9 @@ public class FileIOUtility {
   }
 
   public static void writePrettyJsonToFile(File filename, String content) throws IOException{
-    Map parsedJson = new Gson().fromJson(content, HashMap.class);
+    Map parsedJson = JsonParserWrapper.toHashMap(content);
     DoubleToIntConverter.convertAllDoublesToInt(parsedJson);
-    writeToFile(filename, new GsonBuilder().setPrettyPrinting().create().toJson(parsedJson));
+    writeToFile(filename, JsonParserWrapper.prettyPrintString(parsedJson));
   }
 
   public static void writePrettyJsonToFile(String filename, String content) throws IOException{

@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
 import org.junit.After;
 import org.junit.Before;
@@ -120,7 +121,7 @@ public class DownloadChromeDriverTest {
     String bit = "32";
     String version = "2.6";
 
-    Map firstExec = new Gson().fromJson(task.execute(version), HashMap.class);
+    Map firstExec = JsonParserWrapper.toHashMap(task.execute(version));
 
     File expectedFile = new File(RuntimeConfig.getConfig().getChromeDriver().getExecutablePath());
 
@@ -134,7 +135,7 @@ public class DownloadChromeDriverTest {
     assertEquals("http://chromedriver.storage.googleapis.com/" + version + "/chromedriver_" + os + bit + ".zip",
                  ((ArrayList) firstExec.get("source_url")).get(0));
 
-    Map secondExec = new Gson().fromJson(task.execute(version), HashMap.class);
+    Map secondExec = JsonParserWrapper.toHashMap(task.execute(version));
 
     assertEquals(0.0, secondExec.get("exit_code"));
     assertEquals(0, ((ArrayList) secondExec.get("error")).size());
@@ -157,7 +158,7 @@ public class DownloadChromeDriverTest {
 
     DownloadChromeDriver customSettingTask = new DownloadChromeDriver();
 
-    Map firstExec = new Gson().fromJson(customSettingTask.execute(version), HashMap.class);
+    Map firstExec = JsonParserWrapper.toHashMap(customSettingTask.execute(version));
     assertEquals("http://chromedriver.storage.googleapis.com/" + version + "/chromedriver_" + os + bit + ".zip",
                  ((ArrayList) firstExec.get("source_url")).get(0));
 
