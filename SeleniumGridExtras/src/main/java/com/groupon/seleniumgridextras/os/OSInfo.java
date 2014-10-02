@@ -108,13 +108,15 @@ public class OSInfo {
   public Map<String, String> getJvmMemoryInfo() {
     Map<String, String> jvmInfo = new HashMap<String, String>();
 
-    jvmInfo.put(JsonCodec.OS.JVM.AVAILABLE_PROCESSORS_TO_JVM, "" + Runtime.getRuntime().availableProcessors());
-    jvmInfo.put(JsonCodec.OS.JVM.FREE_MEMORY_AVAILABLE_TO_JVM, ValueConverter.bytesToHumanReadable(Runtime.getRuntime().freeMemory(), false));
+    jvmInfo.put(JsonCodec.OS.JVM.AVAILABLE_PROCESSORS_TO_JVM,
+                "" + Runtime.getRuntime().availableProcessors());
+    jvmInfo.put(JsonCodec.OS.JVM.FREE_MEMORY_AVAILABLE_TO_JVM,
+                ValueConverter.bytesToHumanReadable(Runtime.getRuntime().freeMemory(), false));
 
     long maxMemory = Runtime.getRuntime().maxMemory();
-    jvmInfo.put(JsonCodec.OS.JVM.MAX_MEMORY, (maxMemory == Long.MAX_VALUE ? "no limit" : ValueConverter.bytesToHumanReadable(maxMemory, false)));
-
-    System.out.println(jvmInfo);
+    jvmInfo.put(JsonCodec.OS.JVM.MAX_MEMORY, (maxMemory == Long.MAX_VALUE ? "no limit"
+                                                                          : ValueConverter
+                                                  .bytesToHumanReadable(maxMemory, false)));
 
     return jvmInfo;
   }
