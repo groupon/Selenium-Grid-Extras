@@ -81,8 +81,11 @@ public class HtmlNodeRenderer {
     StringBuilder jvm = new StringBuilder();
 
     jvm.append("\n<ul>");
-    jvm.append("\n\t<li>Available Processors: " + jvmInfoFromMap.get(JsonCodec.OS.JVM.AVAILABLE_PROCESSORS_TO_JVM) + "</li>");
-    jvm.append("\n\t<li>Free Memory: " + jvmInfoFromMap.get(JsonCodec.OS.JVM.FREE_MEMORY_AVAILABLE_TO_JVM) + "</li>");
+    jvm.append("\n\t<li>Available Processors: " + jvmInfoFromMap
+        .get(JsonCodec.OS.JVM.AVAILABLE_PROCESSORS_TO_JVM) + "</li>");
+    jvm.append(
+        "\n\t<li>Free Memory: " + jvmInfoFromMap.get(JsonCodec.OS.JVM.FREE_MEMORY_AVAILABLE_TO_JVM)
+        + "</li>");
     jvm.append("\n\t<li>Max Memory: " + jvmInfoFromMap.get(JsonCodec.OS.JVM.MAX_MEMORY) + "</li>");
 
     jvm.append("\n</ul>");
@@ -240,7 +243,6 @@ public class HtmlNodeRenderer {
   protected String buildPageHead() {
 
     String headHtmlSnippet = HtmlRenderer.getPageHead();
-    System.out.println(headHtmlSnippet);
 
     headHtmlSnippet = headHtmlSnippet.
         replaceAll("INSERT_PAGE_TITLE", getMachineInfo());
@@ -259,10 +261,10 @@ public class HtmlNodeRenderer {
     String footHtmlSnippet = HtmlRenderer.getPageFooter();
 
     footHtmlSnippet = footHtmlSnippet.
-        replaceAll("INSERT_JQUERY_SCRIPT", HtmlRenderer.getJquery());
+        replace("INSERT_JQUERY_SCRIPT", HtmlRenderer.getJquery());
 
     footHtmlSnippet =
-        footHtmlSnippet.replaceAll("INSERT_BOOTSTRAP_SCRIPT", HtmlRenderer.getMainJs());
+        footHtmlSnippet.replace("INSERT_BOOTSTRAP_SCRIPT", HtmlRenderer.getMainJs());
 
     return footHtmlSnippet;
 

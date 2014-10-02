@@ -73,8 +73,7 @@ public class HtmlRenderer {
 
 
   public static String getMainJs() {
-    //TODO: Ignoring local JS for now, the find replace on string is not working, needs fixing
-    return getJsContent("",
+    return getJsContent(RuntimeConfig.getConfig().getHtmlRender().getMainCss(),
                         RuntimeConfig.getConfig().getHtmlRender().getMainJsFallBack());
   }
 
@@ -87,8 +86,7 @@ public class HtmlRenderer {
 
 
   public static String getJquery() {
-    //TODO: Ignoring local JS for now, the find replace on string is not working, needs fixing
-    return getJsContent("",
+    return getJsContent(RuntimeConfig.getConfig().getHtmlRender().getJquery(),
                         RuntimeConfig.getConfig().getHtmlRender().getJqueryFallBack());
   }
 
