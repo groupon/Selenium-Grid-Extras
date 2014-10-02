@@ -38,19 +38,59 @@
 package com.groupon.seleniumgridextras.os;
 
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class OSInfo {
+import javax.management.MBeanServerConnection;
+
+public class OSInfo {
+
+  private OperatingSystemMXBean osMBean;
+
+  public OSInfo() {
+    MBeanServerConnection mbsc = ManagementFactory.getPlatformMBeanServer();
+
+    try {
+      osMBean = ManagementFactory.newPlatformMXBeanProxy(
+          mbsc, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME, OperatingSystemMXBean.class);
+    } catch (IOException e) {
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+  }
+
 
   public List<Map<String, String>> getDiskInfo() throws Exception {
     return AllDiskDrives.toPreJsonArray();
   }
 
-  public abstract Map<String, String> getProcessorInfo() throws Exception;
+  public Map<String, String> getProcessorInfo() {
 
-  public abstract Map<String, String> getMemoryInfo() throws Exception;
+    Map<String, String> processorInfo = new HashMap<String, String>();
 
-  public abstract String getSystemUptime() throws Exception;
+    processorInfo.put(JsonCodec.OS.Hardware.Processor.INFO,
+                      "" + osMBean.getName() + " " + osMBean.getVersion());
+    processorInfo.put(JsonCodec.OS.Hardware.Processor.ARCHITECTURE, osMBean.getArch());
+    processorInfo.put(JsonCodec.OS.Hardware.Processor.CORES, "" + osMBean.getAvailableProcessors());
+    processorInfo.put(JsonCodec.OS.Hardware.Processor.LOAD, "" + osMBean.getSystemLoadAverage());
+
+    return processorInfo;
+  }
+
+
+  public Map<String, String> getMemoryInfo() {
+
+    return null;
+  }
+
+  public String getSystemUptime() {
+    return null;
+
+  }
 
 }

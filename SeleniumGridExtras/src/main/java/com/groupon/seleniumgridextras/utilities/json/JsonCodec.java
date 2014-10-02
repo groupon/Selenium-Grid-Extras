@@ -82,7 +82,6 @@ public class JsonCodec {
 
     public static class Hardware{
 
-      public static final String PROCESSOR = "processor";
       public static final String RAM = "ram";
 
       public static class HardDrive{
@@ -91,6 +90,16 @@ public class JsonCodec {
         public static final String FREE = "free";
         public static final String SIZE = "size";
         public static final String DRIVE = "drive";
+        public static final String USABLE = "usable";
+      }
+
+      public static class Processor{
+
+        public static final String PROCESSOR = "processor";
+        public static final String INFO = "info";
+        public static final String ARCHITECTURE = "architecture";
+        public static final String CORES = "cores";
+        public static final String LOAD = "load";
       }
     }
 

@@ -40,11 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
-import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.os.LinuxSystemInfo;
-import com.groupon.seleniumgridextras.os.MacSystemInfo;
 import com.groupon.seleniumgridextras.os.OSInfo;
-import com.groupon.seleniumgridextras.os.WindowsSystemInfo;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
@@ -73,8 +69,8 @@ public class SystemInfo extends ExecuteOSTask {
     setButtonText(TaskDescriptions.UI.ButtonText.SYSTEM);
     setEnabledInGui(true);
 
-    addResponseDescription(JsonCodec.OS.Hardware.DRIVES, "Hash of all mounted drives and their info");
-    addResponseDescription(JsonCodec.OS.Hardware.PROCESSOR, "Info about processors on machine");
+    addResponseDescription(JsonCodec.OS.Hardware.HardDrive.DRIVES, "Hash of all mounted drives and their info");
+    addResponseDescription(JsonCodec.OS.Hardware.Processor.PROCESSOR, "Info about processors on machine");
     addResponseDescription(JsonCodec.OS.Hardware.RAM, "Info in bytes on how much RAM machine has/uses");
     addResponseDescription(JsonCodec.OS.UPTIME, "System uptime since last reboot in seconds");
 
@@ -87,18 +83,11 @@ public class SystemInfo extends ExecuteOSTask {
   public JsonObject execute() {
 
     try {
-      OSInfo info;
 
-      if (RuntimeConfig.getOS().isWindows()) {
-        info = new WindowsSystemInfo();
-      } else if (RuntimeConfig.getOS().isMac()) {
-        info = new MacSystemInfo();
-      } else {
-        info = new LinuxSystemInfo();
-      }
+      OSInfo info = new OSInfo();
 
-      getJsonResponse().addListOfHashes(JsonCodec.OS.Hardware.DRIVES, info.getDiskInfo());
-      getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.PROCESSOR, info.getProcessorInfo());
+      getJsonResponse().addListOfHashes(JsonCodec.OS.Hardware.HardDrive.DRIVES, info.getDiskInfo());
+      getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.Processor.PROCESSOR, info.getProcessorInfo());
       getJsonResponse().addKeyValues(JsonCodec.OS.Hardware.RAM, info.getMemoryInfo());
       getJsonResponse().addKeyValues(JsonCodec.OS.UPTIME, info.getSystemUptime());
     } catch (Exception e) {
