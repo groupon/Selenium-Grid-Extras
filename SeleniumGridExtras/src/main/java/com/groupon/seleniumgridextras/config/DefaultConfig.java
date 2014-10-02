@@ -81,10 +81,10 @@ public class DefaultConfig {
   public static final String DEFAULT_HUB_PORT = "4444";
   public static final String DEFAULT_SHARED_DIRECTORY = "shared";
 
-  public static final String BOOTSTRAP_CSS = "bootstrap.3.2.0.min.css";
-  public static final String BOOTSTRAP_JS = "bootstrap.3.2.0.min.js";
-  public static final String JQUERY_JS = "jquery.1.11.1.min.js";
-  public static final String BOOTSTRAP_TEMPLATE = "jumbotron-narrow.css";
+  public static final String BOOTSTRAP_CSS = "/bootstrap.3.2.0.min.css";
+  public static final String BOOTSTRAP_JS = "/bootstrap.3.2.0.min.js";
+  public static final String JQUERY_JS = "/jquery.1.11.1.min.js";
+  public static final String BOOTSTRAP_TEMPLATE = "/jumbotron-narrow.css";
 
   public static final
   String
@@ -102,6 +102,11 @@ public class DefaultConfig {
   String
       BOOTSTRAP_URL =
       "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js";
+
+
+  public static final String HEAD_PARTIAL_HTML = "/header_partial.html";
+  public static final String TOP_BAR_PARTIAL_HTML = "/nav_bar_partial.html";
+  public static final String FOOTER_PARTIAL_HTML = "/footer_partial.html";
   private static Config config;
   private static final String webDriverDefaultVersion = "2.41.0";
   private static final String ieDriverDefaultVersion = "2.41.0";
@@ -130,25 +135,13 @@ public class DefaultConfig {
 
   public static void loadHtmlRenderOptions() {
     //Set the locally packed source files first
-    config.getHtmlRender().setMainCss(new File(SeleniumGridExtras.class
-                                                   .getClassLoader()
-                                                   .getResource(BOOTSTRAP_CSS)
-                                                   .getFile()).getAbsolutePath());
+    config.getHtmlRender().setMainCss(BOOTSTRAP_CSS);
 
-    config.getHtmlRender().setMainJs(new File(SeleniumGridExtras.class
-                                                  .getClassLoader()
-                                                  .getResource(BOOTSTRAP_JS)
-                                                  .getFile()).getAbsolutePath());
+    config.getHtmlRender().setMainJs(BOOTSTRAP_JS);
 
-    config.getHtmlRender().setJquery(new File(SeleniumGridExtras.class
-                                                  .getClassLoader()
-                                                  .getResource(JQUERY_JS)
-                                                  .getFile()).getAbsolutePath());
+    config.getHtmlRender().setJquery(JQUERY_JS);
 
-    config.getHtmlRender().setTemplateJs(new File(SeleniumGridExtras.class
-                                                      .getClassLoader()
-                                                      .getResource(BOOTSTRAP_TEMPLATE)
-                                                      .getFile()).getAbsolutePath());
+    config.getHtmlRender().setTemplateJs(BOOTSTRAP_TEMPLATE);
 
     //Set fallback sources
     config.getHtmlRender()
@@ -162,6 +155,14 @@ public class DefaultConfig {
 
     config.getHtmlRender()
         .setMainJsFallBack(BOOTSTRAP_URL);
+
+    //Local sources for grid extras
+    //Set the locally packed source files first
+    config.getHtmlRender().setHtmlHeadFile(HEAD_PARTIAL_HTML);
+
+    config.getHtmlRender().setHtmlNavBar(TOP_BAR_PARTIAL_HTML);
+
+    config.getHtmlRender().setHtmlFooter(FOOTER_PARTIAL_HTML);
   }
 
   public static void loadHTTPOptions() {
