@@ -50,8 +50,6 @@ import org.apache.log4j.Logger;
 import java.util.Map;
 
 public class SystemInfo extends ExecuteOSTask {
-
-  private static final String HOSTNAME_CAN_NOT_BE_RESOLVED = "Hostname can not be resolved";
   private static Logger logger = Logger.getLogger(SystemInfo.class);
 
   public SystemInfo() {
@@ -69,7 +67,7 @@ public class SystemInfo extends ExecuteOSTask {
     addResponseDescription(JsonCodec.OS.Hardware.HardDrive.DRIVES, "Hash of all mounted drives and their info");
     addResponseDescription(JsonCodec.OS.Hardware.Processor.PROCESSOR, "Info about processors on machine");
     addResponseDescription(JsonCodec.OS.Hardware.Ram.RAM, "Info in bytes on how much RAM machine has/uses");
-    addResponseDescription(JsonCodec.OS.Hardware.Ram.RAM, "JVM Info");
+    addResponseDescription(JsonCodec.OS.JVM.JVM_INFO, "JVM Info");
     addResponseDescription(JsonCodec.OS.UPTIME, "Uptime in minutes");
 
     addResponseDescription(JsonCodec.OS.HOSTNAME, "Host name");
@@ -91,6 +89,7 @@ public class SystemInfo extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.OS.JVM.JVM_INFO, info.getJvmMemoryInfo());
     } catch (Exception e) {
       logger.error(e);
+      e.printStackTrace();
       getJsonResponse().addKeyValues(JsonCodec.ERROR, e.toString());
     }
 
