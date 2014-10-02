@@ -38,11 +38,13 @@
 package com.groupon.seleniumgridextras.os;
 
 
+import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -89,7 +91,9 @@ public class OSInfo {
   }
 
   public String getSystemUptime() {
-    return null;
+    //Technically JVM uptime, not system, but in our case this is good since the node might have been restarted
+    RuntimeMXBean rb = ManagementFactory.getRuntimeMXBean();
+    return ValueConverter.millisecondsToHours(rb.getUptime());
 
   }
 
