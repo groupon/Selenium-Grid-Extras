@@ -1,4 +1,5 @@
-1.6.0 - Set timeout to 5 seconds when pulling node config from the central hub, instead of sitting there indefinetely
+1.6.0 - Improved OS detection on Windows for first run, this solves issue between Windows/Vista/XP/Win8
+      - [BUG] Set timeout to 5 seconds when pulling node config from the central hub, instead of sitting there indefinetely
 1.5.1 - [BUG] Firefox on windows was not getting terminated with /kill_firefox command
 1.5.0 - Automatically record video of a running test
       - Daily rolling logs for grid extras

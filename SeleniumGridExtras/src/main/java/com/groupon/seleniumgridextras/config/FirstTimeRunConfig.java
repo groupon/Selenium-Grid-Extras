@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.config;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
+import com.groupon.seleniumgridextras.os.GridPlatform;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 
 import org.apache.log4j.Logger;
@@ -267,9 +268,16 @@ public class FirstTimeRunConfig {
 
     if (defaultConfig.getAutoStartNode()) {
 
+      String guessedPlatform = guessPlatform();
+      System.out.println("What is node Platform? (WINDOWS|XP|VISTA|WIN8|WIN8_1|MAC|LINUX|UNIX|ANDROID)");
+      if (guessedPlatform.equals("WINDOWS")){
+        System.out.println("WARNING: We had a hard time guessing your platform accurately so will default to 'WINDOWS' pleas update this to be more accurate, or the grid capability matcher might not function properly");
+      }
       String platform = askQuestion(
-          "What is node Platform? (WINDOWS|XP|VISTA|MAC|LINUX|UNIX|ANDROID)",
-          guessPlatform());
+          "",
+          guessedPlatform);
+
+
 
       for (Class currentCapabilityClass : Capability.getSupportedCapabilities().keySet()) {
         String
@@ -304,7 +312,8 @@ public class FirstTimeRunConfig {
 
   private static String guessPlatform() {
     if (RuntimeConfig.getOS().isWindows()) {
-      return "WINDOWS";
+      String osFamily = new GridPlatform().getWindowsFamily(System.getProperty("os.name"));
+      return osFamily;
     } else if (RuntimeConfig.getOS().isMac()) {
       return "MAC";
     } else {
