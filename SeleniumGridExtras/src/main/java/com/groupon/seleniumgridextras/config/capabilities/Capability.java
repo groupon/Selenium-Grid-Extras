@@ -97,6 +97,8 @@ public abstract class Capability extends HashMap {
   public String getWDStyleName() {
     return Capability.getSupportedCapabilities().get(this.getClass());
   }
+
+  public abstract String getIcon();
 }
 
 
