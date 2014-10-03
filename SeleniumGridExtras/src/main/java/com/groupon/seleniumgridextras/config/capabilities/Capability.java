@@ -27,6 +27,11 @@ public abstract class Capability extends HashMap {
     return String.valueOf(this.get(VERSION));
   }
 
+  public String getMaxInstances(){
+    return String.valueOf(this.get(MAX_INSTANCES));
+  }
+
+
   public void setPlatform(String platform) {
     this.put(PLATFORM, platform);
   }

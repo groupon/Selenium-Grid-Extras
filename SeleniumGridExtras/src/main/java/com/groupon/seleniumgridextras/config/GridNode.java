@@ -165,6 +165,9 @@ public class GridNode {
 
     //java -jar 2.41.0.jar -role node -hub http://192.168.168.17:4444 -maxSession 3 -register true -unregisterIfStillDownAfter 20000 -browserTimeout 120 -timeout 120 -port
 
+    public int getMaxSession(){
+      return this.maxSession;
+    }
 
     public int getPort() {
       return port;

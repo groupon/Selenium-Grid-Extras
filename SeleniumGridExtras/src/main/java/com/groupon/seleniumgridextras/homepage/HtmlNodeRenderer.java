@@ -2,7 +2,9 @@ package com.groupon.seleniumgridextras.homepage;
 
 import com.google.gson.internal.StringMap;
 
+import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.tasks.SystemInfo;
 import com.groupon.seleniumgridextras.utilities.ImageUtils;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
@@ -15,8 +17,8 @@ import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 public class HtmlNodeRenderer {
 
@@ -183,13 +185,39 @@ public class HtmlNodeRenderer {
 
     hardwareInfoSnippet.append(HtmlRenderer.openDiv(COL_LG_6));
 
-    hardwareInfoSnippet.append(infoSnippet("Current Sessions", ""));
+    hardwareInfoSnippet.append(infoSnippet("Declared Capabilities", buildSupportedCapabilities()));
     hardwareInfoSnippet.append(infoSnippet("Previous Builds", ""));
     hardwareInfoSnippet.append(infoSnippet("Supported Browsers", ""));
 
     hardwareInfoSnippet.append(HtmlRenderer.closeDiv(COL_LG_6));
 
     return hardwareInfoSnippet.toString();
+  }
+
+  public String buildSupportedCapabilities() {
+    StringBuilder renderedCapabilities = new StringBuilder();
+    renderedCapabilities.append("\n<ul class='capabilities'>");
+    for (GridNode node : RuntimeConfig.getConfig().getNodes()) {
+      renderedCapabilities.append("\n\t<li class='cap_node'>");
+      renderedCapabilities.append("\n\t\tNode: " + node.getConfiguration().getPort());
+      renderedCapabilities.append("\n\t\t<ul class='node'>");
+      renderedCapabilities.append("\n\t\t\t<li>Config File: " + node.getLoadedFromFile() + "</li>");
+      renderedCapabilities.append("\n\t\t\t<li>Max Sessions: " + node.getConfiguration().getMaxSession() + "</li>");
+      renderedCapabilities.append("\n\t\t\t<li class='declared_browsers'>Declared Browsers: <br/> (Version / Max Instances)");
+      renderedCapabilities.append("\n\t\t\t\t<ul class='browser_list'>");
+      for (Capability cap : node.getCapabilities()) {
+        renderedCapabilities.append("\n\t\t\t\t\t<li class='browser'>");
+        renderedCapabilities.append("<img class='browser_icon' src='data:image/png;base64," + cap.getIcon() + "'>");
+        renderedCapabilities.append(" " + cap.getBrowserVersion() + " / " + cap.getMaxInstances());
+        renderedCapabilities.append("\n\t\t\t\t\t</li> <!-- browser -->");
+      }
+      renderedCapabilities.append("\n\t\t\t\t</ul> <!-- browser_list -->");
+      renderedCapabilities.append("\n\t\t\t</li> <!-- declared_browsers -->");
+      renderedCapabilities.append("\n\t\t</ul><!-- node -->");
+      renderedCapabilities.append("\n\t</li><!-- cap_node -->");
+    }
+    renderedCapabilities.append("\n</ul> <!-- capabilities -->");
+    return renderedCapabilities.toString();
   }
 
 
