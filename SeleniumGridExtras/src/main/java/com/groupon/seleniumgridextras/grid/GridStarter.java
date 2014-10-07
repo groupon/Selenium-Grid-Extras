@@ -18,7 +18,7 @@ public class GridStarter {
 
   private static Logger logger = Logger.getLogger(GridStarter.class);
 
-  public static String getOsSpecificHubStartCommand(Boolean windows) {
+  public static String getOsSpecificHubStartCommand(String configFile, Boolean windows) {
 
     StringBuilder command = new StringBuilder();
     command.append(getJavaExe() + " ");
@@ -28,14 +28,15 @@ public class GridStarter {
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
 
     command.append(jarPath + getOsSpecificQuote());
-    command.append(" org.openqa.grid.selenium.GridLauncher ");
-    command.append(RuntimeConfig.getConfig().getHub().getStartCommand());
+    command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
+//    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
 
     String
         logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
     command.append(logCommand);
-    command.append(" -newSessionWaitTimeout 120000 -browserTimeout 120 -timeout 120");
+//    command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
+    command.append(" -hubConfig " + configFile);
 
     logger.info("Hub Start Command: \n\n" + String.valueOf(command));
     return String.valueOf(command);
@@ -76,6 +77,31 @@ public class GridStarter {
 
     }
 
+    return jsonResponseBuilder.getJson();
+  }
+  
+  public static JsonObject startAllHubs(JsonResponseBuilder jsonResponseBuilder) {
+    List<String> configFiles = RuntimeConfig.getConfig().getHubConfigFiles();
+    String configFile = configFiles.get(0); // TODO For now just use the first config file
+    String command = getOsSpecificHubStartCommand(configFile, RuntimeConfig.getOS().isWindows());
+    logger.info(command);
+    
+    try {
+      JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
+      logger.info(startResponse);
+
+      if (!startResponse.get("exit_code").toString().equals("0")) {
+        jsonResponseBuilder
+            .addKeyValues("error", "Error running " + startResponse.get("error").toString());
+      }
+    } catch (Exception e) {
+      jsonResponseBuilder
+          .addKeyValues("error", "Error running " + command);
+      jsonResponseBuilder
+          .addKeyValues("error", e.toString());
+
+      e.printStackTrace();
+    }
     return jsonResponseBuilder.getJson();
   }
 
