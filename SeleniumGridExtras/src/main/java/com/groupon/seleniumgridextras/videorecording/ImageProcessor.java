@@ -40,7 +40,8 @@ public class ImageProcessor {
       g.fillRect(0, firstLineStartHeight, imageWidth, borderHeight);
 
       g.setColor(fontColor);
-      g.setFont(g.getFont().deriveFont(12f)); //Set text size
+      g.setFont(new Font("TimesRoman", Font.PLAIN, 12));
+//      g.setFont(g.getFont().deriveFont(12f)); //Set text size
 
       g.drawString("" + line1, textLeftStartPosition, firstLineStartHeight + 12);
       g.drawString("" + line2, textLeftStartPosition, firstLineStartHeight + 24);
@@ -76,9 +77,9 @@ public class ImageProcessor {
     int secondLineY = firstLineY + 20;
     int thirdLineY = secondLineY + 12;
 
-    g.setFont(g.getFont().deriveFont(20f));
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 26));
     g.drawString("" + line1, firstLineX, firstLineY);
-    g.setFont(g.getFont().deriveFont(12f));
+    g.setFont(new Font("TimesRoman", Font.PLAIN, 14));
     g.drawString("" + line2, firstLineX, secondLineY);
     g.drawString("" + line3, firstLineX, thirdLineY);
 

@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class ImageProcessorTest {
@@ -51,14 +52,27 @@ public class ImageProcessorTest {
                                                    "LINE 4: Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
 
     // Uncomment this line after updating ImageProcessor class, to generate a new expected image
-    // ImageUtils.saveImage(new File("SeleniumGridExtras/src/test/resources/fixtures/expected_processed_image.png"), processedImage);
+//    ImageUtils.saveImage(new File("SeleniumGridExtras/src/test/resources/fixtures/expected_processed_image.png"), processedImage);
+//      ImageUtils.saveImage(new File("SeleniumGridExtras/src/test/resources/fixtures/expected_processed_image_cli.png"), processedImage);
 
     String actual = ImageUtils.encodeToString(processedImage, "PNG");
+
     final File
         expectedFile =
         new File(ClassLoader.getSystemResource("fixtures/expected_processed_image.png").getFile());
 
-    assertEquals(ImageUtils.encodeToString(ImageUtils.readImage(expectedFile), "PNG"), actual);
+      //So this is a ton of FUN!!! the font that is used by IDE might not match the font used from CLI
+      //So doing a backwards hack, will probably fail on windows or linux
+      if (ImageUtils.encodeToString(ImageUtils.readImage(expectedFile), "PNG").equals(actual)){
+          assertTrue(true);
+      } else {
+          final File
+                  expectedCLIFile =
+                  new File(ClassLoader.getSystemResource("fixtures/expected_processed_image_cli.png").getFile());
+          assertEquals(ImageUtils.encodeToString(ImageUtils.readImage(expectedCLIFile), "PNG"), actual);
+      }
+
+
   }
 
   @Test
@@ -70,13 +84,27 @@ public class ImageProcessorTest {
 
     // Uncomment this line after updating ImageProcessor class, to generate a new expected image
 //    ImageUtils.saveImage(new File("SeleniumGridExtras/src/test/resources/fixtures/expected_title_image.png"), image);
+//      ImageUtils.saveImage(new File("SeleniumGridExtras/src/test/resources/fixtures/expected_title_image_cli.png"), image);
 
     final File
         expectedFile =
         new File(ClassLoader.getSystemResource("fixtures/expected_title_image.png").getFile());
 
-    assertEquals(ImageUtils.encodeToString(ImageUtils.readImage(expectedFile), "PNG"),
-                 ImageUtils.encodeToString(image, "PNG"));
+
+      //So this is a ton of FUN!!! the font that is used by IDE might not match the font used from CLI
+      //So doing a backwards hack, will probably fail on windows or linux
+      if (ImageUtils.encodeToString(ImageUtils.readImage(expectedFile), "PNG").equals(ImageUtils.encodeToString(image, "PNG")) ){
+          assertTrue(true);
+      } else {
+          final File
+                  expectedCLIFile =
+                  new File(ClassLoader.getSystemResource("fixtures/expected_title_image_cli.png").getFile());
+
+          assertEquals(ImageUtils.encodeToString(ImageUtils.readImage(expectedCLIFile), "PNG"),
+                  ImageUtils.encodeToString(image, "PNG"));
+      }
+
+
 
   }
 
