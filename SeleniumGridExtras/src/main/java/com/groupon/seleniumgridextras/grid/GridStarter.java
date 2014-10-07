@@ -90,15 +90,15 @@ public class GridStarter {
       JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
       logger.info(startResponse);
 
-      if (!startResponse.get("exit_code").toString().equals("0")) {
+      if (!startResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
         jsonResponseBuilder
-            .addKeyValues("error", "Error running " + startResponse.get("error").toString());
+            .addKeyValues(JsonCodec.ERROR, "Error running " + startResponse.get(JsonCodec.ERROR).toString());
       }
     } catch (Exception e) {
       jsonResponseBuilder
-          .addKeyValues("error", "Error running " + command);
+          .addKeyValues(JsonCodec.ERROR, "Error running " + command);
       jsonResponseBuilder
-          .addKeyValues("error", e.toString());
+          .addKeyValues(JsonCodec.ERROR, e.toString());
 
       e.printStackTrace();
     }
