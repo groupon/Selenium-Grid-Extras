@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras;
 
 import com.google.gson.JsonParser;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.MoveMouse;
 
@@ -77,23 +78,22 @@ public class MoveMouseTest {
     foo.put("x", "20");
     foo.put("y", "20");
 
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
-
+    if (RuntimeConfig.getOS().hasGUI()) {
       assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":20,\"x\":20,\"out\":[]}"),
-          task.execute(foo));
+              task.execute(foo));
     }
   }
 
   @Test
   public void testExecuteNoParam() throws Exception {
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+    if (RuntimeConfig.getOS().hasGUI()) {
       assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":0,\"x\":0,\"out\":[]}"), task.execute());
     }
   }
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+    if (RuntimeConfig.getOS().hasGUI()) {
       assertEquals(new JsonParser().parse("{\"exit_code\":0,\"error\":[],\"y\":[\"\"],\"x\":[\"\"],\"out\":[]}"),
           task.getJsonResponse().getJson());
 

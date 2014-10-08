@@ -38,6 +38,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonParser;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -81,7 +82,7 @@ public class GridStatusTest {
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+    if (RuntimeConfig.getOS().hasGUI()) {
       assertEquals(
           new JsonParser().parse("{\"exit_code\":0,\"out\":[],\"error\":[],\"hub_running\":[\"\"],\"node_running\":[\"\"],\"hub_info\":[\"\"],\"node_info\":[\"\"],\"node_sessions_started\":[\"\"],\"node_sessions_closed\":[\"\"],\"node_sessions_limit\":[\"\"]}"),
           task.getJsonResponse().getJson());

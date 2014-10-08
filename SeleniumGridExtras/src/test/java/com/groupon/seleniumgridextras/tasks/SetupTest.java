@@ -80,7 +80,7 @@ public class SetupTest {
 
   @Test
   public void testExecute() {
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+    if (RuntimeConfig.getOS().hasGUI()) {
       JsonObject result = task.execute();
       Long exitCode = new Long(0);
       JsonArray expectedClasses = new JsonArray();
@@ -105,7 +105,7 @@ public class SetupTest {
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+    if (RuntimeConfig.getOS().hasGUI()) {
 
       assertEquals(
           new JsonParser().parse("{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"MoveMouse\", \"SessionCounterStartSession\"],\"out\":[]}"),

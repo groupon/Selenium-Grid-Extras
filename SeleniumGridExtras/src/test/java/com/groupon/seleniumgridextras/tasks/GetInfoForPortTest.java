@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonParser;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,7 +85,7 @@ public class GetInfoForPortTest {
 
   @Test
   public void testGetJsonResponse() throws Exception {
-    if (!java.awt.GraphicsEnvironment.isHeadless()) {
+    if (RuntimeConfig.getOS().hasGUI()) {
       assertEquals(
           new JsonParser().parse("{\"port\":[\"\"],\"exit_code\":0,\"error\":[],\"process_name\":[\"\"],\"pid\":[\"\"],\"user\":[\"\"],\"out\":[]}"),
           task.getJsonResponse().getJson());

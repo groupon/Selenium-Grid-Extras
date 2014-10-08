@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
@@ -103,7 +104,7 @@ public class MoveMouse extends ExecuteOSTask {
 
   @Override
   public boolean initialize() {
-    if (allDependenciesLoaded() && !java.awt.GraphicsEnvironment.isHeadless()) {
+    if (allDependenciesLoaded() && RuntimeConfig.getOS().hasGUI()) {
       printInitilizedSuccessAndRegisterWithAPI();
       return true;
     } else {

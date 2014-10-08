@@ -42,6 +42,7 @@ import com.sun.jna.platform.win32.Kernel32;
 
 import org.apache.log4j.Logger;
 
+import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -115,6 +116,9 @@ public class OS {
     }
   }
 
+  public boolean hasGUI(){
+      return !GraphicsEnvironment.isHeadless();
+  }
 
 
   private String getUnixPid(){
