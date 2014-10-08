@@ -144,6 +144,7 @@ public class RuntimeConfig {
 
     //Load node info from the node classes
     config.loadNodeClasses();
+    config.loadHubClasses(); // TODO added for Hub
 
     //Write out all of the possible examples into an example file
     config.writeToDisk(RuntimeConfig.getConfigFile() + ".example");

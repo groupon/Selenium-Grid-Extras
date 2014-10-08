@@ -125,24 +125,7 @@ public class StartGrid extends ExecuteOSTask {
 
   private JsonObject startHub() {
     System.out.println(ATTEMPTING_TO_START_GRID_HUB);
-
-    JsonObject serviceStartResponse = ExecuteCommand.execRuntime(
-        GridStarter.getOsSpecificHubStartCommand(RuntimeConfig.getOS().isWindows())
-        , false);
-
-    logger.info(serviceStartResponse);
-
-    if (serviceStartResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
-      getJsonResponse().addKeyValues(JsonCodec.OUT,
-                                     "Service start command sent, might take as long as 10 seconds to spin up");
-    } else {
-      logger.error(CANT_LAUNCH_ERROR);
-      logger.error(serviceStartResponse);
-      getJsonResponse().addKeyValues(JsonCodec.ERROR, (JsonArray) serviceStartResponse.get(JsonCodec.ERROR));
-    }
-
-    return getJsonResponse().getJson();
-
+    return GridStarter.startAllHubs(getJsonResponse());
   }
 
 
