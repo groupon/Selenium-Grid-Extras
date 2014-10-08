@@ -13,6 +13,7 @@ tmp
 log/*
 SeleniumGridExtras/log/*
 .DS_Store
+hub_4444.json
 node_5555.json
 node_5556.json
 node_5557.json
