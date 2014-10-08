@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class FileIOUtility {
@@ -65,6 +66,10 @@ public class FileIOUtility {
     }
 
     public static void writePrettyJsonToFile(File filename, Map content) throws IOException {
+        writeToFile(filename, JsonParserWrapper.prettyPrintString(content));
+    }
+
+    public static void writePrettyJsonToFile(File filename, List content) throws IOException {
         writeToFile(filename, JsonParserWrapper.prettyPrintString(content));
     }
 
