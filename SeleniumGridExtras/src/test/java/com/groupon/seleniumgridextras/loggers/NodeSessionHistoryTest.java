@@ -1,14 +1,12 @@
 package com.groupon.seleniumgridextras.loggers;
 
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
-import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +16,6 @@ import static org.junit.Assert.*;
 public class NodeSessionHistoryTest {
 
     private NodeSessionHistory history;
-    private Date timestamp;
     private File outputFile = new File("session_output_log.json");
     private Map expectedSession;
     private final String expectedJson =
@@ -32,8 +29,7 @@ public class NodeSessionHistoryTest {
     @Before
     public void setUp() throws Exception {
         deleteOutput();
-        timestamp = TimeStampUtility.getTimestamp();
-        history = new NodeSessionHistory(timestamp, outputFile);
+        history = new NodeSessionHistory(outputFile);
 
         expectedSession = new HashMap();
         expectedSession.put("id", "123456");
@@ -74,7 +70,7 @@ public class NodeSessionHistoryTest {
 
     @Test
     public void testTimeToRotateLog() throws Exception {
-        NodeSessionHistory timedHistory = new NodeSessionHistory(timestamp, outputFile);
+        NodeSessionHistory timedHistory = new NodeSessionHistory(outputFile);
 
         assertFalse(timedHistory.timeToRotateLog());
         timedHistory.setLogRotationDuration(1000);

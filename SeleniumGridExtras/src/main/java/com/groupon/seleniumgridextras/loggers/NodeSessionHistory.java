@@ -21,8 +21,8 @@ public class NodeSessionHistory {
 
     private static Logger logger = Logger.getLogger(NodeSessionHistory.class);
 
-    public NodeSessionHistory(Date nodeNameTimestamp, File outputFile) {
-        this.created = nodeNameTimestamp;
+    public NodeSessionHistory(File outputFile) {
+        this.created = TimeStampUtility.getTimestamp();
         this.sessions = new LinkedList<Map>();
         this.outputFile = outputFile;
     }
