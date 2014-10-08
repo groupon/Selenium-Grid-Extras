@@ -43,8 +43,12 @@ import com.google.gson.JsonParser;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.GetProcesses;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -87,5 +91,11 @@ public class GetProcessesTest {
     assertEquals(3, task.getJsonResponse().getKeyDescriptions().entrySet().size());
 
   }
+
+    @Test
+    public void testExecute() throws Exception{
+        Map result = JsonParserWrapper.toHashMap(task.execute());
+        assertEquals(0, ((Double) result.get(JsonCodec.EXIT_CODE)).intValue());
+    }
 
 }

@@ -44,27 +44,32 @@ import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 
 public class GetProcesses extends ExecuteOSTask {
 
-  public GetProcesses() {
-    setEndpoint(TaskDescriptions.Endpoints.PS);
-    setDescription(TaskDescriptions.Description.PS);
-    JsonObject params = new JsonObject();
-    setAcceptedParams(params);
-    setRequestType(TaskDescriptions.HTTP.GET);
-    setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
-    setButtonText(TaskDescriptions.UI.ButtonText.PS);
-    setEnabledInGui(true);
-  }
+    public GetProcesses() {
+        setEndpoint(TaskDescriptions.Endpoints.PS);
+        setDescription(TaskDescriptions.Description.PS);
+        JsonObject params = new JsonObject();
+        setAcceptedParams(params);
+        setRequestType(TaskDescriptions.HTTP.GET);
+        setResponseType(TaskDescriptions.HTTP.JSON);
+        setClassname(this.getClass().getCanonicalName().toString());
+        setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
+        setButtonText(TaskDescriptions.UI.ButtonText.PS);
+        setEnabledInGui(true);
+    }
 
-  @Override
-  public String getWindowsCommand() {
-    return "tasklist";
-  }
+    @Override
+    public String getWindowsCommand(String parameter) {
+        return "tasklist";
+    }
 
-  @Override
-  public String getLinuxCommand() {
-    return "ps x";
-  }
+    @Override
+    public String getLinuxCommand(String parameter) {
+        return "ps x";
+    }
+
+    @Override
+    public String getMacCommand(String parameter) {
+        return "ps x";
+    }
 
 }
