@@ -87,8 +87,7 @@ public class GetNodeConfig extends ExecuteOSTask {
       return execute();
     } else if (!configDirExist()) {
       getJsonResponse().addKeyValues(JsonCodec.ERROR, "This node does not contain the following directory: "
-                                              + RuntimeConfig.getConfig().getConfigsDirectory()
-          .getName());
+                                              + RuntimeConfig.getConfig().getConfigsDirectory().getName());
       return getJsonResponse().getJson();
     } else {
       return execute(parameter.get(JsonCodec.WebDriver.Grid.NODE).toString());

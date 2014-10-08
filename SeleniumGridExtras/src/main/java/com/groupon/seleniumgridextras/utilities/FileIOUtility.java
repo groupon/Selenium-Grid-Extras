@@ -14,58 +14,58 @@ import java.util.Map;
 
 public class FileIOUtility {
 
-  private static Logger logger = Logger.getLogger(FileIOUtility.class);
+    private static Logger logger = Logger.getLogger(FileIOUtility.class);
 
-  public static String getAsString(String file) throws FileNotFoundException {
-    return getAsString(new File(file));
-  }
-
-
-  public static String getAsString(File file) throws FileNotFoundException {
-
-    String readString = "";
-    BufferedReader reader = new BufferedReader(new FileReader(file));
-    String line = null;
-
-    try {
-      while ((line = reader.readLine()) != null) {
-        readString = readString + line;
-      }
-    } catch (IOException error) {
-      logger.error("IOExcetion reading " + file.getAbsolutePath());
-      logger.error(error);
-    } finally {
-      try {
-        reader.close();
-      } catch (IOException e) {
-        logger.error("Error closing the file reader");
-        logger.equals(e);
-        e.printStackTrace();
-      }
+    public static String getAsString(String file) throws FileNotFoundException {
+        return getAsString(new File(file));
     }
 
-    logger.debug("Read from" + file.getAbsolutePath() + " following content\n" + readString);
 
-    return readString;
-  }
+    public static String getAsString(File file) throws FileNotFoundException {
 
-  public static void writeToFile(File filename, String content, boolean append) throws IOException {
-    logger.debug("Writing to " + filename.getAbsolutePath() + " following content\n" + content);
-    FileUtils.writeStringToFile(filename, content, append);
-  }
+        String readString = "";
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line = null;
 
-  public static void writeToFile(File filename, String content) throws IOException {
-    FileIOUtility.writeToFile(filename, content, false);
-  }
+        try {
+            while ((line = reader.readLine()) != null) {
+                readString = readString + line;
+            }
+        } catch (IOException error) {
+            logger.error("IOExcetion reading " + file.getAbsolutePath());
+            logger.error(error);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                logger.error("Error closing the file reader");
+                logger.equals(e);
+                e.printStackTrace();
+            }
+        }
 
-  public static void writePrettyJsonToFile(File filename, String content) throws IOException{
-    Map parsedJson = JsonParserWrapper.toHashMap(content);
-    DoubleToIntConverter.convertAllDoublesToInt(parsedJson);
-    writeToFile(filename, JsonParserWrapper.prettyPrintString(parsedJson));
-  }
+        logger.debug("Read from" + file.getAbsolutePath() + " following content\n" + readString);
 
-  public static void writePrettyJsonToFile(String filename, String content) throws IOException{
-    writePrettyJsonToFile(new File(filename), content);
-  }
+        return readString;
+    }
+
+    public static void writeToFile(File filename, String content, boolean append) throws IOException {
+        logger.debug("Writing to " + filename.getAbsolutePath() + " following content\n" + content);
+        FileUtils.writeStringToFile(filename, content, append);
+    }
+
+    public static void writeToFile(File filename, String content) throws IOException {
+        FileIOUtility.writeToFile(filename, content, false);
+    }
+
+    public static void writePrettyJsonToFile(File filename, String content) throws IOException {
+        Map parsedJson = JsonParserWrapper.toHashMap(content);
+        DoubleToIntConverter.convertAllDoublesToInt(parsedJson);
+        writePrettyJsonToFile(filename, parsedJson);
+    }
+
+    public static void writePrettyJsonToFile(File filename, Map content) throws IOException {
+        writeToFile(filename, JsonParserWrapper.prettyPrintString(content));
+    }
 
 }
