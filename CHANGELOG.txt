@@ -1,5 +1,8 @@
-1.6.0 - Improved OS detection on Windows for first run, this solves issue between Windows/Vista/XP/Win8
+1.6.0 - Adding a machine view at http://localhost:3000
+      - Grid Hub now launches from JSON file (hub_4444.json)
+      - Improved OS detection on Windows for first run, this solves issue between Windows/Vista/XP/Win8
       - [BUG] Set timeout to 5 seconds when pulling node config from the central hub, instead of sitting there indefinetely
+      - [BJG[ Fix /ps endpoint
 1.5.2 - Make the Grid Extras compatible with Java 1.6
 1.5.1 - [BUG] Firefox on windows was not getting terminated with /kill_firefox command
 1.5.0 - Automatically record video of a running test
