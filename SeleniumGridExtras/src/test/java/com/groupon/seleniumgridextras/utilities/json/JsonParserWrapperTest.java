@@ -24,8 +24,17 @@ public class JsonParserWrapperTest {
             "  ]\n" +
             "}";
 
+    private static final String JSON_LIST_WITH_MAPS =
+            "[\n" +
+            "  {\n" +
+            "    \"id\": \"123456\",\n" +
+            "    \"time\": \"time\"\n" +
+            "  }\n" +
+            "]";
+
     private JsonResponseBuilder responseBuilder;
     private Map expectedParsedHash;
+
 
     @Before
     public void setUp() throws Exception {
@@ -41,6 +50,21 @@ public class JsonParserWrapperTest {
         List foo = new LinkedList();
         foo.add("hello");
         expectedParsedHash.put("foo", foo);
+
+
+
+
+    }
+
+    @Test
+    public void testToListFromString() throws Exception {
+        Map expected = new HashMap();
+        expected.put("id", "123456");
+        expected.put("time", "time");
+
+        List actual =JsonParserWrapper.toList(JSON_LIST_WITH_MAPS);
+        assertEquals(1, actual.size());
+        assertEquals(expected, actual.get(0));
     }
 
     @Test
