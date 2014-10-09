@@ -2,7 +2,9 @@ package com.groupon.seleniumgridextras.utilities.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,6 +17,10 @@ public class JsonParserWrapper {
         return new Gson().fromJson(input, LinkedList.class);
     }
 
+
+    public static JsonObject toJsonObject(Map input) {
+        return new Gson().toJsonTree(input).getAsJsonObject();
+    }
 
     public static Map toHashMap(String input) {
         return new Gson().fromJson(input, HashMap.class);

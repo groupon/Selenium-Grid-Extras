@@ -1,5 +1,8 @@
 package com.groupon.seleniumgridextras.utilities.json;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.tasks.ExposeDirectory;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,5 +99,25 @@ public class JsonParserWrapperTest {
     @Test
     public void testPrettyPrintStringJsonObject() throws Exception {
         assertEquals(JSON_BUILDER_PRETTY_STRING, JsonParserWrapper.prettyPrintString(responseBuilder.getJson()));
+    }
+
+    @Test
+    public void testToJsonObject() throws Exception {
+
+        Map foo = new HashMap();
+        foo.put("a", "b");
+        foo.put("b", 2);
+
+        JsonObject actual = JsonParserWrapper.toJsonObject(foo);
+
+        JsonObject expected = new JsonObject();
+
+        expected.add("a", new JsonPrimitive("b"));
+        expected.add("b", new JsonPrimitive(2));
+
+
+        assertEquals(expected, actual);
+
+
     }
 }
