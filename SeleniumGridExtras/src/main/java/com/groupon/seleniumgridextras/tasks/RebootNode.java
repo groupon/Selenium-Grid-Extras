@@ -38,40 +38,52 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
+import org.apache.log4j.Logger;
 
 public class RebootNode extends ExecuteOSTask {
 
-  public RebootNode() {
-    setEndpoint(TaskDescriptions.Endpoints.REBOOT);
-    setDescription(TaskDescriptions.Description.REBOOT);
-    JsonObject params = new JsonObject();
-    setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass(TaskDescriptions.UI.BTN_DANGER);
-    setButtonText(TaskDescriptions.UI.ButtonText.REBOOT);
-    setEnabledInGui(true);
-  }
+    private static Logger logger = Logger.getLogger(RebootNode.class);
 
-  @Override
-  public String getWindowsCommand() {
-    return getWindowsCommand("");
-  }
+    public RebootNode() {
+        setEndpoint(TaskDescriptions.Endpoints.REBOOT);
+        setDescription(TaskDescriptions.Description.REBOOT);
+        JsonObject params = new JsonObject();
+        setAcceptedParams(params);
+        setRequestType("GET");
+        setResponseType("json");
+        setClassname(this.getClass().getCanonicalName().toString());
+        setCssClass(TaskDescriptions.UI.BTN_DANGER);
+        setButtonText(TaskDescriptions.UI.ButtonText.REBOOT);
+        setEnabledInGui(true);
+    }
 
-  @Override
-  public String getWindowsCommand(String param) {
-    return "shutdown -r -t 1 -f";
-  }
+    @Override
+    public String getWindowsCommand() {
+        return getWindowsCommand("");
+    }
 
-  @Override
-  public String getMacCommand() {
-    return getMacCommand("");
-  }
+    @Override
+    public String getWindowsCommand(String param) {
+        logReboot();
+        return "shutdown -r -t 1 -f";
+    }
 
-  @Override
-  public String getMacCommand(String param) {
-    return "shutdown -r now";
-  }
+    @Override
+    public String getMacCommand() {
+        logReboot();
+        return getMacCommand("");
+    }
+
+    @Override
+    public String getMacCommand(String param) {
+        logReboot();
+        return "shutdown -r now";
+    }
+
+    protected void logReboot() {
+        logger.info("Rebooting " + RuntimeConfig.getOS().getHostName() + " at " + TimeStampUtility.getTimestampAsString());
+    }
 }
