@@ -102,7 +102,6 @@ public class IEProtectedMode extends ExecuteOSTask {
     return zone;
   }
 
-
   public String setCurrentSettingForZone(String zoneId, String newValue) {
     String
         foo =
@@ -154,7 +153,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     try {
       for (String key : getZones().keySet()) {
         Advapi32Util
-            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), "2500",
+            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), JsonCodec.OS.RegistryKeys.IE_PROTECTED_MODE,
                                  enable);
       }
     } catch (Exception e) {
@@ -166,7 +165,7 @@ public class IEProtectedMode extends ExecuteOSTask {
   private Boolean getProtectedEnabledForZone(String zone) {
     int enabled =
         Advapi32Util
-            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), "2500");
+            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), JsonCodec.OS.RegistryKeys.IE_PROTECTED_MODE);
 
     if (enabled == 0) {
       return true;

@@ -52,7 +52,7 @@ public class IEMixedContent extends ExecuteOSTask {
 
   private static
   org.apache.log4j.Logger
-      logger = org.apache.log4j.Logger.getLogger(DownloadIEDriver.class);
+      logger = org.apache.log4j.Logger.getLogger(IEMixedContent.class);
 
   public IEMixedContent() {
     setEndpoint(TaskDescriptions.Endpoints.IE_MIXED_CONTENT);
@@ -60,7 +60,7 @@ public class IEMixedContent extends ExecuteOSTask {
         TaskDescriptions.Description.IE_MIXED_CONTENT);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.OS.InternetExplorer.ENABLED,
-                       "(Optional)1 for enabling mixed content for all zones, 0 for disabling");
+                       "(Optional)0 for enabling mixed content for all zones, 1 for prompting, and 3 for disabling");
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
@@ -80,7 +80,6 @@ public class IEMixedContent extends ExecuteOSTask {
                             "Current setting for Restricted Sites");
   }
 
-
   public String
       regLocation =
       "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%s";
@@ -97,17 +96,8 @@ public class IEMixedContent extends ExecuteOSTask {
     }
   };
 
-
   public HashMap<String, String> getZones() {
     return zone;
-  }
-
-
-  public String setCurrentSettingForZone(String zoneId, String newValue) {
-    String
-        foo =
-        "powershell.exe /c \"Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\Zones\\%s' -Name 1609 -Value %s";
-    return String.format(foo, zoneId, newValue);
   }
 
   public String getCurrentSettingForZone(String zoneId) {
@@ -137,8 +127,19 @@ public class IEMixedContent extends ExecuteOSTask {
   @Override
   public JsonObject execute(String status) {
     if (RuntimeConfig.getOS().isWindows()) {
-      setAllMixedContent(
-          status.equals(JsonCodec.OS.InternetExplorer.INTERNET_ZONE) ? true : false);
+      int value = 0;
+      if (status.equals("0")) {
+        value = 0;
+      } else if (status.equals("1")) {
+        value = 1;
+      } else if (status.equals("3")) {
+        value = 3;
+      } else {
+        getJsonResponse().addKeyValues(JsonCodec.ERROR,
+            "Value of " + status + " is not valid. Only 0, 1, 3 are valid.");
+        return getJsonResponse().getJson();
+      }
+      setAllMixedContent(value);
       getJsonResponse()
           .addKeyValues(JsonCodec.OUT, "IE needs to restart before you see the changes");
       return getAllMixedContentStatus();
@@ -149,40 +150,41 @@ public class IEMixedContent extends ExecuteOSTask {
     }
   }
 
-  private void setAllMixedContent(boolean value) {
-    int enable = value ? 0 : 1;
+  private void setAllMixedContent(int value) {
     try {
       for (String key : getZones().keySet()) {
         Advapi32Util
-            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), "1609",
-                                 enable);
+            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), JsonCodec.OS.RegistryKeys.IE_MIXED_CONTENT,
+                                 value);
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
-
-  private Boolean getMixedContentEnabledForZone(String zone) {
-    int enabled =
+  private String getMixedContentEnabledForZone(String zone) {
+    int status =
         Advapi32Util
-            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), "1609");
+            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), JsonCodec.OS.RegistryKeys.IE_MIXED_CONTENT);
 
-    if (enabled == 0) {
-      return true;
+    if (status == 0) {
+      return "enabled";
+    } else if (status == 1) {
+      return "prompt";
+    } else if (status == 3) {
+      return "disabled";
     } else {
-      return false;
+      return "unknown";
     }
   }
 
 
   private JsonObject getAllMixedContentStatus() {
     for (String key : getZones().keySet()) {
-      boolean enabled = getMixedContentEnabledForZone(key);
+      String status = getMixedContentEnabledForZone(key);
 
-      logger.info("Zone " + key + " is set to " + enabled);
-      getJsonResponse().addKeyValues(getZones().get(key), enabled);
-
+      logger.info("Zone " + key + " is set to " + status);
+      getJsonResponse().addKeyValues(getZones().get(key), status);
     }
 
     return getJsonResponse().getJson();

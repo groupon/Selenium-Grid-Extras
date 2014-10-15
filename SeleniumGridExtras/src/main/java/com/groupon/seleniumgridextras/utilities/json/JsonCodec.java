@@ -86,6 +86,11 @@ public class JsonCodec {
       public static final String RESTRICTED_SITES = "Restricted Sites";
       public static final String ENABLED = "enabled";
     }
+    
+    public static class RegistryKeys {
+      public static final String IE_PROTECTED_MODE = "2500";
+      public static final String IE_MIXED_CONTENT = "1609";
+    }
 
     public static class Hardware{
 
