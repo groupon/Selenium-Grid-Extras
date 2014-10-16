@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Deprecated
 public class ProxyStatusJsonServlet extends RegistryBasedServlet {
 
     private static final long serialVersionUID = -1975392591408983229L;
@@ -58,7 +59,7 @@ public class ProxyStatusJsonServlet extends RegistryBasedServlet {
     private Map getResponse() {
         Map error = new HashMap();
 
-        error.put("message", "This servlete is currently disabled and will be depricated soon.");
+        error.put("message", "This servlet is currently disabled and will be deprecated soon.");
 
         return error;
 
