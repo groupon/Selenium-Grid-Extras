@@ -50,6 +50,7 @@ import com.groupon.seleniumgridextras.tasks.GetNodeConfig;
 import com.groupon.seleniumgridextras.tasks.GetProcesses;
 import com.groupon.seleniumgridextras.tasks.GridStatus;
 import com.groupon.seleniumgridextras.tasks.IEProtectedMode;
+import com.groupon.seleniumgridextras.tasks.IEMixedContent;
 import com.groupon.seleniumgridextras.tasks.KillAllByName;
 import com.groupon.seleniumgridextras.tasks.KillAllChrome;
 import com.groupon.seleniumgridextras.tasks.KillAllFirefox;
@@ -276,6 +277,7 @@ public class DefaultConfig {
     config.addActivatedModules(GetConfig.class.getCanonicalName());
     config.addActivatedModules(StopGridExtras.class.getCanonicalName());
     config.addActivatedModules(IEProtectedMode.class.getCanonicalName());
+    config.addActivatedModules(IEMixedContent.class.getCanonicalName());
     config.addActivatedModules(SystemInfo.class.getCanonicalName());
     config.addActivatedModules(GetNodeConfig.class.getCanonicalName());
     config.addActivatedModules(UpdateNodeConfig.class.getCanonicalName());
