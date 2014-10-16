@@ -16,6 +16,7 @@ public class TaskDescriptions {
     public static final String PS = "/ps";
     public static final String GRID_STATUS = "/grid_status";
     public static final String IE_PROTECTED_MODE = "/ie_protected_mode";
+    public static final String IE_MIXED_CONTENT = "/ie_mixed_content";
     public static final String KILL_ALL_BY_NAME = "/kill_all_by_name";
     public static final String KILL_CHROME = "/kill_chrome";
     public static final String KILL_FIREFOX = "/kill_firefox";
@@ -83,6 +84,10 @@ public class TaskDescriptions {
     String
         IE_PROTECTED_MODE =
         "Changes protected mode for Internet Explorer on/off. No param for current status";
+    public static final
+    String
+        IE_MIXED_CONTENT =
+        "Changes mixed content for Internet Explorer on/off. No param for current status";
     public static final
     String
         KILL_ALL_BY_NAME =
@@ -160,6 +165,7 @@ public class TaskDescriptions {
       public static final String PS = "Get Processes";
       public static final String GRID_STATUS = "Grid Status";
       public static final String IE_PROTECTED_MODE = "Enanble/Disable Protected Mode";
+      public static final String IE_MIXED_CONTENT = "Enanble/Disable Mixed Content";
       public static final String KILL_ALL_BY_NAME = "Kill all by name";
       public static final String KILL_CHROME = "Kill all chrome";
       public static final String KILL_FIREFOX = "Kill all firefox";
