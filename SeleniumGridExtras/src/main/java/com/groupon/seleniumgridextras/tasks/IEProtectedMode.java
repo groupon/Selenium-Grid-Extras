@@ -59,7 +59,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     setDescription(
         TaskDescriptions.Description.IE_PROTECTED_MODE);
     JsonObject params = new JsonObject();
-    params.addProperty(JsonCodec.OS.InternetExplorer.ENABLED,
+    params.addProperty(JsonCodec.OS.Windows.InternetExplorer.ENABLED,
                        "(Optional)1 for enabling protected mode for all zones, 0 for disabling");
     setAcceptedParams(params);
     setRequestType("GET");
@@ -70,13 +70,13 @@ public class IEProtectedMode extends ExecuteOSTask {
     setEnabledInGui(true);
 
     getJsonResponse()
-        .addKeyDescriptions(JsonCodec.OS.InternetExplorer.INTERNET, "Current setting for Internet");
-    getJsonResponse().addKeyDescriptions(JsonCodec.OS.InternetExplorer.LOCAL_INTRANET,
+        .addKeyDescriptions(JsonCodec.OS.Windows.InternetExplorer.INTERNET, "Current setting for Internet");
+    getJsonResponse().addKeyDescriptions(JsonCodec.OS.Windows.InternetExplorer.LOCAL_INTRANET,
                                          "Current setting for Local Intranet");
-    getJsonResponse().addKeyDescriptions(JsonCodec.OS.InternetExplorer.TRUSTED_SITES,
+    getJsonResponse().addKeyDescriptions(JsonCodec.OS.Windows.InternetExplorer.TRUSTED_SITES,
                                          "Current setting for Trusted Sites");
     getJsonResponse()
-        .addKeyDescriptions(JsonCodec.OS.InternetExplorer.RESTRICTED_SITES,
+        .addKeyDescriptions(JsonCodec.OS.Windows.InternetExplorer.RESTRICTED_SITES,
                             "Current setting for Restricted Sites");
   }
 
@@ -88,12 +88,12 @@ public class IEProtectedMode extends ExecuteOSTask {
 
   public final HashMap<String, String> zone = new HashMap<String, String>() {
     {
-      put(JsonCodec.OS.InternetExplorer.INTERNET_ZONE, JsonCodec.OS.InternetExplorer.INTERNET);
-      put(JsonCodec.OS.InternetExplorer.INTRANET_ZONE,
-          JsonCodec.OS.InternetExplorer.LOCAL_INTRANET);
-      put(JsonCodec.OS.InternetExplorer.TRUSTED_ZONE, JsonCodec.OS.InternetExplorer.TRUSTED_SITES);
-      put(JsonCodec.OS.InternetExplorer.RESTRICTED_ZONE,
-          JsonCodec.OS.InternetExplorer.RESTRICTED_SITES);
+      put(JsonCodec.OS.Windows.InternetExplorer.INTERNET_ZONE, JsonCodec.OS.Windows.InternetExplorer.INTERNET);
+      put(JsonCodec.OS.Windows.InternetExplorer.INTRANET_ZONE,
+          JsonCodec.OS.Windows.InternetExplorer.LOCAL_INTRANET);
+      put(JsonCodec.OS.Windows.InternetExplorer.TRUSTED_ZONE, JsonCodec.OS.Windows.InternetExplorer.TRUSTED_SITES);
+      put(JsonCodec.OS.Windows.InternetExplorer.RESTRICTED_ZONE,
+          JsonCodec.OS.Windows.InternetExplorer.RESTRICTED_SITES);
     }
   };
 
@@ -116,8 +116,8 @@ public class IEProtectedMode extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.InternetExplorer.ENABLED)) {
-      return execute(parameter.get(JsonCodec.OS.InternetExplorer.ENABLED).toString());
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.Windows.InternetExplorer.ENABLED)) {
+      return execute(parameter.get(JsonCodec.OS.Windows.InternetExplorer.ENABLED).toString());
     }
     return execute();
   }
@@ -137,7 +137,7 @@ public class IEProtectedMode extends ExecuteOSTask {
   public JsonObject execute(String status) {
     if (RuntimeConfig.getOS().isWindows()) {
       setAllProtectedStatuses(
-          status.equals(JsonCodec.OS.InternetExplorer.INTERNET_ZONE) ? true : false);
+          status.equals(JsonCodec.OS.Windows.InternetExplorer.INTERNET_ZONE) ? true : false);
       getJsonResponse()
           .addKeyValues(JsonCodec.OUT, "IE needs to restart before you see the changes");
       return getAllProtectedStatus();
@@ -153,7 +153,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     try {
       for (String key : getZones().keySet()) {
         Advapi32Util
-            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), JsonCodec.OS.RegistryKeys.IE_PROTECTED_MODE,
+            .registrySetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(key), JsonCodec.OS.Windows.RegistryKeys.IE_PROTECTED_MODE,
                                  enable);
       }
     } catch (Exception e) {
@@ -165,7 +165,7 @@ public class IEProtectedMode extends ExecuteOSTask {
   private Boolean getProtectedEnabledForZone(String zone) {
     int enabled =
         Advapi32Util
-            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), JsonCodec.OS.RegistryKeys.IE_PROTECTED_MODE);
+            .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), JsonCodec.OS.Windows.RegistryKeys.IE_PROTECTED_MODE);
 
     if (enabled == 0) {
       return true;

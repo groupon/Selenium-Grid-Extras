@@ -76,21 +76,24 @@ public class JsonCodec {
             public static final String ID = "id";
         }
 
-        public static class InternetExplorer {
-            public static final String INTERNET_ZONE = "1";
-            public static final String INTRANET_ZONE = "2";
-            public static final String TRUSTED_ZONE = "3";
-            public static final String RESTRICTED_ZONE = "4";
-            public static final String INTERNET = "Internet";
-            public static final String LOCAL_INTRANET = "Local Intranet";
-            public static final String TRUSTED_SITES = "Trusted Sites";
-            public static final String RESTRICTED_SITES = "Restricted Sites";
-            public static final String ENABLED = "enabled";
-        }
+        public static class Windows {
 
-        public static class RegistryKeys {
-            public static final String IE_PROTECTED_MODE = "2500";
-            public static final String IE_MIXED_CONTENT = "1609";
+            public static class InternetExplorer {
+                public static final String INTERNET_ZONE = "1";
+                public static final String INTRANET_ZONE = "2";
+                public static final String TRUSTED_ZONE = "3";
+                public static final String RESTRICTED_ZONE = "4";
+                public static final String INTERNET = "Internet";
+                public static final String LOCAL_INTRANET = "Local Intranet";
+                public static final String TRUSTED_SITES = "Trusted Sites";
+                public static final String RESTRICTED_SITES = "Restricted Sites";
+                public static final String ENABLED = "enabled";
+            }
+
+            public static class RegistryKeys {
+                public static final String IE_PROTECTED_MODE = "2500";
+                public static final String IE_MIXED_CONTENT = "1609";
+            }
         }
 
         public static class Hardware {
