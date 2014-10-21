@@ -1,9 +1,6 @@
 package com.groupon.seleniumgridextras.utilities.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -13,7 +10,7 @@ import java.util.Map;
 
 public class JsonParserWrapper {
 
-    public static List toList(String input){
+    public static List toList(String input) throws JsonSyntaxException {
         return new Gson().fromJson(input, LinkedList.class);
     }
 

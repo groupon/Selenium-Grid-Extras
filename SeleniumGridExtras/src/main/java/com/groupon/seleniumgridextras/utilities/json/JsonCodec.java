@@ -166,7 +166,6 @@ public class JsonCodec {
             public static final String HUB = "hub";
 
             public static final String SESSION_ID = "session";
-            public static final String ACTION = "action";
 
             public static final String LOGS = "logs";
             public static final String INTERNAL_KEY = "internal_key";

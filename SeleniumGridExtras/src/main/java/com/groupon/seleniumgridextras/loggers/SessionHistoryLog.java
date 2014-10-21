@@ -1,6 +1,8 @@
 package com.groupon.seleniumgridextras.loggers;
 
 import com.google.common.base.Throwables;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.MalformedJsonException;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
@@ -9,6 +11,7 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,15 +67,29 @@ public class SessionHistoryLog {
         String todaysTimeStamp = TimeStampUtility.osFriendlyTimestamp();
 
         for (File currentFile : outputDir.listFiles()) {
+            String error = "";
 
             if (currentFile.getName().contains(todaysTimeStamp)) {
+                String host = new String(currentFile.getName()).replaceAll("_" + todaysTimeStamp + ".log", "");
                 try {
                     String fileContents = FileIOUtility.getAsString(currentFile);
-                    String host = new String(currentFile.getName()).replaceAll("_" + todaysTimeStamp + ".log", "");
                     allHistory.put(host, JsonParserWrapper.toList(fileContents));
                 } catch (FileNotFoundException e) {
-                    logger.error(String.format("A file that existed a minute ago is now missing, %s\n%s\n%s",
-                            currentFile.getAbsolutePath(), e.getMessage(), Throwables.getStackTraceAsString(e)));
+                    error = String.format("A file that existed a minute ago is now missing, %s\n%s\n%s",
+                            currentFile.getAbsolutePath(), e.getMessage());
+                    logger.error(error, e);
+                } catch (JsonSyntaxException e) {
+                    error = String.format("File %s seems to be corrupted", currentFile.getAbsolutePath());
+                    logger.error(error, e);
+                } catch (Exception e) {
+                    error = String.format("Something went wrong and was not caught \n%s", Throwables.getStackTraceAsString(e));
+                    logger.error(error, e);
+                }
+
+                if ( !error.equals("")){
+                    List<String> errorList = new LinkedList<String>();
+                    errorList.add(error);
+                    allHistory.put(host, errorList);
                 }
 
 
