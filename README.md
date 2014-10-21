@@ -1,5 +1,6 @@
 Selenium-Grid-Extras
 ====================
+![](https://github.com/groupon/Selenium-Grid-Extras/blob/master/resources/node_view_screenshot.png)
 
 Selenium Grid Extras is a project that helps you set up and manage your local Selenium Grid. Typical instances of the Grid consists of the HUB and Nodes. The HUB is responsible for managing test sessions and assigning new session idle nodes.
 
