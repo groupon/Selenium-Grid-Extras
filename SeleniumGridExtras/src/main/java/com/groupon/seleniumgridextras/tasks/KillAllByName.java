@@ -48,78 +48,80 @@ import java.util.Map;
 
 public class KillAllByName extends ExecuteOSTask {
 
-  public KillAllByName() {
-    setEndpoint(TaskDescriptions.Endpoints.KILL_ALL_BY_NAME);
-    setDescription(TaskDescriptions.Description.KILL_ALL_BY_NAME);
-    JsonObject params = new JsonObject();
-    params.addProperty(JsonCodec.OS.KillCommands.NAME, "Name of process");
-    setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass(TaskDescriptions.UI.BTN_DANGER);
-    setButtonText(TaskDescriptions.UI.ButtonText.KILL_ALL_BY_NAME);
-    setEnabledInGui(true);
-  }
-
-  @Override
-  public String getWindowsCommand(String parameter) {
-    return getWindowsKillCommand(parameter);
-  }
-
-  @Override
-  public String getMacCommand(String parameter) {
-    return getMacKillCommand(parameter);
-  }
-  
-  @Override
-  public String getMacCommand() {
-    return getMacKillCommand("");
-  }  
-
-  @Override
-  public String getLinuxCommand(String parameter) {
-    return getLinuxKillCommand(parameter);
-  }
-
-  @Override
-  public JsonObject execute(String parameter) {
-    String command = "";
-    if (RuntimeConfig.getOS().isWindows()){
-      command = getWindowsCommand();
-    } else {
-      command = getMacCommand();
+    public KillAllByName() {
+        setEndpoint(TaskDescriptions.Endpoints.KILL_ALL_BY_NAME);
+        setDescription(TaskDescriptions.Description.KILL_ALL_BY_NAME);
+        JsonObject params = new JsonObject();
+        params.addProperty(JsonCodec.OS.KillCommands.NAME, "Name of process");
+        setAcceptedParams(params);
+        setRequestType("GET");
+        setResponseType("json");
+        setClassname(this.getClass().getCanonicalName().toString());
+        setCssClass(TaskDescriptions.UI.BTN_DANGER);
+        setButtonText(TaskDescriptions.UI.ButtonText.KILL_ALL_BY_NAME);
+        setEnabledInGui(true);
     }
 
-    String finalCommand = command + parameter;
-
-    JsonObject response = ExecuteCommand.execRuntime(finalCommand, waitToFinishTask);
-
-    response.addProperty(JsonCodec.OS.KillCommands.COMMAND, finalCommand);
-    response.addProperty(JsonCodec.OS.KillCommands.WAIT_TO_FINISH, waitToFinishTask);
-
-    return response;
-  }
-
-  @Override
-  public JsonObject execute(Map<String, String> parameter) {
-    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.KillCommands.NAME)) {
-      return execute(parameter.get(JsonCodec.OS.KillCommands.NAME).toString());
+    @Override
+    public String getWindowsCommand(String parameter) {
+        return getWindowsKillCommand(parameter);
     }
-    return execute();
-  }
+
+    @Override
+    public String getMacCommand(String parameter) {
+        return getMacKillCommand(parameter);
+    }
+
+    @Override
+    public String getMacCommand() {
+        return getMacKillCommand("");
+    }
+
+    @Override
+    public String getLinuxCommand(String parameter) {
+        return getLinuxKillCommand(parameter);
+    }
+
+    @Override
+    public JsonObject execute(String parameter) {
+        String command = "";
+        if (RuntimeConfig.getOS().isWindows()) {
+            command = getWindowsCommand();
+        } else if (RuntimeConfig.getOS().isMac()) {
+            command = getMacCommand();
+        } else {
+            command = getLinuxCommand();
+        }
+
+        String finalCommand = command + parameter;
+
+        JsonObject response = ExecuteCommand.execRuntime(finalCommand, waitToFinishTask);
+
+        response.addProperty(JsonCodec.OS.KillCommands.COMMAND, finalCommand);
+        response.addProperty(JsonCodec.OS.KillCommands.WAIT_TO_FINISH, waitToFinishTask);
+
+        return response;
+    }
+
+    @Override
+    public JsonObject execute(Map<String, String> parameter) {
+        if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.KillCommands.NAME)) {
+            return execute(parameter.get(JsonCodec.OS.KillCommands.NAME).toString());
+        }
+        return execute();
+    }
 
 
-  protected String getWindowsKillCommand(String parameter) {
-    return "taskkill -F -IM " + parameter;
-  }
+    protected String getWindowsKillCommand(String parameter) {
+        return "taskkill -F -IM " + parameter;
+    }
 
-  protected String getLinuxKillCommand(String parameter) {
-    return "killall -v -r " + parameter;
-  }
+    protected String getLinuxKillCommand(String parameter) {
+        return "killall -v " + parameter;
+    }
 
-  protected String getMacKillCommand(String parameter) {
-    return "killall -v -m " + parameter;	  
-  }
-  
+    protected String getMacKillCommand(String parameter) {
+        return "killall -v -m " + parameter;
+    }
+
 }

@@ -56,7 +56,7 @@ public class KillAllFirefoxTest {
   public void setUp() throws Exception {
     task = new KillAllFirefox();
     windowsCommand = "taskkill -F -IM firefox.exe";
-    linuxCommnad = "killall -v -r [Ff]irefox";
+    linuxCommnad = "killall -v firefox";
     macCommand = "killall -v -m [Ff]irefox";
   }
 

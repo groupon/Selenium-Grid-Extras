@@ -63,7 +63,7 @@ public class KillAllChrome extends KillAllByName {
 
   @Override
   public String getLinuxCommand() {
-    return super.getLinuxCommand("[Cc]hrome");
+    return super.getLinuxCommand("chrome");
   }
 
   @Override
