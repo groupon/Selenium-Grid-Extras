@@ -1,4 +1,6 @@
-1.6.0 - Adding a machine view at http://localhost:3000
+1.6.0 - Better session tracking, on the /session_history endpoint
+      - [BUG] fixing inability to start the grid hub because the webdriver 2.44 has broken JSON dependency
+      - Adding a machine view at http://localhost:3000
       - Deprecating the status servlet, it will be replaced with better API soon
       - Adding IE mixed mode toggle
       - Grid Hub now launches from JSON file (hub_4444.json)
