@@ -243,7 +243,7 @@ public class HtmlNodeRenderer {
                                 "Error taking a screenshot", getMachineInfo(),
                                 TimeStampUtility.getTimestampAsString());
 
-      return ImageUtils.encodeToString(errorImage, "PNG");
+        returnString = returnString + ImageUtils.encodeToString(errorImage, "PNG");
     }
 
     return returnString + "'>";
