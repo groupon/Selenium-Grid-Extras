@@ -80,6 +80,7 @@ public class DefaultConfig {
     public static final String FOOTER_PARTIAL_HTML = "/footer_partial.html";
     public static final int HTTP_REQUEST_TIMEOUT = 60000;
     public static final int CONFIG_PULLER_HTTP_TIMEOUT = 5000;
+    public static final File SESSION_LOG_DIRECTORY = new File("log", "session_logs");
     private static Config config;
     private static final String webDriverDefaultVersion = "2.41.0";
     private static final String ieDriverDefaultVersion = "2.41.0";
@@ -109,7 +110,7 @@ public class DefaultConfig {
     }
 
     public static void loadSessionLogDir() {
-        SessionHistoryLog.setOutputDir(new File("log", "session_logs"));
+        SessionHistoryLog.setOutputDir(SESSION_LOG_DIRECTORY);
     }
 
     public static void loadHtmlRenderOptions() {

@@ -41,7 +41,7 @@ public class NodeSessionHistory {
 
     public void backupToFile(){
         try {
-            FileIOUtility.writePrettyJsonToFile(outputFile, sessions);
+            FileIOUtility.writePrettyJsonToFile(outputFile, sessions, true);
         } catch (IOException e) {
             logger.warn("Unable to backup session history to file for " + outputFile.getAbsolutePath());
             logger.warn(e);

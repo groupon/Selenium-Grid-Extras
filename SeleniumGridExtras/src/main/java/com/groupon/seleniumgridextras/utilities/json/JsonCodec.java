@@ -15,6 +15,12 @@ public class JsonCodec {
     public static final String TRUE_INT = "1";
     public static final String WARNING = "__WARNING__";
 
+    public static class SessionLogging {
+
+        public static final String NEW = "new";
+        public static final String GET = "get";
+    }
+
 
     public static class SetupTeardown {
         public static final String RESULTS = "results";
@@ -158,6 +164,15 @@ public class JsonCodec {
             public static final String ROLE = "role";
             public static final String SERVLETS = "servlets";
             public static final String HUB = "hub";
+
+            public static final String SESSION_ID = "session";
+            public static final String ACTION = "action";
+
+            public static final String LOGS = "logs";
+            public static final String INTERNAL_KEY = "internal_key";
+            public static final String EXTERNAL_KEY = "external_key";
+            public static final String NOT_YET_ASSIGNED = "Not Yet Assigned";
+            public static final String REQUESTED_CAPABILITIES = "requested_capabilities";
         }
 
         public static class Downloader {

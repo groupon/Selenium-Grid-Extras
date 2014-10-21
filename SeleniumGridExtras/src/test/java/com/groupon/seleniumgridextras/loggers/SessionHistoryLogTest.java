@@ -82,61 +82,13 @@ public class SessionHistoryLogTest {
         assertEquals(2, testDir.listFiles().length);
     }
 
-    @Test
-    public void testGetHistoryExistingNodes() throws Exception {
-        deleteTestFiles();
-        SessionHistoryLog.newSession(node, sessionInfo);
-        SessionHistoryLog.newSession(node, sessionInfo2);
-        SessionHistoryLog.newSession(node2, sessionInfo2);
-
-        assertEquals(expectedNode1, SessionHistoryLog.getHistory(node));
-        assertEquals(expectedNode2, SessionHistoryLog.getHistory(node2));
-    }
-
-    @Test
-    public void testGetHistoryPreviousDay() throws Exception {
-        deleteTestFiles();
-        SessionHistoryLog.newSession(node, sessionInfo);
-        SessionHistoryLog.newSession(node, sessionInfo2);
-        SessionHistoryLog.newSession(node2, sessionInfo2);
-
-        FileIOUtility.writeToFile(new File(testDir, "node3_31_12_1999.log"), expectedNode1, false);
-
-        assertEquals(expectedNode1, SessionHistoryLog.getHistory("node3", "31", "12", "1999"));
-
-    }
-
-    @Test
-    public void testGetAllCurrentHistory() throws Exception {
-        deleteTestFiles();
-        SessionHistoryLog.newSession(node, sessionInfo);
-        SessionHistoryLog.newSession(node2, sessionInfo2);
-
-
-        Map expected = new HashMap();
-
-        List ex1 = new LinkedList();
-        ex1.add(sessionInfo);
-        expected.put(node + "_" + TimeStampUtility.osFriendlyTimestamp() + ".log", ex1);
-
-        List ex2 = new LinkedList();
-        ex2.add(sessionInfo2);
-        expected.put(node2 + "_" + TimeStampUtility.osFriendlyTimestamp() + ".log", ex2);
-
-        assertEquals(expected, JsonParserWrapper.toHashMap(SessionHistoryLog.getAllHistory()));
-
-    }
 
     @Test
     public void testGetAllCurrentHistoryEmpty() throws Exception {
         deleteTestFiles();
-        assertEquals("{}", SessionHistoryLog.getAllHistory());
+        assertEquals("{}", SessionHistoryLog.getTodaysHistoryAsString());
     }
 
-    @Test
-    public void testGetHistoryNonExistingNode() throws Exception {
-        assertEquals("[]", SessionHistoryLog.getHistory("no_such_node"));
-    }
 
 
     private void deleteTestFiles() throws IOException {
