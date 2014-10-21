@@ -41,11 +41,10 @@ package com.groupon.seleniumgridextras.grid.proxies;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import com.groupon.seleniumgridextras.grid.proxies.sessions.history.SessionHistoryThreadPool;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;

@@ -1,7 +1,5 @@
-package com.groupon.seleniumgridextras.grid.proxies;
+package com.groupon.seleniumgridextras.grid.proxies.sessions.history;
 
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 import org.openqa.grid.internal.TestSession;
 

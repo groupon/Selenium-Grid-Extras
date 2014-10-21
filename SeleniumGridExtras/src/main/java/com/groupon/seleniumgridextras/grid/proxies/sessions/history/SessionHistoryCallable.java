@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.grid.proxies;
+package com.groupon.seleniumgridextras.grid.proxies.sessions.history;
 
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
@@ -7,7 +7,6 @@ import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.apache.log4j.Logger;
 import org.openqa.grid.internal.TestSession;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
