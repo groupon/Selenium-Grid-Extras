@@ -53,7 +53,7 @@ public class SessionHistoryLog {
             history = new HashMap<String, NodeSessionHistory>();
         } else {
             //delete all reference to objects to make objects ready for garbage collection
-            //Doing it this way, just in case the history map is refered to anywhere, and does not get garbage collected
+            //Doing it this way, just in case the threads map is refered to anywhere, and does not get garbage collected
             //This is done in hopes of reducing memory bloat, if a JVM expert is reading this, please fix it!
             //-Love, Dima
             history.clear();

@@ -41,7 +41,7 @@ package com.groupon.seleniumgridextras.grid.proxies;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import com.groupon.seleniumgridextras.grid.proxies.sessions.history.SessionHistoryThreadPool;
+import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
@@ -65,6 +65,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +78,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     private boolean available = true;
     private boolean restarting = false;
     private List<String> sessionsRecording = new LinkedList<String>();
+    protected static ExecutorService cachedPool;
 
     private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
 
@@ -85,31 +88,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         writeProxyLog("Attaching a node: " + getHost());
     }
 
-    @Override
-    public TestSession getNewSession(Map<String, Object> requestedCapability) {
-        synchronized (this) {
-            if (timeToReboot() && !this.isBusy()) {
-                setAvailable(false);
-                setRestarting(false);
-//        killBrowserForCurrentSession();
-                stopGridNode();
-                rebootGridExtrasNode();
-            }
-
-            if (isAvailable()) {
-                TestSession session = super.getNewSession(requestedCapability);
-                if (session == null) {
-                    return null;
-                } else {
-                    SessionHistoryThreadPool.registerNewSession(session);
-                    return session;
-                }
-            } else {
-                return null;
-            }
-
-        }
-    }
 
     @Override
     public void beforeCommand(TestSession session, HttpServletRequest request,
@@ -137,6 +115,12 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         super.afterSession(session);
         stopVideoRecording(session.getExternalKey().getKey());
         callRemoteGridExtrasAsync("teardown", new HashMap<String, String>());
+
+        if (cachedPool == null) {
+            cachedPool = Executors.newCachedThreadPool();
+        }
+
+        cachedPool.submit(new NodeRestartCallable(this, session));
     }
 
     private boolean alreadyRecordingCurrentSession(String session) {
@@ -183,13 +167,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         callRemoteGridExtrasAsync("video", params);
     }
 
-    protected void stopGridNode() {
+    public void stopGridNode() {
         writeProxyLog("Asking " + getHost() + " to stop grid node politely");
         writeProxyLog(callRemoteGridExtras("stop_grid?port=5555"));
         unregister();
     }
 
-    private void rebootGridExtrasNode() {
+    public void rebootGridExtrasNode() {
         writeProxyLog("Asking SeleniumGridExtras to reboot " + getHost());
         writeProxyLog(callRemoteGridExtras("reboot"));
     }
@@ -224,7 +208,8 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         return returnedFuture;
     }
 
-    private JsonObject callRemoteGridExtras(String action) {
+
+    public JsonObject callRemoteGridExtras(String action) {
         String returnedString;
 
         try {
@@ -237,13 +222,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             return (JsonObject) j.parse(returnedString);
 
         } catch (MalformedURLException e) {
-            writeProxyLog(e.toString());
-            e.printStackTrace();
+            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
         } catch (ProtocolException e) {
-            writeProxyLog(e.toString());
-            e.printStackTrace();
+            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
         }
 
         return null;
@@ -257,35 +242,11 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         return this.available;
     }
 
-    protected void setAvailable(boolean available) {
+    public void setAvailable(boolean available) {
         this.available = available;
     }
 
-    protected boolean timeToReboot() {
-        JsonObject status = callRemoteGridExtras("grid_status");
-
-        boolean nodeRunning = status.get("node_running").getAsBoolean();
-        int sessionsStarted = status.get("node_sessions_started").getAsInt();
-        int sessionLimit = status.get("node_sessions_limit").getAsInt();
-
-        if (!nodeRunning) {
-            writeProxyLog("The grid node on " + getHost() + " does not seem to be running");
-        } else if (sessionLimit == 0) {
-            return false;
-        } else if (sessionsStarted >= sessionLimit) {
-            System.out
-                    .println("Node " + getHost() + " has reached " + sessionsStarted + " of " + sessionLimit
-                            + " test session, time to reboot");
-        } else {
-            return false;
-
-        }
-        setAvailable(false);
-        return true;
-    }
-
     public void unregister() {
-        writeProxyLog("Sending Un register command for " + getHost());
         addNewEvent(new RemoteUnregisterException("Unregistering the node."));
     }
 

@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.grid.proxies.sessions.history;
+package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
 
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
@@ -58,7 +58,7 @@ public class SessionHistoryCallable implements Callable {
             SessionHistoryLog.setOutputDir(DefaultConfig.SESSION_LOG_DIRECTORY);
             SessionHistoryLog.newSession(this.session.getSlot().getRemoteURL().getHost(), sessionDetails);
         } catch (Exception e) {
-            logger.error("Something went wrong when gathering information for new session history", e);
+            logger.error("Something went wrong when gathering information for new session threads", e);
         }
         return sessionDetails.toString();
     }

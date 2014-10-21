@@ -21,7 +21,7 @@ public class SessionHistory extends ExecuteOSTask {
 //        params.addProperty(JsonCodec.WebDriver.Grid.HOST, "Host on which the session is kept");
 
 
-        addResponseDescription(JsonCodec.WebDriver.Grid.LOGS, "An array with session history per node");
+        addResponseDescription(JsonCodec.WebDriver.Grid.LOGS, "An array with session threads per node");
 
 
         setAcceptedParams(params);
@@ -39,7 +39,7 @@ public class SessionHistory extends ExecuteOSTask {
         try {
             getJsonResponse().addNestedMapValues(JsonCodec.WebDriver.Grid.LOGS, SessionHistoryLog.getTodaysHistoryAsMap());
         } catch (Exception e) {
-            String error = String.format("Something went wrong when reading session history\n%s",
+            String error = String.format("Something went wrong when reading session threads\n%s",
                     Throwables.getStackTraceAsString(e));
            logger.error(error);
             getJsonResponse().addKeyValues(JsonCodec.ERROR, error);

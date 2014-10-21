@@ -123,7 +123,7 @@ public class TaskDescriptions {
                 UPDATE_NODE_CONFIG =
                 "Send the current config to the central location to be stored";
         public static final String VIDEO = "Starts and stops video recording";
-        public static final String SESSION_HISTORY = "Displays the history of test session on all nodes or per node basis";
+        public static final String SESSION_HISTORY = "Displays the threads of test session on all nodes or per node basis";
         public static final String IE_MIXED_CONTENT = "Changes mixed content for Internet Explorer on/off. No param for current status";
     }
 

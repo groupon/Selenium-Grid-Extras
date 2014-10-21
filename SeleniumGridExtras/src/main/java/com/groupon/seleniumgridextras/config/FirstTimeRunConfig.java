@@ -107,7 +107,7 @@ public class FirstTimeRunConfig {
       logger.info("Setting node to record videos");
 
       answer =
-          askQuestion("How many videos should node keep in history?",
+          askQuestion("How many videos should node keep in threads?",
                       "10");
 
       logger.info("Will keep " + answer + " videos");

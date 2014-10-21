@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.grid.proxies.sessions.history;
+package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
 
 import org.apache.log4j.Logger;
 import org.openqa.grid.internal.TestSession;

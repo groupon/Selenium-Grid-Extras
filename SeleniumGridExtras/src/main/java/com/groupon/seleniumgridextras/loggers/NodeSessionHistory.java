@@ -46,7 +46,7 @@ public class NodeSessionHistory {
         try {
             FileIOUtility.writePrettyJsonToFile(outputFile, sessions, false);
         } catch (IOException e) {
-            logger.warn("Unable to backup session history to file for " + outputFile.getAbsolutePath());
+            logger.warn("Unable to backup session threads to file for " + outputFile.getAbsolutePath());
             logger.warn(e);
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }

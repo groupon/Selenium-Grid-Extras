@@ -43,7 +43,7 @@ class Gem::Specification
   #
   #   spec   ruby
   #    ver    ver yyyy-mm-dd description
-  #     -1 <0.8.0            pre-spec-version-history
+  #     -1 <0.8.0            pre-spec-version-threads
   #      1  0.8.0 2004-08-01 Deprecated "test_suite_file" for "test_files"
   #                          "test_file=x" is a shortcut for "test_files=[x]"
   #      2  0.9.5 2007-10-01 Added "required_rubygems_version"
