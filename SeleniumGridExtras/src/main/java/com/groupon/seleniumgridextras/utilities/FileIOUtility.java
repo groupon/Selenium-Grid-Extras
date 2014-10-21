@@ -73,4 +73,8 @@ public class FileIOUtility {
         writeToFile(filename, JsonParserWrapper.prettyPrintString(content));
     }
 
+    public static void writePrettyJsonToFile(File filename, List content, boolean append) throws IOException {
+        writeToFile(filename, JsonParserWrapper.prettyPrintString(content), append);
+    }
+
 }
