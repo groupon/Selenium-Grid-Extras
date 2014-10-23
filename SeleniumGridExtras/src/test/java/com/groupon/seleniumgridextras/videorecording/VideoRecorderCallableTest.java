@@ -90,7 +90,7 @@ public class VideoRecorderCallableTest {
                 Thread.sleep(1000);
                 video.lastAction("action");
                 assertTrue(!future.isDone());
-                Thread.sleep(3000);
+                Thread.sleep(4000);
                 assertTrue(future.isDone());
             } finally {
                 cachedPool.shutdown();
