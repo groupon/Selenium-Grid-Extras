@@ -42,6 +42,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
+import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.SessionHistoryThreadPool;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
@@ -86,6 +87,21 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
         super(request, registry);
         writeProxyLog("Attaching a node: " + getHost());
+    }
+
+
+    /**
+     * overwrites the session allocation to discard the proxy that are down.
+     */
+    @Override
+    public TestSession getNewSession(Map<String, Object> requestedCapability) {
+        if (isDown()) {
+            return null;
+        }
+
+        TestSession session = super.getNewSession(requestedCapability);
+        SessionHistoryThreadPool.registerNewSession(session);
+        return session;
     }
 
 

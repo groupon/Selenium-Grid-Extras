@@ -15,13 +15,12 @@ public class SessionHistoryThreadPool {
             initiateThreadPool();
         }
 
-        logger.info("Registering new session to history for internal key " + session.getInternalKey());
+        logger.info(String.format("New session request started on proxy %s, int. key: %s ",
+                session.getSlot().getProxy().getId(), session.getInternalKey()));
 
         SessionHistoryCallable aCallable = new SessionHistoryCallable(session);
 
-        Future callableFuture = cachedPool.submit(aCallable);
-
-
+        cachedPool.submit(aCallable);
     }
 
     private static void initiateThreadPool() {
