@@ -40,10 +40,13 @@ package com.groupon.seleniumgridextras;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.ProcessOutputReader;
 import com.groupon.seleniumgridextras.utilities.StreamUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
+import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
+import com.groupon.seleniumgridextras.utilities.threads.ExecuteOsTaskCallable;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -51,68 +54,65 @@ import java.io.IOException;
 
 public class ExecuteCommand {
 
-  private static Logger logger = Logger.getLogger(ExecuteCommand.class);
+    private static Logger logger = Logger.getLogger(ExecuteCommand.class);
 
-  public static JsonObject execRuntime(String cmd) {
-    return execRuntime(cmd, true);
-  }
-
-  public static JsonObject execRuntime(String cmd, boolean waitToFinish) {
-    logger.debug("Starting to execute - " + cmd);
-
-    JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
-
-    Process process;
-
-    try {
-      if (RuntimeConfig.getOS().isWindows()) {
-        process = Runtime.getRuntime().exec("cmd /C " + cmd);
-      } else {
-        process = Runtime.getRuntime().exec(cmd);
-      }
-    } catch (IOException e) {
-      final String message = "Problems in running " + cmd + "\n" + e.toString();
-      jsonResponse.addKeyValues(JsonCodec.ERROR, message);
-      logger.warn(message);
-      return jsonResponse.getJson();
+    public static JsonObject execRuntime(String cmd) {
+        return execRuntime(cmd, true);
     }
 
-    int exitCode;
-    if (waitToFinish) {
-      try {
-        logger.debug("Waiting to finish");
-        exitCode = process.waitFor();
-        logger.debug("Command Finished");
-      } catch (InterruptedException e) {
-        final String message = "Interrupted running " + cmd + "\n" + e.toString();
-        jsonResponse.addKeyValues(JsonCodec.ERROR, message);
-        logger.warn(message);
-        return jsonResponse.getJson();
-      }
-    } else {
-      logger.debug("Not waiting for finish");
-      jsonResponse.addKeyValues(JsonCodec.OUT, "Background process started");
-      return jsonResponse.getJson();
-    }
+    public static JsonObject execRuntime(String cmd, boolean waitToFinish) {
+        logger.debug("Starting to execute - " + cmd);
 
-    try {
-      String output = StreamUtility.inputStreamToString(process.getInputStream());
-      String error = StreamUtility.inputStreamToString(process.getErrorStream());
-      jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
-      jsonResponse.addKeyValues(JsonCodec.OUT, output);
-      if (!error.equals("")) {
-        //Only add error if there is one, this way we have a nice empty array instead of [""]
-        jsonResponse.addKeyValues(JsonCodec.ERROR, error);
-      }
-      return jsonResponse.getJson();
-    } catch (IOException e) {
-      final String message = "Problems reading stdout and stderr from " + cmd + "\n" + e.toString();
-      jsonResponse.addKeyValues(JsonCodec.ERROR, message);
-      logger.warn(message);
-      return jsonResponse.getJson();
+        JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
 
-    } finally {
-      process.destroy();
+        jsonResponse.addKeyDescriptions(JsonCodec.COMMAND, "Command executed");
+        jsonResponse.addKeyValues(JsonCodec.COMMAND, cmd);
+        Process process;
+
+        try {
+            if (RuntimeConfig.getOS().isWindows()) {
+                process = Runtime.getRuntime().exec("cmd /C " + cmd);
+            } else {
+                process = Runtime.getRuntime().exec(cmd);
+            }
+        } catch (IOException e) {
+            final String message = "Problems in running " + cmd + "\n" + e.toString();
+            jsonResponse.addKeyValues(JsonCodec.ERROR, message);
+            logger.warn(message);
+            return jsonResponse.getJson();
+        }
+
+        int exitCode;
+        if (waitToFinish) {
+            try {
+                logger.debug("Waiting to finish");
+                exitCode = process.waitFor();
+                logger.debug("Command Finished");
+            } catch (InterruptedException e) {
+                final String message = String.format("Interrupted running %s\n%s", cmd, e.getMessage());
+                jsonResponse.addKeyValues(JsonCodec.ERROR, message);
+                logger.error(message, e);
+                return jsonResponse.getJson();
+            }
+        } else {
+            CommonThreadPool.startCallable(new ExecuteOsTaskCallable(cmd, process));
+            jsonResponse.addKeyValues(JsonCodec.OUT, "Background process started, check log for output");
+            return jsonResponse.getJson();
+        }
+
+        try {
+            String output = ProcessOutputReader.getStandardOut(process);
+            String error = ProcessOutputReader.getErrorOut(process);
+            jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
+            jsonResponse.addKeyValues(JsonCodec.OUT, output);
+            if (!error.equals("")) {
+                //Only add error if there is one, this way we have a nice empty array instead of [""]
+                jsonResponse.addKeyValues(JsonCodec.ERROR, error);
+            }
+            return jsonResponse.getJson();
+
+        } finally {
+            process.destroy();
+        }
     }
-  }
 }

@@ -1,6 +1,7 @@
 package com.groupon.seleniumgridextras.videorecording;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecorderCallable;
 import org.junit.After;
 import org.junit.Test;
 

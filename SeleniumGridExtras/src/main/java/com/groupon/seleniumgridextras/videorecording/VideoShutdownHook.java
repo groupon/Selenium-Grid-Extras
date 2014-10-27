@@ -1,5 +1,6 @@
 package com.groupon.seleniumgridextras.videorecording;
 
+import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecordingThreadPool;
 import org.apache.log4j.Logger;
 
 public class VideoShutdownHook {

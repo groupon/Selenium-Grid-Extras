@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.videorecording;
+package com.groupon.seleniumgridextras.utilities.threads.video;
 
 import org.apache.log4j.Logger;
 

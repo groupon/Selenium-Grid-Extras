@@ -14,6 +14,7 @@ public class JsonCodec {
     public static final String FALSE_INT = "0";
     public static final String TRUE_INT = "1";
     public static final String WARNING = "__WARNING__";
+    public static final String COMMAND = "command";
 
     public static class SessionLogging {
 

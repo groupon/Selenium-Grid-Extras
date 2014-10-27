@@ -1,9 +1,10 @@
-package com.groupon.seleniumgridextras.videorecording;
+package com.groupon.seleniumgridextras.utilities.threads.video;
 
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
+import com.groupon.seleniumgridextras.videorecording.ImageProcessor;
 import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
@@ -97,10 +98,10 @@ public class VideoRecorderCallable implements Callable {
             ScreenshotUtility.getResizedScreenshot(dimension.width, dimension.height);
 
         screenshot = ImageProcessor.addTextCaption(screenshot,
-                                                   "Session: " + this.sessionId,
-                                                   "Host: " + this.nodeName,
-                                                   "Timestamp: " + getTimestamp().toString(),
-                                                   this.lastAction
+                "Session: " + this.sessionId,
+                "Host: " + this.nodeName,
+                "Timestamp: " + getTimestamp().toString(),
+                this.lastAction
         );
 
         // convert to the right image type

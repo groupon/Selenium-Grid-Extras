@@ -57,97 +57,100 @@ import java.util.Map;
 
 public class SeleniumGridExtras {
 
-  public static final String START_UP_COMPLETE = "\nSelenium Grid Extras has been started!\nNavigate to http://localhost:3000 for more details";
-  private static Logger logger = Logger.getLogger(SeleniumGridExtras.class);
+    public static final String START_UP_COMPLETE = "\nSelenium Grid Extras has been started!\nNavigate to http://localhost:3000 for more details";
+    private static Logger logger = Logger.getLogger(SeleniumGridExtras.class);
 
-  public static void main(String[] args) throws Exception {
-    final String filename = "log4j.properties";
-    PropertyConfigurator.configure(SeleniumGridExtras.class.getClassLoader().getResource(filename));
-    logger.info("Loaded Grid Logger from " + filename);
+    public static void main(String[] args) throws Exception {
+        final String filename = "log4j.properties";
+        PropertyConfigurator.configure(SeleniumGridExtras.class.getClassLoader().getResource(filename));
+        logger.info("Loaded Grid Logger from " + filename);
 
-    RuntimeConfig.load(true);
+        RuntimeConfig.load(true);
 
-    SelfHealingGrid.checkStatus(RuntimeConfig.getGridExtrasPort(), RuntimeConfig.getConfig());
+        SelfHealingGrid.checkStatus(RuntimeConfig.getGridExtrasPort(), RuntimeConfig.getConfig());
 
-    HttpServer
-        server =
-        HttpServer.create(new InetSocketAddress(RuntimeConfig.getGridExtrasPort()), 0);
+        HttpServer
+                server =
+                HttpServer.create(new InetSocketAddress(RuntimeConfig.getGridExtrasPort()), 0);
 
-    List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
-    for (String module : RuntimeConfig.getConfig().getActivatedModules()) {
-      tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
-    }
+        List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
+        for (String module : RuntimeConfig.getConfig().getActivatedModules()) {
+            tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
+        }
 
-    logger.debug(RuntimeConfig.getSeleniungGridExtrasHomePath());
+        logger.debug(RuntimeConfig.getSeleniungGridExtrasHomePath());
 
-    logger.info("Initializing Task Modules");
-    for (final ExecuteOSTask task : tasks) {
+        logger.info("Initializing Task Modules");
+        for (final ExecuteOSTask task : tasks) {
 
-      if (task.initialize()) {
+            if (task.initialize()) {
 
-        HttpContext context = server.createContext(task.getEndpoint(), new HttpExecutor() {
-          @Override
-          String execute(Map params) {
+                HttpContext context = server.createContext(task.getEndpoint(), new HttpExecutor() {
+                    @Override
+                    String execute(Map params) {
 
-            logger.debug(
-                "End-point " + task.getEndpoint() + " was called with HTTP params " + params
-                    .toString());
-            String result = JsonParserWrapper.prettyPrintString(task.execute(params));
-            logger.debug(result);
-            return result;
-          }
+                        logger.debug(
+                                "End-point " + task.getEndpoint() + " was called with HTTP params " + params
+                                        .toString());
+                        String result = JsonParserWrapper.prettyPrintString(task.execute(params));
+                        logger.debug(result);
+                        return result;
+                    }
+                });
+
+                context.getFilters().add(new ParameterFilter());
+            }
+
+
+        }
+
+        logger.info("API documentation");
+        logger.info("/api - Located here");
+        HttpContext context = server.createContext("/api", new HttpExecutor() {
+            @Override
+            String execute(Map params) {
+                String apiDocs = ApiDocumentation.getApiDocumentation();
+                logger.debug(apiDocs);
+                return apiDocs;
+            }
         });
 
+        HttpContext homePageContext = server.createContext("/", new HtmlHttpExecutor() {
+            @Override
+            String execute(Map params) {
+                return new HtmlRenderer(params).toString();
+            }
+        });
+
+        HttpContext videoContext = server.createContext(VideoHttpExecutor.VIDEO_ENDPOINT, new VideoHttpExecutor());
+        logger.info("Attaching video downloading context at " + VideoHttpExecutor.VIDEO_ENDPOINT);
+
+        if (RuntimeConfig.getConfig().getAutoStartHub()) {
+            logger.info("Grid Hub was set to Autostart");
+            ExecuteOSTask grid = new StartGrid();
+            logger.info(grid.execute("hub").toString().toString());
+
+        }
+
+        if (RuntimeConfig.getConfig().getAutoStartNode()) {
+            logger.info("Grid NodeConfig was set to Autostart");
+            ExecuteOSTask grid = new StartGrid();
+            logger.info(grid.execute("node").toString().toString());
+        }
+
         context.getFilters().add(new ParameterFilter());
-      }
+        homePageContext.getFilters().add(new ParameterFilter());
+        videoContext.getFilters().add(new ParameterFilter());
+
+        server.setExecutor(null);
+        server.start();
 
 
+        System.out.println(START_UP_COMPLETE);
+        logger.info(START_UP_COMPLETE);
+
+        VideoShutdownHook videoShutdownHook = new VideoShutdownHook();
+        videoShutdownHook.attachShutDownHook();
     }
-
-    logger.info("API documentation");
-    logger.info("/api - Located here");
-    HttpContext context = server.createContext("/api", new HttpExecutor() {
-      @Override
-      String execute(Map params) {
-        String apiDocs = ApiDocumentation.getApiDocumentation();
-        logger.debug(apiDocs);
-        return apiDocs;
-      }
-    });
-
-    HttpContext homePageContext = server.createContext("/", new HtmlHttpExecutor() {
-      @Override
-      String execute(Map params) {
-        return new HtmlRenderer(params).toString();
-      }
-    });
-
-
-    if (RuntimeConfig.getConfig().getAutoStartHub()) {
-      logger.info("Grid Hub was set to Autostart");
-      ExecuteOSTask grid = new StartGrid();
-      logger.info(grid.execute("hub").toString().toString());
-
-    }
-
-    if (RuntimeConfig.getConfig().getAutoStartNode()) {
-      logger.info("Grid NodeConfig was set to Autostart");
-      ExecuteOSTask grid = new StartGrid();
-      logger.info(grid.execute("node").toString().toString());
-    }
-
-    context.getFilters().add(new ParameterFilter());
-    homePageContext.getFilters().add(new ParameterFilter());
-
-    server.setExecutor(null);
-    server.start();
-
-
-    System.out.println(START_UP_COMPLETE);
-    logger.info(START_UP_COMPLETE);
-
-    VideoShutdownHook videoShutdownHook = new VideoShutdownHook();
-    videoShutdownHook.attachShutDownHook();
-  }
 }
 

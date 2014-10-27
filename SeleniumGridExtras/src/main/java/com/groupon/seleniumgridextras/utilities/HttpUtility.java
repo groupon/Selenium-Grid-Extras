@@ -18,7 +18,6 @@ import java.util.concurrent.Future;
 public class HttpUtility {
 
     private static Logger logger = Logger.getLogger(HttpUtility.class);
-    protected static ExecutorService cachedPool;
 
 
     public static String getRequestAsString(URI uri) throws IOException, URISyntaxException {
@@ -59,20 +58,6 @@ public class HttpUtility {
 
         logger.debug("Response code is " + conn.getResponseCode());
         return conn;
-    }
-
-    public static Future<String> makeAsyncGetRequest(URI uri) {
-        if (cachedPool == null) {
-            initializeThreadPool();
-        }
-
-        AsyncHttpRequestCallable callable = new AsyncHttpRequestCallable(uri);
-        return cachedPool.submit(callable);
-    }
-
-    protected static void initializeThreadPool() {
-        logger.info("Initializing a new thread for Async Get Requests");
-        cachedPool = Executors.newCachedThreadPool();
     }
 
 }

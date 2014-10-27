@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.videorecording.VideoRecordingThreadPool;
+import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecordingThreadPool;
 import org.apache.log4j.Logger;
 
 import java.util.Map;

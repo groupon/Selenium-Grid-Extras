@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
+package com.groupon.seleniumgridextras.utilities.threads;
 
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;

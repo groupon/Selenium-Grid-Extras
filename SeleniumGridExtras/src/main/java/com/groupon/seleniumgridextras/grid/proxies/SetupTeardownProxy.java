@@ -42,10 +42,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
-import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.SessionHistoryThreadPool;
+import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
+import com.groupon.seleniumgridextras.utilities.threads.SessionHistoryCallable;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
+import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
@@ -79,7 +81,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     private boolean available = true;
     private boolean restarting = false;
     private List<String> sessionsRecording = new LinkedList<String>();
-    protected static ExecutorService cachedPool;
 
     private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
 
@@ -100,7 +101,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         }
 
         TestSession session = super.getNewSession(requestedCapability);
-        SessionHistoryThreadPool.registerNewSession(session);
+        CommonThreadPool.startCallable(new SessionHistoryCallable(session));
         return session;
     }
 
@@ -132,11 +133,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         stopVideoRecording(session.getExternalKey().getKey());
         callRemoteGridExtrasAsync("teardown", new HashMap<String, String>());
 
-        if (cachedPool == null) {
-            cachedPool = Executors.newCachedThreadPool();
-        }
-
-        cachedPool.submit(new NodeRestartCallable(this, session));
+        CommonThreadPool.startCallable(new NodeRestartCallable(this, session));
     }
 
     private boolean alreadyRecordingCurrentSession(String session) {
@@ -194,34 +191,8 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         writeProxyLog(callRemoteGridExtras("reboot"));
     }
 
-    private Future<String> callRemoteGridExtrasAsync(String action, Map<String, String> params) {
-        Future<String> returnedFuture;
-        String parameters = "";
-
-        if (!params.isEmpty()) {
-            StringBuilder parameterBuilder = new StringBuilder();
-            parameterBuilder.append("?");
-
-            for (String currentParam : params.keySet()) {
-                parameterBuilder.append(currentParam + "=" + params.get(currentParam) + "&");
-            }
-
-            parameters = parameterBuilder.toString().replaceAll("&$", "");
-        }
-
-        try {
-
-            returnedFuture =
-                    HttpUtility
-                            .makeAsyncGetRequest(new URI("http://" + getHost() + ":3000/" + action + parameters));
-        } catch (URISyntaxException e) {
-            logger.warn(e);
-            return null;
-        }
-
-        JsonParser j = new JsonParser();
-        logger.info("Async Request is done: " + returnedFuture.isDone());
-        return returnedFuture;
+    private void callRemoteGridExtrasAsync(String action, Map<String, String> params) {
+        CommonThreadPool.startCallable(new RemoteGridExtrasAsyncCallable(getHost(), 3000, action, params));
     }
 
 
