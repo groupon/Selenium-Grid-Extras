@@ -130,7 +130,18 @@
                 <includes>
                     <include>*</include>
                 </includes>
+                <excludes>
+                	<exclude>version.properties</exclude>
+                </excludes>
             </resource>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>version.properties</include>
+				</includes>
+			</resource>
+            
             <resource>
                 <directory>${basedir}/src/main/resources/video_recording</directory>
                 <includes>

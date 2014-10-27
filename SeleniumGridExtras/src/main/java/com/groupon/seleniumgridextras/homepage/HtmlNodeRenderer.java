@@ -1,7 +1,7 @@
 package com.groupon.seleniumgridextras.homepage;
 
 import com.google.gson.internal.StringMap;
-
+import com.groupon.seleniumgridextras.Version;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -254,6 +254,10 @@ public class HtmlNodeRenderer {
     return RuntimeConfig.getOS().getHostName() +
            " (" + RuntimeConfig.getOS().getHostIp() + ")";
   }
+  
+  protected String getVersionInfo() {
+    return "Version : " + Version.getVersion();
+  }
 
   protected String buildScreenshotBillboard() {
     StringBuilder billBoard = new StringBuilder();
@@ -264,7 +268,12 @@ public class HtmlNodeRenderer {
   }
 
   protected String buildNavBar() {
-    return HtmlRenderer.getNavBar().replaceAll("INSERT_TITLE", getMachineInfo());
+    String navBarHtmlSnippet = HtmlRenderer.getNavBar();
+    
+    navBarHtmlSnippet = navBarHtmlSnippet.replaceAll("INSERT_TITLE", getMachineInfo());
+    navBarHtmlSnippet = navBarHtmlSnippet.replaceAll("INSERT_VERSION", getVersionInfo());
+    
+    return navBarHtmlSnippet;
   }
 
 
