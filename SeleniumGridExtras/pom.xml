@@ -20,11 +20,11 @@
     </repositories>
 
     <dependencies>
-		<dependency>
-		    <groupId>net.java.dev.jna</groupId>
-		    <artifactId>jna-platform</artifactId>
-		    <version>4.1.0</version>
-		</dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>4.1.0</version>
+        </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
@@ -131,16 +131,16 @@
                     <include>*</include>
                 </includes>
                 <excludes>
-                	<exclude>version.properties</exclude>
+                    <exclude>version.properties</exclude>
                 </excludes>
             </resource>
-			<resource>
-				<directory>${basedir}/src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>version.properties</include>
-				</includes>
-			</resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>version.properties</include>
+                </includes>
+            </resource>
             
             <resource>
                 <directory>${basedir}/src/main/resources/video_recording</directory>
