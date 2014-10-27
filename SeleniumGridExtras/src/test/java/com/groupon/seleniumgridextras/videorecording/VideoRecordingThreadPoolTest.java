@@ -34,6 +34,10 @@ public class VideoRecordingThreadPoolTest {
 
     @Test
     public void testRecordVideos() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()){
+            return;
+        }
+
         if (RuntimeConfig.getOS().hasGUI()) {
             VideoRecordingThreadPool.startVideoRecording(session1);
             VideoRecordingThreadPool.startVideoRecording(session2);

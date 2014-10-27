@@ -19,30 +19,36 @@ import static org.junit.Assert.assertTrue;
 
 public class MissingFrameImageTest {
 
-  @Test
-  public void testGetMissingImageString() throws Exception {
-    File
-        imageFile =
-        new File(SeleniumGridExtras.class.getClassLoader().getResource("frame_missing_image.png")
-                     .getFile());
+    @Test
+    public void testGetMissingImageString() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()) {
+            return;
+        }
+        File
+                imageFile =
+                new File(SeleniumGridExtras.class.getClassLoader().getResource("frame_missing_image.png")
+                        .getFile());
 
-    assertEquals(ImageUtils.encodeToString(ImageIO.read(imageFile), "PNG"),
-                 MissingFrameImage.getMissingFrame());
+        assertEquals(ImageUtils.encodeToString(ImageIO.read(imageFile), "PNG"),
+                MissingFrameImage.getMissingFrame());
 
 
-  }
+    }
 
-  @Test
-  public void testGetMissingBufferedImage() throws Exception {
-    File
-        imageFile =
-        new File(SeleniumGridExtras.class.getClassLoader().getResource("frame_missing_image.png")
-                     .getFile());
+    @Test
+    public void testGetMissingBufferedImage() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()) {
+            return;
+        }
+        File
+                imageFile =
+                new File(SeleniumGridExtras.class.getClassLoader().getResource("frame_missing_image.png")
+                        .getFile());
 
-    //Not sure how to compare 2 buffered images, but i'll assume that if it read the file in just fine
-    //than we are probably safe. The other test will check for the content
-    MissingFrameImage.getMissingFrameAsBufferedImage();
-    assertTrue(true);
-  }
+        //Not sure how to compare 2 buffered images, but i'll assume that if it read the file in just fine
+        //than we are probably safe. The other test will check for the content
+        MissingFrameImage.getMissingFrameAsBufferedImage();
+        assertTrue(true);
+    }
 
 }

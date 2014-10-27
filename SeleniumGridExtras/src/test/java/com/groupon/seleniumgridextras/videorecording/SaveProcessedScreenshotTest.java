@@ -39,6 +39,10 @@ public class SaveProcessedScreenshotTest {
 
     @Test
     public void testTakeProcessedScreenshot() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()) {
+            return;
+        }
+
         if (RuntimeConfig.getOS().hasGUI()) {
 
             SaveProcessedScreenshot

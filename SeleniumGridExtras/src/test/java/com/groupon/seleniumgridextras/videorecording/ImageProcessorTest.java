@@ -42,6 +42,11 @@ public class ImageProcessorTest {
 
     @Test
     public void testAddTextCaptions() throws Exception {
+
+        if (!testIfDimasComputer()){
+            return;
+        }
+
         if (RuntimeConfig.getOS().hasGUI()) {
             BufferedImage processedImage = MissingFrameImage.getMissingFrameAsBufferedImage();
 
@@ -77,6 +82,10 @@ public class ImageProcessorTest {
 
     @Test
     public void testCreateTitleFrame() throws Exception {
+        if (!testIfDimasComputer()){
+            return;
+        }
+
         if (RuntimeConfig.getOS().hasGUI()) {
             Dimension size = new Dimension(1024, 768);
 
@@ -107,6 +116,10 @@ public class ImageProcessorTest {
 
 
         }
+    }
+
+    public static boolean testIfDimasComputer(){
+        return RuntimeConfig.getOS().getHostName().equals("mbp-3.local");
     }
 
 }

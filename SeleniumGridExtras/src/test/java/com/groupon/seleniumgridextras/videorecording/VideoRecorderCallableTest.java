@@ -25,6 +25,10 @@ public class VideoRecorderCallableTest {
 
     @Test
     public void testRecordVideo() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()){
+            return;
+        }
+
         if (RuntimeConfig.getOS().hasGUI()) {
             VideoRecorderCallable video = new VideoRecorderCallable(session, 60);
 
@@ -52,6 +56,10 @@ public class VideoRecorderCallableTest {
 
     @Test
     public void testTimeout() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()){
+            return;
+        }
+
         if (RuntimeConfig.getOS().hasGUI()) {
             VideoRecorderCallable video = new VideoRecorderCallable(session, 2);
 
@@ -69,6 +77,9 @@ public class VideoRecorderCallableTest {
 
     @Test
     public void testTimeoutExtended() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()){
+            return;
+        }
         if (RuntimeConfig.getOS().hasGUI()) {
             VideoRecorderCallable video = new VideoRecorderCallable(session, 2);
 

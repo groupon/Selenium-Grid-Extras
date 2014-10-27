@@ -29,6 +29,9 @@ public class ImageToVideoConverterTest {
 
     @Test
     public void testVideoConverter() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()) {
+            return;
+        }
         if (RuntimeConfig.getOS().hasGUI()) {
             ImageToVideoConverter
                     converter =
