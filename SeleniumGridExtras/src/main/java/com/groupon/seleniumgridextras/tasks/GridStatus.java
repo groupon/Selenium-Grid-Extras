@@ -44,58 +44,83 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
+import java.util.Map;
+
 public class GridStatus extends ExecuteOSTask {
 
-  public GridStatus() {
-    setEndpoint(TaskDescriptions.Endpoints.GRID_STATUS);
-    setDescription(
-        TaskDescriptions.Description.GRID_STATUS);
-    JsonObject params = new JsonObject();
-    setAcceptedParams(params);
-    setRequestType("GET");
-    setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
-    setCssClass("btn-success");
-    setButtonText(TaskDescriptions.UI.ButtonText.GRID_STATUS);
-    setEnabledInGui(true);
+    public static final String SESSION_PARAM_DESCRIPTION = "(optional) - When provided, the current session ID will be added to list of existing sessions";
+    public static final String BOOLEAN_IF_HUB_IS_RUNNING_ON_GIVEN_PORT = "Boolean if hub is running on given port";
+    public static final String BOOLEAN_IF_NODE_IS_RUNNING_ON_GIVEN_PORT = "Boolean if node is running on given port";
+    public static final String HASH_OBJECT_DESCRIBING_THE_HUB_PROCESS = "Hash object describing the Hub Process";
+    public static final String HASH_OBJECT_DESCRIBING_THE_NODE_CONFIG_PROCESS = "Hash object describing the NodeConfig Process";
+    public static final String LIST_OF_RECORDED_SESSIONS = "List of recorded sessions";
+    public static final String INTEGER_UPPER_LIMIT_BEFORE_THE_BOX_REBOOTS = "Integer upper limit before the box reboots";
 
-    addResponseDescription(JsonCodec.WebDriver.Grid.HUB_RUNNING, "Boolean if hub is running on given port");
-    addResponseDescription(JsonCodec.WebDriver.Grid.NODE_RUNNING, "Boolean if node is running on given port");
-    addResponseDescription(JsonCodec.WebDriver.Grid.HUB_INFO, "Hash object describing the Hub Process");
-    addResponseDescription(JsonCodec.WebDriver.Grid.NODE_INFO, "Hash object describing the NodeConfig Process");
+    public static final String DEPRECATED_STARTED_SESSIONS_KEY = "node_sessions_started";
+    public static final String DEPRECATION_WARNING = "[DEPRECATION WARNING] - The " + DEPRECATED_STARTED_SESSIONS_KEY + " key returned from the node's " + TaskDescriptions.Endpoints.GRID_STATUS +"  endpoint indicates that the node is using old version of Selenium Grid Extras, please update it";
 
-    addResponseDescription(JsonCodec.WebDriver.Grid.NODE_SESSIONS_STARTED,
-                           "Integer how many times grid connected to this computer");
-    addResponseDescription(JsonCodec.WebDriver.Grid.NODE_SESSIONS_CLOSED,
-                           "Integer how many sessions where properly closed");
-    addResponseDescription(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT, "Integer upper limit before the box reboots");
+    public GridStatus() {
+        setEndpoint(TaskDescriptions.Endpoints.GRID_STATUS);
+        setDescription(
+                TaskDescriptions.Description.GRID_STATUS);
+        JsonObject params = new JsonObject();
+        setAcceptedParams(params);
+        setRequestType("GET");
+        setResponseType("json");
+        setClassname(this.getClass().getCanonicalName().toString());
+        setCssClass("btn-success");
+        setButtonText(TaskDescriptions.UI.ButtonText.GRID_STATUS);
+        setEnabledInGui(true);
 
-  }
+        params.addProperty(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM,
+                SESSION_PARAM_DESCRIPTION);
 
+        addResponseDescription(JsonCodec.WebDriver.Grid.HUB_RUNNING, BOOLEAN_IF_HUB_IS_RUNNING_ON_GIVEN_PORT);
+        addResponseDescription(JsonCodec.WebDriver.Grid.NODE_RUNNING, BOOLEAN_IF_NODE_IS_RUNNING_ON_GIVEN_PORT);
+        addResponseDescription(JsonCodec.WebDriver.Grid.HUB_INFO, HASH_OBJECT_DESCRIBING_THE_HUB_PROCESS);
+        addResponseDescription(JsonCodec.WebDriver.Grid.NODE_INFO, HASH_OBJECT_DESCRIBING_THE_NODE_CONFIG_PROCESS);
+        addResponseDescription(JsonCodec.WebDriver.Grid.RECORDED_SESSIONS, LIST_OF_RECORDED_SESSIONS);
+        addResponseDescription(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT, INTEGER_UPPER_LIMIT_BEFORE_THE_BOX_REBOOTS);
 
-  @Override
-  public JsonObject execute() {
-    try {
-      JsonObject hubInfo = PortChecker.getParsedPortInfo(4444);
-      JsonObject nodeInfo = PortChecker.getParsedPortInfo(5555);
-
-      getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_RUNNING, hubInfo.isJsonNull() ? false : true);
-      getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_RUNNING, nodeInfo.isJsonNull() ? false : true);
-      getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_INFO, hubInfo);
-      getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_INFO, nodeInfo);
-
-      getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_SESSIONS_STARTED,
-                                     RuntimeConfig.getTestSessionTracker().getSessionsStarted());
-      getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_SESSIONS_CLOSED,
-                                     RuntimeConfig.getTestSessionTracker().getSessionsEnded());
-      getJsonResponse()
-          .addKeyValues(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT, RuntimeConfig.getConfig().getRebootAfterSessions());
-
-      return getJsonResponse().getJson();
-    } catch (Exception error) {
-      getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
-      return getJsonResponse().getJson();
     }
-  }
+
+
+    @Override
+    public JsonObject execute() {
+        try {
+            JsonObject hubInfo = PortChecker.getParsedPortInfo(4444);
+            JsonObject nodeInfo = PortChecker.getParsedPortInfo(5555);
+
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_RUNNING, hubInfo.isJsonNull() ? false : true);
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_RUNNING, nodeInfo.isJsonNull() ? false : true);
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_INFO, hubInfo);
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_INFO, nodeInfo);
+
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.RECORDED_SESSIONS,
+                    RuntimeConfig.getTestSessionTracker().getSessions());
+
+            getJsonResponse()
+                    .addKeyValues(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT,
+                            RuntimeConfig.getConfig().getRebootAfterSessions());
+
+            return getJsonResponse().getJson();
+        } catch (Exception error) {
+            getJsonResponse().addKeyValues(JsonCodec.ERROR, error.toString());
+            return getJsonResponse().getJson();
+        }
+    }
+
+    @Override
+    public JsonObject execute(Map<String, String> parameter) {
+
+
+        if (parameter.containsKey(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM)) {
+            RuntimeConfig.getTestSessionTracker().startSession(
+                    parameter.get(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM));
+        }
+
+
+        return execute();
+    }
 
 }

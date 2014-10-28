@@ -49,6 +49,7 @@ public class JsonCodec {
         public static final String HEARTBEAT = "heartbeat";
         public static final String STATUS = "status";
         public static final String STOP_ALL = "stop_all";
+        public static final String AVAILABLE_VIDEOS = "available_videos";
     }
 
     public static class OS {
@@ -156,8 +157,6 @@ public class JsonCodec {
             public static final String NODE_RUNNING = "node_running";
             public static final String HUB_INFO = "hub_info";
             public static final String NODE_INFO = "node_info";
-            public static final String NODE_SESSIONS_STARTED = "node_sessions_started";
-            public static final String NODE_SESSIONS_CLOSED = "node_sessions_closed";
             public static final String NODE_SESSIONS_LIMIT = "node_sessions_limit";
             public static final String NODE = "node";
             public static final String PORT = "port";
@@ -173,6 +172,8 @@ public class JsonCodec {
             public static final String EXTERNAL_KEY = "external_key";
             public static final String NOT_YET_ASSIGNED = "Not Yet Assigned";
             public static final String REQUESTED_CAPABILITIES = "requested_capabilities";
+            public static final String NEW_SESSION_PARAM = "session";
+            public static final String RECORDED_SESSIONS = "sessions";
         }
 
         public static class Downloader {

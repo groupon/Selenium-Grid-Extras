@@ -13,13 +13,18 @@ public class CommonThreadPool {
     private static Logger logger = Logger.getLogger(CommonThreadPool.class);
     protected static ExecutorService cachedPool;
 
-    public static Future startCallable(Callable callable){
+    public static Future<String> startCallable(Callable callable) {
 
-        if (cachedPool == null){
-            logger.info("Initializing new ");
+        if (cachedPool == null) {
+            logger.info("Initializing new " + CommonThreadPool.class);
             cachedPool = Executors.newCachedThreadPool();
         }
 
-        return cachedPool.submit(callable);
+        try {
+            return (Future<String>) cachedPool.submit(callable);
+        } catch (Exception e) {
+            logger.error(e);
+            return null;
+        }
     }
 }

@@ -85,7 +85,6 @@ public class SetupTest {
       Long exitCode = new Long(0);
       JsonArray expectedClasses = new JsonArray();
       expectedClasses.add(new JsonPrimitive("MoveMouse"));
-      expectedClasses.add(new JsonPrimitive("SessionCounterStartSession"));
 
       assertEquals((Object) exitCode, result.get("exit_code").getAsLong());
       assertEquals(expectedClasses, result.get("classes_to_execute"));
@@ -108,7 +107,7 @@ public class SetupTest {
     if (RuntimeConfig.getOS().hasGUI()) {
 
       assertEquals(
-          new JsonParser().parse("{\"exit_code\":0,\"results\":[\"\"],\"error\":[],\"classes_to_execute\":[\"MoveMouse\", \"SessionCounterStartSession\"],\"out\":[]}"),
+          new JsonParser().parse("{\"exit_code\":0,\"out\":[],\"error\":[],\"classes_to_execute\":[\"MoveMouse\"],\"results\":[\"\"]}"),
           task.getJsonResponse().getJson());
 
       assertEquals("List of full canonical classes to execute on Setup",

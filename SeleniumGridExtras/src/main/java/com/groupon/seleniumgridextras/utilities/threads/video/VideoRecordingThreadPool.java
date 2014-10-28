@@ -23,7 +23,7 @@ public class VideoRecordingThreadPool {
             new HashMap<String, VideoRecorderCallable>();
 
 
-    public static void startVideoRecording(String sessionName, int timeout) {
+    public static Future<String> startVideoRecording(String sessionName, int timeout) {
         if (cachedPool == null) {
             initializeThreadPool();
         }
@@ -33,13 +33,14 @@ public class VideoRecordingThreadPool {
         Future callableFuture = cachedPool.submit(aCallable);
         futures.put(sessionName, callableFuture);
         videos.put(sessionName, aCallable);
+        return callableFuture;
     }
 
-    public static void startVideoRecording(String sessionName) {
-        startVideoRecording(sessionName, 120);
+    public static Future<String> startVideoRecording(String sessionName) {
+        return startVideoRecording(sessionName, 120);
     }
 
-    public static void stopVideoRecording(String sessionName) {
+    public static Future<String> stopVideoRecording(String sessionName) {
         Future<String> future = futures.get(sessionName);
         VideoRecorderCallable video = videos.get(sessionName);
 
@@ -69,6 +70,8 @@ public class VideoRecordingThreadPool {
                 }
             }
         }
+
+        return future;
     }
 
     public static void addNewDescriptionToLowerThird(String sessionName, String newDescription) {
@@ -85,6 +88,7 @@ public class VideoRecordingThreadPool {
     }
 
     public static List<String> getAllVideos() {
+        cleanUpOrphanedVideos();
         List<String> listOfVideos = new LinkedList<String>();
         listOfVideos.addAll(videos.keySet());
         return listOfVideos;
@@ -116,6 +120,25 @@ public class VideoRecordingThreadPool {
     protected static void initializeThreadPool() {
         logger.info("Initializing a new thread pool");
         cachedPool = Executors.newCachedThreadPool();
+    }
+
+    protected static void cleanUpOrphanedVideos() {
+        try {
+            List<String> sessionsToCleanUp = new LinkedList<String>();
+            for (String session : futures.keySet()) {
+                Future<String> f = futures.get(session);
+                if (f.isCancelled() || f.isDone()) {
+                    sessionsToCleanUp.add(session);
+                }
+            }
+
+            for (String s : sessionsToCleanUp) {
+                logger.info(String.format("Video Session %s seems to have timed out, removing it from memory", s));
+                removeSession(s);
+            }
+        } catch (Exception e) {
+            logger.error("Error cleaning up orphaned video recording threads", e);
+        }
     }
 
 

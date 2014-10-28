@@ -37,7 +37,6 @@
 package com.groupon.seleniumgridextras.config;
 
 
-
 import com.groupon.seleniumgridextras.tasks.*;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
 
@@ -187,14 +186,11 @@ public class DefaultConfig {
 
 
     private static void loadSetupConfig() {
-
         config.addSetupTask(MoveMouse.class.getCanonicalName());
-        config.addSetupTask(SessionCounterStartSession.class.getCanonicalName());
     }
 
     private static void loadTeardownConfig() {
         config.addTeardownTask(MoveMouse.class.getCanonicalName());
-        config.addTeardownTask(SessionCounterStopSession.class.getCanonicalName());
     }
 
 
@@ -227,7 +223,6 @@ public class DefaultConfig {
         config.getChromeDriver().setVersion(getChromeDriverDefaultVersion());
         config.getChromeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
     }
-
 
 
     private static void loadEnabledPlugins() {

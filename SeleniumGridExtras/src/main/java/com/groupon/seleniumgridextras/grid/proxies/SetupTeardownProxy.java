@@ -38,16 +38,15 @@
 
 package com.groupon.seleniumgridextras.grid.proxies;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
 import com.groupon.seleniumgridextras.utilities.threads.SessionHistoryCallable;
-import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
 import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
+import com.groupon.seleniumgridextras.utilities.threads.video.RemoteVideoRecordingControlCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
@@ -56,20 +55,11 @@ import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,21 +77,36 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
     public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
         super(request, registry);
-        writeProxyLog("Attaching a node: " + getHost());
+        logger.info(String.format("Attaching node %s", this.getId()));
     }
 
 
-    /**
-     * overwrites the session allocation to discard the proxy that are down.
-     */
     @Override
     public TestSession getNewSession(Map<String, Object> requestedCapability) {
         if (isDown()) {
             return null;
         }
-
         TestSession session = super.getNewSession(requestedCapability);
-        CommonThreadPool.startCallable(new SessionHistoryCallable(session));
+
+        try {
+            String host = session.getSlot().getRemoteURL().getHost();
+            CommonThreadPool.startCallable(new SessionHistoryCallable(session));
+
+            CommonThreadPool.startCallable(
+                    new RemoteGridExtrasAsyncCallable(
+                            host,
+                            3000,
+                            TaskDescriptions.Endpoints.SETUP,
+                            new HashMap<String, String>()));
+
+            startVideoRecording(session);
+
+
+        } catch (Exception e) {
+
+            logger.error(String.format("Error communicating with %s, \n%s",
+                    session.getSlot().getProxy().getId(), e));
+        }
         return session;
     }
 
@@ -109,120 +114,133 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     @Override
     public void beforeCommand(TestSession session, HttpServletRequest request,
                               HttpServletResponse response) {
-
-        if (session.getExternalKey() != null) {
-            if (!alreadyRecordingCurrentSession(session.getExternalKey().getKey())) {
-                startVideoRecording(session.getExternalKey().getKey());
-            }
-
-            updateLastCommand(session.getExternalKey().getKey(), request);
-        }
-
+        updateLastCommand(session, request);
         session.put("lastCommand", request.getMethod() + " - " + request.getPathInfo() + " executed.");
-    }
-
-    @Override
-    public void beforeSession(TestSession session) {
-        super.beforeSession(session);
-        callRemoteGridExtrasAsync("setup", new HashMap<String, String>());
     }
 
     @Override
     public void afterSession(TestSession session) {
         super.afterSession(session);
-        stopVideoRecording(session.getExternalKey().getKey());
-        callRemoteGridExtrasAsync("teardown", new HashMap<String, String>());
+        stopVideoRecording(session);
 
-        CommonThreadPool.startCallable(new NodeRestartCallable(this, session));
+        CommonThreadPool.startCallable(
+                new RemoteGridExtrasAsyncCallable(
+                        this.getRemoteHost().getHost(),
+                        3000,
+                        TaskDescriptions.Endpoints.TEARDOWN,
+                        new HashMap<String, String>()));
+
+        CommonThreadPool.startCallable(
+                new NodeRestartCallable(
+                        this,
+                        session));
     }
 
-    private boolean alreadyRecordingCurrentSession(String session) {
-        return this.sessionsRecording.contains(session);
-    }
-
-
-    private void startVideoRecording(String session) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("session", session);
-        params.put("action", "start");
-
-        callRemoteGridExtrasAsync("video", params);
-        this.sessionsRecording.add(session);
-    }
-
-    private void stopVideoRecording(String session) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("session", session);
-        params.put("action", "stop");
-        callRemoteGridExtrasAsync("video", params);
-    }
-
-    private void updateLastCommand(String session, HttpServletRequest request) {
-        String
-                command =
-                new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
-                        JsonWireCommandTranslator.getBodyAsString(request))
-                        .toString();
-
-        try {
-            command = URLEncoder.encode(command, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            logger.warn("Encoding with UTF-8 Failed, falling back to deprecated method");
-            command = URLEncoder.encode(command);
-
+    private boolean alreadyRecordingCurrentSession(TestSession session) {
+        if ((session.getExternalKey() == null) || !getSessionsRecording().contains(session.getExternalKey().getKey())) {
+            return false;
         }
 
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("session", session);
-        params.put("action", "heartbeat");
-        params.put("description", command);
+        return true;
+    }
 
-        callRemoteGridExtrasAsync("video", params);
+
+    private void startVideoRecording(TestSession session) {
+
+        if (alreadyRecordingCurrentSession(session)) {
+            return;
+        }
+
+        CommonThreadPool.startCallable(
+                new RemoteVideoRecordingControlCallable(
+                        this,
+                        session,
+                        JsonCodec.Video.START));
+    }
+
+    private void stopVideoRecording(TestSession session) {
+        Future a = CommonThreadPool.startCallable(
+                new RemoteVideoRecordingControlCallable(
+                        this,
+                        session,
+                        JsonCodec.Video.STOP));
+
+        try {
+            logger.info(String.format(
+                    "Waiting for stop command to finish for session: %s, output:\n%s",
+                    session.getExternalKey().getKey(),
+                    a.get()));
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage(), e);
+        } catch (ExecutionException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    private void updateLastCommand(TestSession session, HttpServletRequest request) {
+
+        if (session.getExternalKey() == null) {
+            return;
+        }
+
+        try {
+            String
+                    command =
+                    new JsonWireCommandTranslator(request.getMethod(), request.getRequestURI(),
+                            JsonWireCommandTranslator.getBodyAsString(request))
+                            .toString();
+
+            CommonThreadPool.startCallable(
+                    new RemoteVideoRecordingControlCallable(
+                            this,
+                            session,
+                            JsonCodec.Video.HEARTBEAT,
+                            command));
+        } catch (Exception e) {
+            logger.error(String.format("Error updating last action for int. key: %s"), e);
+        }
     }
 
     public void stopGridNode() {
-        writeProxyLog("Asking " + getHost() + " to stop grid node politely");
-        writeProxyLog(callRemoteGridExtras("stop_grid?port=5555"));
+
+        logger.info(String.format("Asking proxy %s to stop gracefully", this.getId()));
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(JsonCodec.WebDriver.Grid.PORT, String.valueOf(this.getRemoteHost().getPort()));
+
+        Future<String> f = CommonThreadPool.startCallable(
+                new RemoteGridExtrasAsyncCallable(
+                        this.getRemoteHost().getHost(),
+                        3000,
+                        TaskDescriptions.Endpoints.STOP_GRID,
+                        params));
+
+        try {
+            logger.debug(f.get());
+        } catch (Exception e) {
+            logger.error(String.format("Error stopping proxy %s", this.getId()), e);
+        }
         unregister();
     }
 
-    public void rebootGridExtrasNode() {
-        writeProxyLog("Asking SeleniumGridExtras to reboot " + getHost());
-        writeProxyLog(callRemoteGridExtras("reboot"));
-    }
-
-    private void callRemoteGridExtrasAsync(String action, Map<String, String> params) {
-        CommonThreadPool.startCallable(new RemoteGridExtrasAsyncCallable(getHost(), 3000, action, params));
-    }
-
-
-    public JsonObject callRemoteGridExtras(String action) {
-        String returnedString;
-
+    public static void rebootGridExtrasNode(String host) {
+        logger.info("Asking SeleniumGridExtras to reboot node" + host);
+        Future<String> f = CommonThreadPool.startCallable(
+                new RemoteGridExtrasAsyncCallable(
+                        host,
+                        3000,
+                        TaskDescriptions.Endpoints.REBOOT,
+                        new HashMap<String, String>()));
         try {
-
-            returnedString = HttpUtility.getRequestAsString(
-                    new URL("http://" + getHost() + ":3000/" + action));
-
-            JsonParser j = new JsonParser();
-            logger.debug(returnedString);
-            return (JsonObject) j.parse(returnedString);
-
-        } catch (MalformedURLException e) {
-            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
-        } catch (ProtocolException e) {
-            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
-        } catch (IOException e) {
-            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
+            logger.debug(f.get());
         } catch (Exception e) {
-            logger.error("Attempt to contact node has failed with " + e.getMessage(), e);
+            logger.error(String.format("Error rebooting node ", host), e);
         }
 
-        return null;
     }
 
-    protected String getHost() {
-        return this.getRemoteHost().getHost();
+    public List<String> getSessionsRecording() {
+        return this.sessionsRecording;
     }
 
     protected boolean isAvailable() {
@@ -234,7 +252,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
 
     public void unregister() {
-        addNewEvent(new RemoteUnregisterException("Unregistering the node."));
+        addNewEvent(new RemoteUnregisterException(String.format("Taking proxy %s offline", this.getId())));
     }
 
     public boolean isRestarting() {
@@ -244,9 +262,4 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     public void setRestarting(boolean restarting) {
         this.restarting = restarting;
     }
-
-    private void writeProxyLog(Object logItem) {
-        logger.info(logItem.toString());
-    }
-
 }

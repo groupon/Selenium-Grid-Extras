@@ -1,6 +1,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -9,7 +10,12 @@ import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecordingThreadPool;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class VideoRecorder extends ExecuteOSTask {
     private static Logger logger = Logger.getLogger(VideoRecorder.class);
@@ -37,6 +43,9 @@ public class VideoRecorder extends ExecuteOSTask {
         addResponseDescription(JsonCodec.Video.CURRENT_VIDEOS,
                 "List of videos currently being recorded, retrieved with 'status' action");
 
+        addResponseDescription(JsonCodec.Video.AVAILABLE_VIDEOS,
+                "List of videos on the hard driver");
+
         setEnabledInGui(false);
     }
 
@@ -58,9 +67,14 @@ public class VideoRecorder extends ExecuteOSTask {
             return getJsonResponse().getJson();
         }
 
-        if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.Video.SESSION) && parameter
-                .containsKey(JsonCodec.Video.ACTION)) {
-
+        if (parameter.isEmpty()) {
+            return execute();
+        } else if ((parameter.containsKey(JsonCodec.Video.ACTION)) && (parameter.get(JsonCodec.Video.ACTION).equals(JsonCodec.Video.STOP_ALL))) {
+            VideoRecordingThreadPool.stopAndFinalizeAllVideos();
+            getJsonResponse().addKeyValues(JsonCodec.OUT, "Calling stop all videos command");
+        } else if (!parameter.containsKey(JsonCodec.Video.SESSION)) {
+            return execute();
+        } else {
             String session = parameter.get(JsonCodec.Video.SESSION);
             String action = parameter.get(JsonCodec.Video.ACTION);
             String userDescription = parameter.get(JsonCodec.Video.DESCRIPTION);
@@ -69,44 +83,116 @@ public class VideoRecorder extends ExecuteOSTask {
             getJsonResponse().addKeyValues(JsonCodec.Video.ACTION, "" + action);
             getJsonResponse().addKeyValues(JsonCodec.Video.DESCRIPTION, "" + userDescription);
 
-            if (action.equals(JsonCodec.Video.START)) {
-                VideoRecordingThreadPool.startVideoRecording(session,
-                        RuntimeConfig.getConfig().getVideoRecording()
-                                .getIdleTimeout());
-                getJsonResponse().addKeyValues(JsonCodec.OUT, "Starting Video Recording");
+            if (action.equals(JsonCodec.Video.START)) { //Once again, a kingdom for a string switch
+                startVideoRecording(session);
             } else if (action.equals(JsonCodec.Video.STOP)) {
-                getJsonResponse().addKeyValues(JsonCodec.OUT, "Stopping Video Recording");
-                VideoRecordingThreadPool.stopVideoRecording(session);
+                stopVideoRecording(session);
             } else if (action.equals(JsonCodec.Video.HEARTBEAT)) {
-                VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
-                getJsonResponse().addKeyValues(JsonCodec.OUT, "Updating lower 3rd description");
-            } else if (action.equals(JsonCodec.Video.STATUS)) {
-                getJsonResponse()
-                        .addKeyValues(JsonCodec.Video.CURRENT_VIDEOS, VideoRecordingThreadPool.getAllVideos());
-            } else if (action.equals(JsonCodec.Video.STOP_ALL)) {
-                VideoRecordingThreadPool.stopAndFinalizeAllVideos();
-                getJsonResponse().addKeyValues(JsonCodec.OUT, "Calling stop all videos command");
+                updateLastAction(session, userDescription);
             } else {
-                getJsonResponse().addKeyValues(JsonCodec.ERROR, "Unrecognized action '" + action
-                        + "', only acceptable actions are start, stop, heartbeat");
+                String error = String.format(
+                        "Unrecognized action: %s, for session: %s, on host: %s",
+                        action,
+                        session,
+                        RuntimeConfig.getOS().getHostIp());
+
+                logger.warn(error);
+                getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
 
             }
-
-            return getJsonResponse().getJson();
-
-        } else {
-            return execute();
         }
 
-
+        addExistingAndCurrentVideosToResponse();
+        return getJsonResponse().getJson();
     }
 
 
     @Override
     public JsonObject execute() {
+        addExistingAndCurrentVideosToResponse();
         getJsonResponse().addKeyValues(JsonCodec.ERROR,
-                "Cannot call this endpoint without required parameters: session & action");
+                "Cannot call this endpoint without required parameters: session and action");
         return getJsonResponse().getJson();
+    }
+
+    protected void updateLastAction(String session, String userDescription) {
+        VideoRecordingThreadPool.addNewDescriptionToLowerThird(session, userDescription);
+        getJsonResponse().addKeyValues(JsonCodec.OUT, "Updating lower 3rd description with " + userDescription);
+    }
+
+    protected void startVideoRecording(String session) {
+        try {
+            Future<String> f = VideoRecordingThreadPool.startVideoRecording(session,
+                    RuntimeConfig.getConfig().getVideoRecording().getIdleTimeout());
+
+            String message = String.format(
+                    "Starting video recording for session: %s, on host: %s, done: %s, cancelled: %s",
+                    session,
+                    RuntimeConfig.getOS().getHostIp(),
+                    f.isDone(),
+                    f.isCancelled());
+            logger.info(message);
+            getJsonResponse().addKeyValues(JsonCodec.OUT, message);
+        } catch (Exception e) {
+            String error = String.format(
+                    "Error starting video recording for session: %s, error: %s, \n%s",
+                    session,
+                    e.getMessage(),
+                    Throwables.getStackTraceAsString(e));
+
+            logger.error(error);
+            getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
+        }
+    }
+
+    protected void stopVideoRecording(String session) {
+        Future<String> f = VideoRecordingThreadPool.stopVideoRecording(session);
+
+
+        try {
+            String output = f.get();
+
+            VideoRecordingThreadPool.removeSession(session);
+
+            getJsonResponse().addKeyValues(
+                    JsonCodec.OUT,
+                    String.format(
+                            "Stopping video done: %s, cancelled: %s, output: %s",
+                            f.isDone(),
+                            f.isCancelled(),
+                            output));
+        } catch (Exception e) {
+            String error = String.format("Error stopping video for session: %s, host: %s, IP: %s, \n%s",
+                    session,
+                    RuntimeConfig.getOS().getHostName(),
+                    RuntimeConfig.getOS().getHostIp(),
+                    Throwables.getStackTraceAsString(e));
+
+            logger.error(error);
+            getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
+        }
+    }
+
+
+    protected void addExistingAndCurrentVideosToResponse() {
+        List<String> videosInMidRecording = VideoRecordingThreadPool.getAllVideos();
+
+        getJsonResponse()
+                .addKeyValues(JsonCodec.Video.CURRENT_VIDEOS, videosInMidRecording);
+
+
+        List<String> files = new LinkedList<String>();
+        try {
+            for (File f : RuntimeConfig.getConfig().getVideoRecording().getOutputDir().listFiles()) {
+                files.add(f.getName());
+            }
+        } catch (NullPointerException e) {
+            logger.warn("NullPointerException exception when trying to list videos in output dir", e);
+        }
+
+        getJsonResponse().addKeyValues(JsonCodec.Video.AVAILABLE_VIDEOS, files);
+
+
     }
 
 

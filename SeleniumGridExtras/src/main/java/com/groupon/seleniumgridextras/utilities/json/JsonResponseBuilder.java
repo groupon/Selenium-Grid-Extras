@@ -46,14 +46,17 @@ import java.util.Map;
 
 public class JsonResponseBuilder {
 
+    public static final String ERROR_RECEIVED_DURING_EXECUTION_OF_COMMAND = "Error received during execution of command";
+    public static final String EXIT_CODE_FOR_OPERATION = "Exit code for operation";
+    public static final String ALL_OF_THE_STANDARD_OUT_RECEIVED_FROM_THE_SYSTEM = "All of the StandardOut received from the system";
     private JsonObject keyDescriptions;
     private JsonObject keyValues;
 
     public JsonResponseBuilder() {
         keyDescriptions = new JsonObject();
-        keyDescriptions.addProperty(JsonCodec.ERROR, "Error received during execution of command");
-        keyDescriptions.addProperty(JsonCodec.EXIT_CODE, "Exit code for operation");
-        keyDescriptions.addProperty(JsonCodec.OUT, "All of the StandardOut received from the system");
+        keyDescriptions.addProperty(JsonCodec.ERROR, ERROR_RECEIVED_DURING_EXECUTION_OF_COMMAND);
+        keyDescriptions.addProperty(JsonCodec.EXIT_CODE, EXIT_CODE_FOR_OPERATION);
+        keyDescriptions.addProperty(JsonCodec.OUT, ALL_OF_THE_STANDARD_OUT_RECEIVED_FROM_THE_SYSTEM);
         clearValues();
     }
 

@@ -2,32 +2,32 @@ package com.groupon.seleniumgridextras.grid;
 
 import org.junit.Test;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created with IntelliJ IDEA. User: dima Date: 5/30/14 Time: 10:45 AM To change this template use
- * File | Settings | File Templates.
- */
 public class SessionTrackerTest {
 
 
-  @Test
-  public void testStartAndEndSessions() throws Exception{
+    @Test
+    public void testSessionsStarted() throws Exception {
 
-    SessionTracker s = new SessionTracker();
+        SessionTracker s = new SessionTracker();
 
-    s.startSession();
-    s.startSession();
-    s.startSession();
+        s.startSession("a");
+        s.startSession("b");
+        s.startSession("c");
 
-    s.stopSession();
-    s.stopSession();
+        List<String> expected = new LinkedList<String>();
+        expected.add("a");
+        expected.add("b");
+        expected.add("c");
+
+        assertEquals(3, s.getSessions().size());
+        assertEquals(expected, s.getSessions());
 
 
-    assertEquals(3, s.getSessionsStarted());
-    assertEquals(2, s.getSessionsEnded());
-
-
-  }
+    }
 
 }
