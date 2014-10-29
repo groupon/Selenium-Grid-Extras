@@ -1,13 +1,13 @@
 package com.groupon.seleniumgridextras.utilities;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.Test;
 
-import java.net.ConnectException;
-import java.net.ServerSocket;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.io.File;
+import java.net.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HttpUtilityTest {
 
@@ -39,4 +39,11 @@ public class HttpUtilityTest {
   public void testGetAsString() throws Exception {
     assertEquals("", HttpUtility.getRequestAsString(new URL("http://xkcd.com/404")));
   }
+
+//    @Test //This is commented out until we find a more consistent place to download videos from
+//    public void testGetVideoFromUri() throws Exception {
+//        RuntimeConfig.load();
+//        File actual = HttpUtility.downloadVideoFromUri(new URI("http://192.168.168.144:3000/download_video/ad895b34-ee0a-4362-b542-a63d90ea221d.mp4"));
+//        assertTrue(actual.exists());
+//    }
 }
