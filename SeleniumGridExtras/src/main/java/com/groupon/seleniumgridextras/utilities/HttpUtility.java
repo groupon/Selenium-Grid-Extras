@@ -65,7 +65,14 @@ public class HttpUtility {
 
     public static File downloadVideoFromUri(URI uri) {
         //Don't modify this without running the comment out tests!
-        File destinationDir = RuntimeConfig.getConfig().getVideoRecording().getOutputDir();
+
+        File destinationDir;
+        if ( RuntimeConfig.getConfig() != null ){
+            destinationDir = RuntimeConfig.getConfig().getVideoRecording().getOutputDir();
+        }   else {
+            destinationDir = new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY);
+        }
+
         if (!destinationDir.exists()) {
             destinationDir.mkdir();
         }
