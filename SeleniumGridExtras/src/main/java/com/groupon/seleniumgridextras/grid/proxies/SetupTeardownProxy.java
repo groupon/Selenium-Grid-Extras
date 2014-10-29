@@ -47,6 +47,7 @@ import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 
 import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.video.RemoteVideoRecordingControlCallable;
+import com.groupon.seleniumgridextras.utilities.threads.video.VideoDownloaderCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
@@ -124,16 +125,24 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         stopVideoRecording(session);
 
         CommonThreadPool.startCallable(
+                new VideoDownloaderCallable(
+                        session.getExternalKey().getKey(),
+                        session.getSlot().getRemoteURL().getHost())
+        );
+
+        CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         this.getRemoteHost().getHost(),
                         3000,
                         TaskDescriptions.Endpoints.TEARDOWN,
                         new HashMap<String, String>()));
 
+
         CommonThreadPool.startCallable(
                 new NodeRestartCallable(
                         this,
                         session));
+
     }
 
     private boolean alreadyRecordingCurrentSession(TestSession session) {
