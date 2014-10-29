@@ -16,7 +16,7 @@ import java.net.URI;
 public class VideoHttpExecutor implements HttpHandler {
 
     private static Logger logger = Logger.getLogger(VideoHttpExecutor.class);
-    public static final String VIDEO_ENDPOINT = "/download_video";
+    public static final String GET_VIDEO_FILE_ENDPOINT = "/download_video";
     private File outputDir;
 
 
@@ -29,7 +29,7 @@ public class VideoHttpExecutor implements HttpHandler {
         }
 
         URI uri = t.getRequestURI();
-        String desiredFile = uri.getPath().replaceAll(VIDEO_ENDPOINT + "/", "");
+        String desiredFile = uri.getPath().replaceAll(GET_VIDEO_FILE_ENDPOINT + "/", "");
         File videoFile = new File(outputDir, desiredFile);
         logger.info("New video download request for " + videoFile.getAbsolutePath());
 

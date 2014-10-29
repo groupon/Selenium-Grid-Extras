@@ -50,6 +50,10 @@ public class JsonCodec {
         public static final String STATUS = "status";
         public static final String STOP_ALL = "stop_all";
         public static final String AVAILABLE_VIDEOS = "available_videos";
+        public static final String VIDEO_DOWNLOAD_URL = "download_url";
+        public static final String VIEDO_SIZE = "size";
+        public static final String LAST_MODIFIED = "last_modified";
+        public static final String VIDEO_ABSOLUTE_PATH = "absolute_path";
     }
 
     public static class OS {

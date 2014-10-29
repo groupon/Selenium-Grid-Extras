@@ -4,13 +4,19 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 
+import com.groupon.seleniumgridextras.VideoHttpExecutor;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecordingThreadPool;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -181,18 +187,53 @@ public class VideoRecorder extends ExecuteOSTask {
                 .addKeyValues(JsonCodec.Video.CURRENT_VIDEOS, videosInMidRecording);
 
 
-        List<String> files = new LinkedList<String>();
+        Map<String, Map<String, Object>> filesReadyForDownload = new HashMap<String, Map<String, Object>>();
         try {
             for (File f : RuntimeConfig.getConfig().getVideoRecording().getOutputDir().listFiles()) {
-                files.add(f.getName());
+                String sessionId = FilenameUtils.removeExtension(f.getName());
+                if (!videosInMidRecording.contains(sessionId)) {
+                    Map<String, Object> videoInfo = new HashMap<String, Object>();
+                    videoInfo.put(JsonCodec.Video.SESSION, sessionId);
+                    videoInfo.put(JsonCodec.Video.VIDEO_DOWNLOAD_URL, buildUrlToVideo(f.getName()));
+                    videoInfo.put(JsonCodec.Video.VIEDO_SIZE, f.length());
+                    videoInfo.put(JsonCodec.Video.LAST_MODIFIED, f.lastModified());
+                    videoInfo.put(JsonCodec.Video.VIDEO_ABSOLUTE_PATH, f.getAbsolutePath());
+
+                    filesReadyForDownload.put(sessionId, videoInfo);
+                }
             }
-        } catch (NullPointerException e) {
-            logger.warn("NullPointerException exception when trying to list videos in output dir", e);
+
+            getJsonResponse().addKeyValues(
+                    JsonCodec.Video.AVAILABLE_VIDEOS,
+                    JsonParserWrapper.toJsonObject(filesReadyForDownload));
+        } catch (Exception e) {
+            String error = String.format(
+                    "Error occurred while collecting while trying to collect downloadable video files %s\n%s",
+                    e.getMessage(),
+                    Throwables.getStackTraceAsString(e));
+            logger.error(error, e);
+
+            getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
         }
+    }
 
-        getJsonResponse().addKeyValues(JsonCodec.Video.AVAILABLE_VIDEOS, files);
+    protected String buildUrlToVideo(String fileName) {
+        try {
+            URIBuilder uriBuilder = new URIBuilder();
+            uriBuilder.setScheme("http");
+            uriBuilder.setHost(RuntimeConfig.getOS().getHostIp());
+            uriBuilder.setPort(3000);
+            uriBuilder.setPath(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT + "/" + fileName);
 
-
+            return uriBuilder.build().toString();
+        } catch (Exception e) {
+            String error = String.format("Error building direct URL for session %s, %s\n%s",
+                    e.getMessage(),
+                    Throwables.getStackTraceAsString(e));
+            logger.error(error, e);
+            getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
+            return "";
+        }
     }
 
 

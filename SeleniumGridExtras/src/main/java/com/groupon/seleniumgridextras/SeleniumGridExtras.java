@@ -122,8 +122,8 @@ public class SeleniumGridExtras {
             }
         });
 
-        HttpContext videoContext = server.createContext(VideoHttpExecutor.VIDEO_ENDPOINT, new VideoHttpExecutor());
-        logger.info("Attaching video downloading context at " + VideoHttpExecutor.VIDEO_ENDPOINT);
+        HttpContext videoContext = server.createContext(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT, new VideoHttpExecutor());
+        logger.info("Attaching video downloading context at " + VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT);
 
         if (RuntimeConfig.getConfig().getAutoStartHub()) {
             logger.info("Grid Hub was set to Autostart");
