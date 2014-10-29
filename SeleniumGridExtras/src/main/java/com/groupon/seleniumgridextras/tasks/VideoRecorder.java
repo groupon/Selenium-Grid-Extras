@@ -190,6 +190,11 @@ public class VideoRecorder extends ExecuteOSTask {
         Map<String, Map<String, Object>> filesReadyForDownload = new HashMap<String, Map<String, Object>>();
         try {
             for (File f : RuntimeConfig.getConfig().getVideoRecording().getOutputDir().listFiles()) {
+
+                if (!f.getName().contains(".mp4")){
+                    continue;
+                }
+
                 String sessionId = FilenameUtils.removeExtension(f.getName());
                 if (!videosInMidRecording.contains(sessionId)) {
                     Map<String, Object> videoInfo = new HashMap<String, Object>();
