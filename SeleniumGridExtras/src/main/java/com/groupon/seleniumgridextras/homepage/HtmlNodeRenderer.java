@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.homepage;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.StringMap;
-
+import com.groupon.seleniumgridextras.Version;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -291,10 +291,14 @@ public class HtmlNodeRenderer {
     }
 
 
-    protected String getMachineInfo() {
-        return RuntimeConfig.getOS().getHostName() +
-                " (" + RuntimeConfig.getOS().getHostIp() + ")";
-    }
+  protected String getMachineInfo() {
+    return RuntimeConfig.getOS().getHostName() +
+           " (" + RuntimeConfig.getOS().getHostIp() + ")";
+  }
+  
+  protected String getVersionInfo() {
+    return "Version : " + Version.getVersion();
+  }
 
     protected String buildScreenshotBillboard() {
         StringBuilder billBoard = new StringBuilder();
@@ -304,9 +308,14 @@ public class HtmlNodeRenderer {
         return billBoard.toString();
     }
 
-    protected String buildNavBar() {
-        return HtmlRenderer.getNavBar().replaceAll("INSERT_TITLE", getMachineInfo());
-    }
+  protected String buildNavBar() {
+    String navBarHtmlSnippet = HtmlRenderer.getNavBar();
+    
+    navBarHtmlSnippet = navBarHtmlSnippet.replaceAll("INSERT_TITLE", getMachineInfo());
+    navBarHtmlSnippet = navBarHtmlSnippet.replaceAll("INSERT_VERSION", getVersionInfo());
+    
+    return navBarHtmlSnippet;
+  }
 
 
     protected String buildPageHead() {
