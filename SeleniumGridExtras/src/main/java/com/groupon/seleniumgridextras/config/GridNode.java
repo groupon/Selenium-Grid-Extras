@@ -1,5 +1,6 @@
 package com.groupon.seleniumgridextras.config;
 
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.google.gson.internal.StringMap;
 
@@ -22,178 +23,191 @@ import java.util.Map;
 
 public class GridNode {
 
-  private LinkedList<Capability> capabilities;
-  private GridNodeConfiguration configuration;
-  private String loadedFromFile;
+    private LinkedList<Capability> capabilities;
+    private GridNodeConfiguration configuration;
+    private String loadedFromFile;
 
-  private static Logger logger = Logger.getLogger(GridNode.class);
+    private static Logger logger = Logger.getLogger(GridNode.class);
 
-  public GridNode() {
-    capabilities = new LinkedList<Capability>();
-    configuration = new GridNodeConfiguration();
-  }
-
-  private GridNode(LinkedList<Capability> caps, GridNodeConfiguration config) {
-    capabilities = caps;
-    configuration = config;
-  }
-
-  public static GridNode loadFromFile(String filename) {
-
-    String configString = readConfigFile(filename);
-    Map topLevelHash = JsonParserWrapper.toHashMap(configString);
-
-    String configFromFile = topLevelHash.get("configuration").toString();
-
-    GridNodeConfiguration
-        nodeConfiguration =
-        new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
-
-    List<StringMap> capabilitiesFromFile = (ArrayList<StringMap>) topLevelHash.get("capabilities");
-
-    LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
-
-    for (StringMap cap : capabilitiesFromFile){
-      if (cap.containsKey("browserName")){
-        filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName"), cap));
-      }
-
+    public GridNode() {
+        capabilities = new LinkedList<Capability>();
+        configuration = new GridNodeConfiguration();
     }
 
-    GridNode node = new GridNode(filteredCapabilities, nodeConfiguration);
-    node.setLoadedFromFile(filename);
+    private GridNode(LinkedList<Capability> caps, GridNodeConfiguration config) {
+        capabilities = caps;
+        configuration = config;
+    }
 
-    return node;
-  }
+    public static GridNode loadFromFile(String filename) {
 
-  public String getLoadedFromFile() {
-    return this.loadedFromFile;
-  }
+        String configString = readConfigFile(filename);
+        Map topLevelHash = JsonParserWrapper.toHashMap(configString);
 
-  public void setLoadedFromFile(String file) {
-    this.loadedFromFile = file;
-  }
+        String configFromFile = topLevelHash.get("configuration").toString();
 
+        GridNodeConfiguration
+                nodeConfiguration =
+                new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
 
-  public LinkedList<Capability> getCapabilities() {
-    return capabilities;
-  }
+        List<StringMap> capabilitiesFromFile = (ArrayList<StringMap>) topLevelHash.get("capabilities");
 
-  public GridNodeConfiguration getConfiguration() {
-    return configuration;
-  }
+        LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
 
-  public void writeToFile(String filename) {
+        for (StringMap cap : capabilitiesFromFile) {
+            if (cap.containsKey("browserName")) {
+                filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName"), cap));
+            }
 
-    try {
-      File f = new File(filename);
-      String config = this.toPrettyJsonString();
-      FileUtils.writeStringToFile(f, config);
-    } catch (Exception e) {
-      logger.fatal("Could not write node config for '" + filename + "' with following error");
-      logger.fatal(e.toString());
-      System.exit(1);
+        }
+
+        GridNode node = new GridNode(filteredCapabilities, nodeConfiguration);
+        node.setLoadedFromFile(filename);
+
+        return node;
+    }
+
+    public String getLoadedFromFile() {
+        return this.loadedFromFile;
+    }
+
+    public void setLoadedFromFile(String file) {
+        this.loadedFromFile = file;
     }
 
 
-  }
-
-  private String toPrettyJsonString() {
-    return JsonParserWrapper.prettyPrintString(this);
-  }
-
-
-  protected static String readConfigFile(String filePath) {
-    String returnString = "";
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(filePath));
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        returnString = returnString + line;
-      }
-    } catch (FileNotFoundException error) {
-      error.printStackTrace();
-      System.exit(1);
-    } catch (IOException error) {
-      error.printStackTrace();
-      System.exit(1);
-    }
-    return returnString;
-  }
-
-
-  //<Grumble Grumble>, google parsing Gson, Grumble
-  protected static Map doubleToIntConverter(Map input) {
-    for (Object key : input.keySet()) {
-
-      if (input.get(key) instanceof Double) {
-        input.put(key, ((Double) input.get(key)).intValue());
-      }
+    public LinkedList<Capability> getCapabilities() {
+        return capabilities;
     }
 
-    return input;
-  }
+    public GridNodeConfiguration getConfiguration() {
+        return configuration;
+    }
 
-  public static Map stringMapToHashMap(StringMap input) {
-    Map output = new HashMap();
-    output.putAll(input);
+    public void writeToFile(String filename) {
 
-    return output;
-  }
+        try {
+            File f = new File(filename);
+            String config = this.toPrettyJsonString();
+            FileUtils.writeStringToFile(f, config);
+        } catch (Exception e) {
+            logger.fatal("Could not write node config for '" + filename + "' with following error");
+            logger.fatal(e.toString());
+            System.exit(1);
+        }
 
-  //</Grubmle>
+
+    }
+
+    private String toPrettyJsonString() {
+        return JsonParserWrapper.prettyPrintString(this);
+    }
 
 
-  public class GridNodeConfiguration {
+    protected static String readConfigFile(String filePath) {
+        String returnString = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                returnString = returnString + line;
+            }
+        } catch (FileNotFoundException error) {
+            String e = String.format(
+                    "Error loading config from %s, %s, Will have to exit. \n%s",
+                    filePath,
+                    error.getMessage(),
+                    Throwables.getStackTraceAsString(error));
+            System.out.println(e);
+            logger.error(e);
 
-    private String proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
-    private int maxSession = 3;
-    private int port;
-    private boolean register = true;
-    private int unregisterIfStillDownAfter = 10000;
-    private int hubPort;
-    private String hubHost;
-//    private int browserTimeout = 120;
+            System.exit(1);
+        } catch (IOException error) {
+            String e = String.format(
+                    "Error loading config from %s, %s, Will have to exit. \n%s",
+                    filePath,
+                    error.getMessage(),
+                    Throwables.getStackTraceAsString(error));
+            System.out.println(e);
+            logger.error(e);
+
+            System.exit(1);
+        }
+        return returnString;
+    }
+
+
+    //<Grumble Grumble>, google parsing Gson, Grumble
+    protected static Map doubleToIntConverter(Map input) {
+        for (Object key : input.keySet()) {
+
+            if (input.get(key) instanceof Double) {
+                input.put(key, ((Double) input.get(key)).intValue());
+            }
+        }
+
+        return input;
+    }
+
+    public static Map stringMapToHashMap(StringMap input) {
+        Map output = new HashMap();
+        output.putAll(input);
+
+        return output;
+    }
+
+    //</Grubmle>
+
+
+    public class GridNodeConfiguration {
+
+        private String proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
+        private int maxSession = 3;
+        private int port;
+        private boolean register = true;
+        private int unregisterIfStillDownAfter = 10000;
+        private int hubPort;
+        private String hubHost;
+        //    private int browserTimeout = 120;
 //    private int timeout = 120;
-    private int nodeStatusCheckTimeout = 10000;
+        private int nodeStatusCheckTimeout = 10000;
 
-    //Only test the node status 1 time, since the limit checker is
-    //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
-    private int downPollingLimit = 0;
+        //Only test the node status 1 time, since the limit checker is
+        //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
+        private int downPollingLimit = 0;
 
 
+        //java -jar 2.41.0.jar -role node -hub http://192.168.168.17:4444 -maxSession 3 -register true -unregisterIfStillDownAfter 20000 -browserTimeout 120 -timeout 120 -port
 
-    //java -jar 2.41.0.jar -role node -hub http://192.168.168.17:4444 -maxSession 3 -register true -unregisterIfStillDownAfter 20000 -browserTimeout 120 -timeout 120 -port
+        public int getMaxSession() {
+            return this.maxSession;
+        }
 
-    public int getMaxSession(){
-      return this.maxSession;
+        public int getPort() {
+            return port;
+        }
+
+        public void setPort(int port) {
+            this.port = port;
+        }
+
+        public int getHubPort() {
+            return hubPort;
+        }
+
+        public void setHubPort(int hubPort) {
+            this.hubPort = hubPort;
+        }
+
+        public String getHubHost() {
+            return hubHost;
+        }
+
+        public void setHubHost(String hubHost) {
+            this.hubHost = hubHost;
+        }
+
     }
-
-    public int getPort() {
-      return port;
-    }
-
-    public void setPort(int port) {
-      this.port = port;
-    }
-
-    public int getHubPort() {
-      return hubPort;
-    }
-
-    public void setHubPort(int hubPort) {
-      this.hubPort = hubPort;
-    }
-
-    public String getHubHost() {
-      return hubHost;
-    }
-
-    public void setHubHost(String hubHost) {
-      this.hubHost = hubHost;
-    }
-
-  }
 
 }
 
