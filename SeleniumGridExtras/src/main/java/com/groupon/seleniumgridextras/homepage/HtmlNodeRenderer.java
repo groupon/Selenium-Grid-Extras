@@ -273,15 +273,16 @@ public class HtmlNodeRenderer {
             returnString = returnString + ScreenshotUtility
                     .getResizedScreenshotAsBase64String(WIDTH, HEIGHT);
         } catch (AWTException e) {
-            logger.error(e);
+            logger.debug(e);
             e.printStackTrace();
 
             BufferedImage
                     errorImage =
                     ImageProcessor
                             .createTitleFrame(new Dimension(WIDTH, HEIGHT), BufferedImage.TYPE_3BYTE_BGR,
-                                    "Error taking a screenshot", getMachineInfo(),
-                                    TimeStampUtility.getTimestampAsString());
+                                    "Cannot create screenshot for this node. Is it in Headless mode?",
+                                    e.getMessage(),
+                                    getMachineInfo() + " " + TimeStampUtility.getTimestampAsString());
 
             returnString = returnString + ImageUtils.encodeToString(errorImage, "PNG");
         }
