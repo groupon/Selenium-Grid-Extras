@@ -6,7 +6,7 @@
 
     <groupId>com.groupon.selenium-grid-extras</groupId>
     <artifactId>SeleniumGridExtras</artifactId>
-    <version>1.6.2-SNAPSHOT</version>
+    <version>1.7.0-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -90,6 +90,12 @@
             <groupId>org.boofcv</groupId>
             <artifactId>xuggler</artifactId>
             <version>0.16</version>
+        </dependency>
+        <dependency>
+            <artifactId>guava</artifactId>
+            <groupId>com.google.guava</groupId>
+            <type>jar</type>
+            <version>18.0</version>
         </dependency>
 
     </dependencies>
