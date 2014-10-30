@@ -108,7 +108,7 @@ public class FirstTimeRunConfig {
 
       answer =
           askQuestion("How many videos should node keep in threads?",
-                      "10");
+                      String.valueOf(DefaultConfig.VIDEOS_TO_KEEP));
 
       logger.info("Will keep " + answer + " videos");
       if (!answer.equals("10")) {

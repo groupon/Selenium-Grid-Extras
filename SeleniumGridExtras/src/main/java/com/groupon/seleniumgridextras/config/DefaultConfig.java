@@ -80,6 +80,7 @@ public class DefaultConfig {
     public static final int HTTP_REQUEST_TIMEOUT = 60000;
     public static final int CONFIG_PULLER_HTTP_TIMEOUT = 5000;
     public static final File SESSION_LOG_DIRECTORY = new File("log", "session_logs");
+    public static final int VIDEOS_TO_KEEP = 40;
     private static Config config;
     private static final String webDriverDefaultVersion = "2.41.0";
     private static final String ieDriverDefaultVersion = "2.41.0";
@@ -154,7 +155,7 @@ public class DefaultConfig {
         config.getVideoRecording().setRecordTestVideos(true);
         config.getVideoRecording().setFrameRate(5, 1);
         config.getVideoRecording().setOutputDimensions(1024, 768);
-        config.getVideoRecording().setVideosToKeep(10);
+        config.getVideoRecording().setVideosToKeep(VIDEOS_TO_KEEP);
         config.getVideoRecording().setOutputDir(VIDEO_OUTPUT_DIRECTORY);
         config.getVideoRecording().setIdleTimeout(120);
 
