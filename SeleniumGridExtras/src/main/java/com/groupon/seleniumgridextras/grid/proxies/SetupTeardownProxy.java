@@ -38,6 +38,7 @@
 
 package com.groupon.seleniumgridextras.grid.proxies;
 
+import com.google.common.base.Throwables;
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -87,9 +88,22 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         if (isDown()) {
             return null;
         }
-        TestSession session = super.getNewSession(requestedCapability);
+
+        TestSession session;
+        try {
+            session = super.getNewSession(requestedCapability);
+        } catch (Exception e) {
+            logger.error(
+                    String.format(
+                            "Something went terribly wrong when trying to connect to remote node on proxy: %s requested capabilities: %s\n%s",
+                            this.getId(),
+                            requestedCapability,
+                            Throwables.getStackTraceAsString(e)));
+            return null;
+        }
 
         try {
+
             String host = session.getSlot().getRemoteURL().getHost();
             CommonThreadPool.startCallable(new SessionHistoryCallable(session));
 
@@ -104,11 +118,12 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
 
         } catch (Exception e) {
-
             logger.error(String.format("Error communicating with %s, \n%s",
                     session.getSlot().getProxy().getId(), e));
+        } finally {
+            return session;
         }
-        return session;
+
     }
 
 
