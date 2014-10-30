@@ -1,7 +1,10 @@
 1.7.0 - Adding ability to watch videos from home page of grid extras
       - Improving Video recording functionality and adding more logs
       - Adding an error message if use tries to start video recording on a headless OS
+      - Display grid extras version on Homepage. Pull request #62
+      - [BUG] Exit with better message if node config or hub config is not present. Issue #60 and #61
       - [BUG] fixing the bug, where session history was never recorded.
+      - [BUG] More cleaner message on servlete if the screenshot cannot be taken. Issue #61
 1.6.1 - [BUG] Significantly improved logic for restarting grid nodes, to prevent orphan session in the new session queue and chances of a bad TestSlot that cannot be cleaned up.
 1.6.0 - Better session tracking, on the /session_history endpoint
       - [BUG] fixing inability to start the grid hub because the webdriver 2.44 has broken JSON dependency
