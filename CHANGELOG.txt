@@ -1,4 +1,6 @@
-1.7.0 - Adding ability to watch videos from home page of grid extras
+1.7.0 - Hub will attempt to download the video from each node and collect them in 1 place, so user can view the test run from the http://hub:3000
+      - Set default videos to keep to be 30 instead of 10
+      - Adding ability to watch videos from home page of grid extras
       - Improving Video recording functionality and adding more logs
       - Adding an error message if use tries to start video recording on a headless OS
       - Display grid extras version on Homepage. Pull request #62
