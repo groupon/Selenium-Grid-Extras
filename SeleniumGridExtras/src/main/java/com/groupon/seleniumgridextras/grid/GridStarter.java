@@ -150,8 +150,8 @@ public class GridStarter {
 
     String host = "";
 
-    if (RuntimeConfig.getOS().getHostIp() != null) {
-      host = " -host " + RuntimeConfig.getOS().getHostIp();
+    if (RuntimeConfig.getHostIp() != null) {
+      host = " -host " + RuntimeConfig.getHostIp();
     }
 
     if (RuntimeConfig.getOS().getHostName() != null) {

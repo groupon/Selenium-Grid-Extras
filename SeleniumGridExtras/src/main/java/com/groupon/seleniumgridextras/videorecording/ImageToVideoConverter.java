@@ -100,8 +100,8 @@ public class ImageToVideoConverter implements Callable {
     String line2 = "Recorded on: ";
     String
         line3 =
-        "Encoded on: " + RuntimeConfig.getOS().getHostName() + "(" + RuntimeConfig.getOS()
-            .getHostIp() + ") at " +  new java.sql.Timestamp(
+        "Encoded on: " + RuntimeConfig.getOS().getHostName() + "(" + RuntimeConfig.getHostIp()
+                + ") at " +  new java.sql.Timestamp(
             Calendar.getInstance().getTime().getTime());
 
     BufferedImage

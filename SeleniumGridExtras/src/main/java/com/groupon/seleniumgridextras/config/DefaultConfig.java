@@ -284,7 +284,7 @@ public class DefaultConfig {
         config.getHub()
                 .setServlets("com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet");
 
-        String hostIp = RuntimeConfig.getOS().getHostIp();
+        String hostIp = RuntimeConfig.getHostIp();
         if (hostIp != null) {
             config.getHub().setHost(hostIp);
         }
