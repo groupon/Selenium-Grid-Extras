@@ -146,6 +146,8 @@ public class Config {
     initializeVideoRecorder();
     getConfigMap().put(HTML_RENDER_OPTIONS, new HtmlConfig());
 
+    getConfigMap().put(HOST_IP, null);
+
   }
 
   public boolean getAutoUpdateDrivers() {
