@@ -103,7 +103,11 @@ public abstract class Capability extends HashMap {
     capabilityHash.put(InternetExplorer.class, BrowserType.IE);
     capabilityHash.put(Chrome.class, BrowserType.CHROME);
     capabilityHash.put(Safari.class, BrowserType.SAFARI);
-
+    capabilityHash.put(Android.class, BrowserType.ANDROID);
+    capabilityHash.put(Chromium.class, BrowserType.CHROMIUM);
+    capabilityHash.put(Browser.class, BrowserType.BROWSER);
+    capabilityHash.put(IPhone.class, BrowserType.IPHONE);
+    capabilityHash.put(IPad.class, BrowserType.IPAD);
 
     return capabilityHash;
   }
