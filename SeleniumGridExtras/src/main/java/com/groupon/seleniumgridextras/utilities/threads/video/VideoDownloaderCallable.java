@@ -60,7 +60,9 @@ public class VideoDownloaderCallable implements Callable {
 
                 if (response != null) {
                     if (attemptToDownloadVideo(response)) {
-                        return String.format("Successfully downloaded video for session %s from host %s");
+                        return String.format("Successfully downloaded video for session %s from host %s",
+                                this.session,
+                                this.host);
                     }
                 } else {
                     logger.info(String.format(

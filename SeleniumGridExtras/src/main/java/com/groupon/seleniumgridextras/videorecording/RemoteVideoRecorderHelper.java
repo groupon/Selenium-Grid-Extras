@@ -32,8 +32,8 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                session,
                 3000,
+                session,
                 JsonCodec.Video.START,
                 params.toString());
         try {
@@ -65,8 +65,8 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                session,
                 3000,
+                session,
                 JsonCodec.Video.STOP,
                 params.toString());
         try {
@@ -84,7 +84,6 @@ public class RemoteVideoRecorderHelper {
     }
 
     public static String updateLastAction(String host, String session, String action) {
-
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
