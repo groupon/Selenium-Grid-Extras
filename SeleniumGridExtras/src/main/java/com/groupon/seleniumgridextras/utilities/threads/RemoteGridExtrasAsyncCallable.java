@@ -54,6 +54,7 @@ public class RemoteGridExtrasAsyncCallable implements Callable {
             );
 
             logger.error(response, e);
+            return "";
         }
         return response;
     }
