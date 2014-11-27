@@ -91,8 +91,8 @@ public class GridStatus extends ExecuteOSTask {
             JsonObject hubInfo = PortChecker.getParsedPortInfo(4444);
             JsonObject nodeInfo = PortChecker.getParsedPortInfo(5555);
 
-            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_RUNNING, hubInfo.isJsonNull() ? false : true);
-            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_RUNNING, nodeInfo.isJsonNull() ? false : true);
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_RUNNING, hubInfo.isJsonNull() || hubInfo.toString().equals("{}") ? false : true);
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_RUNNING, nodeInfo.isJsonNull() || nodeInfo.toString().equals("{}") ? false : true);
             getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_INFO, hubInfo);
             getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_INFO, nodeInfo);
 
