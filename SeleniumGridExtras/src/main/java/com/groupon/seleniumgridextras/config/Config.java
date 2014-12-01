@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.config;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.internal.StringMap;
+import com.google.gson.internal.LinkedTreeMap;
 
 import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
 import com.groupon.seleniumgridextras.config.driver.DriverInfo;
@@ -126,7 +126,7 @@ public class Config {
     getConfigMap().put(SETUP, new ArrayList<String>());
     getConfigMap().put(TEAR_DOWN, new ArrayList<String>());
 
-    getConfigMap().put(GRID, new StringMap());
+    getConfigMap().put(GRID, new LinkedTreeMap());
     initializeWebdriver();
     initializeIEDriver();
     initializeChromeDriver();
@@ -243,17 +243,17 @@ public class Config {
     return (List<String>) getConfigMap().get(TEAR_DOWN);
   }
 
-  public StringMap getGrid() {
-    return (StringMap) getConfigMap().get(GRID);
+  public LinkedTreeMap getGrid() {
+    return (LinkedTreeMap) getConfigMap().get(GRID);
   }
 
   public DriverInfo getIEdriver() {
     try {
       return (IEDriver) getConfigMap().get(IEDRIVER);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(IEDRIVER);
+          (LinkedTreeMap) getConfigMap().get(IEDRIVER);
       IEDriver ieDriver = new IEDriver();
 
       ieDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -268,9 +268,9 @@ public class Config {
     try {
       return (ChromeDriver) getConfigMap().get(CHROME_DRIVER);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(CHROME_DRIVER);
+          (LinkedTreeMap) getConfigMap().get(CHROME_DRIVER);
       DriverInfo chromeDriver = new ChromeDriver();
 
       chromeDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -286,9 +286,9 @@ public class Config {
     try {
       return (WebDriver) getConfigMap().get(WEBDRIVER);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(WEBDRIVER);
+          (LinkedTreeMap) getConfigMap().get(WEBDRIVER);
       WebDriver webDriver = new WebDriver();
 
       webDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -438,9 +438,9 @@ public class Config {
     try {
       return (Hub) getConfigMap().get(HUB_CONFIG);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(HUB_CONFIG);
+          (LinkedTreeMap) getConfigMap().get(HUB_CONFIG);
       Hub hubConfig = new Hub();
 
       hubConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);

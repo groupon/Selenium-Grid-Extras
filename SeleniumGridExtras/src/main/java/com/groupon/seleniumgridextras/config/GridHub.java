@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.config;
 import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.StringMap;
+import com.google.gson.internal.LinkedTreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -122,7 +122,7 @@ public class GridHub {
         return input;
     }
 
-    public static Map stringMapToHashMap(StringMap input) {
+    public static Map linkedTreeMapToHashMap(LinkedTreeMap input) {
         Map output = new HashMap();
         output.putAll(input);
 
