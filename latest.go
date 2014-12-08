@@ -13,10 +13,10 @@ import (
 type Releases []Release
 
 type Release struct {
-  Url string
-  Assets_url string
-  Upload_url string
-  Html_url string
+  URL string
+  Assets_URL string
+  Upload_URL string
+  Html_URL string
   Id int
   Tag_name string
   Target_commitish string
@@ -24,11 +24,11 @@ type Release struct {
   Draft bool
   Authors []Author
   Prelease bool
-  Created_at int64
-  Published_at int64
+  Created_at string
+  Published_at string
   Assets []Asset
-  Tarball_url string
-  Zipball_url string
+  Tarball_URL string
+  Zipball_URL string
   Body string
 }
 
@@ -37,22 +37,38 @@ type Author struct {
 }
 
 type Asset struct {
-  Url string
+  URL string
   Id int
   Name string
   Label string
-  Uploader []Upload
+  Uploaders Uploader
   Content_type string
   State string
   Size int
   Download_count int
-  Created_at int64
-  Updated_at int64
-  Browser_download_url string
+  Created_at string
+  Updated_at string
+  Browser_download_URL string
 }
 
-type Upload struct {
-  Upload_info []string
+type Uploader struct {
+  Login string
+  Id int
+  Avatar_URL string
+  Gravatar_id string
+  URL string
+  Html_URL string
+  Followers_URL string
+  Following_URL string
+  Gists_URL string
+  Starred_URL string
+  Subscriptions_URL string
+  Organizations_URL string
+  Repos_URL string
+  Events_URL string
+  Received_events_URL string
+  Type string
+  Site_admin bool
 }
 
 func get_latest_release() {
@@ -72,13 +88,16 @@ func get_latest_release() {
   }
 
   var releases Releases
-  json.Unmarshal(body, &releases)
+  err = json.Unmarshal(body, &releases)
+  if err != nil {
+     log.Fatal(err)
+  }
 
   // the first assets is the latest release
   for _, asset := range releases[0].Assets {
 
     // determine filename
-    tokens := strings.Split(asset.Browser_download_url, "/")
+    tokens := strings.Split(asset.Browser_download_URL, "/")
     filename := tokens[len(tokens)-1]
 
     // SeleniumGridExtras-*-jar-with-dependencies.jar
@@ -86,7 +105,7 @@ func get_latest_release() {
 
       // prevent re-downloading file if already exists 
       if _, err := os.Stat(filename); os.IsNotExist(err) {
-        downloadFromUrl(asset.Browser_download_url, filename)
+        downloadFromUrl(asset.Browser_download_URL, filename)
 
         // create symlink to latest release
         os.Symlink(filename, "SeleniumGridExtras-jar-with-dependencies.jar")
