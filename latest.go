@@ -58,13 +58,17 @@ type Upload struct {
 func get_latest_release() {
   resp, err := http.Get("https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases")
   if err != nil {
-    log.Fatal(err.Error())
+    log.Fatal(err)
   }
   defer resp.Body.Close()
 
+  if resp.StatusCode != 200 {
+    log.Fatal(resp.Request.URL, " => Response.StatusCode: ", resp.StatusCode)
+  }
+
   body, err := ioutil.ReadAll(resp.Body)
   if err != nil {
-    log.Fatal(err.Error())
+    log.Fatal(err)
   }
 
   var releases Releases
@@ -88,7 +92,7 @@ func get_latest_release() {
         os.Symlink(filename, "SeleniumGridExtras-jar-with-dependencies.jar")
       }
       if err != nil {
-        log.Fatal(err.Error())
+        log.Fatal(err)
       }
     }
   }
@@ -105,23 +109,23 @@ func downloadFromUrl(url string, fileName string) {
   // TODO: check file existence first with io.IsExist
   output, err := os.Create(fileName)
   if err != nil {
-    log.Fatal(err.Error())
+    log.Fatal(err)
   }
   defer output.Close()
 
   resp, err := http.Get(url)
   if err != nil {
-    log.Fatal(err.Error())
+    log.Fatal(err)
   }
   defer resp.Body.Close()
 
   if resp.StatusCode != 200 {
-    log.Fatal("Response.StatusCode: ", resp.StatusCode)
+    log.Fatal(resp.Request.URL, " => Response.StatusCode: ", resp.StatusCode)
   }
 
   n, err := io.Copy(output, resp.Body)
   if err != nil {
-    log.Fatal(err.Error())
+    log.Fatal(err)
   }
   log.Println(n, "bytes downloaded.")
 }
