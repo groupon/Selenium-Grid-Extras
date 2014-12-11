@@ -56,7 +56,7 @@ import java.util.Map;
 public class StartGrid extends ExecuteOSTask {
 
   private static final String ATTEMPTING_TO_START_GRID_NODES = "Attempting to start Grid Nodes";
-  private static final String ATTEMPTING_TO_START_GRID_HUB = "Attempting to start Grid Hub";
+  private static final String ATTEMPTING_TO_START_GRID_HUBS = "Attempting to start Grid Hubs";
   private static final
   String CANT_LAUNCH_ERROR = "Something didn't go right in launching service";
   private static final
@@ -187,7 +187,7 @@ public class StartGrid extends ExecuteOSTask {
   }
 
   private JsonObject startHub() {
-    System.out.println(ATTEMPTING_TO_START_GRID_HUB);
+    System.out.println(ATTEMPTING_TO_START_GRID_HUBS);
     return GridStarter.startAllHubs(getJsonResponse());
   }
 
