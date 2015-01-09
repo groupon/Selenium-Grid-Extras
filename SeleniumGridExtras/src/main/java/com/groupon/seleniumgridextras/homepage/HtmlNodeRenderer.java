@@ -293,7 +293,7 @@ public class HtmlNodeRenderer {
 
   protected String getMachineInfo() {
     return RuntimeConfig.getOS().getHostName() +
-           " (" + RuntimeConfig.getOS().getHostIp() + ")";
+           " (" + RuntimeConfig.getHostIp() + ")";
   }
   
   protected String getVersionInfo() {

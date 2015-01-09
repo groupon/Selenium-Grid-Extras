@@ -51,6 +51,7 @@ public class Config {
   public static final String CONFIG_PULLER_HTTP_TIMEOUT = "config_puller_http_timeout";
   public static final String HTML_RENDER_OPTIONS = "html_render_options";
 
+  public static final String HOST_IP = "host";
 
   private static Logger logger = Logger.getLogger(Config.class);
 
@@ -144,6 +145,8 @@ public class Config {
     getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
     initializeVideoRecorder();
     getConfigMap().put(HTML_RENDER_OPTIONS, new HtmlConfig());
+
+    getConfigMap().put(HOST_IP, null);
 
   }
 
@@ -375,6 +378,9 @@ public class Config {
     getConfigMap().put(DEFAULT_ROLE, defaultRole);
   }
 
+  public void setHostIp(String hostIp) {
+    getConfigMap().put(HOST_IP, hostIp);
+  }
   public void setAutoStartHub(String autoStartHub) {
     getConfigMap().put(AUTO_START_HUB, autoStartHub);
   }
@@ -480,4 +486,7 @@ public class Config {
     return (HtmlConfig) getConfigMap().get(HTML_RENDER_OPTIONS);
   }
 
+  public String getHostIp() {
+        return (String) getConfigMap().get(HOST_IP);
+  }
 }

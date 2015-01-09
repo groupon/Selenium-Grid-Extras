@@ -167,6 +167,7 @@ public class GridNode {
         private int unregisterIfStillDownAfter = 10000;
         private int hubPort;
         private String hubHost;
+        private String host;
         //    private int browserTimeout = 120;
 //    private int timeout = 120;
         private int nodeStatusCheckTimeout = 10000;
@@ -204,6 +205,14 @@ public class GridNode {
 
         public void setHubHost(String hubHost) {
             this.hubHost = hubHost;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
         }
 
     }
