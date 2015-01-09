@@ -100,7 +100,7 @@ public class VideoRecorder extends ExecuteOSTask {
                         "Unrecognized action: %s, for session: %s, on host: %s",
                         action,
                         session,
-                        RuntimeConfig.getOS().getHostIp());
+                        RuntimeConfig.getHostIp());
 
                 logger.warn(error);
                 getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
@@ -134,7 +134,7 @@ public class VideoRecorder extends ExecuteOSTask {
             String message = String.format(
                     "Starting video recording for session: %s, on host: %s, done: %s, cancelled: %s",
                     session,
-                    RuntimeConfig.getOS().getHostIp(),
+                    RuntimeConfig.getHostIp(),
                     f.isDone(),
                     f.isCancelled());
             logger.info(message);
@@ -171,7 +171,7 @@ public class VideoRecorder extends ExecuteOSTask {
             String error = String.format("Error stopping video for session: %s, host: %s, IP: %s, \n%s",
                     session,
                     RuntimeConfig.getOS().getHostName(),
-                    RuntimeConfig.getOS().getHostIp(),
+                    RuntimeConfig.getHostIp(),
                     Throwables.getStackTraceAsString(e));
 
             logger.error(error);
@@ -226,7 +226,7 @@ public class VideoRecorder extends ExecuteOSTask {
         try {
             URIBuilder uriBuilder = new URIBuilder();
             uriBuilder.setScheme("http");
-            uriBuilder.setHost(RuntimeConfig.getOS().getHostIp());
+            uriBuilder.setHost(RuntimeConfig.getHostIp());
             uriBuilder.setPort(3000);
             uriBuilder.setPath(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT + "/" + fileName);
 

@@ -57,7 +57,7 @@ public class VideoRecorderCallable implements Callable {
   public String call() throws Exception {
     //Probably overkill to null these out, but i'm playing it safe until proven otherwise
     this.nodeName =
-        "Node: " + RuntimeConfig.getOS().getHostName() + " (" + RuntimeConfig.getOS().getHostIp()
+        "Node: " + RuntimeConfig.getOS().getHostName() + " (" + RuntimeConfig.getHostIp()
         + ")";
     this.lastCommand = null;
 
@@ -129,7 +129,7 @@ public class VideoRecorderCallable implements Callable {
                            .createTitleFrame(dimension, BufferedImage.TYPE_3BYTE_BGR,
                                              "Session :" + this.sessionId,
                                              "Host :" + RuntimeConfig.getOS().getHostName() + " ("
-                                             + RuntimeConfig.getOS().getHostIp() + ")",
+                                             + RuntimeConfig.getHostIp() + ")",
                                              getTimestamp().toString()),
                        0,
                        TimeUnit.NANOSECONDS);

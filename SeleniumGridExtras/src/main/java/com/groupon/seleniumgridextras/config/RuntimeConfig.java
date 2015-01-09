@@ -184,6 +184,24 @@ public class RuntimeConfig {
     return currentOS;
   }
 
+  public static String getHostIp() {
+    String ip = null;
+    if (config != null) {
+        if (config.getHostIp() != null) {
+            ip = config.getHostIp();
+        } else if (config.getDefaultRole().equals("hub") && config.getHubs().size() > 0) {
+            ip = config.getHubs().get(0).getConfiguration().getHost();
+        } else if (config.getDefaultRole().equals("node") && config.getNodes().size() > 0) {
+            ip = config.getNodes().get(0).getConfiguration().getHost();
+        }
+    }
+    if (ip == null) {
+        ip = currentOS.getHostIp();
+    }
+    return ip;
+  }
+
+
   public static SessionTracker getTestSessionTracker() {
     if (sessionTracker == null) {
       sessionTracker = new SessionTracker();
