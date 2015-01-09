@@ -84,6 +84,9 @@ public class ExecuteCommand {
 
         int exitCode;
         if (waitToFinish) {
+            String output = ProcessOutputReader.getStandardOut(process);
+            String error = ProcessOutputReader.getErrorOut(process);
+
             try {
                 logger.debug("Waiting to finish");
                 exitCode = process.waitFor();
@@ -94,15 +97,7 @@ public class ExecuteCommand {
                 logger.error(message, e);
                 return jsonResponse.getJson();
             }
-        } else {
-            CommonThreadPool.startCallable(new ExecuteOsTaskCallable(cmd, process));
-            jsonResponse.addKeyValues(JsonCodec.OUT, "Background process started, check log for output");
-            return jsonResponse.getJson();
-        }
 
-        try {
-            String output = ProcessOutputReader.getStandardOut(process);
-            String error = ProcessOutputReader.getErrorOut(process);
             jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
             jsonResponse.addKeyValues(JsonCodec.OUT, output);
             if (!error.equals("")) {
@@ -110,9 +105,10 @@ public class ExecuteCommand {
                 jsonResponse.addKeyValues(JsonCodec.ERROR, error);
             }
             return jsonResponse.getJson();
-
-        } finally {
-            process.destroy();
+        } else {
+            CommonThreadPool.startCallable(new ExecuteOsTaskCallable(cmd, process));
+            jsonResponse.addKeyValues(JsonCodec.OUT, "Background process started, check log for output");
+            return jsonResponse.getJson();
         }
     }
 }

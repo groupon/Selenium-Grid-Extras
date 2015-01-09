@@ -1,6 +1,9 @@
 .idea
 .iml
 .idea/*
+.classpath
+.project
+.settings
 ant-build/*
 Selenium-Grid-Extras.iml
 build/*
