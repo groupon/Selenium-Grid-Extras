@@ -76,13 +76,17 @@ public class FirstTimeRunConfig {
     
     List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
-    configureNodes(caps, hubHost, hubPort, defaultConfig);
-
+    if (defaultConfig.getAutoStartNode()) {
+      configureNodes(caps, hubHost, hubPort, defaultConfig);
+    }
+    
     setRebootAfterSessionLimit(defaultConfig);
 
     setDriverAutoUpdater(defaultConfig);
 
-    askToRecordVideo(defaultConfig);
+    if (defaultConfig.getAutoStartNode()) {
+      askToRecordVideo(defaultConfig);
+    }
 
     final
     String
