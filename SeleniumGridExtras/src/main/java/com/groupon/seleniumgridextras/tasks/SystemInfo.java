@@ -94,7 +94,7 @@ public class SystemInfo extends ExecuteOSTask {
     }
 
     getJsonResponse().addKeyValues(JsonCodec.OS.HOSTNAME, RuntimeConfig.getOS().getHostName());
-    getJsonResponse().addKeyValues(JsonCodec.OS.IP, RuntimeConfig.getOS().getHostIp());
+    getJsonResponse().addKeyValues(JsonCodec.OS.IP, RuntimeConfig.getHostIp());
 
     return getJsonResponse().getJson();
   }

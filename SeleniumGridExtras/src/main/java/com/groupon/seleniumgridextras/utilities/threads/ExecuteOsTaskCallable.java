@@ -24,7 +24,7 @@ public class ExecuteOsTaskCallable implements Callable {
 
             int exitCode = process.waitFor();
 
-            message = String.format("Command finished. \n command: %s \n exit code: %s \n standard out: \n %s \n %standard error: \n %s",
+            message = String.format("Command finished. \n command: %s \n exit code: %d \n standard out: \n %s \n standard error: \n %s",
                     this.command,
                     exitCode,
                     ProcessOutputReader.getStandardOut(process),

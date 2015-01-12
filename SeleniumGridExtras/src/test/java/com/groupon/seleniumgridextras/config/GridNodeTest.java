@@ -2,7 +2,7 @@ package com.groupon.seleniumgridextras.config;
 
 
 import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
+import com.google.gson.internal.LinkedTreeMap;
 
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.capabilities.Firefox;
@@ -138,7 +138,7 @@ public class GridNodeTest {
   public void testConfigurationProperlyWrittenToFile() throws Exception {
     Map actual = getMapFromConfigFile(fileaname);
 
-    Map actualConfiguration = GridNode.stringMapToHashMap((StringMap) actual.get("configuration"));
+    Map actualConfiguration = GridNode.linkedTreeMapToHashMap((LinkedTreeMap) actual.get("configuration"));
     actualConfiguration = GridNode.doubleToIntConverter(actualConfiguration);
     assertEquals(expectedConfiguration, actualConfiguration);
 

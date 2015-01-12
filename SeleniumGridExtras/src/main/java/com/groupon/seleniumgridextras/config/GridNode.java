@@ -2,8 +2,7 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.common.base.Throwables;
 import com.google.gson.Gson;
-import com.google.gson.internal.StringMap;
-
+import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 
@@ -50,11 +49,11 @@ public class GridNode {
                 nodeConfiguration =
                 new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
 
-        List<StringMap> capabilitiesFromFile = (ArrayList<StringMap>) topLevelHash.get("capabilities");
+        List<LinkedTreeMap> capabilitiesFromFile = (ArrayList<LinkedTreeMap>) topLevelHash.get("capabilities");
 
         LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
 
-        for (StringMap cap : capabilitiesFromFile) {
+        for (LinkedTreeMap cap : capabilitiesFromFile) {
             if (cap.containsKey("browserName")) {
                 filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName"), cap));
             }
@@ -149,7 +148,7 @@ public class GridNode {
         return input;
     }
 
-    public static Map stringMapToHashMap(StringMap input) {
+    public static Map linkedTreeMapToHashMap(LinkedTreeMap input) {
         Map output = new HashMap();
         output.putAll(input);
 
@@ -168,6 +167,7 @@ public class GridNode {
         private int unregisterIfStillDownAfter = 10000;
         private int hubPort;
         private String hubHost;
+        private String host;
         //    private int browserTimeout = 120;
 //    private int timeout = 120;
         private int nodeStatusCheckTimeout = 10000;
@@ -205,6 +205,14 @@ public class GridNode {
 
         public void setHubHost(String hubHost) {
             this.hubHost = hubHost;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public void setHost(String host) {
+            this.host = host;
         }
 
     }

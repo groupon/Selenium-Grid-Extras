@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.config;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.internal.StringMap;
+import com.google.gson.internal.LinkedTreeMap;
 
 import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
 import com.groupon.seleniumgridextras.config.driver.DriverInfo;
@@ -51,6 +51,7 @@ public class Config {
   public static final String CONFIG_PULLER_HTTP_TIMEOUT = "config_puller_http_timeout";
   public static final String HTML_RENDER_OPTIONS = "html_render_options";
 
+  public static final String HOST_IP = "host";
 
   private static Logger logger = Logger.getLogger(Config.class);
 
@@ -126,7 +127,7 @@ public class Config {
     getConfigMap().put(SETUP, new ArrayList<String>());
     getConfigMap().put(TEAR_DOWN, new ArrayList<String>());
 
-    getConfigMap().put(GRID, new StringMap());
+    getConfigMap().put(GRID, new LinkedTreeMap());
     initializeWebdriver();
     initializeIEDriver();
     initializeChromeDriver();
@@ -144,6 +145,8 @@ public class Config {
     getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
     initializeVideoRecorder();
     getConfigMap().put(HTML_RENDER_OPTIONS, new HtmlConfig());
+
+    getConfigMap().put(HOST_IP, null);
 
   }
 
@@ -243,17 +246,17 @@ public class Config {
     return (List<String>) getConfigMap().get(TEAR_DOWN);
   }
 
-  public StringMap getGrid() {
-    return (StringMap) getConfigMap().get(GRID);
+  public LinkedTreeMap getGrid() {
+    return (LinkedTreeMap) getConfigMap().get(GRID);
   }
 
   public DriverInfo getIEdriver() {
     try {
       return (IEDriver) getConfigMap().get(IEDRIVER);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(IEDRIVER);
+          (LinkedTreeMap) getConfigMap().get(IEDRIVER);
       IEDriver ieDriver = new IEDriver();
 
       ieDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -268,9 +271,9 @@ public class Config {
     try {
       return (ChromeDriver) getConfigMap().get(CHROME_DRIVER);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(CHROME_DRIVER);
+          (LinkedTreeMap) getConfigMap().get(CHROME_DRIVER);
       DriverInfo chromeDriver = new ChromeDriver();
 
       chromeDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -286,9 +289,9 @@ public class Config {
     try {
       return (WebDriver) getConfigMap().get(WEBDRIVER);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(WEBDRIVER);
+          (LinkedTreeMap) getConfigMap().get(WEBDRIVER);
       WebDriver webDriver = new WebDriver();
 
       webDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -375,6 +378,9 @@ public class Config {
     getConfigMap().put(DEFAULT_ROLE, defaultRole);
   }
 
+  public void setHostIp(String hostIp) {
+    getConfigMap().put(HOST_IP, hostIp);
+  }
   public void setAutoStartHub(String autoStartHub) {
     getConfigMap().put(AUTO_START_HUB, autoStartHub);
   }
@@ -438,9 +444,9 @@ public class Config {
     try {
       return (Hub) getConfigMap().get(HUB_CONFIG);
     } catch (ClassCastException e) {
-      StringMap
+        LinkedTreeMap
           stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-          (StringMap) getConfigMap().get(HUB_CONFIG);
+          (LinkedTreeMap) getConfigMap().get(HUB_CONFIG);
       Hub hubConfig = new Hub();
 
       hubConfig.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
@@ -480,4 +486,7 @@ public class Config {
     return (HtmlConfig) getConfigMap().get(HTML_RENDER_OPTIONS);
   }
 
+  public String getHostIp() {
+        return (String) getConfigMap().get(HOST_IP);
+  }
 }

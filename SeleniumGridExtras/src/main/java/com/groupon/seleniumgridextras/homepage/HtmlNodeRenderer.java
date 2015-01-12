@@ -2,7 +2,7 @@ package com.groupon.seleniumgridextras.homepage;
 
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
-import com.google.gson.internal.StringMap;
+import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.Version;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
@@ -83,7 +83,7 @@ public class HtmlNodeRenderer {
     }
 
     protected String buildJvmMemoryInfo(Map input) {
-        StringMap<String> jvmInfoFromMap = (StringMap<String>) input.get(JsonCodec.OS.JVM.JVM_INFO);
+        LinkedTreeMap<String, String> jvmInfoFromMap = (LinkedTreeMap<String, String>) input.get(JsonCodec.OS.JVM.JVM_INFO);
         StringBuilder jvm = new StringBuilder();
 
         jvm.append("\n<ul>");
@@ -101,7 +101,7 @@ public class HtmlNodeRenderer {
     }
 
     protected String buildMemoryInfo(Map input) {
-        StringMap<String> ramFromInput = (StringMap<String>) input.get(JsonCodec.OS.Hardware.Ram.RAM);
+        LinkedTreeMap<String, String> ramFromInput = (LinkedTreeMap<String, String>) input.get(JsonCodec.OS.Hardware.Ram.RAM);
 
         StringBuilder ramInfo = new StringBuilder();
 
@@ -121,9 +121,9 @@ public class HtmlNodeRenderer {
         if (input.containsKey(JsonCodec.OS.Hardware.Processor.PROCESSOR)) {
             StringBuilder cpuInfo = new StringBuilder();
 
-            StringMap<String>
+            LinkedTreeMap<String, String>
                     cpu =
-                    (StringMap<String>) input.get(JsonCodec.OS.Hardware.Processor.PROCESSOR);
+                    (LinkedTreeMap<String, String>) input.get(JsonCodec.OS.Hardware.Processor.PROCESSOR);
 
             cpuInfo.append("\n<ul>");
             cpuInfo.append(
@@ -154,7 +154,7 @@ public class HtmlNodeRenderer {
             StringBuilder hds = new StringBuilder();
             hds.append("\n<ul>");
 
-            for (StringMap<String> currentHd : (ArrayList<StringMap<String>>) input
+            for (LinkedTreeMap<String, String> currentHd : (ArrayList<LinkedTreeMap<String, String>>) input
                     .get(JsonCodec.OS.Hardware.HardDrive.DRIVES)) {
 
                 hds.append("<li>Drive: " + currentHd.get(JsonCodec.OS.Hardware.HardDrive.DRIVE));
@@ -293,7 +293,7 @@ public class HtmlNodeRenderer {
 
   protected String getMachineInfo() {
     return RuntimeConfig.getOS().getHostName() +
-           " (" + RuntimeConfig.getOS().getHostIp() + ")";
+           " (" + RuntimeConfig.getHostIp() + ")";
   }
   
   protected String getVersionInfo() {
