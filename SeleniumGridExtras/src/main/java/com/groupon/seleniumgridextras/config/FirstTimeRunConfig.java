@@ -37,6 +37,7 @@
 package com.groupon.seleniumgridextras.config;
 
 
+import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
@@ -309,8 +310,9 @@ public class FirstTimeRunConfig {
             capability =
                 (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
             capability.setPlatform(platform.toUpperCase());
-//          capability.setBrowserVersion(askQuestion(
-//              "What version of '" + capability.getBrowserName() + "' is installed?"));
+            String guessedBrowserVersion = BrowserVersionDetector.guessBrowserVersion(currentCapabilityClass.getSimpleName());
+            capability.setBrowserVersion(askQuestion(
+              "What version of '" + currentCapabilityClass.getSimpleName() + "' is installed?", guessedBrowserVersion));
 
             chosenCapabilities.add(capability);
           } catch (Exception e) {

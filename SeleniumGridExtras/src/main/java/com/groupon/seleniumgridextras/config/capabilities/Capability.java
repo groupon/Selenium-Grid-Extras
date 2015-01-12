@@ -27,6 +27,11 @@ public abstract class Capability extends HashMap {
     return String.valueOf(this.get(VERSION));
   }
 
+  public void setBrowserVersion(String browserVersion) {
+    this.put(VERSION, browserVersion);
+  }
+
+
   public String getMaxInstances(){
     return String.valueOf(this.get(MAX_INSTANCES));
   }

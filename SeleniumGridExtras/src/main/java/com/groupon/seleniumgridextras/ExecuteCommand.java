@@ -115,4 +115,63 @@ public class ExecuteCommand {
             process.destroy();
         }
     }
+    
+    public static JsonObject execRuntime(String[] cmd, boolean waitToFinish) {
+      StringBuilder command = new StringBuilder();
+      for(String s : cmd) {
+          command.append(s + " ");
+      }
+      logger.debug("Starting to execute - " + command);
+      JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
+
+      jsonResponse.addKeyDescriptions(JsonCodec.COMMAND, "Command executed");
+      jsonResponse.addKeyValues(JsonCodec.COMMAND, command.toString());
+      Process process;
+
+      try {
+          if (RuntimeConfig.getOS().isWindows()) {
+              process = Runtime.getRuntime().exec(cmd);
+          } else {
+              process = Runtime.getRuntime().exec(cmd);
+          }
+      } catch (IOException e) {
+          final String message = "Problems in running " + command + "\n" + e.toString();
+          jsonResponse.addKeyValues(JsonCodec.ERROR, message);
+          logger.warn(message);
+          return jsonResponse.getJson();
+      }
+
+      int exitCode;
+      if (waitToFinish) {
+          try {
+              logger.debug("Waiting to finish");
+              exitCode = process.waitFor();
+              logger.debug("Command Finished");
+          } catch (InterruptedException e) {
+              final String message = String.format("Interrupted running %s\n%s", command, e.getMessage());
+              jsonResponse.addKeyValues(JsonCodec.ERROR, message);
+              logger.error(message, e);
+              return jsonResponse.getJson();
+          }
+      } else {
+          CommonThreadPool.startCallable(new ExecuteOsTaskCallable(command.toString(), process));
+          jsonResponse.addKeyValues(JsonCodec.OUT, "Background process started, check log for output");
+          return jsonResponse.getJson();
+      }
+
+      try {
+          String output = ProcessOutputReader.getStandardOut(process);
+          String error = ProcessOutputReader.getErrorOut(process);
+          jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
+          jsonResponse.addKeyValues(JsonCodec.OUT, output);
+          if (!error.equals("")) {
+              //Only add error if there is one, this way we have a nice empty array instead of [""]
+              jsonResponse.addKeyValues(JsonCodec.ERROR, error);
+          }
+          return jsonResponse.getJson();
+
+      } finally {
+          process.destroy();
+      }
+  }
 }
