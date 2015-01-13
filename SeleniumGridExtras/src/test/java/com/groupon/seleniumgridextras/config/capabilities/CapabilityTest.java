@@ -18,8 +18,8 @@ public class CapabilityTest {
     Capability android = Capability.getCapabilityFor("android");
     Capability chromium = Capability.getCapabilityFor("chromium");
     Capability browser = Capability.getCapabilityFor("browser");
-    Capability iphone = Capability.getCapabilityFor("iphone");
-    Capability ipad = Capability.getCapabilityFor("ipad");
+    Capability iphone = Capability.getCapabilityFor("iPhone");
+    Capability ipad = Capability.getCapabilityFor("iPad");
 
     assertTrue(firefox instanceof Firefox);
     assertTrue(ie instanceof InternetExplorer);
@@ -43,8 +43,8 @@ public class CapabilityTest {
     assertEquals("android", Capability.getSupportedCapabilities().get(Android.class));
     assertEquals("chromium", Capability.getSupportedCapabilities().get(Chromium.class));
     assertEquals("browser", Capability.getSupportedCapabilities().get(Browser.class));
-    assertEquals("iphone", Capability.getSupportedCapabilities().get(IPhone.class));
-    assertEquals("ipad", Capability.getSupportedCapabilities().get(IPad.class));
+    assertEquals("iPhone", Capability.getSupportedCapabilities().get(IPhone.class));
+    assertEquals("iPad", Capability.getSupportedCapabilities().get(IPad.class));
   }
 
   @Test
@@ -65,8 +65,8 @@ public class CapabilityTest {
     assertEquals("io.appium.java_client.android.AndroidDriver",
             Capability.getCapabilityFor("browser").getWebDriverClass());
     assertEquals("io.appium.java_client.ios.IOSDriver",
-            Capability.getCapabilityFor("iphone").getWebDriverClass());
+            Capability.getCapabilityFor("iPhone").getWebDriverClass());
     assertEquals("io.appium.java_client.ios.IOSDriver",
-            Capability.getCapabilityFor("ipad").getWebDriverClass());
+            Capability.getCapabilityFor("iPad").getWebDriverClass());
   }
 }

@@ -43,6 +43,7 @@ import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.os.GridPlatform;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
+import com.groupon.seleniumgridextras.OS;
 
 import org.apache.log4j.Logger;
 
@@ -74,13 +75,21 @@ public class FirstTimeRunConfig {
     if (defaultConfig.getDefaultRole().equals("hub")) {
       configureHub(hubHost, hubPort, defaultConfig);
     }
-    
+
     List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
     if (defaultConfig.getAutoStartNode()) {
       configureNodes(caps, hubHost, hubPort, defaultConfig);
+
+      List<Capability> appiumCaps = getAppiumCapabilitiesFromUser(defaultConfig);
+
+      if (appiumCaps.size() > 0) {
+        String appiumStartCommand = getAppiumStartCommand();
+
+        configureAppiumNodes(appiumCaps, hubHost, hubPort, appiumStartCommand, defaultConfig);
+      }
     }
-    
+
     setRebootAfterSessionLimit(defaultConfig);
 
     setDriverAutoUpdater(defaultConfig);
@@ -270,6 +279,33 @@ public class FirstTimeRunConfig {
     defaultConfig.addNode(node, configFileName);
   }
 
+  private static void configureAppiumNodes(List<Capability> capabilities, String hubHost,
+                                           String hubPort, String appiumStartCommand, Config defaultConfig) {
+    GridNode node = new GridNode();
+    int nodePort = 4723;
+    String nodeIp = new OS().getHostIp();
+    String nodeUrl = "http://" + nodeIp + ":" + nodePort + "/wd/hub";
+    int registerCycle = 5000;
+
+    node.getConfiguration().setMaxSession(1);
+    node.getConfiguration().setHubHost(hubHost);
+    node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
+    node.getConfiguration().setPort(nodePort);
+    node.getConfiguration().setHost(nodeIp);
+    node.getConfiguration().setUrl(nodeUrl);
+    node.getConfiguration().setRegisterCycle(registerCycle);
+    node.getConfiguration().setAppiumStartCommand(appiumStartCommand);
+
+    for (Capability cap : capabilities) {
+      node.getCapabilities().add(cap);
+    }
+
+    String configFileName = "appium_node_" + nodePort + ".json";
+
+    node.writeToFile(configFileName);
+    defaultConfig.addNode(node, configFileName);
+  }
+
   private static void configureHub(String host, String port,
                                    Config defaultConfig) {
     GridHub hub = new GridHub();
@@ -301,7 +337,7 @@ public class FirstTimeRunConfig {
 
 
 
-      for (Class currentCapabilityClass : Capability.getSupportedCapabilities().keySet()) {
+      for (Class currentCapabilityClass : Capability.getSupportedWebCapabilities().keySet()) {
         String
             value =
             askQuestion(
@@ -328,7 +364,7 @@ public class FirstTimeRunConfig {
 
       }
 
-      String answer = askQuestion("Would you like this Node to auto update browser versions?? (1-yes/0-no)", "1");
+      String answer = askQuestion("Would you like this Node to auto update browser versions? (1-yes/0-no)", "1");
       if (answer.equals("1")) {
         defaultConfig.setAutoUpdateBrowserVersions("1");
       } else {
@@ -339,6 +375,50 @@ public class FirstTimeRunConfig {
     return chosenCapabilities;
   }
 
+  private static List<Capability> getAppiumCapabilitiesFromUser(Config defaultConfig) {
+
+    List<Capability> chosenCapabilities = new LinkedList<Capability>();
+
+    if (defaultConfig.getAutoStartNode()) {
+
+      String appium = askQuestion("Will this node run 'Appium' (1-yes/0-no)", "0");
+      if (appium.equals("1")) {
+
+        for (Class currentCapabilityClass : Capability.getSupportedAppiumCapabilities().keySet()) {
+          String
+              value =
+              askQuestion(
+                  "Will this Appium node run '" + currentCapabilityClass.getSimpleName()
+                  + "' (1-yes/0-no)", "0");
+
+          if (value.equals("1")) {
+            Capability capability;
+            try {
+              capability =
+                  (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
+              String capabilityName = currentCapabilityClass.getSimpleName();
+              if (capabilityName.equals("IPhone") || capabilityName.equals("IPad")
+                      || capabilityName.equals("Safari")) {
+                capability.setPlatform("MAC");
+              } else {
+                capability.setPlatform("ANDROID");
+              }
+              capability.setMaxInstances(1);
+              capability.setBrowserVersion(askQuestion(
+                "What version of '" + currentCapabilityClass.getSimpleName() + "' is installed?", ""));
+
+              chosenCapabilities.add(capability);
+            } catch (Exception e) {
+              logger.warn("Warning: Had an issue creating capability for " + currentCapabilityClass
+                  .getSimpleName());
+              logger.warn(e.toString());
+            }
+          }
+        }
+      }
+    }
+    return chosenCapabilities;
+  }
 
   private static String guessPlatform() {
     if (RuntimeConfig.getOS().isWindows()) {
@@ -372,6 +452,11 @@ public class FirstTimeRunConfig {
   private static String getGridHubPort() {
     String port = askQuestion("What is the PORT for the Selenium Grid Hub?", "4444");
     return port;
+  }
+
+  private static String getAppiumStartCommand() {
+    String command = askQuestion("What is the command to start Appium?", "appium");
+    return command;
   }
 
   private static void setDefaultService(Config defaultConfig) {

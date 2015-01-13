@@ -1,8 +1,9 @@
 package com.groupon.seleniumgridextras.grid;
 
 import com.google.gson.JsonObject;
-
 import com.groupon.seleniumgridextras.ExecuteCommand;
+import com.groupon.seleniumgridextras.config.GridNode;
+import com.groupon.seleniumgridextras.config.GridNode.GridNodeConfiguration;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
@@ -127,14 +128,25 @@ public class GridStarter {
     return commands;
   }
 
+  protected static String getBackgroundStartCommandForWebNode(String command, String logFile) {
+    String logFileFullPath = "log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
+    return command + " -log " + logFileFullPath;
+  }
+
+  protected static String getBackgroundStartCommandForAppiumNode(String command, String logFile) {
+    String workingDirectory = System.getProperty("user.dir");
+    String logFileFullPath = workingDirectory + RuntimeConfig.getOS().getFileSeparator() + "log" +
+            RuntimeConfig.getOS().getFileSeparator() + logFile;
+    return command + " --log " + logFileFullPath;
+  }
+
   protected static String getBackgroundStartCommandForNode(String command, String logFile,
                                                            Boolean windows) {
-
-    String
-        logFileFullPath =
-        "log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
-
-    command = command + " -log " + logFileFullPath;
+    if (logFile.startsWith("appium")) {
+      command = getBackgroundStartCommandForAppiumNode(command, logFile);
+    } else{
+      command = getBackgroundStartCommandForWebNode(command, logFile);
+    }
 
     if (windows) {
       String batchFile = logFile.replace("log", "bat");
@@ -146,7 +158,7 @@ public class GridStarter {
 
   }
 
-  protected static String getNodeStartCommand(String configFile, Boolean windows) {
+  protected static String getWebNodeStartCommand(String configFile, Boolean windows) {
 
     String host = "";
 
@@ -162,7 +174,7 @@ public class GridStarter {
     command.append(getJavaExe() + " ");
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
 
-    if (RuntimeConfig.getOS().isWindows()) {
+    if (windows) {
       command.append(getIEDriverExecutionPathParam());
     }
 
@@ -175,6 +187,29 @@ public class GridStarter {
     command.append(" -nodeConfig " + configFile);
 
     return String.valueOf(command);
+  }
+
+  protected static String getAppiumNodeStartCommand(String configFile) {
+    StringBuilder command = new StringBuilder();
+
+    GridNodeConfiguration config = GridNode.loadFromFile(configFile).getConfiguration();
+    command.append(config.getAppiumStartCommand());
+    command.append(" -p " + config.getPort());
+
+    String workingDirectory = System.getProperty("user.dir");
+    String configFileFullPath = workingDirectory + RuntimeConfig.getOS().getFileSeparator() + configFile;
+    command.append(" --log-timestamp --nodeconfig " + configFileFullPath);
+
+    return String.valueOf(command);
+  }
+
+  protected static String getNodeStartCommand(String configFile, Boolean windows) {
+    if (configFile.startsWith("appium")) {
+      return getAppiumNodeStartCommand(configFile);
+    }
+    else {
+      return getWebNodeStartCommand(configFile, windows);
+    }
   }
 
   protected static String getIEDriverExecutionPathParam() {

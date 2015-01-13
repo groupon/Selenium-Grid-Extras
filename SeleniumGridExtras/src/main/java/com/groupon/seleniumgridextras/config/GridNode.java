@@ -83,6 +83,10 @@ public class GridNode {
         return configuration;
     }
 
+    public boolean isAppiumNode() {
+        return getLoadedFromFile().startsWith("appium");
+    }
+
     public void writeToFile(String filename) {
 
         try {
@@ -168,9 +172,12 @@ public class GridNode {
         private int hubPort;
         private String hubHost;
         private String host;
+        private String url;
+        private Integer registerCycle;
         //    private int browserTimeout = 120;
 //    private int timeout = 120;
         private int nodeStatusCheckTimeout = 10000;
+        private String appiumStartCommand;
 
         //Only test the node status 1 time, since the limit checker is
         //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
@@ -181,6 +188,10 @@ public class GridNode {
 
         public int getMaxSession() {
             return this.maxSession;
+        }
+
+        public void setMaxSession(int maxSession) {
+            this.maxSession = maxSession;
         }
 
         public int getPort() {
@@ -215,6 +226,29 @@ public class GridNode {
             this.host = host;
         }
 
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public int getRegisterCycle() {
+            return registerCycle.intValue();
+        }
+
+        public void setRegisterCycle(int registerCycle) {
+            this.registerCycle = new Integer(registerCycle);
+        }
+
+        public String getAppiumStartCommand() {
+            return appiumStartCommand;
+        }
+
+        public void setAppiumStartCommand(String appiumStartCommand) {
+            this.appiumStartCommand = appiumStartCommand;
+        }
     }
 
 }
