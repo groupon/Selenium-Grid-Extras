@@ -37,13 +37,13 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
+import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPuller;
+import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.grid.GridStarter;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -108,19 +108,76 @@ public class StartGrid extends ExecuteOSTask {
     }
   }
 
+  /**
+   * Get latest node config file from hub (if configs directory exists).<br>
+   * Update browser version in local node config file.<br>
+   * Push updated config file back to hub (if configs directory exists).<br>
+   * 
+   * @return
+   */
   private JsonObject startNodes() {
     File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
-    if (configsDirectory.exists()) {
-      new ConfigPuller().updateFromRemote();
+    if (!RuntimeConfig.getConfig().getAutoStartHub()) {
+      if (configsDirectory.exists()) {
+        new ConfigPuller().updateFromRemote();
+      }
     }
-//    TODO: Uncomment this when browser detector is finished
-//    System.out.println(UPDATING_BROWSER_VERSIONS);
-//    logger.info(UPDATING_BROWSER_VERSIONS);
-//    new BrowserVersionDetector(RuntimeConfig.getConfig().getNodes()).updateVersions();
+
+    // Update browser capabilities and push to remote server
+    System.out.println(UPDATING_BROWSER_VERSIONS);
+    logger.info(UPDATING_BROWSER_VERSIONS);
+    
+    java.util.List<GridNode> nodes = RuntimeConfig.getConfig().getNodes();
+    for (GridNode node : nodes) {
+      String hubHost = node.getConfiguration().getHubHost();
+      java.util.LinkedList<Capability> capabilities = node.getCapabilities();
+      for (Capability cap : capabilities) {
+        String newVersion = BrowserVersionDetector.guessBrowserVersion(cap.getBrowser());
+        if (cap.getBrowserVersion() != newVersion) {
+          cap.setBrowserVersion(newVersion);
+        }
+      }
+      node.writeToFile(node.getLoadedFromFile());
+      if (!RuntimeConfig.getConfig().getAutoStartHub()) {
+        if (configsDirectory.exists()) {
+          pushConfigFileToHub(hubHost, node.getLoadedFromFile());
+        }
+      }
+    }
 
     System.out.println(ATTEMPTING_TO_START_GRID_NODES);
     logger.info(ATTEMPTING_TO_START_GRID_NODES);
     return GridStarter.startAllNodes(getJsonResponse());
+  }
+  
+  private boolean pushConfigFileToHub(String hubHost, String configFile) {
+    ConfigPusher pusher = new ConfigPusher();
+    pusher.setHubHost(hubHost);
+    pusher.addConfigFile(configFile);
+
+    logger.info("Sending config files to " + hubHost);
+
+    logger.info("Open transfer");
+    Map<String, Integer> results = pusher.sendAllConfigsToHub();
+    logger.info("Checking status of transfered files");
+    Boolean failure = false;
+    for (String file : results.keySet()) {
+      logger.info(file + " - " + results.get(file));
+      if (!results.get(file).equals(200)) {
+        failure = true;
+      }
+    }
+
+    if (failure) {
+      System.out.println(
+          "Not all files were successfully sent to the HUB, please check log for more info");
+    } else {
+      System.out.println(
+          "All files sent to hub, check the 'configs" + RuntimeConfig.getOS().getFileSeparator()
+          + RuntimeConfig.getOS().getHostName()
+          + "' directory to modify the configs for this node in the future");
+    }
+    return failure;
   }
 
   private JsonObject startHub() {

@@ -45,6 +45,10 @@ public abstract class Capability extends HashMap {
     this.put(BROWSER_NAME, browser);
   }
 
+  public String getBrowser() {
+    return String.valueOf(this.get(BROWSER_NAME));
+  }
+
   public static Capability getCapabilityFor(String browserName, Map capabilityMap) {
     Capability cap = getCapabilityFor(browserName);
     for (Object capabilityKey : capabilityMap.keySet()) {

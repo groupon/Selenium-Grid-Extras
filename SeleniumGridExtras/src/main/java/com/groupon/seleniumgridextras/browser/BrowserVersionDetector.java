@@ -108,6 +108,8 @@ public class BrowserVersionDetector {
       return getChromeVersion();
     } else if (browserName.equalsIgnoreCase("internetexplorer")) {
       return getIEVersion();
+    } else if (browserName.equalsIgnoreCase("internet explorer")) {
+      return getIEVersion();
     } else {
       return "";
     }
@@ -122,9 +124,25 @@ public class BrowserVersionDetector {
     String version = "";
 
     if (RuntimeConfig.getOS().isWindows()) {
-      version = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, regLocation, "svcVersion");
-      version = version.trim();
-      version = version.substring(0, version.indexOf('.'));
+      try {
+        version = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, regLocation, "svcVersion");
+      } catch (Exception e) {
+        logger.warn("Getting IE version from " + regLocation + "\\svcVersion failed.");
+        logger.warn(e.getMessage());
+        logger.warn("Trying " + regLocation + " next.");
+      }
+      if (version == "") { // svcVersion didn't exist. Try Version instead (maybe IE8 ?).
+        try {
+          version = Advapi32Util.registryGetStringValue(WinReg.HKEY_LOCAL_MACHINE, regLocation, "version");
+        } catch (Exception e) {
+          logger.warn("Getting IE version from " + regLocation + " failed.");
+          logger.warn(e.getMessage());
+        }
+      }
+      if (version != "") {
+        version = version.trim();
+        version = version.substring(0, version.indexOf('.'));
+      }
       return version;
     }
     return version;
@@ -148,15 +166,25 @@ public class BrowserVersionDetector {
       }
 
       cmd[3] = "--version|more";
-      JsonObject object = ExecuteCommand.execRuntime(cmd, true);
-      version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"
-      version = version.substring(0, version.indexOf('.'));
+      try {
+        JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+        version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"
+        version = version.substring(0, version.indexOf('.'));
+      } catch (Exception e) {
+        // If ExecuteCommand.execRuntime fails, still return "";
+        logger.warn(e.getMessage());
+      }
       return version;
     } else if (RuntimeConfig.getOS().isMac()) {
       String[] cmd = {"/Applications/Firefox.app/Contents/MacOS/firefox", "--version"};
+      try {
       JsonObject object = ExecuteCommand.execRuntime(cmd, true);
       version = object.get("out").getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"
       version = version.substring(0, version.indexOf('.'));
+      } catch (Exception e) {
+        // If ExecuteCommand.execRuntime fails, still return "";
+        logger.warn(e.getMessage());
+      }
       return version;
     }
     return version;
@@ -190,12 +218,16 @@ public class BrowserVersionDetector {
       return version.trim();
     } else if (RuntimeConfig.getOS().isMac()) {
       String[] cmd = {"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version"};
-      JsonObject object = ExecuteCommand.execRuntime(cmd, true);
-      version = object.get("out").getAsString().trim();
-      version = version.substring(0, version.indexOf('.'));
+      try {
+        JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+        version = object.get("out").getAsString().trim();
+        version = version.substring(0, version.indexOf('.'));
+      } catch (Exception e) {
+        // If ExecuteCommand.execRuntime fails, still return "";
+        logger.warn(e.getMessage());
+      }
       return version;
     }
     return version;
   }
-
 }
