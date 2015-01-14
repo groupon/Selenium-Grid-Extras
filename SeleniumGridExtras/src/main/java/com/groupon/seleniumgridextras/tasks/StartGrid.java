@@ -124,23 +124,25 @@ public class StartGrid extends ExecuteOSTask {
     }
 
     // Update browser capabilities and push to remote server
-    System.out.println(UPDATING_BROWSER_VERSIONS);
-    logger.info(UPDATING_BROWSER_VERSIONS);
-    
-    java.util.List<GridNode> nodes = RuntimeConfig.getConfig().getNodes();
-    for (GridNode node : nodes) {
-      String hubHost = node.getConfiguration().getHubHost();
-      java.util.LinkedList<Capability> capabilities = node.getCapabilities();
-      for (Capability cap : capabilities) {
-        String newVersion = BrowserVersionDetector.guessBrowserVersion(cap.getBrowser());
-        if (cap.getBrowserVersion() != newVersion) {
-          cap.setBrowserVersion(newVersion);
+    if (RuntimeConfig.getConfig().getAutoUpdateBrowserVersions()) {
+      System.out.println(UPDATING_BROWSER_VERSIONS);
+      logger.info(UPDATING_BROWSER_VERSIONS);
+      
+      java.util.List<GridNode> nodes = RuntimeConfig.getConfig().getNodes();
+      for (GridNode node : nodes) {
+        String hubHost = node.getConfiguration().getHubHost();
+        java.util.LinkedList<Capability> capabilities = node.getCapabilities();
+        for (Capability cap : capabilities) {
+          String newVersion = BrowserVersionDetector.guessBrowserVersion(cap.getBrowser());
+          if (cap.getBrowserVersion() != newVersion) {
+            cap.setBrowserVersion(newVersion);
+          }
         }
-      }
-      node.writeToFile(node.getLoadedFromFile());
-      if (!RuntimeConfig.getConfig().getAutoStartHub()) {
-        if (configsDirectory.exists()) {
-          pushConfigFileToHub(hubHost, node.getLoadedFromFile());
+        node.writeToFile(node.getLoadedFromFile());
+        if (!RuntimeConfig.getConfig().getAutoStartHub()) {
+          if (configsDirectory.exists()) {
+            pushConfigFileToHub(hubHost, node.getLoadedFromFile());
+          }
         }
       }
     }

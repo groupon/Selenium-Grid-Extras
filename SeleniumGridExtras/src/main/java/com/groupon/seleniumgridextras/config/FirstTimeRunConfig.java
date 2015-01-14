@@ -323,6 +323,13 @@ public class FirstTimeRunConfig {
         }
 
       }
+
+      String answer = askQuestion("Would you like this Node to auto update browser versions?? (1-yes/0-no)", "1");
+      if (answer.equals("1")) {
+        defaultConfig.setAutoUpdateBrowserVersions("1");
+      } else {
+        defaultConfig.setAutoUpdateBrowserVersions("0");
+      }
     }
 
     return chosenCapabilities;
