@@ -179,8 +179,9 @@ public class GridStarterTest {
 
   private String readFile(String filePath) {
     String returnString = "";
+    BufferedReader reader = null;
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(filePath));
+      reader = new BufferedReader(new FileReader(filePath));
       String line = null;
       while ((line = reader.readLine()) != null) {
         returnString = returnString + line;
@@ -189,6 +190,14 @@ public class GridStarterTest {
       System.out.println("File " + filePath + " does not exist, going to use default configs");
     } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
+    } finally {
+      if (reader != null) {
+        try {
+          reader.close();
+        } catch (IOException ex) {
+          System.out.println("Error closing buffered reader");
+        }
+      }
     }
     return returnString;
   }

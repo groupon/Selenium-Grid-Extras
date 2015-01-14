@@ -108,8 +108,9 @@ public class GridNode {
 
     protected static String readConfigFile(String filePath) {
         String returnString = "";
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            reader = new BufferedReader(new FileReader(filePath));
             String line = null;
             while ((line = reader.readLine()) != null) {
                 returnString = returnString + line;
@@ -134,6 +135,15 @@ public class GridNode {
             logger.error(e);
 
             System.exit(1);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    System.out.println("Error closing buffered reader");
+                    logger.warn("Error closing buffered reader");
+                }
+            }
         }
         return returnString;
     }
