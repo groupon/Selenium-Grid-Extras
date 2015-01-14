@@ -2,6 +2,9 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.common.base.Throwables;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
@@ -14,10 +17,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class GridNode {
@@ -41,21 +42,19 @@ public class GridNode {
     public static GridNode loadFromFile(String filename) {
 
         String configString = readConfigFile(filename);
-        Map topLevelHash = JsonParserWrapper.toHashMap(configString);
+        JsonObject topLevelJson = new JsonParser().parse(configString).getAsJsonObject();
 
-        String configFromFile = topLevelHash.get("configuration").toString();
+        String configFromFile = topLevelJson.getAsJsonObject("configuration").toString();
 
         GridNodeConfiguration
                 nodeConfiguration =
                 new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
 
-        List<LinkedTreeMap> capabilitiesFromFile = (ArrayList<LinkedTreeMap>) topLevelHash.get("capabilities");
-
         LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
-
-        for (LinkedTreeMap cap : capabilitiesFromFile) {
-            if (cap.containsKey("browserName")) {
-                filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName"), cap));
+        for (JsonElement cap : topLevelJson.getAsJsonArray("capabilities")) {
+            Map capHash = JsonParserWrapper.toHashMap(cap.toString());
+            if (capHash.containsKey("browserName")) {
+                filteredCapabilities.add(Capability.getCapabilityFor((String) capHash.get("browserName"), capHash));
             }
 
         }
