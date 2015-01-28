@@ -44,6 +44,7 @@ public class Config {
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
 
   public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
+  public static final String AUTO_UPDATE_BROWSER_VERSIONS = "auto_update_browser_versions";
   public static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
 
   public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
@@ -141,6 +142,7 @@ public class Config {
     getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
 
     getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
+    getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, "");
 
     getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
     initializeVideoRecorder();
@@ -163,6 +165,23 @@ public class Config {
       getConfigMap().put(AUTO_UPDATE_DRIVERS, input);
     } else {
       getConfigMap().put(AUTO_UPDATE_DRIVERS, "0");
+    }
+
+  }
+
+  public boolean getAutoUpdateBrowserVersions() {
+    if (getConfigMap().get(AUTO_UPDATE_BROWSER_VERSIONS).equals("1")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public void setAutoUpdateBrowserVersions(String input) {
+    if (input.equals("1")) {
+      getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, input);
+    } else {
+      getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, "0");
     }
 
   }
