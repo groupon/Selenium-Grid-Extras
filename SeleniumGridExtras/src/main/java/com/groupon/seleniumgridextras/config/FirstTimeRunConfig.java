@@ -300,7 +300,10 @@ public class FirstTimeRunConfig {
           guessedPlatform);
 
 
-
+      /* If we can't detect the correct browser version, default to No for auto updating the 
+       * browser version automatically on node startup */
+      String ableToAutoDetectBrowserVersions = "1";
+      
       for (Class currentCapabilityClass : Capability.getSupportedCapabilities().keySet()) {
         String
             value =
@@ -315,8 +318,12 @@ public class FirstTimeRunConfig {
                 (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
             capability.setPlatform(platform.toUpperCase());
             String guessedBrowserVersion = BrowserVersionDetector.guessBrowserVersion(currentCapabilityClass.getSimpleName());
-            capability.setBrowserVersion(askQuestion(
-              "What version of '" + currentCapabilityClass.getSimpleName() + "' is installed?", guessedBrowserVersion));
+            String realBrowserVersion = askQuestion(
+                "What version of '" + currentCapabilityClass.getSimpleName() + "' is installed?", guessedBrowserVersion);
+            capability.setBrowserVersion(realBrowserVersion);
+            if ((guessedBrowserVersion != realBrowserVersion) && ableToAutoDetectBrowserVersions.equals("1")) {
+              ableToAutoDetectBrowserVersions = "0";
+            }
 
             chosenCapabilities.add(capability);
           } catch (Exception e) {
@@ -328,7 +335,7 @@ public class FirstTimeRunConfig {
 
       }
 
-      String answer = askQuestion("Would you like this Node to auto update browser versions?? (1-yes/0-no)", "1");
+      String answer = askQuestion("Would you like this Node to auto update browser versions?? (1-yes/0-no)", ableToAutoDetectBrowserVersions);
       if (answer.equals("1")) {
         defaultConfig.setAutoUpdateBrowserVersions("1");
       } else {
