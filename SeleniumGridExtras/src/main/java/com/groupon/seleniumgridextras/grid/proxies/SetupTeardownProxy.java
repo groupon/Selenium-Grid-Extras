@@ -39,32 +39,33 @@
 package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.google.common.base.Throwables;
-import com.groupon.seleniumgridextras.config.capabilities.Capability;
-import com.groupon.seleniumgridextras.config.capabilities.InternetExplorer;
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
-import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
 import com.groupon.seleniumgridextras.utilities.threads.SessionHistoryCallable;
+import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
+
+import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.video.RemoteVideoRecordingControlCallable;
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoDownloaderCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
-import org.openqa.grid.internal.*;
+import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
@@ -81,56 +82,12 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         logger.info(String.format("Attaching node %s", this.getId()));
     }
 
-    protected boolean isCurrentProxyRunningInternetExplorerBuild() {
-        for (TestSlot slot : this.getTestSlots()) {
-            if (slot.getSession() == null) {
-                continue;
-            }
-
-
-            if (Capability.getSupportedCapabilities().get(InternetExplorer.class).equals(
-                    slot.getSession().getRequestedCapabilities().get("browserName"))
-                    ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    protected boolean canAnotherProxyRunBuild(ProxySet existingProxies, Map<String, Object> requestedCapability){
-        for (RemoteProxy proxy : existingProxies) {
-            if (!proxy.isBusy() && proxy.hasCapability(requestedCapability)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 
     @Override
     public TestSession getNewSession(Map<String, Object> requestedCapability) {
         if (isDown()) {
             return null;
-        } else if (this.isBusy()) {
-            if (canAnotherProxyRunBuild(this.getRegistry().getAllProxies(), requestedCapability)) {
-                logger.info(String.format(
-                        "Proxy %s attempted to start new session but it is busy and will request a new proxy",
-                        this.getId()));
-                return null;
-            } else if (isCurrentProxyRunningInternetExplorerBuild()) {
-                logger.info(String.format(
-                        "Proxy %s attempted to start new session but it already has an IE build going, sending request to another proxy",
-                        this.getId()));
-                return null;
-            }
-
-            logger.info(String.format(
-                    "Proxy %s attempted to start new session even though it is already running a build",
-                    this.getId()));
         }
-
 
         TestSession session;
         try {
