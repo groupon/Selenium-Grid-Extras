@@ -42,4 +42,8 @@ public interface BrowserType {
   String IPHONE = "iPhone";
   String IPAD = "iPad";
   String PHANTOMJS = "phantomjs";
+
+  // Android browsers
+  String CHROMIUM = "chromium";
+  String BROWSER = "browser";
 }

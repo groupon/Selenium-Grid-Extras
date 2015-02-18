@@ -4,6 +4,7 @@ package com.groupon.seleniumgridextras.config.capabilities;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class Capability extends HashMap {
@@ -36,6 +37,9 @@ public abstract class Capability extends HashMap {
     return String.valueOf(this.get(MAX_INSTANCES));
   }
 
+  public void setMaxInstances(int maxInstances){
+    this.put(MAX_INSTANCES, maxInstances);
+  }
 
   public void setPlatform(String platform) {
     this.put(PLATFORM, platform);
@@ -96,16 +100,38 @@ public abstract class Capability extends HashMap {
     return null;
   }
 
-  public static Map<Class, String> getSupportedCapabilities() {
-    Map<Class, String> capabilityHash = new HashMap<Class, String>();
+  public static Map<Class, String> getSupportedWebCapabilities() {
+    Map<Class, String> capabilityHash = new LinkedHashMap<Class, String>();
 
     capabilityHash.put(Firefox.class, BrowserType.FIREFOX);
     capabilityHash.put(InternetExplorer.class, BrowserType.IE);
     capabilityHash.put(Chrome.class, BrowserType.CHROME);
     capabilityHash.put(Safari.class, BrowserType.SAFARI);
 
+    return capabilityHash;
+  }
+
+  public static Map<Class, String> getSupportedAppiumCapabilities() {
+    Map<Class, String> capabilityHash = new LinkedHashMap<Class, String>();
+
+    capabilityHash.put(Android.class, BrowserType.ANDROID);
+    capabilityHash.put(Chrome.class, BrowserType.CHROME);
+    capabilityHash.put(Chromium.class, BrowserType.CHROMIUM);
+    capabilityHash.put(Browser.class, BrowserType.BROWSER);
+    capabilityHash.put(IPhone.class, BrowserType.IPHONE);
+    capabilityHash.put(IPad.class, BrowserType.IPAD);
+    capabilityHash.put(Safari.class, BrowserType.SAFARI);
 
     return capabilityHash;
+  }
+
+  public static Map<Class, String> getSupportedCapabilities() {
+      Map<Class, String> capabilityHash = new HashMap<Class, String>();
+
+      capabilityHash.putAll(getSupportedWebCapabilities());
+      capabilityHash.putAll(getSupportedAppiumCapabilities());
+
+      return capabilityHash;
   }
 
   public String getWDStyleName() {

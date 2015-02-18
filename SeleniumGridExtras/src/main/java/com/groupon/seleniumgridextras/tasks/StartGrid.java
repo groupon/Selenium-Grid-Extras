@@ -127,9 +127,13 @@ public class StartGrid extends ExecuteOSTask {
     if (RuntimeConfig.getConfig().getAutoUpdateBrowserVersions()) {
       System.out.println(UPDATING_BROWSER_VERSIONS);
       logger.info(UPDATING_BROWSER_VERSIONS);
-      
+
       java.util.List<GridNode> nodes = RuntimeConfig.getConfig().getNodes();
       for (GridNode node : nodes) {
+        if (node.isAppiumNode()) {
+            continue;
+        }
+
         String hubHost = node.getConfiguration().getHubHost();
         java.util.LinkedList<Capability> capabilities = node.getCapabilities();
         for (Capability cap : capabilities) {

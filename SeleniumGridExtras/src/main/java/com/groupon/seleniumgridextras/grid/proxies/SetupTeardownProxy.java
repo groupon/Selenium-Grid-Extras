@@ -180,13 +180,16 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     @Override
     public void afterSession(TestSession session) {
         super.afterSession(session);
-        stopVideoRecording(session);
 
-        CommonThreadPool.startCallable(
-                new VideoDownloaderCallable(
-                        session.getExternalKey().getKey(),
-                        session.getSlot().getRemoteURL().getHost())
-        );
+        // Stop and download video only if the external session has been established
+        if (session.getExternalKey() != null) {
+            stopVideoRecording(session);
+
+            CommonThreadPool.startCallable(
+                    new VideoDownloaderCallable(
+                            session.getExternalKey().getKey(),
+                            session.getSlot().getRemoteURL().getHost()));
+        }
 
         CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(

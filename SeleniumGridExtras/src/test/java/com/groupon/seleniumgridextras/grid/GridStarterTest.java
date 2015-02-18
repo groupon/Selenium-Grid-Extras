@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
 public class GridStarterTest {
 
@@ -25,6 +27,7 @@ public class GridStarterTest {
   private static final String TEST_COMMAND = "command is here";
   private final String nodeOneConfig = "node1.json";
   private final String nodeTwoConfig = "node2.json";
+  private final String nodeAppiumConfig = "appium_node.json";
 
   private final String logFile = "foo.log";
   private final String command = "command";
@@ -33,6 +36,13 @@ public class GridStarterTest {
   String
       expectedCommand =
       command + " -log log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
+
+  private final String appiumLogFile = "appium_foo.log";
+  private final String windowsAppiumBatchFileName = appiumLogFile.replace("log", "bat");
+  String
+      expectedAppiumCommand =
+          command + " --log " + System.getProperty("user.dir") + RuntimeConfig.getOS().getFileSeparator()
+          + "log" + RuntimeConfig.getOS().getFileSeparator() + appiumLogFile;
 
 
   //COMPILED WITH USE OF http://gskinner.com/RegExr/ Use it, it will make your life simpler
@@ -51,12 +61,17 @@ public class GridStarterTest {
 
     GridNode node1 = new GridNode();
     GridNode node2 = new GridNode();
+    GridNode nodeAppium = new GridNode();
+    nodeAppium.getConfiguration().setAppiumStartCommand("appium");
+    nodeAppium.getConfiguration().setPort(4723);
 
     node1.writeToFile(nodeOneConfig);
     node2.writeToFile(nodeTwoConfig);
+    nodeAppium.writeToFile(nodeAppiumConfig);
 
     config.addNodeConfigFile(nodeOneConfig);
     config.addNodeConfigFile(nodeTwoConfig);
+    config.addNodeConfigFile(nodeAppiumConfig);
 
     config.writeToDisk(RuntimeConfig.getConfigFile());
 
@@ -69,12 +84,33 @@ public class GridStarterTest {
     new File(GRID_HUB_LOG).delete();
     new File(nodeOneConfig).delete();
     new File(nodeTwoConfig).delete();
+    new File(nodeAppiumConfig).delete();
     new File(windowsBatchFileName).delete();
+    new File(windowsAppiumBatchFileName).delete();
     new File(gridStartTestJson).delete();
     new File(RuntimeConfig.getConfigFile() + ".example").delete();
 
   }
 
+
+  @Test
+  public void testGetNodeStartCommand() throws Exception {
+
+    String startCommand = GridStarter.getNodeStartCommand(nodeOneConfig, false);
+    assertThat(startCommand, containsString("org.openqa.grid.selenium.GridLauncher"));
+    assertThat(startCommand, containsString("-role wd"));
+    assertThat(startCommand, containsString("-nodeConfig " + nodeOneConfig));
+
+    startCommand = GridStarter.getNodeStartCommand(nodeAppiumConfig, false);
+    assertThat(startCommand, containsString("appium -p 4723"));
+    assertThat(startCommand, containsString("--nodeconfig " + System.getProperty("user.dir")
+            + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumConfig));
+
+    startCommand = GridStarter.getNodeStartCommand(nodeAppiumConfig, true);
+    assertThat(startCommand, containsString("appium -p 4723"));
+    assertThat(startCommand, containsString("--nodeconfig " + System.getProperty("user.dir")
+            + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumConfig));
+  }
 
   @Test
   public void testGetBackgroundStartCommandForNode() throws Exception {
@@ -87,6 +123,13 @@ public class GridStarterTest {
 
     assertEquals(expectedCommand, readFile(windowsBatchFileName));
 
+    assertEquals(expectedAppiumCommand,
+                 GridStarter.getBackgroundStartCommandForNode(command, appiumLogFile, false));
+
+    assertEquals("start " + windowsAppiumBatchFileName,
+                 GridStarter.getBackgroundStartCommandForNode(command, appiumLogFile, true));
+
+    assertEquals(expectedAppiumCommand, readFile(windowsAppiumBatchFileName));
 
   }
 
@@ -136,8 +179,9 @@ public class GridStarterTest {
 
   private String readFile(String filePath) {
     String returnString = "";
+    BufferedReader reader = null;
     try {
-      BufferedReader reader = new BufferedReader(new FileReader(filePath));
+      reader = new BufferedReader(new FileReader(filePath));
       String line = null;
       while ((line = reader.readLine()) != null) {
         returnString = returnString + line;
@@ -146,6 +190,14 @@ public class GridStarterTest {
       System.out.println("File " + filePath + " does not exist, going to use default configs");
     } catch (IOException error) {
       System.out.println("Error reading" + filePath + ". Going with default configs");
+    } finally {
+      if (reader != null) {
+        try {
+          reader.close();
+        } catch (IOException ex) {
+          System.out.println("Error closing buffered reader");
+        }
+      }
     }
     return returnString;
   }
