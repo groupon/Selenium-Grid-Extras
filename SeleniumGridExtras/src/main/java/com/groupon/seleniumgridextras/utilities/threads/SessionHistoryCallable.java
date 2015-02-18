@@ -52,7 +52,13 @@ public class SessionHistoryCallable implements Callable {
             uri.setHost(getSession().getSlot().getRemoteURL().getHost());
             uri.setPort(3000);
             uri.setPath(TaskDescriptions.Endpoints.GRID_STATUS);
-            uri.addParameter(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM, getSession().getExternalKey().getKey());
+            if (getSession().getExternalKey() != null) {
+                uri.addParameter(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM, getSession().getExternalKey().getKey());
+            } else {
+                String message = String.format("Session %s, did not get an external key after %s seconds.",
+                        getSession().getInternalKey(), SECONDS_TO_WAIT_FOR_EXTERNAL_KEY);
+                uri.addParameter(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM, message);
+            }
 
             URI finalUri = uri.build();
             logger.info(String.format("Notifying Remote Grid Extras node of new session with %s", finalUri));

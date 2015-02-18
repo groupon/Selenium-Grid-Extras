@@ -2,6 +2,9 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.common.base.Throwables;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
@@ -14,10 +17,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class GridNode {
@@ -41,21 +42,19 @@ public class GridNode {
     public static GridNode loadFromFile(String filename) {
 
         String configString = readConfigFile(filename);
-        Map topLevelHash = JsonParserWrapper.toHashMap(configString);
+        JsonObject topLevelJson = new JsonParser().parse(configString).getAsJsonObject();
 
-        String configFromFile = topLevelHash.get("configuration").toString();
+        String configFromFile = topLevelJson.getAsJsonObject("configuration").toString();
 
         GridNodeConfiguration
                 nodeConfiguration =
                 new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
 
-        List<LinkedTreeMap> capabilitiesFromFile = (ArrayList<LinkedTreeMap>) topLevelHash.get("capabilities");
-
         LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
-
-        for (LinkedTreeMap cap : capabilitiesFromFile) {
-            if (cap.containsKey("browserName")) {
-                filteredCapabilities.add(Capability.getCapabilityFor((String) cap.get("browserName"), cap));
+        for (JsonElement cap : topLevelJson.getAsJsonArray("capabilities")) {
+            Map capHash = JsonParserWrapper.toHashMap(cap.toString());
+            if (capHash.containsKey("browserName")) {
+                filteredCapabilities.add(Capability.getCapabilityFor((String) capHash.get("browserName"), capHash));
             }
 
         }
@@ -83,6 +82,10 @@ public class GridNode {
         return configuration;
     }
 
+    public boolean isAppiumNode() {
+        return getLoadedFromFile().startsWith("appium");
+    }
+
     public void writeToFile(String filename) {
 
         try {
@@ -105,8 +108,9 @@ public class GridNode {
 
     protected static String readConfigFile(String filePath) {
         String returnString = "";
+        BufferedReader reader = null;
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            reader = new BufferedReader(new FileReader(filePath));
             String line = null;
             while ((line = reader.readLine()) != null) {
                 returnString = returnString + line;
@@ -131,6 +135,15 @@ public class GridNode {
             logger.error(e);
 
             System.exit(1);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    System.out.println("Error closing buffered reader");
+                    logger.warn("Error closing buffered reader");
+                }
+            }
         }
         return returnString;
     }
@@ -168,9 +181,12 @@ public class GridNode {
         private int hubPort;
         private String hubHost;
         private String host;
+        private String url;
+        private Integer registerCycle;
         //    private int browserTimeout = 120;
 //    private int timeout = 120;
         private int nodeStatusCheckTimeout = 10000;
+        private String appiumStartCommand;
 
         //Only test the node status 1 time, since the limit checker is
         //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
@@ -181,6 +197,10 @@ public class GridNode {
 
         public int getMaxSession() {
             return this.maxSession;
+        }
+
+        public void setMaxSession(int maxSession) {
+            this.maxSession = maxSession;
         }
 
         public int getPort() {
@@ -215,6 +235,29 @@ public class GridNode {
             this.host = host;
         }
 
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public int getRegisterCycle() {
+            return registerCycle.intValue();
+        }
+
+        public void setRegisterCycle(int registerCycle) {
+            this.registerCycle = new Integer(registerCycle);
+        }
+
+        public String getAppiumStartCommand() {
+            return appiumStartCommand;
+        }
+
+        public void setAppiumStartCommand(String appiumStartCommand) {
+            this.appiumStartCommand = appiumStartCommand;
+        }
     }
 
 }

@@ -5,6 +5,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
 
 
 public class JvmParamsTest {
@@ -26,13 +28,19 @@ public class JvmParamsTest {
 
     @Test
     public void testGridExtrasJvmParams() throws Exception {
-        assertEquals("-Dhttp.proxyPort=5555 -DfakeBool=true -Dhttp.proxyHost=www.google.com ", config.getGridExtrasJvmOptions());
+        String gridExtrasJvmOptions = config.getGridExtrasJvmOptions();
+        assertThat(gridExtrasJvmOptions, containsString("-Dhttp.proxyPort=5555"));
+        assertThat(gridExtrasJvmOptions, containsString("-DfakeBool=true"));
+        assertThat(gridExtrasJvmOptions, containsString("-Dhttp.proxyHost=www.google.com"));
     }
 
 
     @Test
     public void testGridJvmParams() throws Exception {
-        assertEquals("-Dhttp.proxyPort=9999 -DfakeBool=false -Dhttp.proxyHost=www.bing.com ", config.getGridJvmOptions());
+        String gridJvmOptions = config.getGridJvmOptions();
+        assertThat(gridJvmOptions, containsString("-Dhttp.proxyPort=9999"));
+        assertThat(gridJvmOptions, containsString("-DfakeBool=false"));
+        assertThat(gridJvmOptions, containsString("-Dhttp.proxyHost=www.bing.com"));
     }
 
     @Test
