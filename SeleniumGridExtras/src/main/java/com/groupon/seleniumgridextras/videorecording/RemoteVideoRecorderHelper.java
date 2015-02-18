@@ -99,8 +99,8 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                session,
                 3000,
+                session,
                 JsonCodec.Video.HEARTBEAT,
                 params.toString());
         try {
