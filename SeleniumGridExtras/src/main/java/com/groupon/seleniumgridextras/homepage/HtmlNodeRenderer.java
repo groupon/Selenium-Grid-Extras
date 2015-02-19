@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.Version;
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -243,12 +244,12 @@ public class HtmlNodeRenderer {
             renderedCapabilities.append("\n\t\t<ul class='node'>");
             renderedCapabilities.append("\n\t\t\t<li>Config File: " + node.getLoadedFromFile() + "</li>");
             renderedCapabilities.append("\n\t\t\t<li>Max Sessions: " + node.getConfiguration().getMaxSession() + "</li>");
-            renderedCapabilities.append("\n\t\t\t<li class='declared_browsers'>Declared Browsers: <br/> (Version / Max Instances)");
+            renderedCapabilities.append("\n\t\t\t<li class='declared_browsers'>Declared Browsers: <br/> (Version / Max Instances / Driver Version)");
             renderedCapabilities.append("\n\t\t\t\t<ul class='browser_list'>");
             for (Capability cap : node.getCapabilities()) {
                 renderedCapabilities.append("\n\t\t\t\t\t<li class='browser'>");
                 renderedCapabilities.append("<img class='browser_icon' src='data:image/png;base64," + cap.getIcon() + "'>");
-                renderedCapabilities.append(" " + cap.getBrowserVersion() + " / " + cap.getMaxInstances());
+                renderedCapabilities.append(" " + cap.getBrowserVersion() + " / " + cap.getMaxInstances() + " / " + getDriverVersion(cap.getBrowser()));
                 renderedCapabilities.append("\n\t\t\t\t\t</li> <!-- browser -->");
             }
             renderedCapabilities.append("\n\t\t\t\t</ul> <!-- browser_list -->");
@@ -260,6 +261,15 @@ public class HtmlNodeRenderer {
         return renderedCapabilities.toString();
     }
 
+    private String getDriverVersion(String browserName) {
+        if (browserName.equalsIgnoreCase("chrome")) {
+            return RuntimeConfig.getConfig().getChromeDriver().getVersion();
+        } else if (browserName.equalsIgnoreCase("internet explorer")) {
+            return RuntimeConfig.getConfig().getIEdriver().getVersion();
+        } else {
+            return RuntimeConfig.getConfig().getWebdriver().getVersion();
+        }
+    }
 
     public static String infoSnippet(String title, String contents) {
         return "\n\t<h4>" + title + "</h4>" + "\n\t<p>" + contents + "</p>\n";
