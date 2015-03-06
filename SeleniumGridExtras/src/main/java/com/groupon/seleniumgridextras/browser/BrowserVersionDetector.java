@@ -155,17 +155,15 @@ public class BrowserVersionDetector {
   private static String getFirefoxVersion() {
     String version = "";
     if (RuntimeConfig.getOS().isWindows()) {
-      String[] cmd = new String[4];
-      cmd[0] = "cmd";
-      cmd[1] = "/C";
+      String[] cmd = new String[2];
       File f = new File("C:/Program Files (x86)");
       if (f.exists()) {
-        cmd[2] = "C:/Program Files (x86)/Mozilla Firefox/firefox.exe";
+        cmd[0] = "\"C:/Program Files (x86)/Mozilla Firefox/firefox.exe\"";
       } else {
-        cmd[2] = "C:/Program Files/Mozilla Firefox/firefox.exe";
+        cmd[0] = "\"C:/Program Files/Mozilla Firefox/firefox.exe\"";
       }
 
-      cmd[3] = "--version|more";
+      cmd[1] = "--version|more";
       try {
         JsonObject object = ExecuteCommand.execRuntime(cmd, true);
         version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"

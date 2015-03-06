@@ -50,11 +50,15 @@ public class VideoRecordingThreadPool {
         } else {
             logger.info("Politely asking video recording to stop");
             video.stop();
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                logger.error(e);
-                e.printStackTrace();
+            int timeout = 5;
+            while(!future.isDone() && !future.isCancelled() && timeout > 0) {
+                try {
+                    timeout -= 1;
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    logger.error(e);
+                    e.printStackTrace();
+                }
             }
 
             if (future.isDone() || future.isCancelled()) {

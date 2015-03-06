@@ -1,8 +1,9 @@
 package com.groupon.seleniumgridextras.utilities.threads;
 
-import com.groupon.seleniumgridextras.utilities.ProcessOutputReader;
 import org.apache.log4j.Logger;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.concurrent.Callable;
 
 public class ExecuteOsTaskCallable implements Callable {
@@ -22,14 +23,25 @@ public class ExecuteOsTaskCallable implements Callable {
         try {
             logger.info("Starting to wait for command to finish in background: " + this.command);
 
+            // Starts a thread to read error stream
+            ByteArrayOutputStream errorOutputStream = new ByteArrayOutputStream();
+            StreamGobbler errorGobbler = new StreamGobbler(process.getErrorStream(), errorOutputStream);
+            errorGobbler.start();
+
+            // Starts a thread to read output stream and discards it (the output should be in the command log)
+            StreamGobbler outputGobbler = new StreamGobbler(process.getInputStream(), null);
+            outputGobbler.start();
+
             int exitCode = process.waitFor();
 
-            message = String.format("Command finished. \n command: %s \n exit code: %d \n standard out: \n %s \n standard error: \n %s",
+            // Waits for threads to die
+            errorGobbler.join();
+            outputGobbler.join();
+
+            message = String.format("Command finished. \n command: %s \n exit code: %d \n standard error: \n %s",
                     this.command,
                     exitCode,
-                    ProcessOutputReader.getStandardOut(process),
-                    ProcessOutputReader.getErrorOut(process)
-
+                    errorOutputStream.toString()
             );
 
             logger.info(message);
@@ -39,7 +51,5 @@ public class ExecuteOsTaskCallable implements Callable {
             logger.error(message, e);
             return message;
         }
-
-
     }
 }
