@@ -1,10 +1,8 @@
 package com.groupon.seleniumgridextras.homepage;
 
 import com.google.common.base.Throwables;
-import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.Version;
-import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
@@ -21,7 +19,6 @@ import org.apache.log4j.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -206,15 +203,21 @@ public class HtmlNodeRenderer {
         videos.append("\n<ul class='videos'>");
 
         try {
-            Map<String, Map> allVideoInfos = (Map<String, Map>) videoInfo.get(JsonCodec.Video.AVAILABLE_VIDEOS);
+			Map<String, Map> allVideoInfos = (Map<String, Map>) videoInfo.get(JsonCodec.Video.AVAILABLE_VIDEOS);
 
-            for (String session : allVideoInfos.keySet()) {
+			List<String> sortedSessions = new ArrayList<String>(allVideoInfos.keySet());
+			Collections.sort(sortedSessions, new VideoSessionComparator(allVideoInfos));
+
+			for (String session : sortedSessions)
+			{
                 videos.append("\n\t<li>");
-                if ((allVideoInfos.get(session) != null) && (allVideoInfos.get(session).containsKey(JsonCodec.Video.VIDEO_DOWNLOAD_URL))) {
+				if ((allVideoInfos.get(session) != null) && (allVideoInfos.get(session).containsKey(JsonCodec.Video.VIDEO_DOWNLOAD_URL)))
+				{
+					Date lastModified = new Date(((Number) allVideoInfos.get(session).get(JsonCodec.Video.LAST_MODIFIED)).longValue());
                     videos.append(String.format(
-                            "<a target='new' href='%s'>%s</a>",
-                            allVideoInfos.get(session).get(JsonCodec.Video.VIDEO_DOWNLOAD_URL),
-                            session));
+						"<a target='new' href='%s'>%s (%tF %tT)</a>",
+						allVideoInfos.get(session).get(JsonCodec.Video.VIDEO_DOWNLOAD_URL),
+						session, lastModified, lastModified));
                 } else {
                     videos.append(session);
                 }
@@ -357,6 +360,25 @@ public class HtmlNodeRenderer {
         return footHtmlSnippet;
 
     }
+
+	private static class VideoSessionComparator implements Comparator<String>
+	{
+		private final Map<String, Map> videoInfo;
+
+		private VideoSessionComparator(Map<String, Map> allVideoInfos)
+		{
+			videoInfo = allVideoInfos;
+		}
+
+		public int compare(String o1, String o2)
+		{
+			Map videoInfo1 = videoInfo.get(o1);
+			Map videoInfo2 = videoInfo.get(o2);
+			long lastModified1 = ((Number) videoInfo1.get(JsonCodec.Video.LAST_MODIFIED)).longValue();
+			long lastModified2 = ((Number) videoInfo2.get(JsonCodec.Video.LAST_MODIFIED)).longValue();
+			return (int) (lastModified2 - lastModified1);
+		}
+	}
 
 
 }
