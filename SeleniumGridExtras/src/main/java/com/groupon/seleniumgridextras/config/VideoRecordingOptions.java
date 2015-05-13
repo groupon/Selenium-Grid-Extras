@@ -12,6 +12,7 @@ public class VideoRecordingOptions extends HashMap<String, String> {
   private static final String FRAMES = "frames";
   private static final String WIDTH = "width";
   private static final String HEIGHT = "height";
+  private static final String DOWNLOAD_VIDEOS_TO_HUB = "download_videos_to_hub";
   private static final String VIDEOS_TO_KEEP = "videos_to_keep";
   private static final String VIDEO_OUTPUT_DIR = "video_output_dir";
   private static final String IDLE_VIDEO_TIMEOUT = "idle_video_timeout";
@@ -47,6 +48,14 @@ public class VideoRecordingOptions extends HashMap<String, String> {
 
   public int getHeight() {
     return Integer.valueOf(this.get(HEIGHT));
+  }
+
+  public boolean getDownloadVideosToHub() {
+    return Boolean.valueOf(this.get(DOWNLOAD_VIDEOS_TO_HUB));
+  }
+
+  public void setDownloadVideosToHub(boolean downloadVideosToHub) {
+    this.put(DOWNLOAD_VIDEOS_TO_HUB, String.valueOf(downloadVideosToHub));
   }
 
   public void setVideosToKeep(int count) {
