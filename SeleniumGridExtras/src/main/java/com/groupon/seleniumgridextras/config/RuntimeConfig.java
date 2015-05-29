@@ -71,8 +71,8 @@ public class RuntimeConfig {
   public static WebDriverReleaseManager getReleaseManager() {
     if (releaseManager == null) {
       releaseManager =
-          loadWebDriverReleaseManager("http://selenium-release.storage.googleapis.com/",
-                                      "http://chromedriver.storage.googleapis.com/LATEST_RELEASE");
+          loadWebDriverReleaseManager("https://selenium-release.storage.googleapis.com/",
+                                      "https://chromedriver.storage.googleapis.com/LATEST_RELEASE");
     }
 
     return releaseManager;
