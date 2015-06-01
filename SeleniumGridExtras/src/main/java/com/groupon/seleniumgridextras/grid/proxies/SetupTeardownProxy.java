@@ -39,6 +39,8 @@
 package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.google.common.base.Throwables;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.config.VideoRecordingOptions;
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -142,10 +144,14 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         if (session.getExternalKey() != null) {
             stopVideoRecording(session);
 
+          if (RuntimeConfig.getConfig() != null &&
+                  RuntimeConfig.getConfig().getVideoRecording() != null &&
+                  RuntimeConfig.getConfig().getVideoRecording().getDownloadVideosToHub()) {
             CommonThreadPool.startCallable(
                     new VideoDownloaderCallable(
                             session.getExternalKey().getKey(),
                             session.getSlot().getRemoteURL().getHost()));
+          }
         }
 
         CommonThreadPool.startCallable(
