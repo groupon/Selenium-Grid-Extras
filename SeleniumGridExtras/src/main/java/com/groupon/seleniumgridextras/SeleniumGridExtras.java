@@ -40,6 +40,7 @@ package com.groupon.seleniumgridextras;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
 import com.groupon.seleniumgridextras.homepage.HtmlRenderer;
+import com.groupon.seleniumgridextras.tasks.DeleteOldLogs;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
@@ -124,6 +125,11 @@ public class SeleniumGridExtras {
 
         HttpContext videoContext = server.createContext(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT, new VideoHttpExecutor());
         logger.info("Attaching video downloading context at " + VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT);
+
+        System.out.println("****************");
+        ExecuteOSTask deleteLogs = new DeleteOldLogs();
+        deleteLogs.getWindowsCommand();
+        System.out.println("****************");
 
         if (RuntimeConfig.getConfig().getAutoStartHub()) {
             logger.info("Grid Hub was set to Autostart");

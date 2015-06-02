@@ -39,6 +39,7 @@ public class Config {
   public static final String HUB_CONFIG = "hub_config";
   public static final String NODE_CONFIG_FILES = "node_config_files";
   public static final String HUB_CONFIG_FILES = "hub_config_files";
+  public static final String DAYS_UNTIL_LOG_DELETION = "days_until_log_deletion";
 
   public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
   public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
@@ -426,6 +427,14 @@ public class Config {
     return mapToJvmParams((Map<String, Object>) getConfigMap().get(GRID_EXTRAS_JVM_OPTIONS));
   }
 
+  public String getLogCleaningDays(){
+    return getConfigMap().get(DAYS_UNTIL_LOG_DELETION).toString();
+  }
+
+  public void setLogCleaningDays(String days){
+    getConfigMap().put(DAYS_UNTIL_LOG_DELETION, days);
+  }
+
   public void addGridJvmOptions(String key, Object value) {
     logger.info(key + " " + value);
     Map<String, Object> params = (Map<String, Object>) getConfigMap().get(GRID_JVM_OPTIONS);
@@ -495,6 +504,10 @@ public class Config {
 
   public File getConfigsDirectory() {
     return new File("configs");
+  }
+
+  public File getLogsDirectory(){
+      return new File("log");
   }
 
   public String getCentralConfigFileName() {

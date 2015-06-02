@@ -99,6 +99,7 @@ public class RuntimeConfigTest {
     theConfigMap.add("setup", new JsonArray());
     theConfigMap.addProperty("auto_start_hub", "1");
     theConfigMap.addProperty("auto_start_node", "0");
+    theConfigMap.addProperty("days_until_log_deletion", "7");
 
 
 

@@ -50,7 +50,7 @@ public class DefaultConfig {
     public static final String REBOOT_AFTER_THIS_MANY_SESSIONS = "10";
     public static final String DEFAULT_HUB_PORT = "4444";
     public static final String DEFAULT_SHARED_DIRECTORY = "shared";
-
+    public static final String DAYS_UNTIL_LOG_DELETION = "7";
     public static final String BOOTSTRAP_CSS = "/bootstrap.3.2.0.min.css";
     public static final String BOOTSTRAP_JS = "/bootstrap.3.2.0.min.js";
     public static final String JQUERY_JS = "/jquery.1.11.1.min.js";
@@ -89,6 +89,7 @@ public class DefaultConfig {
     public static Config getDefaultConfig() {
         config = new Config();
 
+        loadLogConfig();
         loadWebDriverInfo();
         loadIEDriverInfo();
         loadChromeDriverInfo();
@@ -232,7 +233,7 @@ public class DefaultConfig {
         config.addActivatedModules(Teardown.class.getCanonicalName());
         config.addActivatedModules(MoveMouse.class.getCanonicalName());
         config.addActivatedModules(RebootNode.class.getCanonicalName());
-
+        config.addActivatedModules(DeleteOldLogs.class.getCanonicalName());
         config.addActivatedModules(VideoRecorder.class.getCanonicalName());
 
         config.addActivatedModules(KillAllIE.class.getCanonicalName());
@@ -275,6 +276,11 @@ public class DefaultConfig {
         config.setAutoStartNode(JsonCodec.TRUE_INT);
 
         setGridHubConfig();
+
+    }
+
+    private static void loadLogConfig(){
+        config.setLogCleaningDays(DAYS_UNTIL_LOG_DELETION);
 
     }
 
