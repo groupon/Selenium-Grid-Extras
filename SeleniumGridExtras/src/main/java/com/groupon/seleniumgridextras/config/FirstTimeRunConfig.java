@@ -89,6 +89,7 @@ public class FirstTimeRunConfig {
         configureAppiumNodes(appiumCaps, hubHost, hubPort, appiumStartCommand, defaultConfig);
       }
     }
+    setLogDeletionDays(defaultConfig);
 
     setRebootAfterSessionLimit(defaultConfig);
 
@@ -207,6 +208,11 @@ public class FirstTimeRunConfig {
       logger.warn(error);
     }
 
+  }
+
+  private static void setLogDeletionDays(Config defaultConfig) {
+    String answer = askQuestion("Delete logs that exists more days than", "7");
+    defaultConfig.setLogCleaningDays(answer);
   }
 
   private static void setRebootAfterSessionLimit(Config defaultConfig) {

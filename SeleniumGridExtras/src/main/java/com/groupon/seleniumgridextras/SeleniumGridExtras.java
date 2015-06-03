@@ -46,7 +46,6 @@ import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import com.groupon.seleniumgridextras.videorecording.VideoShutdownHook;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -124,6 +123,7 @@ public class SeleniumGridExtras {
 
         HttpContext videoContext = server.createContext(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT, new VideoHttpExecutor());
         logger.info("Attaching video downloading context at " + VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT);
+
 
         if (RuntimeConfig.getConfig().getAutoStartHub()) {
             logger.info("Grid Hub was set to Autostart");

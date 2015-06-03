@@ -22,6 +22,7 @@ public class TaskDescriptions {
         public static final String KILL_IE = "/kill_ie";
         public static final String KILL_SAFARI = "/kill_safari";
         public static final String KILL_PID = "/kill_pid";
+        public static final String LOG_DELETE = "/log_delete";
         public static final String MOVE_MOUSE = "/move_mouse";
         public static final String NETSTAT = "/netstat";
         public static final String REBOOT = "/reboot";
@@ -96,6 +97,7 @@ public class TaskDescriptions {
                 KILL_SAFARI =
                 "Executes os level kill command on all instance of Safari";
         public static final String KILL_PID = "Kills a given process id";
+        public static final String LOG_DELETE = "Delete logs older than X Days. X is define in the config.json";
         public static final
         String
                 MOVE_MOUSE =
