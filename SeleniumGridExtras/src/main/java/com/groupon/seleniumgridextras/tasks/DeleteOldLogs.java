@@ -30,24 +30,24 @@ public class DeleteOldLogs extends ExecuteOSTask {
         String path = String.format("forfiles -p \"%s\" -s -m *.* /D -%s /C \"cmd /c del @path\""
             , RuntimeConfig.getConfig().getLogsDirectory().getAbsolutePath()
             , RuntimeConfig.getConfig().getLogCleaningDays());
-        logReboot();
-        System.out.println(path);
+        logDeleteLogs();
         return path;
     }
 
     @Override
     public String getMacCommand() {
-        logReboot();
+        logger.info("Not implemented yet !");
+//        logDeleteLogs();
         return getMacCommand("");
     }
 
     @Override
     public String getMacCommand(String param) {
-        logReboot();
+//        logDeleteLogs();
         return "";
     }
 
-    protected void logReboot() {
-        logger.info("");
+    protected void logDeleteLogs() {
+        logger.info(String.format("Deleting all Logs older than %s Days", RuntimeConfig.getConfig().getLogCleaningDays()));
     }
 }
