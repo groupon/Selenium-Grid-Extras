@@ -92,8 +92,6 @@ public class StopGrid extends ExecuteOSTask {
       return processKiller.getWindowsCommand(portInfo.get(JsonCodec.OS.PID).toString());
     }
     return "";
-    //return "FOR /F \"usebackq tokens=2\" %i IN (`tasklist /V ^| findstr \"" + port
-    //       + ".bat\"`) DO taskkill /PID %i";
   }
 
   public String getWindowsCommand(int port) {

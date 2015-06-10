@@ -34,9 +34,7 @@ public class StopGridTest {
   @Test
   public void testGetWindowsCommand() throws Exception {
     assertEquals(
-        "FOR /F \"usebackq tokens=2\" %i IN (`tasklist /V ^| findstr \"5555.bat\"`) DO taskkill /PID %i",
-        task.getWindowsCommand(
-            "5555"));
+        "",task.getWindowsCommand("5555"));
   }
 
   @Test

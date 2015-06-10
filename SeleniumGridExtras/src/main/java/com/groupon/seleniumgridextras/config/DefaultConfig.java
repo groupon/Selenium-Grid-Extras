@@ -51,6 +51,8 @@ public class DefaultConfig {
     public static final String DEFAULT_HUB_PORT = "4444";
     public static final String DEFAULT_SHARED_DIRECTORY = "shared";
 
+    public static final String LOG_MAXIMUM_SIZE = "300000";
+
     public static final String BOOTSTRAP_CSS = "/bootstrap.3.2.0.min.css";
     public static final String BOOTSTRAP_JS = "/bootstrap.3.2.0.min.js";
     public static final String JQUERY_JS = "/jquery.1.11.1.min.js";
@@ -103,6 +105,8 @@ public class DefaultConfig {
         loadDefaultVideoRecordingOptions();
         loadHTTPOptions();
         loadHtmlRenderOptions();
+
+        loadLogConfig();
 
         loadSessionLogDir();
 
@@ -225,6 +229,9 @@ public class DefaultConfig {
         config.getChromeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
     }
 
+    private static void loadLogConfig() {
+        config.setLogMaximumSize(LOG_MAXIMUM_SIZE);
+    }
 
     private static void loadEnabledPlugins() {
 
@@ -257,6 +264,7 @@ public class DefaultConfig {
         config.addActivatedModules(SystemInfo.class.getCanonicalName());
         config.addActivatedModules(GetNodeConfig.class.getCanonicalName());
         config.addActivatedModules(UpdateNodeConfig.class.getCanonicalName());
+        config.addActivatedModules(DeleteOldLogsTask.class.getCanonicalName());
 
         config.addActivatedModules(AutoUpgradeDrivers.class.getCanonicalName());
         config.addActivatedModules(DownloadWebdriver.class.getCanonicalName());
