@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.net.InetSocketAddress;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class StopGridTest {
 
@@ -33,8 +34,7 @@ public class StopGridTest {
 
   @Test
   public void testGetWindowsCommand() throws Exception {
-    assertEquals(
-        "",task.getWindowsCommand("5555"));
+    assertTrue(task.getWindowsCommand("5555").contains("taskkill -F -IM "));
   }
 
   @Test
