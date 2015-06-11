@@ -39,14 +39,14 @@
 package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.google.common.base.Throwables;
+import com.groupon.seleniumgridextras.config.capabilities.BrowserType;
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
 import com.groupon.seleniumgridextras.utilities.threads.SessionHistoryCallable;
-import com.groupon.seleniumgridextras.utilities.JsonWireCommandTranslator;
-
-import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.video.RemoteVideoRecordingControlCallable;
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoDownloaderCallable;
 import org.apache.log4j.Logger;
@@ -56,16 +56,16 @@ import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
+import org.openqa.selenium.remote.CapabilityType;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
@@ -138,6 +138,22 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     public void afterSession(TestSession session) {
         super.afterSession(session);
 
+        Map<String, Object> cap = session.getRequestedCapabilities();
+        String browser = (String) cap.get(CapabilityType.BROWSER_NAME);
+
+        if (browser.equals(BrowserType.IE) ||
+                browser.equals(BrowserType.IEXPLORE) ||
+                browser.equals(BrowserType.IE_HTA) ||
+                browser.equals(BrowserType.IEXPLORE_PROXY)) {
+            CommonThreadPool.startCallable(
+                    new RemoteGridExtrasAsyncCallable(
+                            this.getRemoteHost().getHost(),
+                            3000,
+                            TaskDescriptions.Endpoints.KILL_IE,
+                            new HashMap<String, String>()));
+        }
+
+
         // Stop and download video only if the external session has been established
         if (session.getExternalKey() != null) {
             stopVideoRecording(session);
@@ -160,7 +176,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                 new NodeRestartCallable(
                         this,
                         session));
-
     }
 
     private boolean alreadyRecordingCurrentSession(TestSession session) {
