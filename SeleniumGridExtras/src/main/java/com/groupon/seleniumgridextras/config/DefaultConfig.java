@@ -83,6 +83,7 @@ public class DefaultConfig {
     public static final int CONFIG_PULLER_HTTP_TIMEOUT = 5000;
     public static final File SESSION_LOG_DIRECTORY = new File("log", "session_logs");
     public static final int VIDEOS_TO_KEEP = 40;
+    public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
     private static Config config;
     private static final String webDriverDefaultVersion = "2.41.0";
     private static final String ieDriverDefaultVersion = "2.41.0";
@@ -105,12 +106,17 @@ public class DefaultConfig {
         loadDefaultVideoRecordingOptions();
         loadHTTPOptions();
         loadHtmlRenderOptions();
+        loadGridExtrasReleaseUrl();
 
         loadLogConfig();
 
         loadSessionLogDir();
 
         return config;
+    }
+
+    public static void loadGridExtrasReleaseUrl(){
+         config.setGridExtrasReleaseUrl(DEFAULT_GRID_EXTRAS_RELEASE_URL);
     }
 
     public static void loadSessionLogDir() {

@@ -55,6 +55,7 @@ public class Config {
     public static final String LOG_MAXIMUM_SIZE = "log_maximum_size";
 
     public static final String HOST_IP = "host";
+    public static final String GRID_EXTRAS_RELEASE_URL = "grid_extras_release_url";
 
 
     private static Logger logger = Logger.getLogger(Config.class);
@@ -63,6 +64,7 @@ public class Config {
     protected Map theConfigMap;
     protected List<GridNode> gridNodeList;
     protected List<GridHub> gridHubList;
+    private String gridExtrasReleaseUrl;
 
     public Config() {
         theConfigMap = new HashMap();
@@ -523,5 +525,13 @@ public class Config {
 
     public String getHostIp() {
         return (String) getConfigMap().get(HOST_IP);
+    }
+
+    public void setGridExtrasReleaseUrl(String url) {
+        getConfigMap().put(GRID_EXTRAS_RELEASE_URL, url);
+    }
+
+    public String getGridExtrasReleaseUrl() {
+        return (String) getConfigMap().get(GRID_EXTRAS_RELEASE_URL);
     }
 }

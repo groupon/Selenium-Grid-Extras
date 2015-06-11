@@ -110,4 +110,5 @@ public abstract class Downloader {
   public abstract void setDestinationFile(String destination);
   public abstract void setDestinationDir(String dir);
 
+
 }
