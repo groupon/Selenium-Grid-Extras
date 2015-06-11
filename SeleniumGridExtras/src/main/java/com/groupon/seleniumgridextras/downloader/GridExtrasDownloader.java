@@ -23,7 +23,6 @@ public class GridExtrasDownloader extends Downloader {
     public static final String BROWSER_DOWNLOAD_URL = "browser_download_url";
     private final String releaseApiUrl;
     private String version;
-    private String jarUrl = "";
 
     private static Logger logger = Logger.getLogger(GridExtrasDownloader.class);
 

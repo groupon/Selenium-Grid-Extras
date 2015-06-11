@@ -85,4 +85,13 @@ public class GridExtrasDownloaderTest {
 
     }
 
+    @Test
+    public void testBadVersion() throws Exception{
+        GridExtrasDownloader downloader2 = new GridExtrasDownloader();
+
+        downloader2.setVersion("aaaaa");
+        assertEquals(false , downloader2.download());
+        assertEquals(0, testDir.listFiles().length);
+    }
+
 }
