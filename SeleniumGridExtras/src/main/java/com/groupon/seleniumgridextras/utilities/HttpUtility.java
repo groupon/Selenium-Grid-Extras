@@ -1,9 +1,9 @@
 package com.groupon.seleniumgridextras.utilities;
 
+import com.google.common.base.Throwables;
 import com.groupon.seleniumgridextras.VideoHttpExecutor;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -13,7 +13,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
 
 
 public class HttpUtility {
@@ -65,9 +64,9 @@ public class HttpUtility {
         //Don't modify this without running the comment out tests!
 
         File destinationDir;
-        if ( RuntimeConfig.getConfig() != null ){
+        if (RuntimeConfig.getConfig() != null) {
             destinationDir = RuntimeConfig.getConfig().getVideoRecording().getOutputDir();
-        }   else {
+        } else {
             destinationDir = new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY);
         }
 
@@ -97,6 +96,26 @@ public class HttpUtility {
         }
 
         return destFile;
+    }
+
+    public static int checkIfUrlStatusCode(URL u) {
+
+        HttpURLConnection huc = null;
+        try {
+
+            huc = (HttpURLConnection) u.openConnection();
+            huc.setRequestMethod("GET");
+            huc.setInstanceFollowRedirects(true);
+            huc.connect();
+//            OutputStream os = huc.getOutputStream();
+            return huc.getResponseCode();
+        } catch (IOException e) {
+            String message = String.format("URL: %s, \n %s", u, Throwables.getStackTraceAsString(e));
+            System.out.println(message);
+            logger.warn(message);
+        }
+
+        return -1;
     }
 
 
