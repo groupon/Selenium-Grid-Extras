@@ -5,6 +5,7 @@ import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -21,11 +22,23 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
         setRequestType("GET");
         setResponseType("json");
         setClassname(this.getClass().getCanonicalName().toString());
+        addResponseDescription(JsonCodec.LOGS_DELETED, "List of logs deleted");
         setEnabledInGui(true);
     }
 
     @Override
     public JsonObject execute() {
+
+        List<String> listOfFilesAsString = new LinkedList<String>();
+
+        for (File f : deleteOldLogs(
+                RuntimeConfig.getConfig().getLogMaximumSize(),
+                RuntimeConfig.getConfig().getLogsDirectory())) {
+            listOfFilesAsString.add(f.getAbsolutePath());
+        }
+
+
+        getJsonResponse().addKeyValues(JsonCodec.LOGS_DELETED, listOfFilesAsString);
         return getJsonResponse().getJson();
     }
 
@@ -44,9 +57,12 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
     public boolean initialize() {
 
         try {
-            List<File> deletedFiles = deleteOldLogs(RuntimeConfig.getConfig().getLogMaximumSize(), RuntimeConfig.getConfig().getLogsDirectory());
+            List<File> deletedFiles = deleteOldLogs(
+                    RuntimeConfig.getConfig().getLogMaximumSize(),
+                    RuntimeConfig.getConfig().getLogsDirectory()
+            );
 
-            for(File log : deletedFiles){
+            for (File log : deletedFiles) {
                 logger.info(String.format("Deleted log %s", log.getAbsolutePath()));
             }
         } catch (Exception error) {
@@ -83,7 +99,7 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
 
             try {
                 currentFile.delete();
-            } catch (Exception e){
+            } catch (Exception e) {
                 logger.warn(String.format(
                         "Error deleting log file %s, error: %s, \n %s",
                         currentFile.getAbsolutePath(),
