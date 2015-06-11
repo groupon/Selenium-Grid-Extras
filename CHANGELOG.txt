@@ -1,3 +1,7 @@
+1.8.0 - Improve IE post build clean up, to clear all history and cache
+      - Clear up logs once they reach a certain size
+      - issue #140: Changed the WebDriverReleaseManager urls to https
+      - pull #106: fixed the StopGrid command for Windows
 1.7.1 - [BUG] Fixing a situation where sometimes the nodes are idle but hub cannot connect to them
 1.7.0 - Hub will attempt to download the video from each node and collect them in 1 place, so user can view the test run from the http://hub:3000
       - Set default videos to keep to be 30 instead of 10
