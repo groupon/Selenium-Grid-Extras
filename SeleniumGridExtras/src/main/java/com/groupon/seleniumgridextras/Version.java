@@ -51,4 +51,8 @@ public class Version {
     }
     return prop.getProperty("project.version");
   }
+
+    public static String getSanitizedVersion(){
+        return getVersion().replaceAll("-SNAPSHOT", "");
+    }
 }
