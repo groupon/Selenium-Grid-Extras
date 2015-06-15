@@ -2,6 +2,7 @@ package com.groupon.seleniumgridextras.utilities.threads;
 
 import com.google.common.base.Throwables;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
@@ -50,7 +51,7 @@ public class SessionHistoryCallable implements Callable {
             URIBuilder uri = new URIBuilder();
             uri.setScheme("http");
             uri.setHost(getSession().getSlot().getRemoteURL().getHost());
-            uri.setPort(3000);
+            uri.setPort(RuntimeConfig.getGridExtrasPort());
             uri.setPath(TaskDescriptions.Endpoints.GRID_STATUS);
             if (getSession().getExternalKey() != null) {
                 uri.addParameter(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM, getSession().getExternalKey().getKey());

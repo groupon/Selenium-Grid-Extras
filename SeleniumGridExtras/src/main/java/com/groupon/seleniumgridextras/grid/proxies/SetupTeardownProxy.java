@@ -39,6 +39,7 @@
 package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.google.common.base.Throwables;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.BrowserType;
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
@@ -110,7 +111,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             host,
-                            3000,
+                            RuntimeConfig.getGridExtrasPort(),
                             TaskDescriptions.Endpoints.SETUP,
                             new HashMap<String, String>()));
 
@@ -148,7 +149,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             this.getRemoteHost().getHost(),
-                            3000,
+                            RuntimeConfig.getGridExtrasPort(),
                             TaskDescriptions.Endpoints.KILL_IE,
                             new HashMap<String, String>()));
         }
@@ -167,7 +168,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         this.getRemoteHost().getHost(),
-                        3000,
+                        RuntimeConfig.getGridExtrasPort(),
                         TaskDescriptions.Endpoints.TEARDOWN,
                         new HashMap<String, String>()));
 
@@ -253,7 +254,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         this.getRemoteHost().getHost(),
-                        3000,
+                        RuntimeConfig.getGridExtrasPort(),
                         TaskDescriptions.Endpoints.STOP_GRID,
                         params));
 
@@ -270,7 +271,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         host,
-                        3000,
+                        RuntimeConfig.getGridExtrasPort(),
                         TaskDescriptions.Endpoints.REBOOT,
                         new HashMap<String, String>()));
         try {

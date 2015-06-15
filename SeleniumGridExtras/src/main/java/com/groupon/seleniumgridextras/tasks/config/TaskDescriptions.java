@@ -36,6 +36,7 @@ public class TaskDescriptions {
         public static final String UPDATE_NODE_CONFIG = "/update_node_config";
         public static final String VIDEO = "/video";
         public static final String SESSION_HISTORY = "/session_history";
+        public static final String UPGRADE_GRID_EXTRAS = "/upgrade_grid_extras";
     }
 
 
@@ -127,6 +128,7 @@ public class TaskDescriptions {
         public static final String VIDEO = "Starts and stops video recording";
         public static final String SESSION_HISTORY = "Displays the threads of test session on all nodes or per node basis";
         public static final String IE_MIXED_CONTENT = "Changes mixed content for Internet Explorer on/off. No param for current status";
+        public static final String UPGRADE_GRID_EXTRAS = "Download specified version of Selenium Grid Extras";
     }
 
     public static class HTTP {

@@ -4,22 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
-
 import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
 import com.groupon.seleniumgridextras.config.driver.DriverInfo;
 import com.groupon.seleniumgridextras.config.driver.IEDriver;
 import com.groupon.seleniumgridextras.config.driver.WebDriver;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
-
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Config {
 
@@ -56,6 +50,7 @@ public class Config {
 
     public static final String HOST_IP = "host";
     public static final String GRID_EXTRAS_RELEASE_URL = "grid_extras_release_url";
+    public static final String GRID_EXTRAS_AUTO_UPDATE = "grid_extras_auto_update";
 
 
     private static Logger logger = Logger.getLogger(Config.class);
@@ -64,7 +59,6 @@ public class Config {
     protected Map theConfigMap;
     protected List<GridNode> gridNodeList;
     protected List<GridHub> gridHubList;
-    private String gridExtrasReleaseUrl;
 
     public Config() {
         theConfigMap = new HashMap();
@@ -534,4 +528,25 @@ public class Config {
     public String getGridExtrasReleaseUrl() {
         return (String) getConfigMap().get(GRID_EXTRAS_RELEASE_URL);
     }
+
+
+    public void setGridExtrasAutoUpdate(boolean gridExtrasAutoUpdate) {
+        if(gridExtrasAutoUpdate){
+            getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE, "1");
+        }   else {
+            getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE, "0");
+        }
+    }
+
+    public boolean getGridExtrasAutoUpdate(){
+        if (getConfigMap().containsKey(GRID_EXTRAS_AUTO_UPDATE)){
+            if(getConfigMap().get(GRID_EXTRAS_AUTO_UPDATE).equals("1")){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
 }

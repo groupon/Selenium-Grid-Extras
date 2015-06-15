@@ -17,6 +17,18 @@ public class JsonCodec {
     public static final String COMMAND = "command";
     public static final String LOGS_DELETED = "logs_deleted";
 
+    public static class GridExtras{
+
+        public static final String VERSION = "version";
+        public static final String CURRENT_VERSION = "current_version";
+        public static final String CURRENT_GRID_EXTRAS_FILE = "current_grid_extras_file";
+        public static final String NEW_VERSION = "new_version";
+        public static final String VERSION_GRID_EXTRAS_FILE = "version_grid_extras_file";
+        public static final String REMOTE_JAR_URL = "remote_jar_url";
+        public static final String DOWNLOADED_FILE_SIZE = "downloaded_file_size";
+        public static final String ALL_AVAILABLE_RELEASES = "all_available_releases";
+    }
+
     public static class SessionLogging {
 
         public static final String NEW = "new";

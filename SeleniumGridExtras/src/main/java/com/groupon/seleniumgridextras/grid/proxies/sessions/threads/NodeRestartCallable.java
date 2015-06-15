@@ -1,6 +1,6 @@
 package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
 
-import com.google.gson.JsonObject;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
 import com.groupon.seleniumgridextras.tasks.GridStatus;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
@@ -10,7 +10,6 @@ import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.internal.TestSession;
-import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +61,7 @@ public class NodeRestartCallable implements Callable {
             Future<String> f = CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             proxy.getRemoteHost().getHost(),
-                            3000,
+                            RuntimeConfig.getGridExtrasPort(),
                             TaskDescriptions.Endpoints.GRID_STATUS,
                             new HashMap<String, String>()));
 

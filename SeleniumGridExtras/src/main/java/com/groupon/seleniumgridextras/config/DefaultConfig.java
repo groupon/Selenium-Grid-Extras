@@ -37,9 +37,8 @@
 package com.groupon.seleniumgridextras.config;
 
 
-import com.groupon.seleniumgridextras.tasks.*;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
-
+import com.groupon.seleniumgridextras.tasks.*;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import java.io.File;
@@ -115,8 +114,9 @@ public class DefaultConfig {
         return config;
     }
 
-    public static void loadGridExtrasReleaseUrl(){
-         config.setGridExtrasReleaseUrl(DEFAULT_GRID_EXTRAS_RELEASE_URL);
+    public static void loadGridExtrasReleaseUrl() {
+        config.setGridExtrasReleaseUrl(DEFAULT_GRID_EXTRAS_RELEASE_URL);
+        config.setGridExtrasAutoUpdate(false);
     }
 
     public static void loadSessionLogDir() {
@@ -277,6 +277,8 @@ public class DefaultConfig {
         config.addActivatedModules(DownloadIEDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadChromeDriver.class.getCanonicalName());
         config.addActivatedModules(SessionHistory.class.getCanonicalName());
+
+        config.addActivatedModules(UpgradeGridExtrasTask.class.getCanonicalName());
     }
 
     private static void loadDisabledPlugins() {

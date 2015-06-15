@@ -57,7 +57,10 @@ import java.util.Map;
 
 public class SeleniumGridExtras {
 
-    public static final String START_UP_COMPLETE = "\nSelenium Grid Extras has been started!\nNavigate to http://localhost:3000 for more details";
+    public static final String START_UP_COMPLETE = String.format(
+            "\nSelenium Grid Extras has been started!\nNavigate to http://%s:%s for more details",
+            RuntimeConfig.getOS().getHostIp(),
+            RuntimeConfig.getGridExtrasPort());
     private static Logger logger = Logger.getLogger(SeleniumGridExtras.class);
 
     public static void main(String[] args) throws Exception {

@@ -95,7 +95,7 @@ public class ConfigPusher {
     return new URIBuilder()
         .setScheme("http")
         .setHost(host)
-        .setPort(3000)
+        .setPort(RuntimeConfig.getGridExtrasPort())
         .setPath("/update_node_config")
         .addParameter("node", this.nodeName)
         .addParameter("filename", filename)

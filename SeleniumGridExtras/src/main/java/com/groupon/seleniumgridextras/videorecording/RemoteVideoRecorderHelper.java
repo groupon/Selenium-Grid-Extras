@@ -1,5 +1,6 @@
 package com.groupon.seleniumgridextras.videorecording;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -21,7 +22,7 @@ public class RemoteVideoRecorderHelper {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(3000);
+        builder.setPort(RuntimeConfig.getGridExtrasPort());
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.START);
@@ -32,7 +33,7 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                3000,
+                RuntimeConfig.getGridExtrasPort(),
                 session,
                 JsonCodec.Video.START,
                 params.toString());
@@ -55,7 +56,7 @@ public class RemoteVideoRecorderHelper {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(3000);
+        builder.setPort(RuntimeConfig.getGridExtrasPort());
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.STOP);
@@ -65,7 +66,7 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                3000,
+                RuntimeConfig.getGridExtrasPort(),
                 session,
                 JsonCodec.Video.STOP,
                 params.toString());
@@ -87,7 +88,7 @@ public class RemoteVideoRecorderHelper {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(3000);
+        builder.setPort(RuntimeConfig.getGridExtrasPort());
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.HEARTBEAT);
@@ -99,7 +100,7 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                3000,
+                RuntimeConfig.getGridExtrasPort(),
                 session,
                 JsonCodec.Video.HEARTBEAT,
                 params.toString());

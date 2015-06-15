@@ -7,6 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -90,8 +94,47 @@ public class GridExtrasDownloaderTest {
         GridExtrasDownloader downloader2 = new GridExtrasDownloader();
 
         downloader2.setVersion("aaaaa");
-        assertEquals(false , downloader2.download());
+        assertEquals(false, downloader2.download());
         assertEquals(0, testDir.listFiles().length);
+    }
+
+    @Test
+    public void testGetAllAssets() throws Exception{
+        List<Map<String,String>> actual = downloader.getAllDownloadableAssets();
+        int actualSize = actual.size();
+
+        assertTrue(actualSize > 0);
+
+        assertEquals("SeleniumGridExtras-1.1.9-SNAPSHOT-jar-with-dependencies.jar",
+                actual.get(actualSize - 1).keySet().toArray()[0]);
+
+        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/1.1.9/SeleniumGridExtras-1.1.9-SNAPSHOT-jar-with-dependencies.jar",
+                actual.get(actualSize - 1).values().toArray()[0]);
+
+
+        assertEquals("SeleniumGridExtras-1.2.4-SNAPSHOT-jar-with-dependencies.jar",
+                actual.get(actualSize - 5).keySet().toArray()[0]);
+
+        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.2.4/SeleniumGridExtras-1.2.4-SNAPSHOT-jar-with-dependencies.jar",
+                actual.get(actualSize - 5).values().toArray()[0]);
+    }
+
+    @Test
+    public void testSanitizeVersions() throws Exception{
+
+        List<Map<String, String>> inputList = new LinkedList<Map<String, String>>();
+        Map<String, String> tempInputMap = new HashMap<String, String>();
+        tempInputMap.put("SeleniumGridExtras-1.6.1-SNAPSHOT-jar-with-dependencies.jar", "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.6.1/SeleniumGridExtras-1.6.1-SNAPSHOT-jar-with-dependencies.jar");
+        inputList.add(tempInputMap);
+
+
+        List<Map<String, String>> expectedList = new LinkedList<Map<String, String>>();
+        Map<String, String> tempOutputMa = new HashMap<String, String>();
+        tempOutputMa.put("1.6.1", "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.6.1/SeleniumGridExtras-1.6.1-SNAPSHOT-jar-with-dependencies.jar");
+        expectedList.add(tempOutputMa);
+
+        assertEquals(expectedList, GridExtrasDownloader.sanitizeDownloadableAssetsVersions(inputList));
+
     }
 
 }

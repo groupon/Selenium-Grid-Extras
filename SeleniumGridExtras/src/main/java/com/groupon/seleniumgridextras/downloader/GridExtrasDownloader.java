@@ -14,8 +14,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class GridExtrasDownloader extends Downloader {
     public static final String ASSETS_KEY = "assets";
@@ -35,23 +34,30 @@ public class GridExtrasDownloader extends Downloader {
     }
 
     @Override
-    protected boolean startDownload(){
+    protected boolean startDownload() {
         try {
             URL url = new URL(getJarUrl());
+
+            int statusCode = HttpUtility.checkIfUrlStatusCode(url);
+            if (statusCode != 200) {
+                setErrorMessage(String.format("URL %s returned %s", url, statusCode));
+                return false;
+            }
+
             logger.info("Starting to download from " + url);
             FileUtils.copyURLToFile(url, getDestinationFileFullPath());
             logger.info("Download complete");
             return true;
-        } catch (MalformedURLException error){
+        } catch (MalformedURLException error) {
             logger.error(Throwables.getStackTraceAsString(error));
             setErrorMessage(error.toString());
         } catch (IOException error) {
             logger.error(Throwables.getStackTraceAsString(error));
             setErrorMessage(error.toString());
-        } catch (URISyntaxException error){
+        } catch (URISyntaxException error) {
             logger.error(Throwables.getStackTraceAsString(error));
             setErrorMessage(error.toString());
-        } catch (Exception error){
+        } catch (Exception error) {
             logger.error(Throwables.getStackTraceAsString(error));
             setErrorMessage(error.toString());
         }
@@ -61,7 +67,7 @@ public class GridExtrasDownloader extends Downloader {
 
     @Override
     public void setSourceURL(String source) {
-       //NOT USED
+        //NOT USED
     }
 
     @Override
@@ -82,7 +88,7 @@ public class GridExtrasDownloader extends Downloader {
         return version;
     }
 
-    public String getJarName(String version){
+    public String getJarName(String version) {
         return String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar", version);
     }
 
@@ -90,35 +96,69 @@ public class GridExtrasDownloader extends Downloader {
     public String getJarUrl() throws IOException, URISyntaxException {
         String versionToFind = getJarName(getVersion());
         logger.info("Looking for grid extras " + versionToFind);
+        List<Map<String, String>> downloadableAssets = getAllDownloadableAssets();
+        for (Map<String, String> currentRelease : downloadableAssets) {
+            if (versionToFind.equals(currentRelease.keySet().toArray()[0])) {
+                return String.valueOf(currentRelease.values().toArray()[0]);
+            }
+        }
+        return "";
+    }
 
-        for (LinkedTreeMap a : (List<LinkedTreeMap>) getReleaseUrl()) {
-            if (a.containsKey(ASSETS_KEY)) {
-                ArrayList listOfAssets = (ArrayList) a.get(ASSETS_KEY);
+    public static List<Map<String, String>> sanitizeDownloadableAssetsVersions(List<Map<String, String>> input) {
 
-                for (int i = 0; i < listOfAssets.size(); i++) {
+        List<Map<String, String>> sanitized = new LinkedList<Map<String, String>>();
 
-                    LinkedTreeMap currentAsset = (LinkedTreeMap) listOfAssets.get(i);
+        for (Map<String, String> currentVersion : input) {
+            Map<String, String> tempMap = new HashMap<String, String>();
+            tempMap.put(
+                    currentVersion.keySet().toArray()[0].toString()
+                            .replace("SeleniumGridExtras-", "")
+                            .replace("-SNAPSHOT-jar-with-dependencies.jar",
+                                    ""),
+                    currentVersion.values().toArray()[0].toString());
+
+
+            sanitized.add(tempMap);
+        }
+
+        return sanitized;
+    }
+
+    public List<Map<String, String>> getAllDownloadableAssets() throws IOException, URISyntaxException {
+        List<Map<String, String>> releaseList = new LinkedList<Map<String, String>>();
+
+        List<LinkedTreeMap> releases = parseAllReleases();
+
+        for (LinkedTreeMap currentRelease : releases) {
+            if (currentRelease.containsKey(ASSETS_KEY)) {
+                ArrayList listOfAssetsForCurrentRelease = (ArrayList) currentRelease.get(ASSETS_KEY);
+
+                for (int i = 0; i < listOfAssetsForCurrentRelease.size(); i++) {
+                    LinkedTreeMap currentAsset = (LinkedTreeMap) listOfAssetsForCurrentRelease.get(i);
 
                     if (currentAsset.containsKey(NAME_KEY) && currentAsset.containsKey(BROWSER_DOWNLOAD_URL)) {
-
-                        if (versionToFind.equals(currentAsset.get(NAME_KEY))) {
-                            return currentAsset.get(BROWSER_DOWNLOAD_URL).toString();
-                        }
+                        Map<String, String> tempMap = new HashMap<String, String>();
+                        tempMap.put(currentAsset.get(NAME_KEY).toString(), currentAsset.get(BROWSER_DOWNLOAD_URL).toString());
+                        releaseList.add(tempMap);
                     } else {
                         malformedApiResponse(NAME_KEY + " or " + BROWSER_DOWNLOAD_URL, getReleaseApiUrl(), currentAsset.toString());
                     }
+
                 }
+
+
             } else {
-                malformedApiResponse(ASSETS_KEY, getReleaseApiUrl(), a.toString());
+                malformedApiResponse(ASSETS_KEY, getReleaseApiUrl(), currentRelease.toString());
             }
+
         }
 
-
-        return this.releaseApiUrl;
+        return releaseList;
     }
 
-    private List getReleaseUrl() throws URISyntaxException, IOException {
-        return JsonParserWrapper.toList(HttpUtility.getRequestAsString(new URI(this.releaseApiUrl)));
+    private List<LinkedTreeMap> parseAllReleases() throws URISyntaxException, IOException {
+        return (List<LinkedTreeMap>) JsonParserWrapper.toList(HttpUtility.getRequestAsString(new URI(this.releaseApiUrl)));
     }
 
     private void malformedApiResponse(String key, String url, String json) {

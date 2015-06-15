@@ -3,7 +3,6 @@ package com.groupon.seleniumgridextras.tasks;
 
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
-
 import com.groupon.seleniumgridextras.VideoHttpExecutor;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
@@ -15,12 +14,9 @@ import org.apache.http.client.utils.URIBuilder;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class VideoRecorder extends ExecuteOSTask {
@@ -228,7 +224,7 @@ public class VideoRecorder extends ExecuteOSTask {
       URIBuilder uriBuilder = new URIBuilder();
       uriBuilder.setScheme("http");
       uriBuilder.setHost(RuntimeConfig.getHostIp());
-      uriBuilder.setPort(3000);
+      uriBuilder.setPort(RuntimeConfig.getGridExtrasPort());
       uriBuilder.setPath(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT + "/" + fileName);
 
       return uriBuilder.build().toString();

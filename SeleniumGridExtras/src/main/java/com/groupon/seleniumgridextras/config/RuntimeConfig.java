@@ -56,10 +56,10 @@ import java.util.Map;
 
 public class RuntimeConfig {
 
-  private static String configFile = "selenium_grid_extras_config.json";
+  public static String configFile = "selenium_grid_extras_config.json";
   private static Config config = null;
   private static OS currentOS = new OS();
-  private final static int gridExtrasPort = 3000;
+  public final static int gridExtrasPort = 3000;
   private static Logger logger = Logger.getLogger(RuntimeConfig.class);
   private static WebDriverReleaseManager releaseManager;
   private static SessionTracker sessionTracker;
