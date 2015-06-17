@@ -427,7 +427,7 @@ public class Config {
     }
 
     public int getLogMaximumSize(){
-        return Integer.getInteger(getConfigMap().get(LOG_MAXIMUM_SIZE).toString());
+        return Integer.valueOf(getConfigMap().get(LOG_MAXIMUM_SIZE).toString());
     }
 
     public void setLogMaximumSize(String size) {
