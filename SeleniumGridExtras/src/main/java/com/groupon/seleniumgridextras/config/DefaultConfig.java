@@ -50,7 +50,7 @@ public class DefaultConfig {
     public static final String DEFAULT_HUB_PORT = "4444";
     public static final String DEFAULT_SHARED_DIRECTORY = "shared";
 
-    public static final String LOG_MAXIMUM_SIZE = "100000";
+    public static final String LOG_MAXIMUM_SIZE = "20000000";
 
     public static final String BOOTSTRAP_CSS = "/bootstrap.3.2.0.min.css";
     public static final String BOOTSTRAP_JS = "/bootstrap.3.2.0.min.js";
@@ -241,6 +241,7 @@ public class DefaultConfig {
 
     private static void loadEnabledPlugins() {
 
+        config.addActivatedModules(DeleteOldLogsTask.class.getCanonicalName());
         config.addActivatedModules(Setup.class.getCanonicalName());
         config.addActivatedModules(Teardown.class.getCanonicalName());
         config.addActivatedModules(MoveMouse.class.getCanonicalName());
@@ -270,7 +271,6 @@ public class DefaultConfig {
         config.addActivatedModules(SystemInfo.class.getCanonicalName());
         config.addActivatedModules(GetNodeConfig.class.getCanonicalName());
         config.addActivatedModules(UpdateNodeConfig.class.getCanonicalName());
-        config.addActivatedModules(DeleteOldLogsTask.class.getCanonicalName());
 
         config.addActivatedModules(AutoUpgradeDrivers.class.getCanonicalName());
         config.addActivatedModules(DownloadWebdriver.class.getCanonicalName());
