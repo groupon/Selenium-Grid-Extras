@@ -109,7 +109,9 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
         File destinationJar = new File(RuntimeConfig.getSeleniungGridExtrasHomePath(),
                 String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar", latestVersion));
         try {
-            writeStartShellFile(destinationJar);
+            writeStartShellFile(new File(RuntimeConfig.getSeleniungGridExtrasHomePath(),
+                    String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar",
+                            Version.getSanitizedVersion())));
         } catch (IOException e) {
             printInitilizedFailure();
             logger.error(Throwables.getStackTraceAsString(e));
@@ -140,6 +142,14 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
             }
 
             message = spacer + message + "\n**************************************\n\n\n";
+
+            try {
+                writeStartShellFile(destinationJar);
+            } catch (IOException e) {
+                logger.error(Throwables.getStackTraceAsString(e));
+                e.printStackTrace();
+            }
+
         } else {
             message = spacer + message + "\n**************************************\n\n";
             message = spacer + message + "Selenium Grid Extras is out of date" + "\n";
@@ -234,6 +244,8 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
                             String.format("Error downloading Selenium Grid Extras Jar, %s, Are you sure the requested version exists?",
                                     downloader.getErrorMessage()));
                 } else {
+
+                    writeStartShellFile(destinationJar);
 
                     if (destinationJar.exists()) {
                         getJsonResponse().addKeyValues(JsonCodec.GridExtras.VERSION_GRID_EXTRAS_FILE, destinationJar.getAbsolutePath());
