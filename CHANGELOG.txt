@@ -1,3 +1,4 @@
+1.9.1 - Fix how the start script is being written on post update
 1.9.0 - Add self updating feature to Selenium Grid Extras
 1.8.0 - Improve IE post build clean up, to clear all history and cache
       - Clear up logs once they reach a certain size
