@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.videorecording;
+package com.groupon.seleniumgridextras.utilities.shutdownhooks;
 
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecordingThreadPool;
 import org.apache.log4j.Logger;
@@ -21,6 +21,6 @@ public class VideoShutdownHook {
         VideoRecordingThreadPool.stopAndFinalizeAllVideos();
       }
     });
-    logger.info("Shut Down Hook Attached.");
+    logger.info("Video Render Shut Down Hook Attached.");
   }
 }

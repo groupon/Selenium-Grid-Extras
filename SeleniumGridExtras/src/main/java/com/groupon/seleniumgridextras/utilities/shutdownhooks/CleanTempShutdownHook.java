@@ -55,9 +55,9 @@ public class CleanTempShutdownHook {
 
                 }
             });
-        }
 
-        logger.info("Clean TEMP dir Shutdown Hook Attached.");
+            logger.info("Clean TEMP dir Shutdown Hook Attached.");
+        }
     }
 
 }

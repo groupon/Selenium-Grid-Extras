@@ -42,11 +42,12 @@ import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
 import com.groupon.seleniumgridextras.homepage.HtmlRenderer;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
+import com.groupon.seleniumgridextras.utilities.TempUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
-import com.groupon.seleniumgridextras.videorecording.VideoShutdownHook;
+import com.groupon.seleniumgridextras.utilities.shutdownhooks.CleanTempShutdownHook;
+import com.groupon.seleniumgridextras.utilities.shutdownhooks.VideoShutdownHook;
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpServer;
-
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -152,8 +153,8 @@ public class SeleniumGridExtras {
         System.out.println(START_UP_COMPLETE);
         logger.info(START_UP_COMPLETE);
 
-        VideoShutdownHook videoShutdownHook = new VideoShutdownHook();
-        videoShutdownHook.attachShutDownHook();
+        new VideoShutdownHook().attachShutDownHook();
+        new CleanTempShutdownHook(TempUtility.getWindowsTempForCurrentUser()).attachShutDownHook();
     }
 }
 
