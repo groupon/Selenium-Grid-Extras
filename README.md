@@ -20,8 +20,10 @@ Here are the features you get by using Selenium Grid Extras vs Selenium Grid alo
 
 Running
 -------
-1. On the first run, follow the "Setup Instructions" section.
-2. After first run, a starter script start_grid_extras.sh or start_grid_extras.bat will be generated. Use the generated start script to start HUB or nodes after. This will help with automatic upgrades and downgrades
+1. On the initial execution, follow the "Setup Instructions" section.
+2. As part of the initial execution, a starter script start_grid_extras.sh or start_grid_extras.bat will be generated.
+3. After the initial execution, use the generated start script to start HUB or nodes thereafter.
+    * This will help with automatic upgrades and downgrades
 
 
 
