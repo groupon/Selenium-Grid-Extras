@@ -46,6 +46,7 @@ import static org.junit.Assert.assertEquals;
 
 public class KillAllIETest {
 
+    public static final String TASKKILL_F_T_IM_WER_FAULT = "taskkill -F -T -IM WerFault*";
     private KillAllIE task;
     private String expectedIEDriverCommand = "taskkill -F -T -IM iedriver*";
     private String expectedIECommand = "taskkill -F -T -IM iexplore*";
@@ -81,6 +82,11 @@ public class KillAllIETest {
     @Test
     public void testGetClearHistoryCommand() throws Exception{
         assertEquals(expectedHistoryCommand, task.getClearHistoryCommand());
+    }
+
+    @Test
+    public void testGetKillCrashReportCommand() throws Exception{
+        assertEquals(TASKKILL_F_T_IM_WER_FAULT, task.getKillCrashReportCommand());
     }
 
 }

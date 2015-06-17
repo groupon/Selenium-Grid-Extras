@@ -114,6 +114,10 @@ public class KillAllIE extends KillAllByName {
         return getJsonResponse().getJson();
     }
 
+    public String getKillCrashReportCommand(){
+        return "taskkill -F -T -IM WerFault*";
+    }
+
     public String getKillDriverCommand() {
         return "taskkill -F -T -IM iedriver*";
     }
