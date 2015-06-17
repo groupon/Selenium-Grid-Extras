@@ -18,6 +18,12 @@ Here are the features you get by using Selenium Grid Extras vs Selenium Grid alo
 * And much more.
 
 
+Running
+-------
+1. On the first run, follow the "Setup Instructions" section.
+2. After first run, a starter script start_grid_extras.sh or start_grid_extras.bat will be generated. Use the generated start script to start HUB or nodes after. This will help with automatic upgrades and downgrades
+
+
 
 Setup Instructions
 ------------------
@@ -65,8 +71,12 @@ java -jar Selenium-Grid-Extras-Jar.jar
 9. Finally, you will be asked if you wish to store all of the Node configs on the HUB. If you answer yes, Selenium Grid Extras will attempt to push Node's configs to the HUB. If it is successful, Selenium Grid Extras will attempt to download all of the configs from the HUB before it starts. This way all of the Node configs can be controlled directly from the HUB.
 
 
+Upgrading Grid Extras
+---------------------
+There are 2 options available for un-attended upgrades
 
-
+1. Automatic upgrades can be achieved by selected "auto update" on the first run, or setting "grid_extras_auto_update" key to have value of "1" in selenium_grid_extras_config.json
+2. Manual upgrade trigger can be achieved by making an HTTP GET request against http://node_name:3000/upgrade_grid_extras?version=X.X.X
 
 Auto Restarting Nodes
 -------------------
