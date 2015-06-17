@@ -19,4 +19,8 @@ public class TimeStampUtility {
         return new SimpleDateFormat("dd_MM_yyyy").format(getTimestamp());
     }
 
+    public static long timestampInMs(){
+      return getTimestamp().getTime();
+    }
+
 }
