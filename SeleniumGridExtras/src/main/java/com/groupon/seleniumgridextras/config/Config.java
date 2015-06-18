@@ -51,6 +51,7 @@ public class Config {
     public static final String HOST_IP = "host";
     public static final String GRID_EXTRAS_RELEASE_URL = "grid_extras_release_url";
     public static final String GRID_EXTRAS_AUTO_UPDATE = "grid_extras_auto_update";
+    public static final String LOG_MAXIMUM_AGE_MS = "log_maximum_age_ms";
 
 
     private static Logger logger = Logger.getLogger(Config.class);
@@ -549,4 +550,19 @@ public class Config {
     }
 
 
+    public void setLogMaximumAge(long milliseconds) {
+        getConfigMap().put(LOG_MAXIMUM_AGE_MS, milliseconds);
+    }
+
+    public long getLogMaximumAge(){
+        Object value = getConfigMap().get(LOG_MAXIMUM_AGE_MS);
+
+        if(value instanceof Long){
+            return ((Long) value).longValue();
+        }   else if(value instanceof String){
+            return Long.valueOf((String) value).longValue();
+        } else {
+            return DefaultConfig.LOG_MAX_AGE;
+        }
+    }
 }

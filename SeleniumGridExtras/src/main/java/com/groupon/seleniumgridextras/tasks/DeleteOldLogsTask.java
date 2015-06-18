@@ -5,6 +5,7 @@ import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
+import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.apache.log4j.Logger;
 
@@ -33,6 +34,7 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
 
         for (File f : deleteOldLogs(
                 RuntimeConfig.getConfig().getLogMaximumSize(),
+                RuntimeConfig.getConfig().getLogMaximumAge(),
                 RuntimeConfig.getConfig().getLogsDirectory())) {
             listOfFilesAsString.add(f.getAbsolutePath());
         }
@@ -55,10 +57,10 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
 
     @Override
     public boolean initialize() {
-
         try {
             List<File> deletedFiles = deleteOldLogs(
                     RuntimeConfig.getConfig().getLogMaximumSize(),
+                    RuntimeConfig.getConfig().getLogMaximumAge(),
                     RuntimeConfig.getConfig().getLogsDirectory()
             );
 
@@ -76,7 +78,7 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
 
     }
 
-    protected List<File> deleteOldLogs(long bytesLimit, File logDir) {
+    protected List<File> deleteOldLogs(long bytesLimit, long msLimit, File logDir) {
         logger.info(String.format("Deleting all Logs bigger than %s bytes from %s", bytesLimit, logDir.getAbsolutePath()));
         List<File> filesToDelete = new LinkedList<File>();
 
@@ -89,16 +91,31 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
             }
         }
 
+        for (int i = 0; i < files.length; i++) {
+            File currentFile = files[i];
+            long msRange = TimeStampUtility.timestampInMs() - currentFile.lastModified();
+
+            if (currentFile.getName().contains(".log") && msRange > msLimit) {
+                filesToDelete.add(files[i]);
+            }
+        }
+
         for (File currentFile : filesToDelete) {
             logger.info(String.format(
-                    "Deleting %s because files size %s was over the limit of %s",
+                    "Deleting %s because files age %s was over the limit of %s",
                     currentFile.getAbsolutePath(),
-                    currentFile.length(),
+                    currentFile.lastModified(),
                     bytesLimit
             ));
 
             try {
-                currentFile.delete();
+                if(currentFile.exists()){
+                    currentFile.delete();
+                } else {
+                    logger.info(String.format("Attempting to delete %s but file no longer exists",
+                            currentFile.getAbsolutePath()));
+                }
+
             } catch (Exception e) {
                 logger.warn(String.format(
                         "Error deleting log file %s, error: %s, \n %s",

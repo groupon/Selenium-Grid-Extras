@@ -46,6 +46,7 @@ import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.OS;
 
+import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -91,7 +92,7 @@ public class FirstTimeRunConfig {
             }
         }
 
-        setLogMaximumSize(defaultConfig);
+        setLogMaximumDaysToKeep(defaultConfig);
 
         setRebootAfterSessionLimit(defaultConfig);
 
@@ -234,9 +235,9 @@ public class FirstTimeRunConfig {
 
     }
 
-    private static void setLogMaximumSize(Config defaultConfig) {
-        String answer = askQuestion("Maximum log file size (bytes)", "400000000");
-        defaultConfig.setLogMaximumSize(answer);
+    private static void setLogMaximumDaysToKeep(Config defaultConfig) {
+        String answer = askQuestion("Maximum days to keep log file", "10");
+        defaultConfig.setLogMaximumAge(ValueConverter.daysToMilliseconds(Integer.valueOf(answer)));
     }
 
     private static void setRebootAfterSessionLimit(Config defaultConfig) {

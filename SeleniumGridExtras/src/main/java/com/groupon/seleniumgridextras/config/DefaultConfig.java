@@ -39,6 +39,7 @@ package com.groupon.seleniumgridextras.config;
 
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
 import com.groupon.seleniumgridextras.tasks.*;
+import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 
 import java.io.File;
@@ -51,6 +52,7 @@ public class DefaultConfig {
     public static final String DEFAULT_SHARED_DIRECTORY = "shared";
 
     public static final String LOG_MAXIMUM_SIZE = "20000000";
+    public static final long LOG_MAX_AGE = ValueConverter.daysToMilliseconds(10);
 
     public static final String BOOTSTRAP_CSS = "/bootstrap.3.2.0.min.css";
     public static final String BOOTSTRAP_JS = "/bootstrap.3.2.0.min.js";
@@ -237,6 +239,7 @@ public class DefaultConfig {
 
     private static void loadLogConfig() {
         config.setLogMaximumSize(LOG_MAXIMUM_SIZE);
+        config.setLogMaximumAge(LOG_MAX_AGE);
     }
 
     private static void loadEnabledPlugins() {
