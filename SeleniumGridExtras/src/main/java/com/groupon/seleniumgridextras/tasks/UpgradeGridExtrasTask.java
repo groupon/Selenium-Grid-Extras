@@ -125,7 +125,8 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
         String spacer = "                          ";
         String message = "";
         if (isUpToDate) {
-            message = spacer + message + "Grid Extras is Up to date!\n\n";
+            printInitilizedSuccessAndRegisterWithAPI();
+            message = "";
         } else if (!isUpToDate && RuntimeConfig.getConfig().getGridExtrasAutoUpdate()) {
 
 
@@ -145,12 +146,14 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
 
             try {
                 writeStartShellFile(destinationJar);
+                printInitilizedSuccessAndRegisterWithAPI();
             } catch (IOException e) {
                 logger.error(Throwables.getStackTraceAsString(e));
                 e.printStackTrace();
             }
 
         } else {
+            printInitilizedSuccessAndRegisterWithAPI();
             message = spacer + message + "\n**************************************\n\n";
             message = spacer + message + "Selenium Grid Extras is out of date" + "\n";
             message = spacer + message + "Current Version: " + Version.getSanitizedVersion() + "\n";
@@ -172,7 +175,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
         System.out.println(message);
         logger.info(message);
 
-        printInitilizedSuccessAndRegisterWithAPI();
+
         return true;
     }
 
