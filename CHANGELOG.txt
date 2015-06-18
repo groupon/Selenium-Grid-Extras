@@ -1,5 +1,7 @@
 1.10.0 - WhenKilling IE, kill any crash reports that might be open
        - Clean up any empty WebDriver directories in Windows Temp directory at shutdown
+       - Logs are now deleted based on time stamp and size
+       - [BUG] fix the actual deleting of old logs of certain size
 1.9.1 - Fix how the start script is being written on post update
 1.9.0 - Add self updating feature to Selenium Grid Extras
 1.8.0 - Improve IE post build clean up, to clear all history and cache
