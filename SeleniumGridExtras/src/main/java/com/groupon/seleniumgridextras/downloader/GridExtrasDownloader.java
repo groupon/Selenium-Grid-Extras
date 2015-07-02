@@ -179,9 +179,6 @@ public class GridExtrasDownloader extends Downloader {
             FileUtils.writeStringToFile(getCachedReleaseResponseFile(), response);
         }
 
-        System.out.println(response);
-
-
         return response;
     }
 
