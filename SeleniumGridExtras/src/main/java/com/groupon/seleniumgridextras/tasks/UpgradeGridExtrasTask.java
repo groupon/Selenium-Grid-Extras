@@ -75,16 +75,13 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
         }
 
 
-
-
-
         File gridExtrasHome = new File(RuntimeConfig.getSeleniungGridExtrasHomePath());
         File shellFile;
         String shellFileHeader = "";
 
-        if(RuntimeConfig.getOS().isWindows()){
+        if (RuntimeConfig.getOS().isWindows()) {
             shellFile = new File(gridExtrasHome, startGridExtrasShellFileName + ".bat");
-        }   else {
+        } else {
             shellFileHeader = "#!/bin/bash\n\n";
             shellFile = new File(gridExtrasHome, startGridExtrasShellFileName + ".sh");
         }
@@ -105,78 +102,80 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
 
     @Override
     public boolean initialize() {
-        String latestVersion = (String) getSanitizedReleaseList().get(0).keySet().toArray()[0];
-        File destinationJar = new File(RuntimeConfig.getSeleniungGridExtrasHomePath(),
-                String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar", latestVersion));
+
         try {
+
+
+            String latestVersion = (String) getSanitizedReleaseList().get(0).keySet().toArray()[0];
+            File destinationJar = new File(RuntimeConfig.getSeleniungGridExtrasHomePath(),
+                    String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar", latestVersion));
+
             writeStartShellFile(new File(RuntimeConfig.getSeleniungGridExtrasHomePath(),
                     String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar",
                             Version.getSanitizedVersion())));
-        } catch (IOException e) {
-            printInitilizedFailure();
-            logger.error(Throwables.getStackTraceAsString(e));
-        }
 
 
+            boolean isUpToDate = Version.getSanitizedVersion().equals(latestVersion);
+
+            String spacer = "                          ";
+            String message = "";
+            if (isUpToDate) {
+                printInitilizedSuccessAndRegisterWithAPI();
+                message = "";
+            } else if (!isUpToDate && RuntimeConfig.getConfig().getGridExtrasAutoUpdate()) {
 
 
-        boolean isUpToDate = Version.getSanitizedVersion().equals(latestVersion);
+                configDownloaderInstance(latestVersion, RuntimeConfig.getSeleniungGridExtrasHomePath(), destinationJar.getName());
 
-        String spacer = "                          ";
-        String message = "";
-        if (isUpToDate) {
-            printInitilizedSuccessAndRegisterWithAPI();
-            message = "";
-        } else if (!isUpToDate && RuntimeConfig.getConfig().getGridExtrasAutoUpdate()) {
+                boolean downloaded = downloader.download();
+
+                message = spacer + message + "\n**************************************\n";
+                message = spacer + message + "Attempting to self update Grid Extras";
+                message = spacer + message + String.format("Success: %s", downloaded);
+
+                if (!downloaded) {
+                    message = spacer + message + downloader.getErrorMessage();
+                }
+
+                message = spacer + message + "\n**************************************\n\n\n";
 
 
-            configDownloaderInstance(latestVersion, RuntimeConfig.getSeleniungGridExtrasHomePath(), destinationJar.getName());
-
-            boolean downloaded = downloader.download();
-
-            message = spacer + message + "\n**************************************\n";
-            message = spacer + message + "Attempting to self update Grid Extras";
-            message = spacer + message + String.format("Success: %s", downloaded);
-
-            if (!downloaded) {
-                message = spacer + message + downloader.getErrorMessage();
-            }
-
-            message = spacer + message + "\n**************************************\n\n\n";
-
-            try {
                 writeStartShellFile(destinationJar);
                 printInitilizedSuccessAndRegisterWithAPI();
-            } catch (IOException e) {
-                logger.error(Throwables.getStackTraceAsString(e));
-                e.printStackTrace();
+
+
+            } else {
+                printInitilizedSuccessAndRegisterWithAPI();
+                message = spacer + message + "\n**************************************\n\n";
+                message = spacer + message + "Selenium Grid Extras is out of date" + "\n";
+                message = spacer + message + "Current Version: " + Version.getSanitizedVersion() + "\n";
+                message = spacer + message + "Latest Version: " + latestVersion + "\n";
+                message = spacer + message + String.format(
+                        "You can set auto update to true by adding %s = '1' to the %s file \n",
+                        Config.GRID_EXTRAS_AUTO_UPDATE,
+                        RuntimeConfig.configFile
+                );
+                message = spacer + message + String.format(
+                        "Or you can update the version manually by using http://%s:%s%s end-point\n",
+                        RuntimeConfig.getHostIp(),
+                        RuntimeConfig.gridExtrasPort,
+                        TaskDescriptions.Endpoints.UPGRADE_GRID_EXTRAS
+                );
+                message = spacer + message + "\n**************************************\n";
+                message = message + "\n\n";
             }
+            System.out.println(message);
+            logger.info(message);
 
-        } else {
-            printInitilizedSuccessAndRegisterWithAPI();
-            message = spacer + message + "\n**************************************\n\n";
-            message = spacer + message + "Selenium Grid Extras is out of date" + "\n";
-            message = spacer + message + "Current Version: " + Version.getSanitizedVersion() + "\n";
-            message = spacer + message + "Latest Version: " + latestVersion + "\n";
-            message = spacer + message + String.format(
-                    "You can set auto update to true by adding %s = '1' to the %s file \n",
-                    Config.GRID_EXTRAS_AUTO_UPDATE,
-                    RuntimeConfig.configFile
-            );
-            message = spacer + message + String.format(
-                    "Or you can update the version manually by using http://%s:%s%s end-point\n",
-                    RuntimeConfig.getHostIp(),
-                    RuntimeConfig.gridExtrasPort,
-                    TaskDescriptions.Endpoints.UPGRADE_GRID_EXTRAS
-            );
-            message = spacer + message + "\n**************************************\n";
-            message = message + "\n\n";
+
+            return true;
+        } catch (Exception e) {
+            //I know a catch all is bad practice, but the optional update should never cripple the grid completely.
+
+            printInitilizedFailure();
+            logger.error(Throwables.getStackTraceAsString(e));
+            return false;
         }
-        System.out.println(message);
-        logger.info(message);
-
-
-        return true;
     }
 
     protected List<Map<String, String>> getSanitizedReleaseList() {

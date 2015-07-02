@@ -5,10 +5,12 @@ import com.google.common.base.Throwables;
 import com.google.gson.internal.LinkedTreeMap;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
+import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -20,7 +22,14 @@ public class GridExtrasDownloader extends Downloader {
     public static final String ASSETS_KEY = "assets";
     public static final String NAME_KEY = "name";
     public static final String BROWSER_DOWNLOAD_URL = "browser_download_url";
+    public static final String CACHED_RELEASE_LIST_JSON = "cached_release_list.json";
     private final String releaseApiUrl;
+
+    public File getCachedReleaseResponseFile() {
+        return cachedReleaseResponse;
+    }
+
+    private final File cachedReleaseResponse;
     private String version;
 
     private static Logger logger = Logger.getLogger(GridExtrasDownloader.class);
@@ -31,6 +40,7 @@ public class GridExtrasDownloader extends Downloader {
 
     public GridExtrasDownloader() {
         this.releaseApiUrl = RuntimeConfig.getConfig().getGridExtrasReleaseUrl();
+        this.cachedReleaseResponse = new File(CACHED_RELEASE_LIST_JSON);
     }
 
     @Override
@@ -157,8 +167,26 @@ public class GridExtrasDownloader extends Downloader {
         return releaseList;
     }
 
+    protected String getCachedReleaseList() throws URISyntaxException, IOException {
+        String response;
+
+        long msRange = TimeStampUtility.timestampInMs() - getCachedReleaseResponseFile().lastModified();
+        long checkInterval = RuntimeConfig.getConfig().getGridExtrasAutoUpdateCheckInterval();
+        if (getCachedReleaseResponseFile().exists() && msRange < checkInterval){
+            response = FileUtils.readFileToString(getCachedReleaseResponseFile());
+        } else {
+            response = HttpUtility.getRequestAsString(new URI(this.releaseApiUrl));
+            FileUtils.writeStringToFile(getCachedReleaseResponseFile(), response);
+        }
+
+        System.out.println(response);
+
+
+        return response;
+    }
+
     private List<LinkedTreeMap> parseAllReleases() throws URISyntaxException, IOException {
-        return (List<LinkedTreeMap>) JsonParserWrapper.toList(HttpUtility.getRequestAsString(new URI(this.releaseApiUrl)));
+        return (List<LinkedTreeMap>) JsonParserWrapper.toList(getCachedReleaseList());
     }
 
     private void malformedApiResponse(String key, String url, String json) {

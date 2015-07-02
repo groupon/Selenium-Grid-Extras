@@ -1,3 +1,4 @@
+1.10.1 - [BUG] Cache responses from GitHub for 24 hours, to prevent a situation where GitHub rate limits the update checks
 1.10.0 - WhenKilling IE, kill any crash reports that might be open
        - Clean up any empty WebDriver directories in Windows Temp directory at shutdown
        - Logs are now deleted based on time stamp and size
