@@ -51,6 +51,7 @@ public class Config {
     public static final String HOST_IP = "host";
     public static final String GRID_EXTRAS_RELEASE_URL = "grid_extras_release_url";
     public static final String GRID_EXTRAS_AUTO_UPDATE = "grid_extras_auto_update";
+    public static final String GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = "grid_extras_auto_update_check_interval";
     public static final String LOG_MAXIMUM_AGE_MS = "log_maximum_age_ms";
 
 
@@ -427,7 +428,7 @@ public class Config {
         return mapToJvmParams((Map<String, Object>) getConfigMap().get(GRID_EXTRAS_JVM_OPTIONS));
     }
 
-    public int getLogMaximumSize(){
+    public int getLogMaximumSize() {
         return Integer.valueOf(getConfigMap().get(LOG_MAXIMUM_SIZE).toString());
     }
 
@@ -532,16 +533,16 @@ public class Config {
 
 
     public void setGridExtrasAutoUpdate(boolean gridExtrasAutoUpdate) {
-        if(gridExtrasAutoUpdate){
+        if (gridExtrasAutoUpdate) {
             getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE, "1");
-        }   else {
+        } else {
             getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE, "0");
         }
     }
 
-    public boolean getGridExtrasAutoUpdate(){
-        if (getConfigMap().containsKey(GRID_EXTRAS_AUTO_UPDATE)){
-            if(getConfigMap().get(GRID_EXTRAS_AUTO_UPDATE).equals("1")){
+    public boolean getGridExtrasAutoUpdate() {
+        if (getConfigMap().containsKey(GRID_EXTRAS_AUTO_UPDATE)) {
+            if (getConfigMap().get(GRID_EXTRAS_AUTO_UPDATE).equals("1")) {
                 return true;
             }
         }
@@ -554,15 +555,27 @@ public class Config {
         getConfigMap().put(LOG_MAXIMUM_AGE_MS, milliseconds);
     }
 
-    public long getLogMaximumAge(){
+    public long getLogMaximumAge() {
         Object value = getConfigMap().get(LOG_MAXIMUM_AGE_MS);
 
-        if(value instanceof Long){
+        if (value instanceof Long) {
             return ((Long) value).longValue();
-        }   else if(value instanceof String){
+        } else if (value instanceof String) {
             return Long.valueOf((String) value).longValue();
         } else {
             return DefaultConfig.LOG_MAX_AGE;
+        }
+    }
+
+    public void setGridExtrasAutoUpdateCheckInterval(long gridExtrasAutoUpdateCheckInterval) {
+        getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL, String.valueOf(gridExtrasAutoUpdateCheckInterval));
+    }
+
+    public long getGridExtrasAutoUpdateCheckInterval() {
+        if (getConfigMap().containsKey(GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL)) {
+            return Long.valueOf((String) getConfigMap().get(GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL));
+        } else {
+            return DefaultConfig.GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL;
         }
     }
 }

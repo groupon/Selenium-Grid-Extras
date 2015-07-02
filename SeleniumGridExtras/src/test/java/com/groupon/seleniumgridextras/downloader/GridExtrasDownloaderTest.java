@@ -1,7 +1,9 @@
 package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class GridExtrasDownloaderTest {
@@ -22,6 +25,7 @@ public class GridExtrasDownloaderTest {
     public static final String GRID_EXTRAS_RELEASE_API_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
     public static final String EXPECTED_171_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.7.1/SeleniumGridExtras-1.7.1-SNAPSHOT-jar-with-dependencies.jar";
     public static final String EXPECTED_JAR_NAME = "SeleniumGridExtras-1.3.3-SNAPSHOT-jar-with-dependencies.jar";
+    public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 2000;
     private GridExtrasDownloader downloader;
     private File testDir = new File("grid_extras_downloader_test");
     private File expectedFile = new File(testDir, EXPECTED_JAR_NAME);
@@ -33,6 +37,8 @@ public class GridExtrasDownloaderTest {
 
         config.setGridExtrasReleaseUrl(GRID_EXTRAS_RELEASE_API_URL);
         config.writeToDisk(RuntimeConfig.getConfigFile());
+        config.setGridExtrasAutoUpdateCheckInterval(GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL);
+        config.writeToDisk(RuntimeConfig.getConfigFile());
         RuntimeConfig.load();
 
         downloader = new GridExtrasDownloader();
@@ -42,6 +48,11 @@ public class GridExtrasDownloaderTest {
 
         downloader.setDestinationDir(testDir.getAbsolutePath());
         downloader.setDestinationFile(downloader.getJarName(downloader.getVersion()));
+
+        if (downloader.getCachedReleaseResponseFile().exists()){
+            downloader.getCachedReleaseResponseFile().delete();
+        }
+
     }
 
     @After
@@ -50,6 +61,51 @@ public class GridExtrasDownloaderTest {
         new File(RuntimeConfig.getConfigFile() + ".example").delete();
         expectedFile.delete();
         testDir.delete();
+
+        if (downloader.getCachedReleaseResponseFile().exists()){
+            downloader.getCachedReleaseResponseFile().delete();
+        }
+
+        if (new File(RuntimeConfig.getConfigFile()).exists()){
+            new File(RuntimeConfig.getConfigFile()).delete();
+        }
+
+        if (new File(RuntimeConfig.getConfigFile() + ".example").exists()){
+            new File(RuntimeConfig.getConfigFile() + ".example").delete();
+        }
+    }
+
+
+    @Test
+    public void testGetCachedReleaseList() throws Exception {
+        assertEquals(new File(GridExtrasDownloader.CACHED_RELEASE_LIST_JSON), downloader.getCachedReleaseResponseFile());
+        assertFalse(downloader.getCachedReleaseResponseFile().exists());
+
+        String initialResponse = downloader.getCachedReleaseList();
+        assertTrue(downloader.getCachedReleaseResponseFile().exists());
+
+        long msRange = TimeStampUtility.timestampInMs() - downloader.getCachedReleaseResponseFile().lastModified();
+        assertTrue(msRange < 10000); //Make sure that file created is no older than 10 seconds
+        assertEquals(initialResponse, downloader.getCachedReleaseList());
+
+        Thread.sleep(5000);
+        //Let file expire and try to download cached file again, make sure response is still the same
+        //But the file gets re-written
+
+        assertEquals(initialResponse, downloader.getCachedReleaseList());
+        long msRange2 = TimeStampUtility.timestampInMs() - downloader.getCachedReleaseResponseFile().lastModified();
+        assertTrue(msRange2 < 2000); //Make sure that file created is no older than 2 seconds
+    }
+
+    @Test
+    public void testCheckInterval() throws Exception {
+        //Check if interval is written/loaded
+        assertEquals(GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL,
+                RuntimeConfig.getConfig().getGridExtrasAutoUpdateCheckInterval());
+
+        //Check empty default
+        assertEquals(DefaultConfig.GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL,
+                new Config().getGridExtrasAutoUpdateCheckInterval());
     }
 
     @Test
@@ -68,18 +124,18 @@ public class GridExtrasDownloaderTest {
     }
 
     @Test
-    public void testGetReleaseApiUrl() throws Exception{
+    public void testGetReleaseApiUrl() throws Exception {
         assertEquals(GRID_EXTRAS_RELEASE_API_URL, downloader.getReleaseApiUrl());
     }
 
     @Test
-    public void testGetDestinations() throws Exception{
+    public void testGetDestinations() throws Exception {
         assertEquals(testDir.getAbsolutePath(), downloader.getDestinationDir());
         assertEquals(EXPECTED_JAR_NAME, downloader.getDestinationFile());
     }
 
     @Test
-    public void testDownload() throws Exception{
+    public void testDownload() throws Exception {
 
         assertEquals(true, downloader.download());
         assertEquals(true, expectedFile.exists());
@@ -90,7 +146,7 @@ public class GridExtrasDownloaderTest {
     }
 
     @Test
-    public void testBadVersion() throws Exception{
+    public void testBadVersion() throws Exception {
         GridExtrasDownloader downloader2 = new GridExtrasDownloader();
 
         downloader2.setVersion("aaaaa");
@@ -99,8 +155,8 @@ public class GridExtrasDownloaderTest {
     }
 
     @Test
-    public void testGetAllAssets() throws Exception{
-        List<Map<String,String>> actual = downloader.getAllDownloadableAssets();
+    public void testGetAllAssets() throws Exception {
+        List<Map<String, String>> actual = downloader.getAllDownloadableAssets();
         int actualSize = actual.size();
 
         assertTrue(actualSize > 0);
@@ -120,7 +176,7 @@ public class GridExtrasDownloaderTest {
     }
 
     @Test
-    public void testSanitizeVersions() throws Exception{
+    public void testSanitizeVersions() throws Exception {
 
         List<Map<String, String>> inputList = new LinkedList<Map<String, String>>();
         Map<String, String> tempInputMap = new HashMap<String, String>();
