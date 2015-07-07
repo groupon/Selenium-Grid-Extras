@@ -142,10 +142,11 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         Map<String, Object> cap = session.getRequestedCapabilities();
         String browser = (String) cap.get(CapabilityType.BROWSER_NAME);
 
-        if (browser.equals(BrowserType.IE) ||
-                browser.equals(BrowserType.IEXPLORE) ||
-                browser.equals(BrowserType.IE_HTA) ||
-                browser.equals(BrowserType.IEXPLORE_PROXY)) {
+        if (browser != null &&
+                (browser.equals(BrowserType.IE) ||
+                        browser.equals(BrowserType.IEXPLORE) ||
+                        browser.equals(BrowserType.IE_HTA) ||
+                        browser.equals(BrowserType.IEXPLORE_PROXY))) {
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             this.getRemoteHost().getHost(),
