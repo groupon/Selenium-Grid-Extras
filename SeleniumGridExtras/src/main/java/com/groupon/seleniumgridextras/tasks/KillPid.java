@@ -38,7 +38,7 @@
 package com.groupon.seleniumgridextras.tasks;
 
 import com.google.gson.JsonObject;
-
+import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -81,8 +81,18 @@ public class KillPid extends ExecuteOSTask {
           JsonCodec.OS.KillCommands.SIGNAL)) {
         pid = "-" + parameter.get(JsonCodec.OS.KillCommands.SIGNAL).toString() + " " + pid;
       }
+      
+      String command = "";
+      if (RuntimeConfig.getOS().isWindows()) {
+          command = getWindowsCommand(pid);
+      } else if (RuntimeConfig.getOS().isMac()) {
+          command = getLinuxCommand(pid);
+      } else {
+          command = getLinuxCommand(pid);
+      }
 
-      return execute(pid);
+      JsonObject response = ExecuteCommand.execRuntime(command, waitToFinishTask);
+      return response;
     }
   }
 
