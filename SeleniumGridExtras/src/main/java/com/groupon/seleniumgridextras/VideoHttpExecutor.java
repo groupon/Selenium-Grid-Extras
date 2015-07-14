@@ -35,7 +35,7 @@ public class VideoHttpExecutor implements HttpHandler {
 
         if (videoFile.exists()) {
             try {
-                logger.info(String.format("Requested video %s does exist, responding with 404", videoFile.getAbsolutePath()));
+                logger.info(String.format("Requested video %s does exist, responding with 200", videoFile.getAbsolutePath()));
                 Headers h = t.getResponseHeaders();
                 h.add("Content-Type", "video/mp4");
 
