@@ -72,6 +72,12 @@ java -jar Selenium-Grid-Extras-Jar.jar
 
 9. Finally, you will be asked if you wish to store all of the Node configs on the HUB. If you answer yes, Selenium Grid Extras will attempt to push Node's configs to the HUB. If it is successful, Selenium Grid Extras will attempt to download all of the configs from the HUB before it starts. This way all of the Node configs can be controlled directly from the HUB.
 
+### Changing the logging on the grid hub, nodes, or selenium-grid-extras ###
+1. For grid extras, create a log4j.properties in the same directory as your jar file. Start the service like : java -Dlog4j.debug -Dlog4j.configuration=file:log4j.properties -cp .:SeleniumGridExtras-1.10.0-SNAPSHOT-jar-with-dependencies.jar com.groupon.seleniumgridextras.SeleniumGridExtras (Use a semi-colon in the classpath for Windows. Use a colon in the classpath for Mac/Linux).
+2. For hub and node log files, add the following to the selenium_grid_extras_config.json file (see selenium_grid_extras_config.json.example for an example):<br>
+"grid_jvm_options": {<br>
+  "selenium.LOGGER.level": "WARNING"<br>
+},<br>
 
 Upgrading Grid Extras
 ---------------------
