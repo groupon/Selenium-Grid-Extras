@@ -72,8 +72,18 @@ public class RebootNode extends ExecuteOSTask {
     }
 
     @Override
-    public String getMacCommand() {
+    public String getLinuxCommand() {
+        return getLinuxCommand("");
+    }
+
+    @Override
+    public String getLinuxCommand(String param) {
         logReboot();
+        return "shutdown -r now";
+    }
+
+    @Override
+    public String getMacCommand() {
         return getMacCommand("");
     }
 
