@@ -26,3 +26,5 @@ selenium_grid_extras_config.json.example
 configs/*
 video_output/*
 cached_release_list.json
+selenium_grid_extras_jenkins/target/*
+selenium_grid_extras_jenkins/work/*
