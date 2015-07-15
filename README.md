@@ -156,9 +156,10 @@ After you have the virtual display running, add run this command to edit the cro
 crontab -e
 ```
 
-Add following line to the cron list:
+Add following lines to the cron list:
 
 ```
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 */5 * * * * bash -i -c 'cd WORKING_DIRECTORY; export DISPLAY=:1 java -jar SELENIUM_GRID_EXTRAS.jar' >> WORKING_DIRECTORY/log/log.out 2>&1
 ```
 
