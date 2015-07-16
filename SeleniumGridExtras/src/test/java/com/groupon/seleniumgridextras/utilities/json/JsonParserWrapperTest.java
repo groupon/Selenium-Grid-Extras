@@ -1,9 +1,7 @@
 package com.groupon.seleniumgridextras.utilities.json;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.groupon.seleniumgridextras.tasks.ExposeDirectory;
 import org.junit.Before;
 import org.junit.Test;
 
