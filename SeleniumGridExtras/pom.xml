@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.groupon.selenium-grid-extras</groupId>
@@ -19,6 +17,10 @@
         </repository>
     </repositories>
 
+    <properties>
+        <version.selenium>2.46.0</version.selenium>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>net.java.dev.jna</groupId>
@@ -28,14 +30,14 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-server</artifactId>
-            <version>2.42.0</version>
+            <version>${version.selenium}</version>
             <scope>provided</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>log4j</groupId>
             <artifactId>apache-log4j-extras</artifactId>
             <version>1.2.17</version>
-         </dependency>
+        </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -102,7 +104,11 @@
             <type>jar</type>
             <version>18.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -152,7 +158,7 @@
                     <include>version.properties</include>
                 </includes>
             </resource>
-            
+
             <resource>
                 <directory>${basedir}/src/main/resources/video_recording</directory>
                 <includes>
