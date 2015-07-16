@@ -1,4 +1,4 @@
-package com.groupon.seleniumgridextras.utilities.json;
+package selenium_grid_extras_jenkins.selenium_grid_extras_jenkins.utilities;
 
 import com.google.gson.*;
 
@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 public class JsonParserWrapper {
-
     public static List toList(String input) throws JsonSyntaxException {
         return new Gson().fromJson(input, LinkedList.class);
     }
@@ -33,4 +32,5 @@ public class JsonParserWrapper {
     public static String prettyPrintString(JsonObject input) {
         return new GsonBuilder().setPrettyPrinting().create().toJson(input);
     }
+
 }

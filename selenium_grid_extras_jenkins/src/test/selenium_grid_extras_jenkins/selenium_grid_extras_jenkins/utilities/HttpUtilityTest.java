@@ -35,16 +35,17 @@ public class HttpUtilityTest {
         HttpUtility.getRequest(new URL("http://googasdfasfdkjashfdkjahsfdle.com/")).getResponseCode();
     }
 
-    @org.junit.Test
-    public void testGetRequestAsString() throws Exception {
+    @Test
+    public void testGetAsString() throws Exception {
         assertEquals("", HttpUtility.getRequestAsString(new URL("http://xkcd.com/404")));
     }
 
-    @org.junit.Test
-    public void testCheckIfUrlStatusCode() throws Exception {
+    @Test
+    public void testCheckIfUrlStatusCode() throws Exception{
         assertEquals(200, HttpUtility.checkIfUrlStatusCode(new URL("http://google.com")));
         assertEquals(404, HttpUtility.checkIfUrlStatusCode(new URL("http://xkcd.com/404")));
         assertEquals(301, HttpUtility.checkIfUrlStatusCode(new URL("http://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.5.0/SeleniumGridExtras-1.5.0-SNAPSHOT-jar-with-dependencies.jar")));
         assertEquals(200, HttpUtility.checkIfUrlStatusCode(new URL("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.5.0/SeleniumGridExtras-1.5.0-SNAPSHOT-jar-with-dependencies.jar")));
     }
+
 }
