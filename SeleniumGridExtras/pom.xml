@@ -5,7 +5,7 @@
     <groupId>com.groupon.selenium-grid-extras</groupId>
     <artifactId>SeleniumGridExtras</artifactId>
     <version>1.10.1-SNAPSHOT</version>
-
+  
     <repositories>
         <repository>
             <id>maven2</id>
