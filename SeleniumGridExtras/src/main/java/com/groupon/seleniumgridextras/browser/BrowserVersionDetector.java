@@ -26,7 +26,8 @@ public class BrowserVersionDetector {
   protected File chromeDriverPath;
   protected List<GridNode> nodesFromConfigFile;
 
-
+  public static final String[] chromeMacVersionCommand = {"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version"};
+  
   public BrowserVersionDetector(List<GridNode> nodes) {
     nodesFromConfigFile = nodes;
   }
@@ -155,15 +156,17 @@ public class BrowserVersionDetector {
   private static String getFirefoxVersion() {
     String version = "";
     if (RuntimeConfig.getOS().isWindows()) {
-      String[] cmd = new String[2];
+      String[] cmd = new String[4];
+      cmd[0] = "cmd";
+      cmd[1] = "/C";
       File f = new File("C:/Program Files (x86)");
       if (f.exists()) {
-        cmd[0] = "\"C:/Program Files (x86)/Mozilla Firefox/firefox.exe\"";
+        cmd[2] = "C:/Program Files (x86)/Mozilla Firefox/firefox.exe";
       } else {
-        cmd[0] = "\"C:/Program Files/Mozilla Firefox/firefox.exe\"";
+        cmd[2] = "C:/Program Files/Mozilla Firefox/firefox.exe";
       }
 
-      cmd[1] = "--version|more";
+      cmd[3] = "--version|more";
       try {
         JsonObject object = ExecuteCommand.execRuntime(cmd, true);
         version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"
@@ -176,9 +179,9 @@ public class BrowserVersionDetector {
     } else if (RuntimeConfig.getOS().isMac()) {
       String[] cmd = {"/Applications/Firefox.app/Contents/MacOS/firefox", "--version"};
       try {
-      JsonObject object = ExecuteCommand.execRuntime(cmd, true);
-      version = object.get("out").getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"
-      version = version.substring(0, version.indexOf('.'));
+        JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+        version = object.get("out").getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Mozilla Firefox"
+        version = version.substring(0, version.indexOf('.'));
       } catch (Exception e) {
         // If ExecuteCommand.execRuntime fails, still return "";
         logger.warn(e.getMessage());
@@ -215,9 +218,8 @@ public class BrowserVersionDetector {
       version = version.substring(0, version.indexOf('.'));
       return version.trim();
     } else if (RuntimeConfig.getOS().isMac()) {
-      String[] cmd = {"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version"};
       try {
-        JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+        JsonObject object = ExecuteCommand.execRuntime(chromeMacVersionCommand, true);
         version = object.get("out").getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Google Chrome"
         version = version.substring(0, version.indexOf('.'));
       } catch (Exception e) {
