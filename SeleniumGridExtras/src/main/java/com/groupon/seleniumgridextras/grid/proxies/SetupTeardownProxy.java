@@ -52,7 +52,6 @@ import com.groupon.seleniumgridextras.utilities.threads.video.RemoteVideoRecordi
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoDownloaderCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
-import org.openqa.grid.common.exception.RemoteUnregisterException;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
@@ -86,7 +85,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
     @Override
     public TestSession getNewSession(Map<String, Object> requestedCapability) {
-        if (isDown()) {
+        if (isDown() || isRestarting()) {
             return null;
         }
 
@@ -174,10 +173,15 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                         new HashMap<String, String>()));
 
 
-        CommonThreadPool.startCallable(
-                new NodeRestartCallable(
-                        this,
-                        session));
+        if (NodeRestartCallable.timeToReboot(this.getRemoteHost().getHost(), this.getId())) {
+            this.setAvailable(false);
+            this.setRestarting(true);
+
+            CommonThreadPool.startCallable(
+                    new NodeRestartCallable(
+                            this,
+                            session));
+        }
     }
 
     private boolean alreadyRecordingCurrentSession(TestSession session) {
@@ -245,43 +249,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         }
     }
 
-    public void stopGridNode() {
-
-        logger.info(String.format("Asking proxy %s to stop gracefully", this.getId()));
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put(JsonCodec.WebDriver.Grid.PORT, String.valueOf(this.getRemoteHost().getPort()));
-
-        Future<String> f = CommonThreadPool.startCallable(
-                new RemoteGridExtrasAsyncCallable(
-                        this.getRemoteHost().getHost(),
-                        RuntimeConfig.getGridExtrasPort(),
-                        TaskDescriptions.Endpoints.STOP_GRID,
-                        params));
-
-        try {
-            logger.debug(f.get());
-        } catch (Exception e) {
-            logger.error(String.format("Error stopping proxy %s", this.getId()), e);
-        }
-        unregister();
-    }
-
-    public static void rebootGridExtrasNode(String host) {
-        logger.info("Asking SeleniumGridExtras to reboot node" + host);
-        Future<String> f = CommonThreadPool.startCallable(
-                new RemoteGridExtrasAsyncCallable(
-                        host,
-                        RuntimeConfig.getGridExtrasPort(),
-                        TaskDescriptions.Endpoints.REBOOT,
-                        new HashMap<String, String>()));
-        try {
-            logger.debug(f.get());
-        } catch (Exception e) {
-            logger.error(String.format("Error rebooting node ", host), e);
-        }
-
-    }
 
     public List<String> getSessionsRecording() {
         return this.sessionsRecording;
@@ -295,10 +262,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         this.available = available;
     }
 
-    public void unregister() {
-        addNewEvent(new RemoteUnregisterException(String.format("Taking proxy %s offline", this.getId())));
-    }
-
     public boolean isRestarting() {
         return this.restarting;
     }
@@ -306,4 +269,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     public void setRestarting(boolean restarting) {
         this.restarting = restarting;
     }
+
+
 }
