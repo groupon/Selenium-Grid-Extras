@@ -26,6 +26,11 @@ public class GridStarter {
     command.append(RuntimeConfig.getConfig().getGridJvmOptions());
     command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
+    List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalHubConfig();
+    for(String additionalJarPath : additionalClassPathItems) {
+      command.append(RuntimeConfig.getOS().getPathSeparator() + additionalJarPath);
+    }
+
     String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
 
     command.append(jarPath + getOsSpecificQuote());
