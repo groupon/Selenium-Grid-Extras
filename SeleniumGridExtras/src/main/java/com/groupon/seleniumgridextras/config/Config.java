@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.internal.LinkedTreeMap;
-import com.groupon.seleniumgridextras.config.driver.ChromeDriver;
-import com.groupon.seleniumgridextras.config.driver.DriverInfo;
-import com.groupon.seleniumgridextras.config.driver.IEDriver;
-import com.groupon.seleniumgridextras.config.driver.WebDriver;
+import com.groupon.seleniumgridextras.config.driver.*;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import org.apache.log4j.Logger;
@@ -24,6 +21,7 @@ public class Config {
     public static final String GRID = "grid";
     public static final String WEBDRIVER = "webdriver";
     public static final String IEDRIVER = "iedriver";
+    public static final String EDGEDRIVER = "edgedriver";
     public static final String CHROME_DRIVER = "chromedriver";
     public static final String SHARED_DIR = "expose_directory";
 
@@ -301,6 +299,23 @@ public class Config {
             getConfigMap().put(CHROME_DRIVER, chromeDriver);
 
             return chromeDriver;
+        }
+    }
+
+    public DriverInfo getEdgeDriver() {
+        try {
+            return (EdgeDriver) getConfigMap().get(EDGEDRIVER);
+        } catch (ClassCastException e) {
+            LinkedTreeMap
+                    stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+                    (LinkedTreeMap) getConfigMap().get(EDGEDRIVER);
+            DriverInfo edgeDriver = new EdgeDriver();
+
+            edgeDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+            getConfigMap().put(EDGEDRIVER, edgeDriver);
+
+            return edgeDriver;
         }
     }
 
