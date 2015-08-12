@@ -1,3 +1,4 @@
+1.11.0 - Adding support for Microsoft Edge
 1.10.1 - [BUG] Cache responses from GitHub for 24 hours, to prevent a situation where GitHub rate limits the update checks
        - Merge pull request #141 from smccarthy/fix_kill_pid
        - Merge pull request #143 from smccarthy/fix_reboot
