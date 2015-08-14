@@ -37,15 +37,13 @@
 package com.groupon.seleniumgridextras.config;
 
 
+import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.os.GridPlatform;
-import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
-import com.groupon.seleniumgridextras.OS;
-
 import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import org.apache.log4j.Logger;
 
@@ -98,8 +96,6 @@ public class FirstTimeRunConfig {
 
         setDriverAutoUpdater(defaultConfig);
 
-        setAutoUpdateGridExtras(defaultConfig);
-
         if (defaultConfig.getAutoStartNode()) {
             askToRecordVideo(defaultConfig);
         }
@@ -120,25 +116,6 @@ public class FirstTimeRunConfig {
 
         return defaultConfig;
     }
-
-    private static void setAutoUpdateGridExtras(Config defaultConfig) {
-        String answer = askQuestion("Would you like Selenium Grid Extras to auto update? (1-yes/0-no)", "0");
-
-        if (answer.equals("1")) {
-            defaultConfig.setGridExtrasAutoUpdate(true);
-        } else {
-            defaultConfig.setGridExtrasAutoUpdate(false);
-            String message = String.format("You have chosen to not auto update Grid Extras, " +
-                    "you can update Grid Extras manually by visiting http://%s:3000%s",
-                    RuntimeConfig.getOS().getHostIp(),
-                    TaskDescriptions.Endpoints.UPGRADE_GRID_EXTRAS);
-
-            System.out.println(message);
-            logger.info(message);
-        }
-
-    }
-
 
     private static void askToRecordVideo(Config defaultConfig) {
         String answer = askQuestion("Should this Node record test runs? (1-yes/0-no)", "1");

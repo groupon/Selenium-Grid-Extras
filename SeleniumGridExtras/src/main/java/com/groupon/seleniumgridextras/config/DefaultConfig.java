@@ -119,7 +119,6 @@ public class DefaultConfig {
 
     public static void loadGridExtrasReleaseUrl() {
         config.setGridExtrasReleaseUrl(DEFAULT_GRID_EXTRAS_RELEASE_URL);
-        config.setGridExtrasAutoUpdate(false);
         config.setGridExtrasAutoUpdateCheckInterval(GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL);
     }
 

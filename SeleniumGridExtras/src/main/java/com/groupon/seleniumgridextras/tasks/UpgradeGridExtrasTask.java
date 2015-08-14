@@ -122,29 +122,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
             if (isUpToDate) {
                 printInitilizedSuccessAndRegisterWithAPI();
                 message = "";
-            } else if (!isUpToDate && RuntimeConfig.getConfig().getGridExtrasAutoUpdate()) {
-
-
-                configDownloaderInstance(latestVersion, RuntimeConfig.getSeleniungGridExtrasHomePath(), destinationJar.getName());
-
-                boolean downloaded = downloader.download();
-
-                message = spacer + message + "\n**************************************\n";
-                message = spacer + message + "Attempting to self update Grid Extras";
-                message = spacer + message + String.format("Success: %s", downloaded);
-
-                if (!downloaded) {
-                    message = spacer + message + downloader.getErrorMessage();
-                }
-
-                message = spacer + message + "\n**************************************\n\n\n";
-
-
-                writeStartShellFile(destinationJar);
-                printInitilizedSuccessAndRegisterWithAPI();
-
-
-            } else {
+            }  else {
                 printInitilizedSuccessAndRegisterWithAPI();
                 message = spacer + message + "\n**************************************\n\n";
                 message = spacer + message + "Selenium Grid Extras is out of date" + "\n";

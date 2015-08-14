@@ -553,26 +553,6 @@ public class Config {
         return (String) getConfigMap().get(GRID_EXTRAS_RELEASE_URL);
     }
 
-
-    public void setGridExtrasAutoUpdate(boolean gridExtrasAutoUpdate) {
-        if (gridExtrasAutoUpdate) {
-            getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE, "1");
-        } else {
-            getConfigMap().put(GRID_EXTRAS_AUTO_UPDATE, "0");
-        }
-    }
-
-    public boolean getGridExtrasAutoUpdate() {
-        if (getConfigMap().containsKey(GRID_EXTRAS_AUTO_UPDATE)) {
-            if (getConfigMap().get(GRID_EXTRAS_AUTO_UPDATE).equals("1")) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
     public void setLogMaximumAge(long milliseconds) {
         getConfigMap().put(LOG_MAXIMUM_AGE_MS, milliseconds);
     }
