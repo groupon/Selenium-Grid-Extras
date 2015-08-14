@@ -178,7 +178,11 @@ public class GridStarter {
 
         if (windows) {
             command.append(getIEDriverExecutionPathParam());
-            command.append(getEdgeDriverExecutionPathParam());
+
+            String edgeDriverPath = getEdgeDriverExecutionPathParam();
+            if (new File(edgeDriverPath).exists()){
+                command.append(edgeDriverPath);
+            }
         }
 
         command.append(getChromeDriverExecutionPathParam());
@@ -215,7 +219,7 @@ public class GridStarter {
     }
 
     protected static String getIEDriverExecutionPathParam() {
-        if (RuntimeConfig.getOS().isWindows()) {
+        if (RuntimeConfig.getOS().isWindows()) { //TODO: Clean this conditional up and test!!!
             return " -Dwebdriver.ie.driver=" + RuntimeConfig.getConfig().getIEdriver()
                     .getExecutablePath();
         } else {
@@ -224,11 +228,7 @@ public class GridStarter {
     }
 
     public static String getEdgeDriverExecutionPathParam() {
-        if (RuntimeConfig.getOS().isWindows()) {
-            return String.format(" -Dwebdriver.edge.driver=\"%s\"", RuntimeConfig.getConfig().getEdgeDriver().getExecutablePath());
-        } else {
-            return "";
-        }
+        return String.format(" -Dwebdriver.edge.driver='%s'", RuntimeConfig.getConfig().getEdgeDriver().getExecutablePath());
     }
 
     protected static String getChromeDriverExecutionPathParam() {

@@ -304,7 +304,14 @@ public class Config {
 
     public DriverInfo getEdgeDriver() {
         try {
-            return (EdgeDriver) getConfigMap().get(EDGEDRIVER);
+            EdgeDriver driver;
+            driver = (EdgeDriver) getConfigMap().get(EDGEDRIVER);
+            if (driver == null){
+                driver = new EdgeDriver();
+                getConfigMap().put(EDGEDRIVER, driver);
+
+            }
+            return driver;
         } catch (ClassCastException e) {
             LinkedTreeMap
                     stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
