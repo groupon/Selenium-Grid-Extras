@@ -1,15 +1,20 @@
 package com.groupon.seleniumgridextras.videorecording;
 
+import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecorderCallable;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.awt.*;
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class VideoRecorderCallableTest {
@@ -17,10 +22,24 @@ public class VideoRecorderCallableTest {
     final private String session = "123456";
     final private File output = new File("video_output", session + ".mp4");
 
+    @Before
+    public void setUp() throws Exception {
+        RuntimeConfig.setConfigFile("video_recorder_test.json");
+        Config config = DefaultConfig.getDefaultConfig();
+        config.writeToDisk(RuntimeConfig.getConfigFile());
+        RuntimeConfig.load();
+    }
+
     @After
     public void tearDown() throws Exception {
         if (output.exists()) {
             output.delete();
+        }
+
+        File config = new File(RuntimeConfig.getConfigFile());
+
+        if (config.exists()){
+            config.delete();
         }
     }
 
@@ -108,6 +127,13 @@ public class VideoRecorderCallableTest {
                 cachedPool.shutdown();
             }
         }
+    }
+
+    @Test
+    public void testResolutionDivisibleByTwo() throws Exception{
+        assertEquals(true, VideoRecorderCallable.isResolutionDivisibleByTwo(new Dimension(1024, 768)));
+        assertEquals(false, VideoRecorderCallable.isResolutionDivisibleByTwo(new Dimension(1025, 768)));
+        assertEquals(false, VideoRecorderCallable.isResolutionDivisibleByTwo(new Dimension(1024, 769)));
     }
 
 }
