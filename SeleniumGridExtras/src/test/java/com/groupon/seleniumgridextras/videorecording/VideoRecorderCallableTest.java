@@ -19,12 +19,13 @@ import static org.junit.Assert.assertTrue;
 
 public class VideoRecorderCallableTest {
 
+    public static final String VIDEO_RECORDER_TEST_JSON = "video_recorder_test.json";
     final private String session = "123456";
     final private File output = new File("video_output", session + ".mp4");
 
     @Before
     public void setUp() throws Exception {
-        RuntimeConfig.setConfigFile("video_recorder_test.json");
+        RuntimeConfig.setConfigFile(VIDEO_RECORDER_TEST_JSON);
         Config config = DefaultConfig.getDefaultConfig();
         config.writeToDisk(RuntimeConfig.getConfigFile());
         RuntimeConfig.load();
@@ -36,10 +37,12 @@ public class VideoRecorderCallableTest {
             output.delete();
         }
 
-        File config = new File(RuntimeConfig.getConfigFile());
+        if (new File(RuntimeConfig.getConfigFile()).exists()){
+            new File(RuntimeConfig.getConfigFile()).delete();
+        }
 
-        if (config.exists()){
-            config.delete();
+        if (new File(VIDEO_RECORDER_TEST_JSON + ".example").exists()){
+            new File(VIDEO_RECORDER_TEST_JSON + ".example").delete();
         }
     }
 
