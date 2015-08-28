@@ -1,5 +1,5 @@
-1.11.1 - Adding -D flag for current location of the edge driver server
-1.11.0 - [Pulled] Adding support for Microsoft Edge
+1.11.6 - Adding Support for Microsoft Edge Driver
+       - Removing the option to auto upgrade grid extras
 1.10.1 - [BUG] Cache responses from GitHub for 24 hours, to prevent a situation where GitHub rate limits the update checks
        - Merge pull request #141 from smccarthy/fix_kill_pid
        - Merge pull request #143 from smccarthy/fix_reboot

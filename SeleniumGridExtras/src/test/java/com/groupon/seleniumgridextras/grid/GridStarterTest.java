@@ -179,7 +179,7 @@ public class GridStarterTest {
 
     @Test
     public void testEdgeDriverDString() throws Exception {
-        assertEquals(" -Dwebdriver.edge.driver='C:\\Program Files (x86)\\Microsoft Web Driver\\MicrosoftWebDriver.exe'",
+        assertEquals(" -Dwebdriver.edge.driver=\"C:\\Program Files (x86)\\Microsoft Web Driver\\MicrosoftWebDriver.exe\"",
                 GridStarter.getEdgeDriverExecutionPathParam());
     }
 
