@@ -10,39 +10,48 @@ import org.junit.Test;
 
 import java.awt.*;
 import java.io.File;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 public class VideoRecorderCallableTest {
 
     public static final String VIDEO_RECORDER_TEST_JSON = "video_recorder_test.json";
-    final private String session = "123456";
-    final private File output = new File("video_output", session + ".mp4");
+
+    final private String session1 = "123456";
+    final private String session2 = "654321";
+    final private String session3 = "abcdef";
+
+    final private File session1File = new File("video_output", session1 + ".mp4");
+    final private File session2File = new File("video_output", session2 + ".mp4");
+    final private File session3File = new File("video_output", session3 + ".mp4");
 
     @Before
     public void setUp() throws Exception {
         RuntimeConfig.setConfigFile(VIDEO_RECORDER_TEST_JSON);
         Config config = DefaultConfig.getDefaultConfig();
+        config.getVideoRecording().setVideosToKeep(1);
         config.writeToDisk(RuntimeConfig.getConfigFile());
         RuntimeConfig.load();
     }
 
     @After
     public void tearDown() throws Exception {
-        if (output.exists()) {
-            output.delete();
-        }
+        delete(session1File);
+        delete(session2File);
+        delete(session3File);
+        delete(new File(RuntimeConfig.getConfigFile()));
+        delete(new File(VIDEO_RECORDER_TEST_JSON + ".example"));
+    }
 
-        if (new File(RuntimeConfig.getConfigFile()).exists()){
-            new File(RuntimeConfig.getConfigFile()).delete();
-        }
-
-        if (new File(VIDEO_RECORDER_TEST_JSON + ".example").exists()){
-            new File(VIDEO_RECORDER_TEST_JSON + ".example").delete();
+    private void delete(File f) {
+        if (f.exists()) {
+            f.delete();
         }
     }
 
@@ -53,7 +62,7 @@ public class VideoRecorderCallableTest {
         }
 
         if (RuntimeConfig.getOS().hasGUI()) {
-            VideoRecorderCallable video = new VideoRecorderCallable(session, 60);
+            VideoRecorderCallable video = new VideoRecorderCallable(session1, 60);
 
             ExecutorService cachedPool = Executors.newCachedThreadPool();
 
@@ -68,7 +77,7 @@ public class VideoRecorderCallableTest {
 
                 future.get(); //wait for thread to finish
 
-                assertTrue(output.exists());
+                assertTrue(session1File.exists());
 
             } finally {
                 cachedPool.shutdown();
@@ -84,7 +93,7 @@ public class VideoRecorderCallableTest {
         }
 
         if (RuntimeConfig.getOS().hasGUI()) {
-            VideoRecorderCallable video = new VideoRecorderCallable(session, 2);
+            VideoRecorderCallable video = new VideoRecorderCallable(session1, 2);
 
             ExecutorService cachedPool = Executors.newCachedThreadPool();
 
@@ -103,8 +112,9 @@ public class VideoRecorderCallableTest {
         if (!ImageProcessorTest.testIfDimasComputer()){
             return;
         }
+
         if (RuntimeConfig.getOS().hasGUI()) {
-            VideoRecorderCallable video = new VideoRecorderCallable(session, 2);
+            VideoRecorderCallable video = new VideoRecorderCallable(session1, 2);
 
             ExecutorService cachedPool = Executors.newCachedThreadPool();
 
@@ -137,6 +147,58 @@ public class VideoRecorderCallableTest {
         assertEquals(true, VideoRecorderCallable.isResolutionDivisibleByTwo(new Dimension(1024, 768)));
         assertEquals(false, VideoRecorderCallable.isResolutionDivisibleByTwo(new Dimension(1025, 768)));
         assertEquals(false, VideoRecorderCallable.isResolutionDivisibleByTwo(new Dimension(1024, 769)));
+    }
+
+    @Test
+    public void testDeleteOldMovies() throws Exception {
+        // Create empty files
+        session1File.createNewFile();
+        Thread.sleep(100);
+        session2File.createNewFile();
+        Thread.sleep(100);
+        session3File.createNewFile();
+
+        // Delete older files
+        VideoRecorderCallable.deleteOldMovies(new File("video_output"));
+
+        // Older files has been removed
+        assertFalse(session1File.exists());
+        assertFalse(session2File.exists());
+        assertTrue(session3File.exists());
+    }
+
+    @Test
+    public void testRecordVideoAndDeleteOldMovies() throws Exception {
+        if (!ImageProcessorTest.testIfDimasComputer()){
+            return;
+        }
+
+        if (RuntimeConfig.getOS().hasGUI()) {
+            ExecutorService cachedPool = Executors.newCachedThreadPool();
+
+            try {
+                recordVideo(cachedPool, session1);
+                recordVideo(cachedPool, session2);
+                assertTrue(session1File.exists());
+                assertTrue(session2File.exists());
+
+                recordVideo(cachedPool, session3);
+
+                // Only one file has been removed because the number of files is checked before the record 
+                assertFalse(session1File.exists());
+                assertTrue(session2File.exists());
+                assertTrue(session3File.exists());
+            } finally {
+                cachedPool.shutdown();
+            }
+        }
+    }
+
+    private void recordVideo(ExecutorService cachedPool, String session) throws InterruptedException, ExecutionException {
+        VideoRecorderCallable video = new VideoRecorderCallable(session, 60);
+        Future<String> future = cachedPool.submit(video);
+        video.stop();
+        future.get(); //wait for thread to finish
     }
 
 }
