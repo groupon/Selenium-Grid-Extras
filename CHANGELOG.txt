@@ -1,3 +1,4 @@
+1.11.7 - Do not output requested capabilities into session_history, since it will output whole Firefox profile from time to time leading to a 2GB log file per node
 1.11.6 - Adding Support for Microsoft Edge Driver
        - Removing the option to auto upgrade grid extras
 1.10.1 - [BUG] Cache responses from GitHub for 24 hours, to prevent a situation where GitHub rate limits the update checks

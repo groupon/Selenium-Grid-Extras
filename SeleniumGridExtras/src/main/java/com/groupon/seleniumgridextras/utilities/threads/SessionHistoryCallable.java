@@ -82,7 +82,7 @@ public class SessionHistoryCallable implements Callable<String> {
             sessionDetails.put(JsonCodec.WebDriver.Grid.HOST, getSession().getSlot().getRemoteURL().getHost());
             sessionDetails.put(JsonCodec.WebDriver.Grid.PORT, String.valueOf(getSession().getSlot().getRemoteURL().getPort()));
             sessionDetails.put(JsonCodec.TIMESTAMP, TimeStampUtility.getTimestampAsString());
-            sessionDetails.put(JsonCodec.WebDriver.Grid.REQUESTED_CAPABILITIES, getSession().getRequestedCapabilities());
+//            sessionDetails.put(JsonCodec.WebDriver.Grid.REQUESTED_CAPABILITIES, getSession().getRequestedCapabilities());
 
 
             if (getSession().getExternalKey() != null) {
