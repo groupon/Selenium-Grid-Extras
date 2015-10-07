@@ -52,14 +52,10 @@ public class VideoRecordingOptions extends HashMap<String, String> {
 
   public boolean getStoreVideosOnHub() {
       String option = this.get(STORE_VIDEOS_ON_HUB);
-      // Default = true
-      if (option == null) {
-          return true;
-      }
       return Boolean.valueOf(option);
   }
 
-  public void setStoreVideosOnHub(String value) {
+  public void setStoreVideosOnHub(boolean value) {
     this.put(STORE_VIDEOS_ON_HUB, String.valueOf(value));
   }
 

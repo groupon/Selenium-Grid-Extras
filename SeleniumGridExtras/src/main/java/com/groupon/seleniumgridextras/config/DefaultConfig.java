@@ -166,6 +166,7 @@ public class DefaultConfig {
 
     private static void loadDefaultVideoRecordingOptions() {
         config.getVideoRecording().setRecordTestVideos(true);
+        config.getVideoRecording().setStoreVideosOnHub(true);  // Uploading videos to the Hub is enabled by default.
         config.getVideoRecording().setFrameRate(5, 1);
         config.getVideoRecording().setOutputDimensions(1024, 768);
         config.getVideoRecording().setVideosToKeep(VIDEOS_TO_KEEP);
