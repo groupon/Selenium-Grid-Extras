@@ -52,6 +52,7 @@ public class Config {
     public static final String GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = "grid_extras_auto_update_check_interval";
     public static final String LOG_MAXIMUM_AGE_MS = "log_maximum_age_ms";
 
+    public static final String ENABLE_SESSION_HISTORY = "enable_session_history";
 
     private static Logger logger = Logger.getLogger(Config.class);
 
@@ -579,5 +580,22 @@ public class Config {
         } else {
             return DefaultConfig.GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL;
         }
+    }
+
+    public boolean getEnableSessionHistory() {
+        if (getConfigMap().get(ENABLE_SESSION_HISTORY).equals("1")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void setEnableSessionHistory(String input) {
+        if (input.equals("1")) {
+            getConfigMap().put(ENABLE_SESSION_HISTORY, input);
+        } else {
+            getConfigMap().put(ENABLE_SESSION_HISTORY, "0");
+        }
+
     }
 }

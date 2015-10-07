@@ -105,7 +105,10 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         try {
 
             String host = session.getSlot().getRemoteURL().getHost();
-            CommonThreadPool.startCallable(new SessionHistoryCallable(session));
+
+            if (RuntimeConfig.getConfig() != null && RuntimeConfig.getConfig().getEnableSessionHistory()) {
+                CommonThreadPool.startCallable(new SessionHistoryCallable(session));
+            }
 
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
