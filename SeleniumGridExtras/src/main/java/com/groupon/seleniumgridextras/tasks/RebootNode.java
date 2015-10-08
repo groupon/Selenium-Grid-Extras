@@ -79,7 +79,7 @@ public class RebootNode extends ExecuteOSTask {
     @Override
     public String getLinuxCommand(String param) {
         logReboot();
-        return "shutdown -r now";
+        return "sudo shutdown -r now";
     }
 
     @Override
