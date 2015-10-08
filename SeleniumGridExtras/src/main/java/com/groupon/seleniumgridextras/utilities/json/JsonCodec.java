@@ -196,6 +196,7 @@ public class JsonCodec {
         public static class Downloader {
 
             public static final String BIT_32 = "32";
+            public static final String BIT_64 = "64";
             public static final String ROOT_DIR = "root_dir";
             public static final String BIT = "bit";
             public static final String WIN32 = "Win32";

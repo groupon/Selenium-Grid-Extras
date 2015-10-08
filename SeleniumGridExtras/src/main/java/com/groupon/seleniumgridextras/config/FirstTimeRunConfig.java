@@ -45,6 +45,7 @@ import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriv
 import com.groupon.seleniumgridextras.os.GridPlatform;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.ValueConverter;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
@@ -240,6 +241,8 @@ public class FirstTimeRunConfig {
         String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
+        String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
+
         if (answer.equals("1")) {
             defaultConfig.setAutoUpdateDrivers("1");
 
@@ -252,6 +255,8 @@ public class FirstTimeRunConfig {
                     askQuestion("What version of WebDriver Jar should we use?", versionOfWebDriver);
             versionOfChrome =
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
+            bitOfChrome =
+                    askQuestion("What bit of Chrome Driver should we use?", bitOfChrome);
             versionOfIEDriver =
                     askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
         }
@@ -259,12 +264,15 @@ public class FirstTimeRunConfig {
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
         defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
+        defaultConfig.getChromeDriver().setBit(bitOfChrome);
 
         System.out
                 .println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
         System.out.println("Current IE Driver Version: " + defaultConfig.getIEdriver().getVersion());
         System.out
                 .println("Current Chrome Driver Version: " + defaultConfig.getChromeDriver().getVersion());
+        System.out
+                .println("Current Chrome Driver Bit: " + defaultConfig.getChromeDriver().getBit());
 
     }
 
