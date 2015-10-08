@@ -27,9 +27,9 @@ public class VideoRecorderCallableTest {
     final private String session2 = "654321";
     final private String session3 = "abcdef";
 
-    final private File session1File = new File("video_output", session1 + ".mp4");
-    final private File session2File = new File("video_output", session2 + ".mp4");
-    final private File session3File = new File("video_output", session3 + ".mp4");
+    final private File session1File = new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY, session1 + ".mp4");
+    final private File session2File = new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY, session2 + ".mp4");
+    final private File session3File = new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY, session3 + ".mp4");
 
     @Before
     public void setUp() throws Exception {
@@ -152,6 +152,10 @@ public class VideoRecorderCallableTest {
     @Test
     public void testDeleteOldMovies() throws Exception {
         // Create empty files
+        File outputDir = new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY);
+        if (!outputDir.exists()) {
+            outputDir.mkdir();
+        }
         session1File.createNewFile();
         Thread.sleep(100);
         session2File.createNewFile();
@@ -159,7 +163,7 @@ public class VideoRecorderCallableTest {
         session3File.createNewFile();
 
         // Delete older files
-        VideoRecorderCallable.deleteOldMovies(new File("video_output"));
+        VideoRecorderCallable.deleteOldMovies(outputDir);
 
         // Older files has been removed
         assertFalse(session1File.exists());

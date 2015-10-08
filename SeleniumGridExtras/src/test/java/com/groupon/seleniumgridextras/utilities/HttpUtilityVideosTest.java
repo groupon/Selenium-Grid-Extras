@@ -21,7 +21,7 @@ public class HttpUtilityVideosTest {
 
     public static final String VIDEO_RECORDER_TEST_JSON = "video_recorder_test.json";
 
-    final private String videosUrl = "http://192.168.168.144:3000//download_video/";
+    final private String videosUrl = "http://192.168.168.144:3000/download_video/";
     final private String video1Filename = "e985bb1c-bb92-4b16-8e76-62e039efbbc0.mp4";
     final private String video2Filename = "f041511c-367d-4772-a82a-7b48ab69615c.mp4";
     final private String video3Filename = "94a74a04-1579-4475-b65d-926b905f0a40.mp4";
@@ -37,9 +37,9 @@ public class HttpUtilityVideosTest {
 
     @After
     public void tearDown() throws Exception {
-        delete(new File("video_output", video1Filename));
-        delete(new File("video_output", video2Filename));
-        delete(new File("video_output", video3Filename));
+        delete(new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY, video1Filename));
+        delete(new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY, video2Filename));
+        delete(new File(DefaultConfig.VIDEO_OUTPUT_DIRECTORY, video3Filename));
         delete(new File(RuntimeConfig.getConfigFile()));
         delete(new File(VIDEO_RECORDER_TEST_JSON + ".example"));
     }
