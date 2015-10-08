@@ -33,6 +33,7 @@ public class Config {
     public static final String HUB_CONFIG_FILES = "hub_config_files";
 
     public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
+    public static final String GRID_JVM_X_OPTIONS = "grid_jvm_x_options";
     public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
 
     public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
@@ -443,6 +444,15 @@ public class Config {
     public String getGridJvmOptions() {
         logger.info(getConfigMap().get(GRID_JVM_OPTIONS));
         return mapToJvmParams((Map<String, Object>) getConfigMap().get(GRID_JVM_OPTIONS));
+    }
+
+    public String getGridJvmXOptions() {
+        logger.info(getConfigMap().get(GRID_JVM_X_OPTIONS));
+        Object options = getConfigMap().get(GRID_JVM_X_OPTIONS);
+        if (!(options instanceof String)) {
+            return ""; // If the options is null or an invalid type, just return the empty string.
+        }
+        return ((String)options).trim() + " "; // The convention is to return a string with a trailing space
     }
 
     public String getGridExtrasJvmOptions() {
