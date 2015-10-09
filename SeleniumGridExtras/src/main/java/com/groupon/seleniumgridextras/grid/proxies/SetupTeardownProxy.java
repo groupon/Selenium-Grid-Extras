@@ -64,6 +64,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
@@ -106,9 +107,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
             String host = session.getSlot().getRemoteURL().getHost();
 
-            if (RuntimeConfig.getConfig() != null && RuntimeConfig.getConfig().getEnableSessionHistory()) {
-                CommonThreadPool.startCallable(new SessionHistoryCallable(session));
-            }
+            logNewSessionHistoryAsync(session);
 
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
@@ -273,5 +272,11 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         this.restarting = restarting;
     }
 
+    public static Future<String> logNewSessionHistoryAsync(TestSession session) {
+        if (RuntimeConfig.getConfig() != null && RuntimeConfig.getConfig().getEnableSessionHistory()) {
+            return CommonThreadPool.startCallable(new SessionHistoryCallable(session));
+        }
+        return null;
+    }
 
 }
