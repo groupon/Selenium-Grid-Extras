@@ -4,6 +4,7 @@ import com.google.common.base.Throwables;
 import com.groupon.seleniumgridextras.VideoHttpExecutor;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.utilities.threads.video.VideoRecorderCallable;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -73,6 +74,9 @@ public class HttpUtility {
         if (!destinationDir.exists()) {
             destinationDir.mkdir();
         }
+
+        // Delete old movies
+        VideoRecorderCallable.deleteOldMovies(destinationDir);
 
         File destFile = new File(
                 destinationDir.getAbsolutePath(),

@@ -159,10 +159,16 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         if (session.getExternalKey() != null) {
             stopVideoRecording(session);
 
-            CommonThreadPool.startCallable(
-                    new VideoDownloaderCallable(
-                            session.getExternalKey().getKey(),
-                            session.getSlot().getRemoteURL().getHost()));
+            // Download video only if 'videos_to_keep' is greater than 0
+            if (RuntimeConfig.getConfig() == null) {
+                RuntimeConfig.load(false);
+            }
+            if (RuntimeConfig.getConfig().getVideoRecording().getVideosToKeep() > 0) {
+                CommonThreadPool.startCallable(
+                        new VideoDownloaderCallable(
+                                session.getExternalKey().getKey(),
+                                session.getSlot().getRemoteURL().getHost()));
+            }
         }
 
         CommonThreadPool.startCallable(

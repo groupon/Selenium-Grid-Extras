@@ -56,7 +56,7 @@ public class VideoRecorderCallable implements Callable {
                     dimension.getWidth(),
                     dimension.getHeight()));
         }
-        deleteOldMovies();
+        VideoRecorderCallable.deleteOldMovies(outputDir);
     }
 
     @Override
@@ -249,8 +249,8 @@ public class VideoRecorderCallable implements Callable {
         return image;
     }
 
-    protected void deleteOldMovies() {
-        File[] files = outputDir.listFiles();
+    public static void deleteOldMovies(File moviesDir) {
+        File[] files = moviesDir.listFiles();
         //TODO: This is tested, but don't you dare modify this without writing a new test!
         int filesToKeep = RuntimeConfig.getConfig().getVideoRecording().getVideosToKeep();
         int currentFileCount = files.length;

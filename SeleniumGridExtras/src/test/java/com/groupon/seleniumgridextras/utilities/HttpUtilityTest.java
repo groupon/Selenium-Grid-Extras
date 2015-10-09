@@ -48,10 +48,4 @@ public class HttpUtilityTest {
         assertEquals(200, HttpUtility.checkIfUrlStatusCode(new URL("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.5.0/SeleniumGridExtras-1.5.0-SNAPSHOT-jar-with-dependencies.jar")));
     }
 
-//    @Test //This is commented out until we find a more consistent place to download videos from
-//    public void testGetVideoFromUri() throws Exception {
-//        RuntimeConfig.load();
-//        File actual = HttpUtility.downloadVideoFromUri(new URI("http://192.168.168.144:3000/download_video/ad895b34-ee0a-4362-b542-a63d90ea221d.mp4"));
-//        assertTrue(actual.exists());
-//    }
 }
