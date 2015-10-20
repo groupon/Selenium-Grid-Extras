@@ -2,7 +2,6 @@ package com.groupon.seleniumgridextras.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -52,6 +51,9 @@ public class RuntimeConfigTest {
         assertEquals(true, RuntimeConfig.getConfig().getAutoStartNode());
         assertEquals(false, RuntimeConfig.getConfig().getAutoStartHub());
 
+        // Verify that the session history setting matches the default value defined by this constant that is "0" or "1"
+        final boolean defaultSessionHistoryConfig = "1".equals(DefaultConfig.ENABLE_SESSION_HISTORY_DEFAULT);
+        assertEquals(defaultSessionHistoryConfig, RuntimeConfig.getConfig().getEnableSessionHistory());
     }
 
     @Test

@@ -82,6 +82,7 @@ public class DefaultConfig {
     public static final String FOOTER_PARTIAL_HTML = "/footer_partial.html";
     public static final int HTTP_REQUEST_TIMEOUT = 60000;
     public static final int CONFIG_PULLER_HTTP_TIMEOUT = 5000;
+    public static final String ENABLE_SESSION_HISTORY_DEFAULT = "1";  // Session history is turned on by default.
     public static final File SESSION_LOG_DIRECTORY = new File("log", "session_logs");
     public static final int VIDEOS_TO_KEEP = 40;
     public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
@@ -112,6 +113,7 @@ public class DefaultConfig {
 
         loadLogConfig();
 
+        loadSessionHistoryConfig();
         loadSessionLogDir();
 
         return config;
@@ -241,6 +243,10 @@ public class DefaultConfig {
     private static void loadLogConfig() {
         config.setLogMaximumSize(LOG_MAXIMUM_SIZE);
         config.setLogMaximumAge(LOG_MAX_AGE);
+    }
+
+    private static void loadSessionHistoryConfig() {
+        config.setEnableSessionHistory(ENABLE_SESSION_HISTORY_DEFAULT);
     }
 
     private static void loadEnabledPlugins() {

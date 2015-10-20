@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class SessionHistoryCallable implements Callable {
+public class SessionHistoryCallable implements Callable<String> {
 
     public static final int SECONDS_TO_WAIT_FOR_EXTERNAL_KEY = 120;
     public static final String SOMETHING_WENT_WRONG_WHEN_GATHERING_INFORMATION_FOR_NEW_SESSION_THREADS = "Something went wrong when gathering information for new session threads";
