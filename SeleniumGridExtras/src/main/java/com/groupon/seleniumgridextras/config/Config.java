@@ -594,7 +594,6 @@ public class Config {
         }
     }
 
-<<<<<<< HEAD
     public boolean getEnableSessionHistory() {
         if (getConfigMap().get(ENABLE_SESSION_HISTORY).equals("1")) {
             return true;
@@ -609,8 +608,8 @@ public class Config {
         } else {
             getConfigMap().put(ENABLE_SESSION_HISTORY, "0");
         }
+    }
 
-=======
     @SuppressWarnings("unchecked")
     public List<String> getAdditionalHubConfig() {
         return (List<String>) getConfigMap().get(HUB_ADDITIONAL_CLASSPATH);
@@ -619,6 +618,5 @@ public class Config {
     @SuppressWarnings("unchecked")
     public void addHubClasspathItem(String item) {
         ((List<String>) getConfigMap().get(HUB_ADDITIONAL_CLASSPATH)).add(item);
->>>>>>> 134fc8580d4d65cd5e1eb41c8665761b874084e9
     }
 }

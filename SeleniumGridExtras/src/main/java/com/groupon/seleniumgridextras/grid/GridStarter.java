@@ -27,26 +27,22 @@ public class GridStarter {
         command.append(RuntimeConfig.getConfig().getGridJvmOptions());
         command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
-<<<<<<< HEAD
         String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
-=======
-    List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalHubConfig();
-    for(String additionalJarPath : additionalClassPathItems) {
-      command.append(RuntimeConfig.getOS().getPathSeparator() + additionalJarPath);
-    }
-
-    String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
->>>>>>> 134fc8580d4d65cd5e1eb41c8665761b874084e9
+        
+        List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalHubConfig();
+        for(String additionalJarPath : additionalClassPathItems) {
+        	command.append(RuntimeConfig.getOS().getPathSeparator() + additionalJarPath);
+        }
 
         command.append(jarPath + getOsSpecificQuote());
         command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
-//    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
+//	    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
 
         String
                 logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
         command.append(logCommand);
-//    command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
+//      command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
         command.append(" -hubConfig " + configFile);
 
         logger.info("Hub Start Command: \n\n" + String.valueOf(command));
