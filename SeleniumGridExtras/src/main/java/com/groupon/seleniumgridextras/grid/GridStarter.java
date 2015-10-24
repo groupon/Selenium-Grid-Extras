@@ -28,16 +28,21 @@ public class GridStarter {
         command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
         String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
+        
+        List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalHubConfig();
+        for(String additionalJarPath : additionalClassPathItems) {
+        	command.append(RuntimeConfig.getOS().getPathSeparator() + additionalJarPath);
+        }
 
         command.append(jarPath + getOsSpecificQuote());
         command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
-//    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
+//	    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
 
         String
                 logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
         command.append(logCommand);
-//    command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
+//      command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
         command.append(" -hubConfig " + configFile);
 
         logger.info("Hub Start Command: \n\n" + String.valueOf(command));
