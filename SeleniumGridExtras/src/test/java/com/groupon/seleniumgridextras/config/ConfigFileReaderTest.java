@@ -5,11 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.nio.file.Paths;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class ConfigFileReaderTest {
@@ -67,5 +67,21 @@ public class ConfigFileReaderTest {
     ConfigFileReader c = new ConfigFileReader("foo.json");
     assertEquals(false, c.hasContent());
     assertEquals(new HashMap(), c.toHashMap());
+  }
+
+  @Test
+  public void testHubAdditionalClasspath() throws Exception {
+    String path = Paths.get(this.getClass().getResource("/fixtures/configs/additional_classpath.json").toURI()).toString();
+    ConfigFileReader configFileReader = new ConfigFileReader(path);
+
+    List<String> expectedClasspath = new ArrayList<String>(2);
+    expectedClasspath.add("/opt/selenium/prioritizer.jar");
+    expectedClasspath.add("/opt/selenium/lib/capabilitymatcher.jar");
+
+    List<String> actualClasspath = (List<String>) ((Map) configFileReader.toHashMap().get("theConfigMap")).get("hub_additional_classpath");
+
+    assertEquals(true, configFileReader.hasContent());
+    assertEquals(expectedClasspath.size(), actualClasspath.size());
+    assertTrue("Expected " + actualClasspath.toString() + " to contain " + expectedClasspath.toString(), expectedClasspath.containsAll(actualClasspath));
   }
 }

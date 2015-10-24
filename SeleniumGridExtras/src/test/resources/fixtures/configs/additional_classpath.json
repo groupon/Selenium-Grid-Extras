@@ -1,0 +1,117 @@
+{
+  "theConfigMap": {
+    "auto_update_browser_versions": "",
+    "log_maximum_size": "20000000",
+    "iedriver": {
+      "bit": "Win32",
+      "directory": "/tmp/webdriver/iedriver",
+      "version": "2.41.0"
+    },
+    "default_role": "hub",
+    "auto_update_drivers": "1",
+    "html_render_options": {
+      "html_footer_partial": "/footer_partial.html",
+      "main_js_file": "/bootstrap.3.2.0.min.js",
+      "primary_css_file_fallback": "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css",
+      "html_header_file": "/header_partial.html",
+      "main_template": "/jumbotron-narrow.css",
+      "primary_css_file": "/bootstrap.3.2.0.min.css",
+      "main_js_fallback": "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
+      "jquery_file": "/jquery.1.11.1.min.js",
+      "jquery_fallback": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js",
+      "html_nav_bar": "/nav_bar_partial.html",
+      "main_template_fallback": "http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css"
+    },
+    "http_request_timeout": 60000,
+    "video_recording_options": {
+      "frameSeconds": "1",
+      "frames": "5",
+      "videos_to_keep": "40",
+      "lower_third_background_color": "0,0,0,200",
+      "idle_video_timeout": "120",
+      "width": "1024",
+      "video_output_dir": "video_output",
+      "title_frame_font_color": "129,182,64,128",
+      "record_test_videos": "true",
+      "height": "768",
+      "lower_third_font_color": "255,255,255,255"
+    },
+    "grid_extras_release_url": "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases",
+    "hub_additional_classpath": [
+      "/opt/selenium/prioritizer.jar",
+      "/opt/selenium/lib/capabilitymatcher.jar"
+    ],
+    "reboot_after_sessions": "10",
+    "expose_directory": "shared",
+    "tear_down": [
+      "com.groupon.seleniumgridextras.tasks.MoveMouse"
+    ],
+    "webdriver": {
+      "directory": "/tmp/webdriver",
+      "version": "2.41.0"
+    },
+    "active_modules": [
+      "com.groupon.seleniumgridextras.tasks.DeleteOldLogsTask",
+      "com.groupon.seleniumgridextras.tasks.Setup",
+      "com.groupon.seleniumgridextras.tasks.Teardown",
+      "com.groupon.seleniumgridextras.tasks.MoveMouse",
+      "com.groupon.seleniumgridextras.tasks.RebootNode",
+      "com.groupon.seleniumgridextras.tasks.VideoRecorder",
+      "com.groupon.seleniumgridextras.tasks.KillAllIE",
+      "com.groupon.seleniumgridextras.tasks.KillAllFirefox",
+      "com.groupon.seleniumgridextras.tasks.KillAllChrome",
+      "com.groupon.seleniumgridextras.tasks.KillAllSafari",
+      "com.groupon.seleniumgridextras.tasks.GetProcesses",
+      "com.groupon.seleniumgridextras.tasks.KillPid",
+      "com.groupon.seleniumgridextras.tasks.Netstat",
+      "com.groupon.seleniumgridextras.tasks.Screenshot",
+      "com.groupon.seleniumgridextras.tasks.ExposeDirectory",
+      "com.groupon.seleniumgridextras.tasks.StartGrid",
+      "com.groupon.seleniumgridextras.tasks.GetInfoForPort",
+      "com.groupon.seleniumgridextras.tasks.GridStatus",
+      "com.groupon.seleniumgridextras.tasks.KillAllByName",
+      "com.groupon.seleniumgridextras.tasks.StopGrid",
+      "com.groupon.seleniumgridextras.tasks.GetConfig",
+      "com.groupon.seleniumgridextras.tasks.StopGridExtras",
+      "com.groupon.seleniumgridextras.tasks.IEProtectedMode",
+      "com.groupon.seleniumgridextras.tasks.IEMixedContent",
+      "com.groupon.seleniumgridextras.tasks.SystemInfo",
+      "com.groupon.seleniumgridextras.tasks.GetNodeConfig",
+      "com.groupon.seleniumgridextras.tasks.UpdateNodeConfig",
+      "com.groupon.seleniumgridextras.tasks.AutoUpgradeDrivers",
+      "com.groupon.seleniumgridextras.tasks.DownloadWebdriver",
+      "com.groupon.seleniumgridextras.tasks.DownloadIEDriver",
+      "com.groupon.seleniumgridextras.tasks.DownloadChromeDriver",
+      "com.groupon.seleniumgridextras.tasks.SessionHistory",
+      "com.groupon.seleniumgridextras.tasks.UpgradeGridExtrasTask"
+    ],
+    "grid_extras_auto_update": "0",
+    "hub_config_files": [],
+    "config_puller_http_timeout": 5000,
+    "auto_start_hub": "0",
+    "chromedriver": {
+      "bit": "32",
+      "directory": "/tmp/webdriver/chromedriver",
+      "version": "2.10"
+    },
+    "disabled_modules": [
+      "com.groupon.seleniumgridextras.tasks.GetFile"
+    ],
+    "grid_extras_auto_update_check_interval": "86400000",
+    "auto_start_node": "1",
+    "hub_config": {
+      "role": "hub",
+      "port": "4444",
+      "servlets": "com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet",
+      "host": "192.168.1.12"
+    },
+    "log_maximum_age_ms": 864000000,
+    "grid": {},
+    "setup": [
+      "com.groupon.seleniumgridextras.tasks.MoveMouse"
+    ],
+    "grid_jvm_options": {},
+    "node_config_files": [],
+    "grid_extras_jvm_options": {}
+  }
+}
