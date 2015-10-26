@@ -24,10 +24,9 @@ public class CleanTempShutdownHook {
     public void cleanTempDriverDirs(){
         File[] allFiles = tempDir.listFiles();
 
-        for(int i = 0; i < allFiles.length; i++){
-            File currentFile = allFiles[i];
-            if(currentFile.isDirectory()){
-                if(currentFile.listFiles().length == 0){
+        for (File currentFile : allFiles) {
+            if (currentFile.isDirectory()) {
+                if (currentFile.listFiles().length == 0) {
                     logger.info(String.format("Deleting %s", currentFile.getAbsolutePath()));
                     try {
                         FileUtils.deleteDirectory(currentFile);

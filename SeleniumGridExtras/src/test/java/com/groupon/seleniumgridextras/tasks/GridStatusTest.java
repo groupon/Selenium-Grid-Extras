@@ -119,7 +119,7 @@ public class GridStatusTest {
     public void testAddingNewSessionWithBadParam() throws Exception{
         GridStatus status = new GridStatus();
 
-        Map<String, String> shouldNotRecord = new HashMap<String, String>();
+        Map<String, String> shouldNotRecord = new HashMap<>();
         shouldNotRecord.put("not-session", "123445");
 
         Map actualResultsNotRecordedSession = JsonParserWrapper.toHashMap(status.execute(shouldNotRecord));
@@ -128,7 +128,7 @@ public class GridStatusTest {
                 actualResultsNotRecordedSession.get("sessions")));
 
 
-        Map<String, String> shouldRecord = new HashMap<String, String>();
+        Map<String, String> shouldRecord = new HashMap<>();
         shouldRecord.put("session", "123456");
 
         ArrayList expectedResults = new ArrayList();

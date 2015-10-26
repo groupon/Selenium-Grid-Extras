@@ -54,7 +54,7 @@ public class GetFile extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.GET_FILE);
     setEnabledInGui(true);
@@ -67,7 +67,7 @@ public class GetFile extends ExecuteOSTask {
 
   @Override
   public List<String> getDependencies() {
-    List<String> localDependencies = new LinkedList<String>();
+    List<String> localDependencies = new LinkedList<>();
 
     localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
     return localDependencies;

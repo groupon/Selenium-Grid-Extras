@@ -54,9 +54,8 @@ public class jWMI
     vbs += "Dim obj, strData"+CRLF;
     vbs += "For Each obj in classComponent"+CRLF;
     String[] wmiFieldNameArray = wmiCommaSeparatedFieldName.split(",");
-    for(int i = 0; i < wmiFieldNameArray.length; i++)
-    {
-      vbs += "  strData = strData & obj."+wmiFieldNameArray[i]+" & VBCrLf"+CRLF;
+    for (String aWmiFieldNameArray : wmiFieldNameArray) {
+      vbs += "  strData = strData & obj." + aWmiFieldNameArray + " & VBCrLf" + CRLF;
     }
     vbs += "Next"+CRLF;
     vbs += "wscript.echo strData"+CRLF;

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class SessionTracker {
 
-    List<String> sessionsRecorded = new LinkedList<String>();
+    List<String> sessionsRecorded = new LinkedList<>();
 
 
     public void startSession(String session) {

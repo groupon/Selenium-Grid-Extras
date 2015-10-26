@@ -54,7 +54,7 @@ public class Netstat extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_INFO);
     setButtonText(TaskDescriptions.UI.ButtonText.NETSTAT);
     setEnabledInGui(true);

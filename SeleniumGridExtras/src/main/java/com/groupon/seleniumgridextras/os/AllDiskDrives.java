@@ -37,9 +37,7 @@
 
 package com.groupon.seleniumgridextras.os;
 
-import com.groupon.seleniumgridextras.utilities.ValueConverter;
-import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
-
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec.OS.Hardware.HardDrive;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -48,24 +46,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static com.groupon.seleniumgridextras.utilities.ValueConverter.bytesToHumanReadable;
+
 public class AllDiskDrives {
 
   private static Logger logger = Logger.getLogger(AllDiskDrives.class);
 
 
   public static List<Map<String, String>> toPreJsonArray() {
-    List<Map<String, String>> drivesInfo = new LinkedList<Map<String, String>>();
+    List<Map<String, String>> drivesInfo = new LinkedList<>();
 
     for (File drive : getHds()) {
-      Map<String, String> currentDrive = new HashMap<String, String>();
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.FREE, ValueConverter.bytesToHumanReadable(
-          drive.getFreeSpace(), false));
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.SIZE, ValueConverter.bytesToHumanReadable(
-          drive.getTotalSpace(), false));
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.USABLE, ValueConverter.bytesToHumanReadable(
-          drive.getUsableSpace(), false));
+      Map<String, String> currentDrive = new HashMap<>();
 
-      currentDrive.put(JsonCodec.OS.Hardware.HardDrive.DRIVE, drive.getAbsolutePath());
+      currentDrive.put(HardDrive.FREE, bytesToHumanReadable(drive.getFreeSpace(), false));
+      currentDrive.put(HardDrive.SIZE, bytesToHumanReadable(drive.getTotalSpace(), false));
+      currentDrive.put(HardDrive.USABLE, bytesToHumanReadable(drive.getUsableSpace(), false));
+      currentDrive.put(HardDrive.DRIVE, drive.getAbsolutePath());
 
       logger.debug(currentDrive);
 
@@ -73,7 +70,6 @@ public class AllDiskDrives {
     }
 
     return drivesInfo;
-
   }
 
   protected static File[] getHds() {

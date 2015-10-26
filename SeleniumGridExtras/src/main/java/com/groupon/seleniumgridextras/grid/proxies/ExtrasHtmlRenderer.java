@@ -52,10 +52,9 @@ public class ExtrasHtmlRenderer implements HtmlRenderer {
         builder.append(" class='busy' ");
         builder.append(" title='").append(session.get("lastCommand")).append("' ");
       } else {
-        builder.append(" title='")
-            .append(slot.getCapabilities())
-            .append("type=" + slot.getProtocol())
-            .append("' ");
+        builder.append(" title='").append(slot.getCapabilities())
+                .append("type=").append(slot.getProtocol())
+                .append("' ");
       }
 
       if (icon != null) {

@@ -63,7 +63,7 @@ public class Setup extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN);
     setButtonText(TaskDescriptions.UI.ButtonText.SETUP);
     setEnabledInGui(false);
@@ -107,19 +107,13 @@ public class Setup extends ExecuteOSTask {
   public boolean initialize() {
     Boolean initialized = true;
     logger.info("Setup Tasks");
-    setupTasks = new LinkedList<ExecuteOSTask>();
+    setupTasks = new LinkedList<>();
     for (String module : RuntimeConfig.getConfig().getSetup()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         setupTasks.add(task);
         logger.debug("    " + task.getClass().getSimpleName());
-      } catch (ClassNotFoundException error) {
-        logger.error(module + "   " + error);
-        initialized = false;
-      } catch (InstantiationException error) {
-        logger.error(module + "   " + error);
-        initialized = false;
-      } catch (IllegalAccessException error) {
+      } catch (ClassNotFoundException | IllegalAccessException | InstantiationException error) {
         logger.error(module + "   " + error);
         initialized = false;
       }

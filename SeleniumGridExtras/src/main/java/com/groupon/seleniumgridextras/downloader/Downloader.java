@@ -95,9 +95,6 @@ public abstract class Downloader {
       FileUtils.copyURLToFile(url, getDestinationFileFullPath());
       logger.info("Download complete");
       return true;
-    } catch (MalformedURLException error){
-      logger.error(error.toString());
-      setErrorMessage(error.toString());
     } catch (IOException error) {
       logger.error(error.toString());
       setErrorMessage(error.toString());

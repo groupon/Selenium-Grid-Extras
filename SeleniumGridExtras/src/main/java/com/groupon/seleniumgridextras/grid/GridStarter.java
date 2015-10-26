@@ -22,10 +22,10 @@ public class GridStarter {
     public static String getOsSpecificHubStartCommand(String configFile, Boolean windows) {
 
         StringBuilder command = new StringBuilder();
-        command.append(getJavaExe() + " ");
+        command.append(getJavaExe()).append(" ");
         command.append(RuntimeConfig.getConfig().getGridJvmXOptions());
         command.append(RuntimeConfig.getConfig().getGridJvmOptions());
-        command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
+        command.append("-cp ").append(getOsSpecificQuote()).append(getGridExtrasJarFilePath());
 
         String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
         
@@ -34,16 +34,15 @@ public class GridStarter {
         	command.append(RuntimeConfig.getOS().getPathSeparator() + additionalJarPath);
         }
 
-        command.append(jarPath + getOsSpecificQuote());
+        command.append(jarPath).append(getOsSpecificQuote());
         command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
 //	    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
 
-        String
-                logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
+        String logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
 
         command.append(logCommand);
-//      command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
-        command.append(" -hubConfig " + configFile);
+//    command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
+        command.append(" -hubConfig ").append(configFile);
 
         logger.info("Hub Start Command: \n\n" + String.valueOf(command));
         return String.valueOf(command);
@@ -57,7 +56,6 @@ public class GridStarter {
         }
 
     }
-
 
     public static JsonObject startAllNodes(JsonResponseBuilder jsonResponseBuilder) {
         for (String command : getStartCommandsForNodes(RuntimeConfig.getOS().isWindows())) {
@@ -81,7 +79,6 @@ public class GridStarter {
 
                 e.printStackTrace();
             }
-
         }
 
         return jsonResponseBuilder.getJson();
@@ -117,7 +114,7 @@ public class GridStarter {
     }
 
     public static List<String> getStartCommandsForNodes(Boolean windows) {
-        List<String> commands = new LinkedList<String>();
+        List<String> commands = new LinkedList<>();
 
         for (String configFile : RuntimeConfig.getConfig().getNodeConfigFiles()) {
 
@@ -155,15 +152,12 @@ public class GridStarter {
         }
 
         if (windows) {
-
-
             String batchFile = logFile.replace("log", "bat");
             writeBatchFile(batchFile, command);
             return "start /MIN " + batchFile;
         } else {
             return command;
         }
-
     }
 
     protected static String getWebNodeStartCommand(String configFile, Boolean windows) {
@@ -179,7 +173,7 @@ public class GridStarter {
         }
 
         StringBuilder command = new StringBuilder();
-        command.append(getJavaExe() + " ");
+        command.append(getJavaExe()).append(" ");
         command.append(RuntimeConfig.getConfig().getGridJvmXOptions());
         command.append(RuntimeConfig.getConfig().getGridJvmOptions());
 
@@ -189,12 +183,11 @@ public class GridStarter {
         }
 
         command.append(getChromeDriverExecutionPathParam());
-        command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
-        command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath()
-                + getOsSpecificQuote());
+        command.append(" -cp ").append(getOsSpecificQuote()).append(getGridExtrasJarFilePath());
+        command.append(RuntimeConfig.getOS().getPathSeparator()).append(getCurrentWebDriverJarPath()).append(getOsSpecificQuote());
         command.append(" org.openqa.grid.selenium.GridLauncher -role wd ");
         command.append(host);
-        command.append(" -nodeConfig " + configFile);
+        command.append(" -nodeConfig ").append(configFile);
 
         return String.valueOf(command);
     }
@@ -204,11 +197,11 @@ public class GridStarter {
 
         GridNodeConfiguration config = GridNode.loadFromFile(configFile).getConfiguration();
         command.append(config.getAppiumStartCommand());
-        command.append(" -p " + config.getPort());
+        command.append(" -p ").append(config.getPort());
 
         String workingDirectory = System.getProperty("user.dir");
         String configFileFullPath = workingDirectory + RuntimeConfig.getOS().getFileSeparator() + configFile;
-        command.append(" --log-timestamp --nodeconfig " + configFileFullPath);
+        command.append(" --log-timestamp --nodeconfig ").append(configFileFullPath);
 
         return String.valueOf(command);
     }
@@ -267,13 +260,11 @@ public class GridStarter {
         return RuntimeConfig.getConfig().getWebdriver().getVersion();
     }
 
-
     protected static String getWebdriverHome() {
         return RuntimeConfig.getConfig().getWebdriver().getDirectory();
     }
 
     private static void writeBatchFile(String filename, String input) {
-
         File file = new File(filename);
 
         try {

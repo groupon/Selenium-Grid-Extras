@@ -64,7 +64,7 @@ public class IEProtectedMode extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_DANGER);
     setButtonText(TaskDescriptions.UI.ButtonText.IE_PROTECTED_MODE);
     setEnabledInGui(true);
@@ -117,7 +117,7 @@ public class IEProtectedMode extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.Windows.InternetExplorer.ENABLED)) {
-      return execute(parameter.get(JsonCodec.OS.Windows.InternetExplorer.ENABLED).toString());
+      return execute(parameter.get(JsonCodec.OS.Windows.InternetExplorer.ENABLED));
     }
     return execute();
   }
@@ -137,7 +137,7 @@ public class IEProtectedMode extends ExecuteOSTask {
   public JsonObject execute(String status) {
     if (RuntimeConfig.getOS().isWindows()) {
       setAllProtectedStatuses(
-          status.equals(JsonCodec.OS.Windows.InternetExplorer.INTERNET_ZONE) ? true : false);
+              status.equals(JsonCodec.OS.Windows.InternetExplorer.INTERNET_ZONE));
       getJsonResponse()
           .addKeyValues(JsonCodec.OUT, "IE needs to restart before you see the changes");
       return getAllProtectedStatus();
@@ -167,11 +167,7 @@ public class IEProtectedMode extends ExecuteOSTask {
         Advapi32Util
             .registryGetIntValue(WinReg.HKEY_CURRENT_USER, getCurrentSettingForZone(zone), JsonCodec.OS.Windows.RegistryKeys.IE_PROTECTED_MODE);
 
-    if (enabled == 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return enabled == 0;
   }
 
 

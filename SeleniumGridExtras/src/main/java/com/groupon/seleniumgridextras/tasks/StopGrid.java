@@ -59,7 +59,7 @@ public class StopGrid extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_DANGER);
     setButtonText(TaskDescriptions.UI.ButtonText.STOP_GRID);
     setEnabledInGui(false);
@@ -120,7 +120,7 @@ public class StopGrid extends ExecuteOSTask {
     if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.OS.PORT)) {
       return execute();
     } else {
-      return this.execute(parameter.get(JsonCodec.OS.PORT).toString());
+      return this.execute(parameter.get(JsonCodec.OS.PORT));
     }
   }
 

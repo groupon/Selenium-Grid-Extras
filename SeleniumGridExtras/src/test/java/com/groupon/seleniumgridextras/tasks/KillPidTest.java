@@ -68,7 +68,7 @@ public class KillPidTest {
 
   @Test
   public void testKillPid() {
-	  Map <String, String> parameter = new HashMap<String, String>();
+	  Map <String, String> parameter = new HashMap<>();
 	  parameter.put(JsonCodec.OS.KillCommands.ID, "abc");
 	  JsonObject object = task.execute(parameter);
 	  assertNotNull(RuntimeConfig.getOS().getOSName());

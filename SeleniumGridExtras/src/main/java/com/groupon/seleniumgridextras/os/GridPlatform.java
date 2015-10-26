@@ -6,10 +6,10 @@ import java.util.List;
 
 public class GridPlatform {
 
-  protected List<String> xpFamily = new LinkedList<String>();
-  protected List<String> vistaFamily = new LinkedList<String>();
-  protected List<String> win8Family = new LinkedList<String>();
-  protected List<String> win8_1Family = new LinkedList<String>();
+  protected List<String> xpFamily = new LinkedList<>();
+  protected List<String> vistaFamily = new LinkedList<>();
+  protected List<String> win8Family = new LinkedList<>();
+  protected List<String> win8_1Family = new LinkedList<>();
 
 
   public GridPlatform() {

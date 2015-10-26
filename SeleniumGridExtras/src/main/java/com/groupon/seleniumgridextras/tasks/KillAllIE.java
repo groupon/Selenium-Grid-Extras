@@ -65,7 +65,7 @@ public class KillAllIE extends KillAllByName {
         setAcceptedParams(params);
         setRequestType("GET");
         setResponseType("json");
-        setClassname(this.getClass().getCanonicalName().toString());
+        setClassname(this.getClass().getCanonicalName());
         setCssClass(TaskDescriptions.UI.BTN_DANGER);
         setButtonText(TaskDescriptions.UI.ButtonText.KILL_IE);
         setEnabledInGui(true);
@@ -90,7 +90,7 @@ public class KillAllIE extends KillAllByName {
         }
 
 
-        Map<String, String> responsesList = new HashMap<String, String>();
+        Map<String, String> responsesList = new HashMap<>();
         try {
             logger.info(String.format("Killing all IE Driver instances with command %s", getKillDriverCommand()));
             JsonObject killDriverResponse = ExecuteCommand.execRuntime(getKillDriverCommand(), true);

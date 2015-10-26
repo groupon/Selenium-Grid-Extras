@@ -25,7 +25,7 @@ public class NodeSessionHistory {
 
     public NodeSessionHistory(File outputFile) {
         this.created = TimeStampUtility.getTimestamp();
-        this.sessions = new LinkedList<Map>();
+        this.sessions = new LinkedList<>();
         this.outputFile = outputFile;
         readInExistingHistory();
     }

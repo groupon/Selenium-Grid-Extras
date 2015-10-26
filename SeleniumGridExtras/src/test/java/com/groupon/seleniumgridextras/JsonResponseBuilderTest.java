@@ -129,7 +129,7 @@ public class JsonResponseBuilderTest {
   @Test
   public void testAddKeyValuesMap() throws Exception {
     jsonResponseObject.addKeyDescriptions("foo", "test");
-    Map<String, String> bar = new HashMap<String, String>();
+    Map<String, String> bar = new HashMap<>();
     bar.put("a", "b");
     bar.put("c", "d");
     jsonResponseObject.addKeyValues("foo", bar);

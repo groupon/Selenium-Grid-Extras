@@ -65,8 +65,8 @@ public class Config {
 
     public Config() {
         theConfigMap = new HashMap();
-        gridNodeList = new LinkedList<GridNode>();
-        gridHubList = new LinkedList<GridHub>();
+        gridNodeList = new LinkedList<>();
+        gridHubList = new LinkedList<>();
         getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
         getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
         initialize();
@@ -74,8 +74,8 @@ public class Config {
 
     public Config(Boolean emptyConfig) {
         theConfigMap = new HashMap();
-        gridNodeList = new LinkedList<GridNode>();
-        gridHubList = new LinkedList<GridHub>();
+        gridNodeList = new LinkedList<>();
+        gridHubList = new LinkedList<>();
         getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
         getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
         if (!emptyConfig) {
@@ -156,11 +156,7 @@ public class Config {
     }
 
     public boolean getAutoUpdateDrivers() {
-        if (getConfigMap().get(AUTO_UPDATE_DRIVERS).equals("1")) {
-            return true;
-        } else {
-            return false;
-        }
+        return getConfigMap().get(AUTO_UPDATE_DRIVERS).equals("1");
     }
 
     public void setAutoUpdateDrivers(String input) {
@@ -173,11 +169,7 @@ public class Config {
     }
 
     public boolean getAutoUpdateBrowserVersions() {
-        if (getConfigMap().get(AUTO_UPDATE_BROWSER_VERSIONS).equals("1")) {
-            return true;
-        } else {
-            return false;
-        }
+        return getConfigMap().get(AUTO_UPDATE_BROWSER_VERSIONS).equals("1");
     }
 
     public void setAutoUpdateBrowserVersions(String input) {
@@ -437,11 +429,11 @@ public class Config {
     }
 
     public boolean getAutoStartNode() {
-        return getConfigMap().get(AUTO_START_NODE).equals("1") ? true : false;
+        return getConfigMap().get(AUTO_START_NODE).equals("1");
     }
 
     public boolean getAutoStartHub() {
-        return getConfigMap().get(AUTO_START_HUB).equals("1") ? true : false;
+        return getConfigMap().get(AUTO_START_HUB).equals("1");
     }
 
     public String getGridJvmOptions() {
@@ -574,9 +566,9 @@ public class Config {
         Object value = getConfigMap().get(LOG_MAXIMUM_AGE_MS);
 
         if (value instanceof Long) {
-            return ((Long) value).longValue();
+            return (Long) value;
         } else if (value instanceof String) {
-            return Long.valueOf((String) value).longValue();
+            return Long.valueOf((String) value);
         } else {
             return DefaultConfig.LOG_MAX_AGE;
         }

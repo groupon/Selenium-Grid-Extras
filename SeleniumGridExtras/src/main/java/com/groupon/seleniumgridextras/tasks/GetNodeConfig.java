@@ -29,7 +29,7 @@ public class GetNodeConfig extends ExecuteOSTask {
     params.addProperty(JsonCodec.WebDriver.Grid.NODE, "(Required) -  Computer name of desired node.");
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.GET_NODE_CONFIG);
     setEnabledInGui(true);
@@ -90,7 +90,7 @@ public class GetNodeConfig extends ExecuteOSTask {
                                               + RuntimeConfig.getConfig().getConfigsDirectory().getName());
       return getJsonResponse().getJson();
     } else {
-      return execute(parameter.get(JsonCodec.WebDriver.Grid.NODE).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Grid.NODE));
     }
   }
 
@@ -109,7 +109,7 @@ public class GetNodeConfig extends ExecuteOSTask {
   }
 
   protected List<File> getAllJsonConfigs(File config_dir) {
-    List<File> files = new LinkedList<File>();
+    List<File> files = new LinkedList<>();
 
     for (File f : config_dir.listFiles()) {
       if (FilenameUtils.getExtension(f.getName()).equals("json")) {

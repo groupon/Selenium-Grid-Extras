@@ -63,7 +63,7 @@ public class ExposeDirectory extends ExecuteOSTask {
         TaskDescriptions.Description.DIR);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.DIR);
     setEnabledInGui(true);
@@ -75,7 +75,7 @@ public class ExposeDirectory extends ExecuteOSTask {
   @Override
   public JsonObject execute() {
     File[] files = sharedDir.listFiles();
-    List<String> filesToString = new LinkedList<String>();
+    List<String> filesToString = new LinkedList<>();
 
     for (File f : files) {
       filesToString.add(f.toString());

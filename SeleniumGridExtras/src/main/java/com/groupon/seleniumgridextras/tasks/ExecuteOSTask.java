@@ -66,7 +66,7 @@ public abstract class ExecuteOSTask extends ExtrasEndPoint {
 
   public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.PARAMETER)) {
-      return execute(parameter.get(JsonCodec.PARAMETER).toString());
+      return execute(parameter.get(JsonCodec.PARAMETER));
     } else {
       return execute();
     }

@@ -75,7 +75,7 @@ public class Screenshot extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass("btn-info");
     setButtonText(TaskDescriptions.UI.ButtonText.SCREENSHOT);
     setEnabledInGui(true);
@@ -102,9 +102,8 @@ public class Screenshot extends ExecuteOSTask {
     int height = parameter.containsKey(JsonCodec.Images.HEIGHT) ? Integer.parseInt(parameter.get(
         JsonCodec.Images.HEIGHT)) : 0;
     boolean
-        keepFile =
-        parameter.containsKey(JsonCodec.Images.KEEP) ? Boolean.parseBoolean(parameter.get(
-            JsonCodec.Images.KEEP)) : true;
+        keepFile = !parameter.containsKey(JsonCodec.Images.KEEP)
+            || Boolean.parseBoolean(parameter.get(JsonCodec.Images.KEEP));
     return createScreenshot(width, height, keepFile);
   }
 
@@ -147,10 +146,6 @@ public class Screenshot extends ExecuteOSTask {
     }
   }
 
-
-
-
-
   private String writeImageToDisk(BufferedImage screenshot) throws IOException {
     String filename;
     String directory = RuntimeConfig.getConfig().getSharedDirectory();
@@ -173,7 +168,7 @@ public class Screenshot extends ExecuteOSTask {
 
   @Override
   public List<String> getDependencies() {
-    List<String> localDependencies = new LinkedList<String>();
+    List<String> localDependencies = new LinkedList<>();
 
     localDependencies.add("com.groupon.seleniumgridextras.tasks.ExposeDirectory");
     return localDependencies;

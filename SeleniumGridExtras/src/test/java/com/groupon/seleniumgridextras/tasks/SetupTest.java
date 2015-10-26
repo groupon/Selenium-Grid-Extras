@@ -82,7 +82,7 @@ public class SetupTest {
   public void testExecute() {
     if (RuntimeConfig.getOS().hasGUI()) {
       JsonObject result = task.execute();
-      Long exitCode = new Long(0);
+      Long exitCode = 0L;
       JsonArray expectedClasses = new JsonArray();
       expectedClasses.add(new JsonPrimitive("MoveMouse"));
 

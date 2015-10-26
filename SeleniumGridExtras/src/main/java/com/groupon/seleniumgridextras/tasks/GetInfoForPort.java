@@ -56,7 +56,7 @@ public class GetInfoForPort extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.PORT_INFO);
     setEnabledInGui(true);
@@ -85,7 +85,7 @@ public class GetInfoForPort extends ExecuteOSTask {
   public JsonObject execute(Map<String, String> parameter) {
 
     if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.PORT)) {
-      return execute(parameter.get(JsonCodec.OS.PORT).toString());
+      return execute(parameter.get(JsonCodec.OS.PORT));
     } else {
       return execute();
     }

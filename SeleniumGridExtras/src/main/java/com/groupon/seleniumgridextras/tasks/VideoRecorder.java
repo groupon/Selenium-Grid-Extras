@@ -36,7 +36,7 @@ public class VideoRecorder extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
 
     addResponseDescription(JsonCodec.Video.SESSION,
         "Session on which the current action was performed");
@@ -86,22 +86,27 @@ public class VideoRecorder extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.Video.ACTION, "" + action);
       getJsonResponse().addKeyValues(JsonCodec.Video.DESCRIPTION, "" + userDescription);
 
-      if (action.equals(JsonCodec.Video.START)) { //Once again, a kingdom for a string switch
+      switch (action) {
+      case JsonCodec.Video.START:
         startVideoRecording(session);
-      } else if (action.equals(JsonCodec.Video.STOP)) {
+        break;
+      case JsonCodec.Video.STOP:
         stopVideoRecording(session);
-      } else if (action.equals(JsonCodec.Video.HEARTBEAT)) {
+        break;
+      case JsonCodec.Video.HEARTBEAT:
         updateLastAction(session, userDescription);
-      } else {
+        break;
+      default:
         String error = String.format(
-            "Unrecognized action: %s, for session: %s, on host: %s",
-            action,
-            session,
-            RuntimeConfig.getHostIp());
+                "Unrecognized action: %s, for session: %s, on host: %s",
+                action,
+                session,
+                RuntimeConfig.getHostIp());
 
         logger.warn(error);
         getJsonResponse().addKeyValues(JsonCodec.ERROR, error);
 
+        break;
       }
     }
 
@@ -184,7 +189,7 @@ public class VideoRecorder extends ExecuteOSTask {
     .addKeyValues(JsonCodec.Video.CURRENT_VIDEOS, videosInMidRecording);
 
 
-    Map<String, Map<String, Object>> filesReadyForDownload = new HashMap<String, Map<String, Object>>();
+    Map<String, Map<String, Object>> filesReadyForDownload = new HashMap<>();
     try {
       for (File f : RuntimeConfig.getConfig().getVideoRecording().getOutputDir().listFiles()) {
 
@@ -194,7 +199,7 @@ public class VideoRecorder extends ExecuteOSTask {
 
         String sessionId = FilenameUtils.removeExtension(f.getName());
         if (!videosInMidRecording.contains(sessionId)) {
-          Map<String, Object> videoInfo = new HashMap<String, Object>();
+          Map<String, Object> videoInfo = new HashMap<>();
           videoInfo.put(JsonCodec.Video.SESSION, sessionId);
           videoInfo.put(JsonCodec.Video.VIDEO_DOWNLOAD_URL, buildUrlToVideo(f.getName()));
           videoInfo.put(JsonCodec.Video.VIEDO_SIZE, f.length());
@@ -230,6 +235,7 @@ public class VideoRecorder extends ExecuteOSTask {
       return uriBuilder.build().toString();
     } catch (Exception e) {
       String error = String.format("Error building direct URL for session %s, %s\n%s",
+          fileName,
           e.getMessage(),
           Throwables.getStackTraceAsString(e));
       logger.error(error, e);

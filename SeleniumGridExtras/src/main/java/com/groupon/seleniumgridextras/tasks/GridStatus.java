@@ -67,7 +67,7 @@ public class GridStatus extends ExecuteOSTask {
         setAcceptedParams(params);
         setRequestType("GET");
         setResponseType("json");
-        setClassname(this.getClass().getCanonicalName().toString());
+        setClassname(this.getClass().getCanonicalName());
         setCssClass("btn-success");
         setButtonText(TaskDescriptions.UI.ButtonText.GRID_STATUS);
         setEnabledInGui(true);
@@ -81,9 +81,7 @@ public class GridStatus extends ExecuteOSTask {
         addResponseDescription(JsonCodec.WebDriver.Grid.NODE_INFO, HASH_OBJECT_DESCRIBING_THE_NODE_CONFIG_PROCESS);
         addResponseDescription(JsonCodec.WebDriver.Grid.RECORDED_SESSIONS, LIST_OF_RECORDED_SESSIONS);
         addResponseDescription(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT, INTEGER_UPPER_LIMIT_BEFORE_THE_BOX_REBOOTS);
-
     }
-
 
     @Override
     public JsonObject execute() {
@@ -91,8 +89,8 @@ public class GridStatus extends ExecuteOSTask {
             JsonObject hubInfo = PortChecker.getParsedPortInfo(4444);
             JsonObject nodeInfo = PortChecker.getParsedPortInfo(5555);
 
-            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_RUNNING, hubInfo.isJsonNull() || hubInfo.toString().equals("{}") ? false : true);
-            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_RUNNING, nodeInfo.isJsonNull() || nodeInfo.toString().equals("{}") ? false : true);
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_RUNNING, !(hubInfo.isJsonNull() || hubInfo.toString().equals("{}")));
+            getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_RUNNING, !(nodeInfo.isJsonNull() || nodeInfo.toString().equals("{}")));
             getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.HUB_INFO, hubInfo);
             getJsonResponse().addKeyValues(JsonCodec.WebDriver.Grid.NODE_INFO, nodeInfo);
 
@@ -113,12 +111,10 @@ public class GridStatus extends ExecuteOSTask {
     @Override
     public JsonObject execute(Map<String, String> parameter) {
 
-
         if (parameter.containsKey(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM)) {
             RuntimeConfig.getTestSessionTracker().startSession(
                     parameter.get(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM));
         }
-
 
         return execute();
     }

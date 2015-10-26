@@ -56,7 +56,7 @@ public class KillPid extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_DANGER);
     setButtonText(TaskDescriptions.UI.ButtonText.KILL_PID);
     setEnabledInGui(false);
@@ -76,10 +76,10 @@ public class KillPid extends ExecuteOSTask {
 
       return execute();
     } else {
-      String pid = parameter.get(JsonCodec.OS.KillCommands.ID).toString();
+      String pid = parameter.get(JsonCodec.OS.KillCommands.ID);
       if (!RuntimeConfig.getOS().isWindows() && parameter.containsKey(
           JsonCodec.OS.KillCommands.SIGNAL)) {
-        pid = "-" + parameter.get(JsonCodec.OS.KillCommands.SIGNAL).toString() + " " + pid;
+        pid = "-" + parameter.get(JsonCodec.OS.KillCommands.SIGNAL) + " " + pid;
       }
       
       String command = "";

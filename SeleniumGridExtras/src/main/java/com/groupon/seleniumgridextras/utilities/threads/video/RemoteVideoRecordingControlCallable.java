@@ -31,7 +31,6 @@ public class RemoteVideoRecordingControlCallable implements Callable {
         this.proxy = proxy;
         this.action = action;
         this.lastAction = lastAction;
-
     }
 
     public RemoteVideoRecordingControlCallable(SetupTeardownProxy proxy, TestSession session, String action) {
@@ -44,37 +43,37 @@ public class RemoteVideoRecordingControlCallable implements Callable {
             return null; //If we haven't acquired an external session at this point, there is no point to continue
         }
 
-
         String message;
-        if (this.action.equals(JsonCodec.Video.START)) { //My kingdom for a switch statement!
+        switch (this.action) {
+        case JsonCodec.Video.START:
             message = startVideo();
 
             if (!message.equals("")) {
-                //Fail safe, in case the start command was not successful, we don't consider the video as already
-                //recording
+                //Fail safe, in case the start command was not successful,
+                // we don't consider the video as already recording
                 this.proxy.getSessionsRecording().add(this.session.getExternalKey().getKey());
 
-                //If video recording started, send the desired capabilities to be put in lower 1/3
+                // If video recording started, send the desired capabilities to be put in lower 1/3
                 this.lastAction = session.getRequestedCapabilities().toString();
                 updateLastAction();
             }
 
-        } else if (this.action.equals(JsonCodec.Video.STOP)) {
+            break;
+        case JsonCodec.Video.STOP:
             message = stopVideo();
-        } else if (this.action.equals(JsonCodec.Video.HEARTBEAT)) {
+            break;
+        case JsonCodec.Video.HEARTBEAT:
             message = updateLastAction();
-        } else {
+            break;
+        default:
             message = String.format("Unrecognized action: %s, for session: %s, will not send a video request.",
                     this.action,
                     this.session.getExternalKey().getKey());
             logger.error(message);
             return message; // early return so we don't double print the message as warning and info
-
         }
         logger.debug(message);
         return message;
-
-
     }
 
     protected boolean acquiredExternalKey() {
@@ -133,6 +132,5 @@ public class RemoteVideoRecordingControlCallable implements Callable {
                 this.session.getSlot().getRemoteURL().getHost(),
                 this.session.getExternalKey().getKey());
     }
-
 
 }

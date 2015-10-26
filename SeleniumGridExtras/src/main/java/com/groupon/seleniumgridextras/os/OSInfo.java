@@ -77,7 +77,7 @@ public class OSInfo {
 
   public Map<String, String> getProcessorInfo() {
 
-    Map<String, String> processorInfo = new HashMap<String, String>();
+    Map<String, String> processorInfo = new HashMap<>();
 
     processorInfo.put(JsonCodec.OS.Hardware.Processor.INFO,
                       "" + osMBean.getName() + " " + osMBean.getVersion());
@@ -91,7 +91,7 @@ public class OSInfo {
 
   public Map<String, String> getMemoryInfo() {
 
-    Map<String, String> ramInfo = new HashMap<String, String>();
+    Map<String, String> ramInfo = new HashMap<>();
 
     ramInfo.put(JsonCodec.OS.Hardware.Ram.TOTAL,
                 ValueConverter.bytesToHumanReadable(mxbean.getTotalPhysicalMemorySize(), false));
@@ -106,7 +106,7 @@ public class OSInfo {
   }
 
   public Map<String, String> getJvmMemoryInfo() {
-    Map<String, String> jvmInfo = new HashMap<String, String>();
+    Map<String, String> jvmInfo = new HashMap<>();
 
     jvmInfo.put(JsonCodec.OS.JVM.AVAILABLE_PROCESSORS_TO_JVM,
                 "" + Runtime.getRuntime().availableProcessors());

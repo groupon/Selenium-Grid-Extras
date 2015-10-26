@@ -73,7 +73,7 @@ public class StartGrid extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass("btn-info");
     setButtonText(TaskDescriptions.UI.ButtonText.START_GRID);
     setEnabledInGui(false);
@@ -104,7 +104,7 @@ public class StartGrid extends ExecuteOSTask {
     if (parameter.isEmpty() || !parameter.containsKey(JsonCodec.WebDriver.Grid.ROLE)) {
       return execute();
     } else {
-      return execute(parameter.get(JsonCodec.WebDriver.Grid.ROLE).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Grid.ROLE));
     }
   }
 

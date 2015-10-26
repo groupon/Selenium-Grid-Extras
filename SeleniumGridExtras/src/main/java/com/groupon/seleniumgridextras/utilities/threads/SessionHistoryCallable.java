@@ -75,7 +75,7 @@ public class SessionHistoryCallable implements Callable<String> {
     }
 
     protected String notifyHubGridExtrasOfNewSession() {
-        Map<String, Object> sessionDetails = new HashMap<String, Object>();
+        Map<String, Object> sessionDetails = new HashMap<>();
         try {
             sessionDetails.put(JsonCodec.WebDriver.Grid.INTERNAL_KEY, getSession().getInternalKey());
             sessionDetails.put(JsonCodec.WebDriver.Grid.EXTERNAL_KEY, JsonCodec.WebDriver.Grid.NOT_YET_ASSIGNED);

@@ -49,7 +49,7 @@ public class GridNodeTest {
     expectedConfiguration.put("nodeStatusCheckTimeout", 10000);
     expectedConfiguration.put("downPollingLimit", 0);
 
-    expectedCapabilities = new LinkedList<Capability>();
+    expectedCapabilities = new LinkedList<>();
     expectedFirefoxCapability = new Firefox();
     expectedFirefoxCapability.put("version", "12");
     expectedCapabilities.add(expectedFirefoxCapability);
@@ -101,7 +101,7 @@ public class GridNodeTest {
   @Test
   public void testGetCapabilities() throws Exception {
 
-    LinkedList<Capability> expected = new LinkedList<Capability>();
+    LinkedList<Capability> expected = new LinkedList<>();
     expected.add(expectedFirefoxCapability);
     assertEquals(expected, node.getCapabilities());
 

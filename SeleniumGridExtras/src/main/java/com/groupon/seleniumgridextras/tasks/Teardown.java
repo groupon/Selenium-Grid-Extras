@@ -62,7 +62,7 @@ public class Teardown extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass("btn-info");
     setButtonText(TaskDescriptions.UI.ButtonText.TEARDOWN);
     setEnabledInGui(false);
@@ -104,19 +104,13 @@ public class Teardown extends ExecuteOSTask {
   public boolean initialize() {
     Boolean initialized = true;
     logger.info("Tear-Down Tasks");
-    teardownTasks = new LinkedList<ExecuteOSTask>();
+    teardownTasks = new LinkedList<>();
     for (String module : RuntimeConfig.getConfig().getTeardown()) {
       try {
         ExecuteOSTask task = (ExecuteOSTask) Class.forName(module).newInstance();
         teardownTasks.add(task);
         logger.info("    " + task.getClass().getSimpleName());
-      } catch (ClassNotFoundException error) {
-        logger.error(module + "   " + error);
-        initialized = false;
-      } catch (InstantiationException error) {
-        logger.error(module + "   " + error);
-        initialized = false;
-      } catch (IllegalAccessException error) {
+      } catch (ClassNotFoundException | IllegalAccessException | InstantiationException error) {
         logger.error(module + "   " + error);
         initialized = false;
       }

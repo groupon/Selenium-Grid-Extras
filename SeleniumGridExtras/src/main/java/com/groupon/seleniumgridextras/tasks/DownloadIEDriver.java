@@ -64,7 +64,7 @@ public class DownloadIEDriver extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_IEDRIVER);
     setEnabledInGui(true);
@@ -97,12 +97,12 @@ public class DownloadIEDriver extends ExecuteOSTask {
     } else {
 
       if (parameter.containsKey(JsonCodec.WebDriver.Downloader.BIT)) {
-        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT).toString();
+        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT);
       } else {
         this.bit = JsonCodec.WebDriver.Downloader.WIN32;
       }
 
-      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION));
     }
   }
 

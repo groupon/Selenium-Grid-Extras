@@ -53,11 +53,12 @@ public class JsonWireCommandTranslator {
   }
 
   public HttpMethod getMethod() {
-    if (this.method.equals("POST")) {
+    switch (this.method) {
+    case "POST":
       return HttpMethod.POST;
-    } else if (this.method.equals("GET")) {
+    case "GET":
       return HttpMethod.GET;
-    } else {
+    default:
       return HttpMethod.DELETE;
     }
   }

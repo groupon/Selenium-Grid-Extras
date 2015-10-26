@@ -29,8 +29,8 @@ public class ConfigPusher {
   protected final String nodeName = RuntimeConfig.getOS().getHostName();
 
   public ConfigPusher() {
-    this.params = new HashMap<String, String>();
-    this.configFiles = new LinkedList<String>();
+    this.params = new HashMap<>();
+    this.configFiles = new LinkedList<>();
   }
 
   public void addConfigFile(String file) {
@@ -45,7 +45,7 @@ public class ConfigPusher {
 
   public Map<String, Integer> sendAllConfigsToHub() {
     final Map<String, String> filesToSend = getConfigFiles();
-    Map<String, Integer> responses = new HashMap<String, Integer>();
+    Map<String, Integer> responses = new HashMap<>();
 
     for (String file : filesToSend.keySet()) {
 
@@ -77,7 +77,7 @@ public class ConfigPusher {
 
 
   protected Map<String, String> getConfigFiles() {
-    Map<String, String> readFiles = new HashMap<String, String>();
+    Map<String, String> readFiles = new HashMap<>();
 
     for (String file : this.configFiles) {
       try {

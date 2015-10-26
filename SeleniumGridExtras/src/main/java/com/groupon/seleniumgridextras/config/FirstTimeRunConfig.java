@@ -338,7 +338,7 @@ public class FirstTimeRunConfig {
 
     private static List<Capability> getCapabilitiesFromUser(Config defaultConfig) {
 
-        List<Capability> chosenCapabilities = new LinkedList<Capability>();
+        List<Capability> chosenCapabilities = new LinkedList<>();
 
         if (defaultConfig.getAutoStartNode()) {
 
@@ -400,7 +400,7 @@ public class FirstTimeRunConfig {
 
     private static List<Capability> getAppiumCapabilitiesFromUser(Config defaultConfig) {
 
-        List<Capability> chosenCapabilities = new LinkedList<Capability>();
+        List<Capability> chosenCapabilities = new LinkedList<>();
 
         if (defaultConfig.getAutoStartNode()) {
 

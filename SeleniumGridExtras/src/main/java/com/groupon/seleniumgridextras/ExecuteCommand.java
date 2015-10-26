@@ -128,8 +128,8 @@ public class ExecuteCommand {
 
     public static JsonObject execRuntime(String[] cmd, boolean waitToFinish) {
         StringBuilder command = new StringBuilder();
-        for(String s : cmd) {
-            command.append(s + " ");
+        for (String s : cmd) {
+            command.append(s).append(" ");
         }        logger.debug("Starting to execute - " + command);
 
         JsonResponseBuilder jsonResponse = new JsonResponseBuilder();

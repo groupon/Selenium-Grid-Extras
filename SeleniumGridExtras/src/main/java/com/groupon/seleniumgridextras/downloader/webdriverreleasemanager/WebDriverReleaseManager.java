@@ -34,7 +34,7 @@ public class WebDriverReleaseManager {
   private Map<String, List<WebDriverRelease>> allProducts;
 
   private void initialize() {
-    allProducts = new HashMap<String, List<WebDriverRelease>>();
+    allProducts = new HashMap<>();
     allProducts.put(WEBDRIVER_JAR, new LinkedList<WebDriverRelease>());
     allProducts.put(IE_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(CHROME_DRIVER, new LinkedList<WebDriverRelease>());

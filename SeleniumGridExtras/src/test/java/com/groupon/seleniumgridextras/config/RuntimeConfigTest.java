@@ -43,7 +43,7 @@ public class RuntimeConfigTest {
         assertNotNull(RuntimeConfig.getConfig().getWebdriver().getVersion());
         assertEquals(File.separator + "tmp" + File.separator + "webdriver", RuntimeConfig.getConfig().getWebdriver().getDirectory());
 
-        List<String> expectedSetup = new LinkedList<String>();
+        List<String> expectedSetup = new LinkedList<>();
         expectedSetup.add("com.groupon.seleniumgridextras.tasks.MoveMouse");
 
         assertEquals(expectedSetup, RuntimeConfig.getConfig().getSetup());
@@ -70,7 +70,7 @@ public class RuntimeConfigTest {
         assertEquals("64", RuntimeConfig.getConfig().getChromeDriver().getBit());
         assertEquals("40.0.1.0", RuntimeConfig.getConfig().getChromeDriver().getVersion());
 
-        List<String> expectedSetup = new LinkedList<String>();
+        List<String> expectedSetup = new LinkedList<>();
         assertEquals(expectedSetup, RuntimeConfig.getConfig().getSetup());
 
         assertEquals(false, RuntimeConfig.getConfig().getAutoStartNode());

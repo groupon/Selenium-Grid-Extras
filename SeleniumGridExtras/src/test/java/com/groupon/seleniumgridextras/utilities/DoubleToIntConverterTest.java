@@ -18,8 +18,8 @@ public class DoubleToIntConverterTest {
 
   @Test
   public void testConversion() throws Exception {
-    Map input = new HashMap<String, Object>();
-    Map nested = new HashMap<String, Object>();
+    Map input = new HashMap<>();
+    Map nested = new HashMap<>();
     List nestedArray = new LinkedList();
 
     nestedArray.add(1);
@@ -39,8 +39,8 @@ public class DoubleToIntConverterTest {
     input.put("e", nested);
     input.put("f", nestedArray);
 
-    Map expected = new HashMap<String, Object>();
-    Map expectedNested = new HashMap<String, Object>();
+    Map expected = new HashMap<>();
+    Map expectedNested = new HashMap<>();
     List expectedNestedArray = new LinkedList();
 
     expectedNestedArray.add(1);

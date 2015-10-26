@@ -118,7 +118,7 @@ public class RemoteVideoRecorderHelper {
     }
 
     protected static Map<String, String> getBlankParams(String session, String action) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
 
         params.put(JsonCodec.Video.SESSION, session);
         params.put(JsonCodec.Video.ACTION, action);

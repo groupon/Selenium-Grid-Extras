@@ -205,7 +205,7 @@ public class HtmlNodeRenderer {
         try {
 			Map<String, Map> allVideoInfos = (Map<String, Map>) videoInfo.get(JsonCodec.Video.AVAILABLE_VIDEOS);
 
-			List<String> sortedSessions = new ArrayList<String>(allVideoInfos.keySet());
+			List<String> sortedSessions = new ArrayList<>(allVideoInfos.keySet());
 			Collections.sort(sortedSessions, new VideoSessionComparator(allVideoInfos));
 
 			for (String session : sortedSessions)

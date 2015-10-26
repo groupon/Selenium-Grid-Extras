@@ -22,7 +22,7 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
         setDescription(TaskDescriptions.Description.LOG_DELETE);
         setRequestType("GET");
         setResponseType("json");
-        setClassname(this.getClass().getCanonicalName().toString());
+        setClassname(this.getClass().getCanonicalName());
         addResponseDescription(JsonCodec.LOGS_DELETED, "List of logs deleted");
         setEnabledInGui(true);
     }
@@ -30,7 +30,7 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
     @Override
     public JsonObject execute() {
 
-        List<String> listOfFilesAsString = new LinkedList<String>();
+        List<String> listOfFilesAsString = new LinkedList<>();
 
         for (File f : deleteOldLogs(
                 RuntimeConfig.getConfig().getLogMaximumSize(),
@@ -38,7 +38,6 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
                 RuntimeConfig.getConfig().getLogsDirectory())) {
             listOfFilesAsString.add(f.getAbsolutePath());
         }
-
 
         getJsonResponse().addKeyValues(JsonCodec.LOGS_DELETED, listOfFilesAsString);
         return getJsonResponse().getJson();
@@ -80,23 +79,22 @@ public class DeleteOldLogsTask extends ExecuteOSTask {
 
     protected List<File> deleteOldLogs(long bytesLimit, long msLimit, File logDir) {
         logger.info(String.format("Deleting all Logs bigger than %s bytes from %s", bytesLimit, logDir.getAbsolutePath()));
-        List<File> filesToDelete = new LinkedList<File>();
+        List<File> filesToDelete = new LinkedList<>();
 
         File[] files = logDir.listFiles();
 
 
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].getName().contains(".log") && files[i].length() > bytesLimit) {
-                filesToDelete.add(files[i]);
+        for (File file : files) {
+            if (file.getName().contains(".log") && file.length() > bytesLimit) {
+                filesToDelete.add(file);
             }
         }
 
-        for (int i = 0; i < files.length; i++) {
-            File currentFile = files[i];
+        for (File currentFile : files) {
             long msRange = TimeStampUtility.timestampInMs() - currentFile.lastModified();
 
             if (currentFile.getName().contains(".log") && msRange > msLimit) {
-                filesToDelete.add(files[i]);
+                filesToDelete.add(currentFile);
             }
         }
 

@@ -51,7 +51,7 @@ public class GetProcesses extends ExecuteOSTask {
         setAcceptedParams(params);
         setRequestType(TaskDescriptions.HTTP.GET);
         setResponseType(TaskDescriptions.HTTP.JSON);
-        setClassname(this.getClass().getCanonicalName().toString());
+        setClassname(this.getClass().getCanonicalName());
         setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
         setButtonText(TaskDescriptions.UI.ButtonText.PS);
         setEnabledInGui(true);

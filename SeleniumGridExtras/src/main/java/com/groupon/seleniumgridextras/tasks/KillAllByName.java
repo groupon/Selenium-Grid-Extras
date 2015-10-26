@@ -56,7 +56,7 @@ public class KillAllByName extends ExecuteOSTask {
         setAcceptedParams(params);
         setRequestType("GET");
         setResponseType("json");
-        setClassname(this.getClass().getCanonicalName().toString());
+        setClassname(this.getClass().getCanonicalName());
         setCssClass(TaskDescriptions.UI.BTN_DANGER);
         setButtonText(TaskDescriptions.UI.ButtonText.KILL_ALL_BY_NAME);
         setEnabledInGui(true);
@@ -106,7 +106,7 @@ public class KillAllByName extends ExecuteOSTask {
     @Override
     public JsonObject execute(Map<String, String> parameter) {
         if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.KillCommands.NAME)) {
-            return execute(parameter.get(JsonCodec.OS.KillCommands.NAME).toString());
+            return execute(parameter.get(JsonCodec.OS.KillCommands.NAME));
         }
         return execute();
     }

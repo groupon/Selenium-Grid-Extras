@@ -39,7 +39,7 @@ public class ImageToVideoConverter implements Callable {
 
     this.inputDirectory = new File(inputDir);
     this.outputVideo = new File(sessionID + ".mp4");
-    this.imageList = new LinkedList<File>();
+    this.imageList = new LinkedList<>();
 
     generateListOfImages(this.inputDirectory, this.imageList);
 
@@ -89,31 +89,24 @@ public class ImageToVideoConverter implements Callable {
     } finally {
       writer.close();
       logger.info("Video conversion done for " + this.outputVideo.getName());
-      return "done";
     }
-
+    return "done";
   }
 
   protected BufferedImage getTitleFrame() {
 
     String line1 = "Test Session: " + outputVideo.getName();
     String line2 = "Recorded on: ";
-    String
-        line3 =
+    String line3 =
         "Encoded on: " + RuntimeConfig.getOS().getHostName() + "(" + RuntimeConfig.getHostIp()
                 + ") at " +  new java.sql.Timestamp(
             Calendar.getInstance().getTime().getTime());
 
-    BufferedImage
-        title =
-        ImageProcessor.createTitleFrame(screenBounds, imageType, line1,
-                                        line2,
-                                        line3);
+    BufferedImage title = ImageProcessor
+            .createTitleFrame(screenBounds, imageType, line1, line2, line3);
 
     return title;
-
   }
-
 
   protected Dimension getImageDimensionAndType(File exampleImage) throws IOException {
     BufferedImage image = ImageUtils.readImage(exampleImage);
@@ -131,6 +124,5 @@ public class ImageToVideoConverter implements Callable {
       }
     }
   }
-
 
 }

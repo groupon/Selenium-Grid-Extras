@@ -64,7 +64,7 @@ public class IEMixedContent extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_DANGER);
     setButtonText(TaskDescriptions.UI.ButtonText.IE_MIXED_CONTENT);
     setEnabledInGui(true);
@@ -108,7 +108,7 @@ public class IEMixedContent extends ExecuteOSTask {
   @Override
   public JsonObject execute(Map<String, String> parameter) {
     if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.OS.Windows.InternetExplorer.ENABLED)) {
-      return execute(parameter.get(JsonCodec.OS.Windows.InternetExplorer.ENABLED).toString());
+      return execute(parameter.get(JsonCodec.OS.Windows.InternetExplorer.ENABLED));
     }
     return execute();
   }

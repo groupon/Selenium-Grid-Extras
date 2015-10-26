@@ -19,7 +19,7 @@ public class SessionTrackerTest {
         s.startSession("b");
         s.startSession("c");
 
-        List<String> expected = new LinkedList<String>();
+        List<String> expected = new LinkedList<>();
         expected.add("a");
         expected.add("b");
         expected.add("c");

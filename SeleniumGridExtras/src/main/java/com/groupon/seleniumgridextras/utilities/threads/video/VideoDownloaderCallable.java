@@ -156,14 +156,7 @@ public class VideoDownloaderCallable implements Callable {
             if (!response.equals("")) {
                 return JsonParserWrapper.toHashMap(response);
             }
-        } catch (IOException e) {
-            String error = String.format("Error trying to get video status from URI %s, %s\n%s",
-                    this.uri,
-                    e.getMessage(),
-                    Throwables.getStackTraceAsString(e));
-
-            logger.warn(error);
-        } catch (URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             String error = String.format("Error trying to get video status from URI %s, %s\n%s",
                     this.uri,
                     e.getMessage(),

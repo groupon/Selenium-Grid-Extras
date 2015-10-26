@@ -73,7 +73,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
     private boolean available = true;
     private boolean restarting = false;
-    private List<String> sessionsRecording = new LinkedList<String>();
+    private List<String> sessionsRecording = new LinkedList<>();
 
     private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
 
@@ -82,7 +82,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         super(request, registry);
         logger.info(String.format("Attaching node %s", this.getId()));
     }
-
 
     @Override
     public TestSession getNewSession(Map<String, Object> requestedCapability) {
@@ -122,10 +121,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         } catch (Exception e) {
             logger.error(String.format("Error communicating with %s, \n%s",
                     session.getSlot().getProxy().getId(), e));
-        } finally {
-            return session;
         }
 
+        return session;
     }
 
 
@@ -193,11 +191,8 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
 
     private boolean alreadyRecordingCurrentSession(TestSession session) {
-        if ((session.getExternalKey() == null) || !getSessionsRecording().contains(session.getExternalKey().getKey())) {
-            return false;
-        }
-
-        return true;
+        return session.getExternalKey() != null
+                && getSessionsRecording().contains(session.getExternalKey().getKey());
     }
 
 
@@ -226,9 +221,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                     "Waiting for stop command to finish for session: %s, output:\n%s",
                     session.getExternalKey().getKey(),
                     a.get()));
-        } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             logger.error(e.getMessage(), e);
         }
     }
@@ -253,7 +246,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                             JsonCodec.Video.HEARTBEAT,
                             command));
         } catch (Exception e) {
-            logger.error(String.format("Error updating last action for int. key: %s"), e);
+            logger.error("Error updating last action for int. key: %s", e);
         }
     }
 

@@ -82,16 +82,6 @@ public class GridHub {
             while ((line = reader.readLine()) != null) {
                 returnString = returnString + line;
             }
-        } catch (FileNotFoundException error) {
-
-            String e = String.format(
-                    "Error loading config from %s, %s, Will have to exit. \n%s",
-                    filePath,
-                    error.getMessage(),
-                    Throwables.getStackTraceAsString(error));
-            System.out.println(e);
-            logger.error(e);
-            System.exit(1);
         } catch (IOException error) {
             String e = String.format(
                     "Error loading config from %s, %s, Will have to exit. \n%s",
@@ -100,7 +90,6 @@ public class GridHub {
                     Throwables.getStackTraceAsString(error));
             System.out.println(e);
             logger.error(e);
-
             System.exit(1);
         } finally {
             if (reader != null) {

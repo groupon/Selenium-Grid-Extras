@@ -178,14 +178,14 @@ public class GridExtrasDownloaderTest {
     @Test
     public void testSanitizeVersions() throws Exception {
 
-        List<Map<String, String>> inputList = new LinkedList<Map<String, String>>();
-        Map<String, String> tempInputMap = new HashMap<String, String>();
+        List<Map<String, String>> inputList = new LinkedList<>();
+        Map<String, String> tempInputMap = new HashMap<>();
         tempInputMap.put("SeleniumGridExtras-1.6.1-SNAPSHOT-jar-with-dependencies.jar", "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.6.1/SeleniumGridExtras-1.6.1-SNAPSHOT-jar-with-dependencies.jar");
         inputList.add(tempInputMap);
 
 
-        List<Map<String, String>> expectedList = new LinkedList<Map<String, String>>();
-        Map<String, String> tempOutputMa = new HashMap<String, String>();
+        List<Map<String, String>> expectedList = new LinkedList<>();
+        Map<String, String> tempOutputMa = new HashMap<>();
         tempOutputMa.put("1.6.1", "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.6.1/SeleniumGridExtras-1.6.1-SNAPSHOT-jar-with-dependencies.jar");
         expectedList.add(tempOutputMa);
 

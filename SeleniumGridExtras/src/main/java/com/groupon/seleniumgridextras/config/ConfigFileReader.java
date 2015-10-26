@@ -28,11 +28,7 @@ public class ConfigFileReader {
   }
 
   public boolean hasContent() {
-    if (this.configString.equals("")) {
-      return false;
-    } else {
-      return true;
-    }
+    return !this.configString.equals("");
   }
 
   public Map toHashMap() {

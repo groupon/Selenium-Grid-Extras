@@ -65,7 +65,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_WEBDRIVER);
     setEnabledInGui(true);
@@ -127,7 +127,7 @@ public class DownloadWebdriver extends ExecuteOSTask {
         JsonCodec.WebDriver.Downloader.VERSION)) {
       return execute();
     } else {
-      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION));
     }
   }
 

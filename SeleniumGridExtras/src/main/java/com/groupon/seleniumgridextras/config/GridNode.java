@@ -30,7 +30,7 @@ public class GridNode {
     private static Logger logger = Logger.getLogger(GridNode.class);
 
     public GridNode() {
-        capabilities = new LinkedList<Capability>();
+        capabilities = new LinkedList<>();
         configuration = new GridNodeConfiguration();
     }
 
@@ -50,7 +50,7 @@ public class GridNode {
                 nodeConfiguration =
                 new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
 
-        LinkedList<Capability> filteredCapabilities = new LinkedList<Capability>();
+        LinkedList<Capability> filteredCapabilities = new LinkedList<>();
         for (JsonElement cap : topLevelJson.getAsJsonArray("capabilities")) {
             Map capHash = JsonParserWrapper.toHashMap(cap.toString());
             if (capHash.containsKey("browserName")) {
@@ -115,16 +115,6 @@ public class GridNode {
             while ((line = reader.readLine()) != null) {
                 returnString = returnString + line;
             }
-        } catch (FileNotFoundException error) {
-            String e = String.format(
-                    "Error loading config from %s, %s, Will have to exit. \n%s",
-                    filePath,
-                    error.getMessage(),
-                    Throwables.getStackTraceAsString(error));
-            System.out.println(e);
-            logger.error(e);
-
-            System.exit(1);
         } catch (IOException error) {
             String e = String.format(
                     "Error loading config from %s, %s, Will have to exit. \n%s",
@@ -133,7 +123,6 @@ public class GridNode {
                     Throwables.getStackTraceAsString(error));
             System.out.println(e);
             logger.error(e);
-
             System.exit(1);
         } finally {
             if (reader != null) {
@@ -244,11 +233,11 @@ public class GridNode {
         }
 
         public int getRegisterCycle() {
-            return registerCycle.intValue();
+            return registerCycle;
         }
 
         public void setRegisterCycle(int registerCycle) {
-            this.registerCycle = new Integer(registerCycle);
+            this.registerCycle = registerCycle;
         }
 
         public String getAppiumStartCommand() {

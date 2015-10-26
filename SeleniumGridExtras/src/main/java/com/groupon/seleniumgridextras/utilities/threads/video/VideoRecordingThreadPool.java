@@ -16,11 +16,11 @@ public class VideoRecordingThreadPool {
 
     private static Logger logger = Logger.getLogger(VideoRecordingThreadPool.class);
     protected static ExecutorService cachedPool;
-    protected static Map<String, Future<String>> futures = new HashMap<String, Future<String>>();
+    protected static Map<String, Future<String>> futures = new HashMap<>();
     protected static
     Map<String, VideoRecorderCallable>
             videos =
-            new HashMap<String, VideoRecorderCallable>();
+            new HashMap<>();
 
 
     public static Future<String> startVideoRecording(String sessionName, int timeout) {
@@ -93,7 +93,7 @@ public class VideoRecordingThreadPool {
 
     public static List<String> getAllVideos() {
         cleanUpOrphanedVideos();
-        List<String> listOfVideos = new LinkedList<String>();
+        List<String> listOfVideos = new LinkedList<>();
         listOfVideos.addAll(videos.keySet());
         return listOfVideos;
     }
@@ -113,9 +113,7 @@ public class VideoRecordingThreadPool {
     public static void waitForThreadToStop(String sessionName) {
         try {
             futures.get(sessionName).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
@@ -128,7 +126,7 @@ public class VideoRecordingThreadPool {
 
     protected static void cleanUpOrphanedVideos() {
         try {
-            List<String> sessionsToCleanUp = new LinkedList<String>();
+            List<String> sessionsToCleanUp = new LinkedList<>();
             for (String session : futures.keySet()) {
                 Future<String> f = futures.get(session);
                 if (f.isCancelled() || f.isDone()) {

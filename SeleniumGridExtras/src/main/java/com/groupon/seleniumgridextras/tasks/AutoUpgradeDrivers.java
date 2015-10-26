@@ -27,7 +27,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
         TaskDescriptions.Description.AUTO_UPGRADE_WEBDRIVER);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
 
     addResponseDescription(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, "Old version of WebDriver Jar");
     addResponseDescription(JsonCodec.WebDriver.OLD_CHROME_DRIVER, "Old version of Chrome Driver");

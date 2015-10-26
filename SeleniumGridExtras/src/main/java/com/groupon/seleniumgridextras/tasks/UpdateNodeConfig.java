@@ -32,7 +32,7 @@ public class UpdateNodeConfig extends ExecuteOSTask {
     params.addProperty(JsonCodec.Config.CONTENT, "(Required) -  Base64 encoded string of content");
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass("btn-success");
     setButtonText(TaskDescriptions.UI.ButtonText.UPDATE_NODE_CONFIG);
     setEnabledInGui(true);

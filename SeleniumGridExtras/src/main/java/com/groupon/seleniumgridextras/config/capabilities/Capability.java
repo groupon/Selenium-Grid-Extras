@@ -101,7 +101,7 @@ public abstract class Capability extends HashMap {
     }
 
     public static Map<Class, String> getSupportedWebCapabilities() {
-        Map<Class, String> capabilityHash = new LinkedHashMap<Class, String>();
+        Map<Class, String> capabilityHash = new LinkedHashMap<>();
 
         capabilityHash.put(Firefox.class, BrowserType.FIREFOX);
         capabilityHash.put(InternetExplorer.class, BrowserType.IE);
@@ -113,7 +113,7 @@ public abstract class Capability extends HashMap {
     }
 
     public static Map<Class, String> getSupportedAppiumCapabilities() {
-        Map<Class, String> capabilityHash = new LinkedHashMap<Class, String>();
+        Map<Class, String> capabilityHash = new LinkedHashMap<>();
 
         capabilityHash.put(Android.class, BrowserType.ANDROID);
         capabilityHash.put(Chrome.class, BrowserType.CHROME);
@@ -127,7 +127,7 @@ public abstract class Capability extends HashMap {
     }
 
     public static Map<Class, String> getSupportedCapabilities() {
-        Map<Class, String> capabilityHash = new HashMap<Class, String>();
+        Map<Class, String> capabilityHash = new HashMap<>();
 
         capabilityHash.putAll(getSupportedWebCapabilities());
         capabilityHash.putAll(getSupportedAppiumCapabilities());

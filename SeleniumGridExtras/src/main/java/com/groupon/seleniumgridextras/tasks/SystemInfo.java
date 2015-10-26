@@ -59,7 +59,7 @@ public class SystemInfo extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass("btn-info");
     setButtonText(TaskDescriptions.UI.ButtonText.SYSTEM);
     setEnabledInGui(true);

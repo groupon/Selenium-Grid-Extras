@@ -1,5 +1,4 @@
 package com.groupon.seleniumgridextras.downloader;
-//        config.getGridExtrasReleaseUrl();
 
 import com.google.common.base.Throwables;
 import com.google.gson.internal.LinkedTreeMap;
@@ -12,7 +11,6 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -58,15 +56,6 @@ public class GridExtrasDownloader extends Downloader {
             FileUtils.copyURLToFile(url, getDestinationFileFullPath());
             logger.info("Download complete");
             return true;
-        } catch (MalformedURLException error) {
-            logger.error(Throwables.getStackTraceAsString(error));
-            setErrorMessage(error.toString());
-        } catch (IOException error) {
-            logger.error(Throwables.getStackTraceAsString(error));
-            setErrorMessage(error.toString());
-        } catch (URISyntaxException error) {
-            logger.error(Throwables.getStackTraceAsString(error));
-            setErrorMessage(error.toString());
         } catch (Exception error) {
             logger.error(Throwables.getStackTraceAsString(error));
             setErrorMessage(error.toString());
@@ -117,17 +106,15 @@ public class GridExtrasDownloader extends Downloader {
 
     public static List<Map<String, String>> sanitizeDownloadableAssetsVersions(List<Map<String, String>> input) {
 
-        List<Map<String, String>> sanitized = new LinkedList<Map<String, String>>();
+        List<Map<String, String>> sanitized = new LinkedList<>();
 
         for (Map<String, String> currentVersion : input) {
-            Map<String, String> tempMap = new HashMap<String, String>();
+            Map<String, String> tempMap = new HashMap<>();
             tempMap.put(
                     currentVersion.keySet().toArray()[0].toString()
                             .replace("SeleniumGridExtras-", "")
-                            .replace("-SNAPSHOT-jar-with-dependencies.jar",
-                                    ""),
+                            .replace("-SNAPSHOT-jar-with-dependencies.jar", ""),
                     currentVersion.values().toArray()[0].toString());
-
 
             sanitized.add(tempMap);
         }
@@ -136,7 +123,7 @@ public class GridExtrasDownloader extends Downloader {
     }
 
     public List<Map<String, String>> getAllDownloadableAssets() throws IOException, URISyntaxException {
-        List<Map<String, String>> releaseList = new LinkedList<Map<String, String>>();
+        List<Map<String, String>> releaseList = new LinkedList<>();
 
         List<LinkedTreeMap> releases = parseAllReleases();
 
@@ -144,24 +131,20 @@ public class GridExtrasDownloader extends Downloader {
             if (currentRelease.containsKey(ASSETS_KEY)) {
                 ArrayList listOfAssetsForCurrentRelease = (ArrayList) currentRelease.get(ASSETS_KEY);
 
-                for (int i = 0; i < listOfAssetsForCurrentRelease.size(); i++) {
-                    LinkedTreeMap currentAsset = (LinkedTreeMap) listOfAssetsForCurrentRelease.get(i);
+                for (Object aListOfAssetsForCurrentRelease : listOfAssetsForCurrentRelease) {
+                    LinkedTreeMap currentAsset = (LinkedTreeMap) aListOfAssetsForCurrentRelease;
 
                     if (currentAsset.containsKey(NAME_KEY) && currentAsset.containsKey(BROWSER_DOWNLOAD_URL)) {
-                        Map<String, String> tempMap = new HashMap<String, String>();
+                        Map<String, String> tempMap = new HashMap<>();
                         tempMap.put(currentAsset.get(NAME_KEY).toString(), currentAsset.get(BROWSER_DOWNLOAD_URL).toString());
                         releaseList.add(tempMap);
                     } else {
                         malformedApiResponse(NAME_KEY + " or " + BROWSER_DOWNLOAD_URL, getReleaseApiUrl(), currentAsset.toString());
                     }
-
                 }
-
-
             } else {
                 malformedApiResponse(ASSETS_KEY, getReleaseApiUrl(), currentRelease.toString());
             }
-
         }
 
         return releaseList;
@@ -189,8 +172,8 @@ public class GridExtrasDownloader extends Downloader {
     private void malformedApiResponse(String key, String url, String json) {
         logger.warn(String.format(
                 "Response API seems to be malformed and does not have %s key. \n URL: %s \n JSON: %s",
-                ASSETS_KEY,
-                getReleaseApiUrl(),
+                key,
+                url,
                 json
         ));
     }

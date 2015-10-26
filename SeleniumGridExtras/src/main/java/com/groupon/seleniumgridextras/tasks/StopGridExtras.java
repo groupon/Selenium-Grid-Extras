@@ -56,7 +56,7 @@ public class StopGridExtras extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType("GET");
     setResponseType("json");
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_DANGER);
     setButtonText(TaskDescriptions.UI.ButtonText.STOP_GRID_EXTRAS);
     setEnabledInGui(true);

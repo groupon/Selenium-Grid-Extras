@@ -62,7 +62,7 @@ public class RAM {
 
 
   public Map<String, String> toHash() {
-    Map<String, String> hash = new HashMap<String, String>();
+    Map<String, String> hash = new HashMap<>();
 
     hash.put("free", freeMemory);
     hash.put("total", totalMemory);

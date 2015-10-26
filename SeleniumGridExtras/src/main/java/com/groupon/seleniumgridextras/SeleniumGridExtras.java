@@ -77,7 +77,7 @@ public class SeleniumGridExtras {
                 server =
                 HttpServer.create(new InetSocketAddress(RuntimeConfig.getGridExtrasPort()), 0);
 
-        List<ExecuteOSTask> tasks = new LinkedList<ExecuteOSTask>();
+        List<ExecuteOSTask> tasks = new LinkedList<>();
         for (String module : RuntimeConfig.getConfig().getActivatedModules()) {
             tasks.add((ExecuteOSTask) Class.forName(module).newInstance());
         }
@@ -132,14 +132,14 @@ public class SeleniumGridExtras {
         if (RuntimeConfig.getConfig().getAutoStartHub()) {
             logger.info("Grid Hub was set to Autostart");
             ExecuteOSTask grid = new StartGrid();
-            logger.info(grid.execute("hub").toString().toString());
+            logger.info(grid.execute("hub").toString());
 
         }
 
         if (RuntimeConfig.getConfig().getAutoStartNode()) {
             logger.info("Grid NodeConfig was set to Autostart");
             ExecuteOSTask grid = new StartGrid();
-            logger.info(grid.execute("node").toString().toString());
+            logger.info(grid.execute("node").toString());
         }
 
         context.getFilters().add(new ParameterFilter());

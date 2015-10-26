@@ -66,7 +66,7 @@ public class DownloadChromeDriver extends ExecuteOSTask {
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
-    setClassname(this.getClass().getCanonicalName().toString());
+    setClassname(this.getClass().getCanonicalName());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
     setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_CHROMEDRIVER);
     setEnabledInGui(true);
@@ -103,11 +103,11 @@ public class DownloadChromeDriver extends ExecuteOSTask {
     if (!parameter.isEmpty() && parameter.containsKey(
         JsonCodec.WebDriver.Downloader.VERSION)) {
       if (parameter.containsKey(JsonCodec.WebDriver.Downloader.BIT)) {
-        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT).toString();
+        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT);
       } else {
         this.bit = JsonCodec.WebDriver.Downloader.BIT_32;
       }
-      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
+      return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION));
     } else {
       return execute();
     }

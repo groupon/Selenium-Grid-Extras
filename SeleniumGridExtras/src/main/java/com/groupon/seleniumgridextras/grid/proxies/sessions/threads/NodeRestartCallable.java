@@ -96,7 +96,7 @@ public class NodeRestartCallable implements Callable {
 
         logger.info(String.format("Asking proxy %s to stop gracefully", proxy.getId()));
 
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
         params.put(JsonCodec.WebDriver.Grid.PORT, String.valueOf(proxy.getRemoteHost().getPort()));
 
         Future<String> f = CommonThreadPool.startCallable(

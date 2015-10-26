@@ -48,7 +48,7 @@ public class ConfigPusherTest {
     @Test
     public void testConfigFileReader() throws Exception {
         final String content = "This is a test";
-        Map<String, String> expected = new HashMap<String, String>();
+        Map<String, String> expected = new HashMap<>();
         expected.put(testFile.getName(), "VGhpcyBpcyBhIHRlc3Q=");
 
         FileIOUtility.writeToFile(testFile, content);

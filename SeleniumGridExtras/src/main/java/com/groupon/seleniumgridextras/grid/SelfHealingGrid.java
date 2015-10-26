@@ -54,10 +54,7 @@ public class SelfHealingGrid extends GridStarter {
 
   private static Boolean portOccupied(int port) {
     JsonObject foo = PortChecker.getParsedPortInfo(port);
-    if (foo.has("pid")) {
-      return true;
-    }
-    return false;
+    return foo.has("pid");
   }
 
 

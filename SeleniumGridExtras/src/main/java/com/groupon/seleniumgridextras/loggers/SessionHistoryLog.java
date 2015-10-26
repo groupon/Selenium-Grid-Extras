@@ -50,7 +50,7 @@ public class SessionHistoryLog {
 
     protected static void resetMemory() {
         if (history == null) {
-            history = new HashMap<String, NodeSessionHistory>();
+            history = new HashMap<>();
         } else {
             //delete all reference to objects to make objects ready for garbage collection
             //Doing it this way, just in case the threads map is refered to anywhere, and does not get garbage collected
@@ -63,19 +63,19 @@ public class SessionHistoryLog {
 
     public static Map<String, List> getTodaysHistoryAsMap() {
         initialize();
-        Map<String, List> allHistory = new HashMap<String, List>();
+        Map<String, List> allHistory = new HashMap<>();
         String todaysTimeStamp = TimeStampUtility.osFriendlyTimestamp();
 
         for (File currentFile : outputDir.listFiles()) {
             String error = "";
 
             if (currentFile.getName().contains(todaysTimeStamp)) {
-                String host = new String(currentFile.getName()).replaceAll("_" + todaysTimeStamp + ".log", "");
+                String host = currentFile.getName().replaceAll("_" + todaysTimeStamp + ".log", "");
                 try {
                     String fileContents = FileIOUtility.getAsString(currentFile);
                     allHistory.put(host, JsonParserWrapper.toList(fileContents));
                 } catch (FileNotFoundException e) {
-                    error = String.format("A file that existed a minute ago is now missing, %s\n%s\n%s",
+                    error = String.format("A file that existed a minute ago is now missing, %s\n%s\n",
                             currentFile.getAbsolutePath(), e.getMessage());
                     logger.error(error, e);
                 } catch (JsonSyntaxException e) {
@@ -87,7 +87,7 @@ public class SessionHistoryLog {
                 }
 
                 if ( !error.equals("")){
-                    List<String> errorList = new LinkedList<String>();
+                    List<String> errorList = new LinkedList<>();
                     errorList.add(error);
                     allHistory.put(host, errorList);
                 }
