@@ -159,7 +159,7 @@ public class GridStarter {
 
             String batchFile = logFile.replace("log", "bat");
             writeBatchFile(batchFile, command);
-            return "start " + batchFile;
+            return "start /MIN " + batchFile;
         } else {
             return command;
         }
