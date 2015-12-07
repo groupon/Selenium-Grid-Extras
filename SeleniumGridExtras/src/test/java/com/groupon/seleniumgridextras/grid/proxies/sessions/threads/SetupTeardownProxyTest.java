@@ -2,11 +2,13 @@ package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.BrowserType;
 import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +38,11 @@ public class SetupTeardownProxyTest {
             FileUtils.deleteDirectory(sessionLogDir);
         }
 
+        RuntimeConfig.setConfigFile("setup_teardown_proxy_test.json");
+        Config config = new Config(true);
+        config.writeToDisk(RuntimeConfig.getConfigFile());
+
+
         // Load default configs.
         RuntimeConfig.load();
 
@@ -55,6 +62,13 @@ public class SetupTeardownProxyTest {
 
         when (mockTestSession.getSlot()).thenReturn(mockTestSlot);
 
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        File config = new File(RuntimeConfig.getConfigFile());
+        config.delete();
+        new File(RuntimeConfig.getConfigFile() + ".example").delete();
     }
 
     @Test
