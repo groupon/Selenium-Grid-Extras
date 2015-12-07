@@ -38,8 +38,8 @@ public class GridStarter {
         command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
 //	    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
 
-        String
-                logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + "grid_hub.log";
+        String logFile = configFile.replace("json", "log");
+        String logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
         command.append(logCommand);
 //      command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
@@ -88,26 +88,26 @@ public class GridStarter {
     }
 
     public static JsonObject startAllHubs(JsonResponseBuilder jsonResponseBuilder) {
-        List<String> configFiles = RuntimeConfig.getConfig().getHubConfigFiles();
-        String configFile = configFiles.get(0); // TODO For now just use the first config file
-        String command = getOsSpecificHubStartCommand(configFile, RuntimeConfig.getOS().isWindows());
-        logger.info(command);
+        for (String configFile : RuntimeConfig.getConfig().getHubConfigFiles()) {
+            String command = getOsSpecificHubStartCommand(configFile, RuntimeConfig.getOS().isWindows());
+            logger.info(command);
 
-        try {
-            JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
-            logger.info(startResponse);
+            try {
+                JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
+                logger.info(startResponse);
 
-            if (!startResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
-                jsonResponseBuilder
+                if (!startResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
+                    jsonResponseBuilder
                         .addKeyValues(JsonCodec.ERROR, "Error running " + startResponse.get(JsonCodec.ERROR).toString());
-            }
-        } catch (Exception e) {
-            jsonResponseBuilder
+                }
+            } catch (Exception e) {
+                jsonResponseBuilder
                     .addKeyValues(JsonCodec.ERROR, "Error running " + command);
-            jsonResponseBuilder
+                jsonResponseBuilder
                     .addKeyValues(JsonCodec.ERROR, e.toString());
 
-            e.printStackTrace();
+                e.printStackTrace();
+            }
         }
         return jsonResponseBuilder.getJson();
     }
