@@ -119,7 +119,7 @@ public class GridStarterTest {
         assertEquals(expectedCommand,
                 GridStarter.getBackgroundStartCommandForNode(command, logFile, false));
 
-        assertEquals("start " + windowsBatchFileName,
+        assertEquals("start /MIN " + windowsBatchFileName,
                 GridStarter.getBackgroundStartCommandForNode(command, logFile, true));
 
         assertEquals(expectedCommand, readFile(windowsBatchFileName));
@@ -127,7 +127,7 @@ public class GridStarterTest {
         assertEquals(expectedAppiumCommand,
                 GridStarter.getBackgroundStartCommandForNode(command, appiumLogFile, false));
 
-        assertEquals("start " + windowsAppiumBatchFileName,
+        assertEquals("start /MIN " + windowsAppiumBatchFileName,
                 GridStarter.getBackgroundStartCommandForNode(command, appiumLogFile, true));
 
         assertEquals(expectedAppiumCommand, readFile(windowsAppiumBatchFileName));
