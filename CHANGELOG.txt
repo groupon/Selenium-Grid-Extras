@@ -1,3 +1,9 @@
+1.11.8 - Adding ability to set automatic user logon for Windows both on and off Active Directory
+       - Start multiple hubs on a machine (PR #177)
+       - Start nodes with minimized console window
+       - Allow turning on/off the SessionHistory feature. (PR #167)
+       - Delete old videos in hub before downloading a new video (PR #162)
+       - Fix issue #159, where you can't pass in "-Xmx" or any option not starting with -D
 1.11.7 - Do not output requested capabilities into session_history, since it will output whole Firefox profile from time to time leading to a 2GB log file per node
 1.11.6 - Adding Support for Microsoft Edge Driver
        - Removing the option to auto upgrade grid extras
