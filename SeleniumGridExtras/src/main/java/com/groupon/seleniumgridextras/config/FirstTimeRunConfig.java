@@ -37,21 +37,23 @@
 package com.groupon.seleniumgridextras.config;
 
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.os.GridPlatform;
+import com.groupon.seleniumgridextras.tasks.SetAutoLogonUser;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +61,7 @@ import java.util.Map;
 public class FirstTimeRunConfig {
 
     private static Logger logger = Logger.getLogger(FirstTimeRunConfig.class);
+    private static Config autoLogonAsUser;
 
     public static Config customiseConfig(Config defaultConfig) {
         final
@@ -94,6 +97,7 @@ public class FirstTimeRunConfig {
         setLogMaximumDaysToKeep(defaultConfig);
 
         setRebootAfterSessionLimit(defaultConfig);
+        setAutoLogonAsUser(defaultConfig);
 
         setDriverAutoUpdater(defaultConfig);
 
@@ -544,5 +548,57 @@ public class FirstTimeRunConfig {
 
         return line;
     }
+
+    public static void setAutoLogonAsUser(Config defaultConfig) {
+
+        if (RuntimeConfig.getOS().isMac() || RuntimeConfig.getOS().isWindows()) {
+            String answer = askQuestion("Would you like this user to automatically log in after restart (1-yes/0-no)", "1");
+
+            if (answer.equals("1")) {
+                if (RuntimeConfig.getOS().isWindows()) {
+                    System.out.println(
+                            "\n\n" +
+                            "WARNING: Setting default username requires elevated privileges. " +
+                            "Make sure that this script was started with 'Run as Administrator' option." +
+                            "\n" +
+                            "It is safe to kill this process and restart setup with Administrative privileges" +
+                            "\n\n"
+                    );
+
+                    Map<String, String> input = new HashMap<String, String>();
+                    Console console = System.console();
+
+                    input.put(JsonCodec.OS.DOMAIN, askQuestion("Username DOMAIN (If not using ActiveDirectory leave blank to use current computer)", System.getenv("USERDOMAIN")));
+                    input.put(JsonCodec.OS.USERNAME, askQuestion("Username to auto logon with", System.getProperty("user.name")));
+
+                    System.out.println("\n\nEnter user password");
+                    char[] password = console.readPassword();
+                    input.put(JsonCodec.OS.PASSWORD, new String(password));
+
+                    JsonObject response = new SetAutoLogonUser().execute(input);
+                    logger.info(response);
+
+
+                    if(((JsonPrimitive) response.get(JsonCodec.EXIT_CODE)).getAsInt() != 0){
+                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                        System.out.println(SetAutoLogonUser.FAILED_TO_SET_DEFAULT_USER_MESSAGE);
+                        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    }
+
+
+                } else {
+
+                    System.out.println("Opening User preferences, please follow these steps:");
+                    System.out.println("1) Unlock preferences by clicking on the Lock symbol in left hand corner (input username and password of admin user)");
+                    System.out.println("2) Click on 'Login Options'");
+                    System.out.println("3) Select desired user from 'Automatic logon'");
+
+                    ExecuteCommand.execRuntime("open /System/Library/PreferencePanes/Accounts.prefPane/");
+                }
+            }
+        }
+
+    }
+
 
 }

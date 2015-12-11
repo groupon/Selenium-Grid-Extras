@@ -264,6 +264,7 @@ public class DefaultConfig {
         config.addActivatedModules(KillAllChrome.class.getCanonicalName());
         config.addActivatedModules(KillAllSafari.class.getCanonicalName());
 
+        config.addActivatedModules(SetAutoLogonUser.class.getCanonicalName());
         config.addActivatedModules(GetProcesses.class.getCanonicalName());
         config.addActivatedModules(KillPid.class.getCanonicalName());
         config.addActivatedModules(Netstat.class.getCanonicalName());

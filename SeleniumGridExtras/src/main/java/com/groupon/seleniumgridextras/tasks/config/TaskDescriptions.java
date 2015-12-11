@@ -37,6 +37,7 @@ public class TaskDescriptions {
         public static final String VIDEO = "/video";
         public static final String SESSION_HISTORY = "/session_history";
         public static final String UPGRADE_GRID_EXTRAS = "/upgrade_grid_extras";
+        public static final String USER_AUTO_LOGON = "/user_auto_logon";
     }
 
 
@@ -129,6 +130,7 @@ public class TaskDescriptions {
         public static final String SESSION_HISTORY = "Displays the threads of test session on all nodes or per node basis";
         public static final String IE_MIXED_CONTENT = "Changes mixed content for Internet Explorer on/off. No param for current status";
         public static final String UPGRADE_GRID_EXTRAS = "Download specified version of Selenium Grid Extras";
+        public static final String SETS_A_USER_TO_AUTOMATICALLY_LOGON_INTO_SYSTEM_POST_REBOOT = "Sets a user to automatically logon into system post reboot";
     }
 
     public static class HTTP {
@@ -144,6 +146,7 @@ public class TaskDescriptions {
         public static final String BTN_DANGER = "btn-danger";
         public static final String BTN_INFO = "btn-info";
         public static final String BTN = "btn";
+        public static final String AUTO_LOGON_USER = "Auto Logon User";
 
         public static class ButtonText {
 

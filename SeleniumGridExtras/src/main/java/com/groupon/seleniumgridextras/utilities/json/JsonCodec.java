@@ -79,6 +79,12 @@ public class JsonCodec {
         public static final String HOSTNAME = "hostname";
         public static final String IP = "ip";
         public static final String UPTIME = "uptime";
+        public static final String USERNAME = "username";
+        public static final String PASSWORD = "password";
+        public static final String DOMAIN = "domain";
+        public static final String CURRENT_USER = "current_user";
+        public static final String CURRENT_DOMAIN = "current_domain";
+        public static final String AUTO_LOGON_ENABLED = "auto_logon_enabled";
 
         public static class JVM {
             public static final String JVM_INFO = "jvm";
