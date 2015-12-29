@@ -1,11 +1,10 @@
 package com.groupon.seleniumgridextras.config.capabilities;
 
-
-import org.apache.log4j.Logger;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 public abstract class Capability extends HashMap {
 
@@ -108,6 +107,7 @@ public abstract class Capability extends HashMap {
         capabilityHash.put(Edge.class, BrowserType.EDGE);
         capabilityHash.put(Chrome.class, BrowserType.CHROME);
         capabilityHash.put(Safari.class, BrowserType.SAFARI);
+        capabilityHash.put(PhantomJs.class, BrowserType.PHANTOMJS);
 
         return capabilityHash;
     }
