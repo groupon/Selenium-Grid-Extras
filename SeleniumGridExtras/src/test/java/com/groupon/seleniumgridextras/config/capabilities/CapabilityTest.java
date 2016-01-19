@@ -20,6 +20,7 @@ public class CapabilityTest {
     Capability browser = Capability.getCapabilityFor("browser");
     Capability iphone = Capability.getCapabilityFor("iPhone");
     Capability ipad = Capability.getCapabilityFor("iPad");
+    Capability phantomjs = Capability.getCapabilityFor("phantomjs");
 
     assertTrue(firefox instanceof Firefox);
     assertTrue(ie instanceof InternetExplorer);
@@ -30,6 +31,7 @@ public class CapabilityTest {
     assertTrue(browser instanceof Browser);
     assertTrue(iphone instanceof IPhone);
     assertTrue(ipad instanceof IPad);
+    assertTrue(phantomjs instanceof PhantomJs);
   }
 
 
@@ -68,5 +70,8 @@ public class CapabilityTest {
             Capability.getCapabilityFor("iPhone").getWebDriverClass());
     assertEquals("io.appium.java_client.ios.IOSDriver",
             Capability.getCapabilityFor("iPad").getWebDriverClass());
+    assertEquals("org.openqa.selenium.phantomjs.PhantomJSDriver",
+            Capability.getCapabilityFor("phantomjs").getWebDriverClass());
+
   }
 }
