@@ -347,9 +347,9 @@ public class FirstTimeRunConfig {
         if (defaultConfig.getAutoStartNode()) {
 
             String guessedPlatform = guessPlatform();
-            System.out.println("What is node Platform? (WINDOWS|XP|VISTA|WIN8|WIN8_1|MAC|LINUX|UNIX|ANDROID)");
+            System.out.println("What is node Platform? (WINDOWS|XP|VISTA|WIN8|WIN8_1|WIN10|MAC|LINUX|UNIX|ANDROID)");
             if (guessedPlatform.equals("WINDOWS")) {
-                System.out.println("WARNING: We had a hard time guessing your platform accurately so will default to 'WINDOWS' pleas update this to be more accurate, or the grid capability matcher might not function properly");
+                System.out.println("WARNING: We had a hard time guessing your platform accurately so will default to 'WINDOWS' please update this to be more accurate, or the grid capability matcher might not function properly");
             }
             String platform = askQuestion(
                     "",

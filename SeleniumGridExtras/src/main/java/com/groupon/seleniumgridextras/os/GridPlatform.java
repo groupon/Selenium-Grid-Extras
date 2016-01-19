@@ -10,6 +10,7 @@ public class GridPlatform {
   protected List<String> vistaFamily = new LinkedList<String>();
   protected List<String> win8Family = new LinkedList<String>();
   protected List<String> win8_1Family = new LinkedList<String>();
+  protected List<String> win10Family = new LinkedList<String>();
 
 
   public GridPlatform() {
@@ -30,6 +31,8 @@ public class GridPlatform {
 
     win8_1Family.add("Windows 8.");
 
+    win10Family.add("Windows 10");
+
   }
 
 
@@ -43,6 +46,8 @@ public class GridPlatform {
       return "WIN8";
     } else if (win8_1Family.contains(osName)) {
       return "WIN8_1";
+    } else if (win10Family.contains(osName)) {
+        return "WIN10";
     } else {
       return "WINDOWS";
     }
