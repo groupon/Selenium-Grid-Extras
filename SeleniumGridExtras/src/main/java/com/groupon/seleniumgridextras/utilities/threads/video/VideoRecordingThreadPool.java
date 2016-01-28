@@ -2,6 +2,8 @@ package com.groupon.seleniumgridextras.utilities.threads.video;
 
 import org.apache.log4j.Logger;
 
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
