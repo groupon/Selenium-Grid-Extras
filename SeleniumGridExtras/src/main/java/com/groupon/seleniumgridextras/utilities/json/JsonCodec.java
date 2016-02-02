@@ -79,7 +79,7 @@ public class JsonCodec {
         public static final String HOSTNAME = "hostname";
         public static final String IP = "ip";
         public static final String UPTIME = "uptime";
-        public static final String USERNAME = "username";
+		public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
         public static final String DOMAIN = "domain";
         public static final String CURRENT_USER = "current_user";
@@ -105,6 +105,7 @@ public class JsonCodec {
             public static final String NAME = "name";
             public static final String SIGNAL = "signal";
             public static final String ID = "id";
+            public static final String PORT = "port";
         }
 
         public static class Windows {
@@ -181,6 +182,8 @@ public class JsonCodec {
             public static final String HUB_INFO = "hub_info";
             public static final String NODE_INFO = "node_info";
             public static final String NODE_SESSIONS_LIMIT = "node_sessions_limit";
+            public static final String APPIUM_SESSIONS_LIMIT = "appium_sessions_limit";
+            public static final String PHONE_SESSIONS_LIMIT = "phone_sessions_limit";
             public static final String NODE = "node";
             public static final String PORT = "port";
             public static final String HOST = "host";
@@ -202,7 +205,7 @@ public class JsonCodec {
         public static class Downloader {
 
             public static final String BIT_32 = "32";
-            public static final String BIT_64 = "64";
+			public static final String BIT_64 = "64";
             public static final String ROOT_DIR = "root_dir";
             public static final String BIT = "bit";
             public static final String WIN32 = "Win32";

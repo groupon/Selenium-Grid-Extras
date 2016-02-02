@@ -1,9 +1,9 @@
 package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.base.Throwables;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.proxies.AbstractProxy;
-import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
 import com.groupon.seleniumgridextras.tasks.GridStatus;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -12,31 +12,29 @@ import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
-import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.RemoteProxy;
-import com.google.common.base.Stopwatch;
+import org.openqa.grid.internal.TestSession;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 
-public class NodeRestartCallable implements Callable {
+public class AppiumNodeRestartCallable implements Callable {
 
     public static final int TIME_FOR_PROXY_TO_FREEUP = 2000;
     public static final int SECONDS_TIMEOUT = 14400;
     public int timeout = 300;
-    private static Logger logger = Logger.getLogger(NodeRestartCallable.class);
+    private static Logger logger = Logger.getLogger(AppiumNodeRestartCallable.class);
 
     protected AbstractProxy proxy;
     protected TestSession session;
 
-    public NodeRestartCallable(AbstractProxy proxy, TestSession session) {
+    public AppiumNodeRestartCallable(AbstractProxy proxy, TestSession session) {
         this.proxy = proxy;
         this.session = session;
     }
@@ -44,6 +42,7 @@ public class NodeRestartCallable implements Callable {
 
     @Override
     public String call() throws Exception {
+        logger.info("Running AppiumNodeRestartCallable");
         try {
             //Giving the proxy a couple of seconds to recover post session. This also gives us opportunity to check if the new build is trying to pick it up
             logger.info(String.format("Giving %s proxy %s ms to free up", this.proxy.getId(), TIME_FOR_PROXY_TO_FREEUP));
@@ -53,12 +52,12 @@ public class NodeRestartCallable implements Callable {
         }
 
         if (this.proxy.isBusy()) {
+            logger.info("Proxy is busy giving it time to free up");
             waitForProxyToFreeUp();
         }
 
-        stopGridNodes();
-        stopGridNode();
-        NodeRestartCallable.rebootGridExtrasNode(proxy.getRemoteHost().getHost());
+
+        restartAppiumNode(proxy.getRemoteHost().getHost(), String.valueOf(proxy.getRemoteHost().getPort()));
 
         logger.info(String.format("Proxy restart command sent for %s", proxy.getId()));
         return "Done";
@@ -92,6 +91,8 @@ public class NodeRestartCallable implements Callable {
 
     }
 
+
+
     private List<RemoteProxy> getProxiesByIp(String ip) {
         List<RemoteProxy> proxies = new ArrayList<RemoteProxy>();
         for (RemoteProxy proxyOnPort : proxy.getRegistry().getAllProxies()) {
@@ -122,16 +123,33 @@ public class NodeRestartCallable implements Callable {
     }
 
 
-    public static void rebootGridExtrasNode(String host) {
-        logger.info("Asking SeleniumGridExtras to reboot node" + host);
+    public void restartAppiumNode(String host, String port) {
+        logger.info("Asking SeleniumGridExtras to reboot appium " + host + ":"+ port);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("port", port);
+
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         host,
                         RuntimeConfig.getGridExtrasPort(),
-                        TaskDescriptions.Endpoints.REBOOT,
-                        new HashMap<String, String>()));
+                        TaskDescriptions.Endpoints.KILL_PORT,
+                        params));
         try {
-            logger.debug(f.get());
+            logger.info(f.get());
+        } catch (Exception e) {
+            logger.error(String.format("Error rebooting node %s, \n %s", host, Throwables.getStackTraceAsString(e)));
+        }
+        proxy.addNewEvent(new RemoteUnregisterException(String.format("Taking proxy %s offline", proxy.getId())));
+
+        params.put("action", "restart");
+        f = CommonThreadPool.startCallable(
+                new RemoteGridExtrasAsyncCallable(
+                        host,
+                        RuntimeConfig.getGridExtrasPort(),
+                        TaskDescriptions.Endpoints.APPIUM_TASKS,
+                        params));
+        try {
+            logger.info(f.get());
         } catch (Exception e) {
             logger.error(String.format("Error rebooting node %s, \n %s", host, Throwables.getStackTraceAsString(e)));
         }
@@ -153,7 +171,7 @@ public class NodeRestartCallable implements Callable {
                         params));
 
         try {
-            logger.debug(f.get());
+            logger.info(f.get());
             unregister();
         } catch (Exception e) {
             logger.error(String.format("Error stopping proxy %s", proxy.getId()), e);
@@ -175,7 +193,7 @@ public class NodeRestartCallable implements Callable {
         String response = "";
         try {
             response = f.get();
-            logger.debug(response);
+            logger.info(response);
         } catch (Exception e) {
             logger.error(
                     String.format(
@@ -214,21 +232,56 @@ public class NodeRestartCallable implements Callable {
 
         int sessionLimit = ((Double) status.get(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT)).intValue();
 
+        return false;
+    }
+    public static boolean timeToRebootAppium(String nodeHost, String proxyId) {
+        Future<String> f = CommonThreadPool.startCallable(
+                new RemoteGridExtrasAsyncCallable(
+                        nodeHost,
+                        RuntimeConfig.getGridExtrasPort(),
+                        TaskDescriptions.Endpoints.GRID_STATUS,
+                        new HashMap<String, String>()));
 
-        if (sessionLimit == 0) {
-            String message = String.format("Node %s with proxy %s is set to never reboot, skipping this step",
-                    nodeHost, proxyId);
-            logger.info(message);
+        String response = "";
+        try {
+            response = f.get();
+            logger.info(response);
+        } catch (Exception e) {
+            logger.error(
+                    String.format(
+                            "Error getting the %s endpoint for proxy %s ",
+                            TaskDescriptions.Endpoints.GRID_STATUS,
+                            proxyId),
+                    e);
+
             return false;
         }
 
-        if (recordedSessions >= sessionLimit) {
-            String message = String.format("Node %s has executed has executed %s sessions, the limit is %s so it is time to reboot it",
-                    nodeHost, recordedSessions, sessionLimit);
 
-            logger.info(message);
-            return true;
+        if (response.equals("")) {
+            String error = "Something went wrong when asking for status from " + proxyId;
+            logger.error(error);
+            return false;
         }
+
+        Map status = JsonParserWrapper.toHashMap(response);
+
+        if (status == null) {
+            String message = String.format("Problem communicating with %s, will not attempt to reboot", nodeHost);
+            logger.warn(message);
+            return false;
+        }
+
+
+        int recordedSessions;
+        if (status.containsKey(GridStatus.DEPRECATED_STARTED_SESSIONS_KEY)) {
+            logger.warn(GridStatus.DEPRECATION_WARNING + " for node " + proxyId);
+            recordedSessions = ((Double) status.get(GridStatus.DEPRECATED_STARTED_SESSIONS_KEY)).intValue();
+        } else {
+            recordedSessions = ((List) status.get(JsonCodec.WebDriver.Grid.RECORDED_SESSIONS)).size();
+        }
+
+
 
         return false;
     }

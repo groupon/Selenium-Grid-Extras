@@ -18,7 +18,7 @@
     </repositories>
 
     <properties>
-        <version.selenium>2.46.0</version.selenium>
+        <version.selenium>2.48.2</version.selenium>
     </properties>
 
     <dependencies>
@@ -26,6 +26,11 @@
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
             <version>4.1.0</version>
+        </dependency>
+		        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>2.0.31-beta</version>
         </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -108,11 +113,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20090211</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.0.31-beta</version>
         </dependency>
     </dependencies>
 

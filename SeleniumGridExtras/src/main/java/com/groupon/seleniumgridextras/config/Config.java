@@ -31,15 +31,17 @@ public class Config {
     public static final String HUB_CONFIG = "hub_config";
     public static final String NODE_CONFIG_FILES = "node_config_files";
     public static final String HUB_CONFIG_FILES = "hub_config_files";
-    public static final String HUB_ADDITIONAL_CLASSPATH = "hub_additional_classpath";
+	public static final String HUB_ADDITIONAL_CLASSPATH = "hub_additional_classpath";
 
     public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
-    public static final String GRID_JVM_X_OPTIONS = "grid_jvm_x_options";
+	public static final String GRID_JVM_X_OPTIONS = "grid_jvm_x_options";
     public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
 
     public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
     public static final String AUTO_UPDATE_BROWSER_VERSIONS = "auto_update_browser_versions";
     public static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
+    public static final String REBOOT_APPIUM_AFTER_SESSIONS = "reboot_appium_after_sessions";
+    public static final String REBOOT_PHONE_AFTER_SESSIONS = "reboot_phone_after_sessions";
 
     public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
     public static final String HTTP_REQUEST_TIMEOUT = "http_request_timeout";
@@ -55,6 +57,11 @@ public class Config {
     public static final String LOG_MAXIMUM_AGE_MS = "log_maximum_age_ms";
 
     public static final String ENABLE_SESSION_HISTORY = "enable_session_history";
+	public static final String REAL_ANDROID_CONFIG_FILE = "real_android_config_file";
+    public static final String ENVIRONMENT_DIRECTORY = "environment_directory";
+
+
+
 
     private static Logger logger = Logger.getLogger(Config.class);
 
@@ -87,6 +94,10 @@ public class Config {
     public List<String> getNodeConfigFiles() {
         return (List<String>) getConfigMap().get(NODE_CONFIG_FILES);
     }
+
+    public String getEnvironmentsDirectory(){ return (String) getConfigMap().get(ENVIRONMENT_DIRECTORY); }
+
+    public String getRealAndroidConfigFile(){ return (String) getConfigMap().get(REAL_ANDROID_CONFIG_FILE); }
 
     public List<GridNode> getNodes() {
         return this.gridNodeList;
@@ -141,13 +152,15 @@ public class Config {
         initializeHubConfig();
 
         getConfigMap().put(HUB_ADDITIONAL_CLASSPATH, new ArrayList<String>());
-        getConfigMap().put(GRID_JVM_OPTIONS, new HashMap<String, Object>());
+		getConfigMap().put(GRID_JVM_OPTIONS, new HashMap<String, Object>());
         getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
 
         getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
         getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, "");
 
         getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
+        getConfigMap().put(REBOOT_APPIUM_AFTER_SESSIONS, 0);
+        getConfigMap().put(REBOOT_PHONE_AFTER_SESSIONS, 0);
         initializeVideoRecorder();
         getConfigMap().put(HTML_RENDER_OPTIONS, new HtmlConfig());
 
@@ -333,6 +346,7 @@ public class Config {
 
     public WebDriver getWebdriver() {
         try {
+            WebDriver test =  (WebDriver) getConfigMap().get(WEBDRIVER);
             return (WebDriver) getConfigMap().get(WEBDRIVER);
         } catch (ClassCastException e) {
             LinkedTreeMap
@@ -349,6 +363,7 @@ public class Config {
     }
 
 
+
     public void writeToDisk(String file) {
         try {
             File f = new File(file);
@@ -362,9 +377,18 @@ public class Config {
             System.exit(1);
         }
     }
-
+	
     public void addSetupTask(String task) {
         getSetup().add(task);
+    }
+	
+	public String getGridJvmXOptions() {
+        logger.info(getConfigMap().get(GRID_JVM_X_OPTIONS));
+        Object options = getConfigMap().get(GRID_JVM_X_OPTIONS);
+        if (!(options instanceof String)) {
+            return ""; // If the options is null or an invalid type, just return the empty string.
+        }
+        return ((String)options).trim() + " "; // The convention is to return a string with a trailing space
     }
 
     public void addTeardownTask(String task) {
@@ -447,15 +471,6 @@ public class Config {
     public String getGridJvmOptions() {
         logger.info(getConfigMap().get(GRID_JVM_OPTIONS));
         return mapToJvmParams((Map<String, Object>) getConfigMap().get(GRID_JVM_OPTIONS));
-    }
-
-    public String getGridJvmXOptions() {
-        logger.info(getConfigMap().get(GRID_JVM_X_OPTIONS));
-        Object options = getConfigMap().get(GRID_JVM_X_OPTIONS);
-        if (!(options instanceof String)) {
-            return ""; // If the options is null or an invalid type, just return the empty string.
-        }
-        return ((String)options).trim() + " "; // The convention is to return a string with a trailing space
     }
 
     public String getGridExtrasJvmOptions() {
@@ -542,6 +557,14 @@ public class Config {
         return Integer.valueOf((String) getConfigMap().get(REBOOT_AFTER_SESSIONS));
     }
 
+    public int getRebootAppiumAfterSessions() {
+        return Integer.valueOf((String) getConfigMap().get(REBOOT_APPIUM_AFTER_SESSIONS));
+    }
+
+    public int getRebootPhoneAfterSessions() {
+        return Integer.valueOf((String) getConfigMap().get(REBOOT_PHONE_AFTER_SESSIONS));
+    }
+
     public File getConfigsDirectory() {
         return new File("configs");
     }
@@ -593,8 +616,8 @@ public class Config {
             return DefaultConfig.GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL;
         }
     }
-
-    public boolean getEnableSessionHistory() {
+	
+	public boolean getEnableSessionHistory() {
         if (getConfigMap().get(ENABLE_SESSION_HISTORY).equals("1")) {
             return true;
         } else {
