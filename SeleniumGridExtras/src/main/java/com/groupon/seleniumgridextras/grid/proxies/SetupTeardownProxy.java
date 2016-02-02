@@ -55,7 +55,6 @@ import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
-import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 import org.openqa.selenium.remote.CapabilityType;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,7 +68,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 
-public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
+public class SetupTeardownProxy extends AbstractProxy implements TestSessionListener {
 
     private boolean available = true;
     private boolean restarting = false;
@@ -90,6 +89,10 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             return null;
         }
 
+        if(!isAvailable()){
+            return null;
+        }
+
         TestSession session;
         try {
             session = super.getNewSession(requestedCapability);
@@ -106,8 +109,8 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         try {
 
             String host = session.getSlot().getRemoteURL().getHost();
-
-            logNewSessionHistoryAsync(session);
+			logNewSessionHistoryAsync(session);
+            CommonThreadPool.startCallable(new SessionHistoryCallable(session));
 
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
@@ -180,7 +183,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                         TaskDescriptions.Endpoints.TEARDOWN,
                         new HashMap<String, String>()));
 
-
+        boolean rebooting = false;
         if (NodeRestartCallable.timeToReboot(this.getRemoteHost().getHost(), this.getId())) {
             this.setAvailable(false);
             this.setRestarting(true);
@@ -189,10 +192,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                     new NodeRestartCallable(
                             this,
                             session));
+            rebooting = true;
         }
+
+
     }
 
-    private boolean alreadyRecordingCurrentSession(TestSession session) {
+    boolean alreadyRecordingCurrentSession(TestSession session) {
         if ((session.getExternalKey() == null) || !getSessionsRecording().contains(session.getExternalKey().getKey())) {
             return false;
         }
@@ -201,7 +207,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
 
 
-    private void startVideoRecording(TestSession session) {
+    void startVideoRecording(TestSession session) {
 
         if (alreadyRecordingCurrentSession(session)) {
             return;
@@ -214,7 +220,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                         JsonCodec.Video.START));
     }
 
-    private void stopVideoRecording(TestSession session) {
+    void stopVideoRecording(TestSession session) {
         Future a = CommonThreadPool.startCallable(
                 new RemoteVideoRecordingControlCallable(
                         this,
@@ -233,7 +239,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         }
     }
 
-    private void updateLastCommand(TestSession session, HttpServletRequest request) {
+    void updateLastCommand(TestSession session, HttpServletRequest request) {
 
         if (session.getExternalKey() == null) {
             return;
@@ -277,12 +283,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     public void setRestarting(boolean restarting) {
         this.restarting = restarting;
     }
-
-    public static Future<String> logNewSessionHistoryAsync(TestSession session) {
+	
+	public static Future<String> logNewSessionHistoryAsync(TestSession session) {
         if (RuntimeConfig.getConfig() != null && RuntimeConfig.getConfig().getEnableSessionHistory()) {
             return CommonThreadPool.startCallable(new SessionHistoryCallable(session));
         }
         return null;
     }
+
 
 }

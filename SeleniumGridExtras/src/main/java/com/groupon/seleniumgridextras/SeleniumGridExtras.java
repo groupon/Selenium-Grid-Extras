@@ -37,9 +37,13 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.google.gson.JsonObject;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.SelfHealingGrid;
+import com.groupon.seleniumgridextras.utilities.Environment;
+import com.groupon.seleniumgridextras.utilities.json.JsonFileReader;
 import com.groupon.seleniumgridextras.homepage.HtmlRenderer;
+import com.groupon.seleniumgridextras.monitor.AndroidDeviceBridgeWatcher;
 import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
 import com.groupon.seleniumgridextras.tasks.StartGrid;
 import com.groupon.seleniumgridextras.utilities.TempUtility;
@@ -51,6 +55,8 @@ import com.sun.net.httpserver.HttpServer;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.LinkedList;
 import java.util.List;
@@ -118,16 +124,25 @@ public class SeleniumGridExtras {
                 return apiDocs;
             }
         });
+        try {
+            HttpContext homePageContext = server.createContext("/", new HtmlHttpExecutor() {
+                @Override
+                String execute(Map params) {
+                    return new HtmlRenderer(params).toString();
+                }
+            });
 
-        HttpContext homePageContext = server.createContext("/", new HtmlHttpExecutor() {
-            @Override
-            String execute(Map params) {
-                return new HtmlRenderer(params).toString();
-            }
-        });
+            HttpContext videoContext = server.createContext(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT, new VideoHttpExecutor());
+            logger.info("Attaching video downloading context at " + VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT);
 
-        HttpContext videoContext = server.createContext(VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT, new VideoHttpExecutor());
-        logger.info("Attaching video downloading context at " + VideoHttpExecutor.GET_VIDEO_FILE_ENDPOINT);
+
+
+        context.getFilters().add(new ParameterFilter());
+        homePageContext.getFilters().add(new ParameterFilter());
+        videoContext.getFilters().add(new ParameterFilter());
+        }catch(Exception e){
+            logger.error(e.getMessage());
+        }
 
         if (RuntimeConfig.getConfig().getAutoStartHub()) {
             logger.info("Grid Hub was set to Autostart");
@@ -142,19 +157,57 @@ public class SeleniumGridExtras {
             logger.info(grid.execute("node").toString().toString());
         }
 
-        context.getFilters().add(new ParameterFilter());
-        homePageContext.getFilters().add(new ParameterFilter());
-        videoContext.getFilters().add(new ParameterFilter());
-
         server.setExecutor(null);
         server.start();
 
+        if(RuntimeConfig.getConfig().getRealAndroidConfigFile()!=null){
+            startAndroidDeviceWatcher(RuntimeConfig.getConfig().getRealAndroidConfigFile());
+        }
+
+
+        loadEnvironments();
 
         System.out.println(START_UP_COMPLETE);
         logger.info(START_UP_COMPLETE);
 
         new VideoShutdownHook().attachShutDownHook();
         new CleanTempShutdownHook(TempUtility.getWindowsTempForCurrentUser()).attachShutDownHook();
+    }
+
+
+    private static void loadEnvironments() {
+        if(RuntimeConfig.getConfig().getEnvironmentsDirectory()!=null){
+            File directory = new File(RuntimeConfig.getConfig().getEnvironmentsDirectory());
+            File[] files = directory.listFiles();
+            for(File file : files){
+                createEnvironment(file);
+            }
+        }
+    }
+
+    private static void startAndroidDeviceWatcher(String path) {
+        AndroidDeviceBridgeWatcher.watch(new File(path));
+    }
+
+    private static void createEnvironment(File file){
+
+        JsonObject config = null;
+        try {
+            config = JsonFileReader.getJsonObject(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String type = config.get("type").getAsString();
+
+        if(type.toLowerCase().equals("environment")){
+            logger.info(String.format("New environment detected: [%s]", file.getName()));
+            Environment env = new Environment(file);
+            logger.info(String.format("New environment created: [%s]", file.getName()));
+            //if (env != null) {
+                //add the environment name to a private ConcurrentHashMap<String, Environment> environments;
+                //environments.put(file.getName(), env);
+            //}
+        }
     }
 }
 

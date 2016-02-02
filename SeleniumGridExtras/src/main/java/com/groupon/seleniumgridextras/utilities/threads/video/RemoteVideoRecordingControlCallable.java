@@ -1,5 +1,6 @@
 package com.groupon.seleniumgridextras.utilities.threads.video;
 
+import com.groupon.seleniumgridextras.grid.proxies.AbstractProxy;
 import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.videorecording.RemoteVideoRecorderHelper;
@@ -14,10 +15,10 @@ public class RemoteVideoRecordingControlCallable implements Callable {
     private final String action;
     private String lastAction;
     private TestSession session;
-    private SetupTeardownProxy proxy;
+    private AbstractProxy proxy;
     private static Logger logger = Logger.getLogger(RemoteVideoRecordingControlCallable.class);
 
-    public RemoteVideoRecordingControlCallable(SetupTeardownProxy proxy, TestSession session, String action, String lastAction) {
+    public RemoteVideoRecordingControlCallable(AbstractProxy proxy, TestSession session, String action, String lastAction) {
         logger.info(
                 String.format(
                         "Creating new Video callable for proxy: %s, int key: %s, ex. key: %s, action: %s, lastAction: %s",
@@ -34,7 +35,7 @@ public class RemoteVideoRecordingControlCallable implements Callable {
 
     }
 
-    public RemoteVideoRecordingControlCallable(SetupTeardownProxy proxy, TestSession session, String action) {
+    public RemoteVideoRecordingControlCallable(AbstractProxy proxy, TestSession session, String action) {
         this(proxy, session, action, "");
     }
 

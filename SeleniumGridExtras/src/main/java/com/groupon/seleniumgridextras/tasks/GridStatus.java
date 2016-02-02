@@ -55,6 +55,8 @@ public class GridStatus extends ExecuteOSTask {
     public static final String HASH_OBJECT_DESCRIBING_THE_NODE_CONFIG_PROCESS = "Hash object describing the NodeConfig Process";
     public static final String LIST_OF_RECORDED_SESSIONS = "List of recorded sessions";
     public static final String INTEGER_UPPER_LIMIT_BEFORE_THE_BOX_REBOOTS = "Integer upper limit before the box reboots";
+    public static final String INTEGER_UPPER_LIMIT_BEFORE_THE_APPIUM_REBOOTS = "Integer upper limit before the appium reboots";
+    public static final String INTEGER_UPPER_LIMIT_BEFORE_THE_PHONE_REBOOTS = "Integer upper limit before the phone reboots";
 
     public static final String DEPRECATED_STARTED_SESSIONS_KEY = "node_sessions_started";
     public static final String DEPRECATION_WARNING = "[DEPRECATION WARNING] - The " + DEPRECATED_STARTED_SESSIONS_KEY + " key returned from the node's " + TaskDescriptions.Endpoints.GRID_STATUS +"  endpoint indicates that the node is using old version of Selenium Grid Extras, please update it";
@@ -81,7 +83,8 @@ public class GridStatus extends ExecuteOSTask {
         addResponseDescription(JsonCodec.WebDriver.Grid.NODE_INFO, HASH_OBJECT_DESCRIBING_THE_NODE_CONFIG_PROCESS);
         addResponseDescription(JsonCodec.WebDriver.Grid.RECORDED_SESSIONS, LIST_OF_RECORDED_SESSIONS);
         addResponseDescription(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT, INTEGER_UPPER_LIMIT_BEFORE_THE_BOX_REBOOTS);
-
+        addResponseDescription(JsonCodec.WebDriver.Grid.APPIUM_SESSIONS_LIMIT, INTEGER_UPPER_LIMIT_BEFORE_THE_APPIUM_REBOOTS);
+        addResponseDescription(JsonCodec.WebDriver.Grid.PHONE_SESSIONS_LIMIT, INTEGER_UPPER_LIMIT_BEFORE_THE_PHONE_REBOOTS);
     }
 
 
@@ -102,6 +105,14 @@ public class GridStatus extends ExecuteOSTask {
             getJsonResponse()
                     .addKeyValues(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT,
                             RuntimeConfig.getConfig().getRebootAfterSessions());
+
+            getJsonResponse()
+                    .addKeyValues(JsonCodec.WebDriver.Grid.APPIUM_SESSIONS_LIMIT,
+                            RuntimeConfig.getConfig().getRebootAppiumAfterSessions());
+
+            getJsonResponse()
+                    .addKeyValues(JsonCodec.WebDriver.Grid.PHONE_SESSIONS_LIMIT,
+                            RuntimeConfig.getConfig().getRebootPhoneAfterSessions());
 
             return getJsonResponse().getJson();
         } catch (Exception error) {

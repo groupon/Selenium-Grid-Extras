@@ -5,6 +5,7 @@ import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.GridNode.GridNodeConfiguration;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.tasks.AppiumNodeTasks;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
 
@@ -12,8 +13,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class GridStarter {
 
@@ -23,26 +26,26 @@ public class GridStarter {
 
         StringBuilder command = new StringBuilder();
         command.append(getJavaExe() + " ");
-        command.append(RuntimeConfig.getConfig().getGridJvmXOptions());
+		command.append(RuntimeConfig.getConfig().getGridJvmXOptions());
         command.append(RuntimeConfig.getConfig().getGridJvmOptions());
         command.append("-cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
         String jarPath = RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath();
-        
-        List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalHubConfig();
+
+		List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalHubConfig();
         for(String additionalJarPath : additionalClassPathItems) {
         	command.append(RuntimeConfig.getOS().getPathSeparator() + additionalJarPath);
         }
-
+		
         command.append(jarPath + getOsSpecificQuote());
         command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
-//	    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
+//    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
 
         String logFile = configFile.replace("json", "log");
         String logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
         command.append(logCommand);
-//      command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
+//    command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
         command.append(" -hubConfig " + configFile);
 
         logger.info("Hub Start Command: \n\n" + String.valueOf(command));
@@ -55,7 +58,6 @@ public class GridStarter {
         } else {
             return "";
         }
-
     }
 
 
@@ -91,23 +93,26 @@ public class GridStarter {
         for (String configFile : RuntimeConfig.getConfig().getHubConfigFiles()) {
             String command = getOsSpecificHubStartCommand(configFile, RuntimeConfig.getOS().isWindows());
             logger.info(command);
+		List<String> configFiles = RuntimeConfig.getConfig().getHubConfigFiles();
+        String configFile = configFiles.get(0); // TODO For now just use the first config file
+        String command = getOsSpecificHubStartCommand(configFile, RuntimeConfig.getOS().isWindows());
+        logger.info(command);
 
-            try {
-                JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
-                logger.info(startResponse);
+        try {
+            JsonObject startResponse = ExecuteCommand.execRuntime(command, false);
+            logger.info(startResponse);
 
-                if (!startResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
-                    jsonResponseBuilder
+            if (!startResponse.get(JsonCodec.EXIT_CODE).toString().equals("0")) {
+                jsonResponseBuilder
                         .addKeyValues(JsonCodec.ERROR, "Error running " + startResponse.get(JsonCodec.ERROR).toString());
-                }
-            } catch (Exception e) {
-                jsonResponseBuilder
+            }
+        } catch (Exception e) {
+            jsonResponseBuilder
                     .addKeyValues(JsonCodec.ERROR, "Error running " + command);
-                jsonResponseBuilder
+            jsonResponseBuilder
                     .addKeyValues(JsonCodec.ERROR, e.toString());
 
-                e.printStackTrace();
-            }
+            e.printStackTrace();
         }
         return jsonResponseBuilder.getJson();
     }
@@ -180,7 +185,6 @@ public class GridStarter {
 
         StringBuilder command = new StringBuilder();
         command.append(getJavaExe() + " ");
-        command.append(RuntimeConfig.getConfig().getGridJvmXOptions());
         command.append(RuntimeConfig.getConfig().getGridJvmOptions());
 
         if (windows) {
@@ -210,6 +214,12 @@ public class GridStarter {
         String configFileFullPath = workingDirectory + RuntimeConfig.getOS().getFileSeparator() + configFile;
         command.append(" --log-timestamp --nodeconfig " + configFileFullPath);
 
+        //add node port and startup command
+        Map<String, String> appiumNode = new HashMap<String, String>();
+        appiumNode.put("action", "add");
+        appiumNode.put("command", String.valueOf(command));
+        appiumNode.put("port", String.valueOf(config.getPort()));
+        new AppiumNodeTasks().execute(appiumNode);
         return String.valueOf(command);
     }
 

@@ -64,6 +64,8 @@ public class GridStatusTest {
         expectedJsonResponse.put("out", new ArrayList());
         expectedJsonResponse.put("error", new ArrayList());
         expectedJsonResponse.put("node_sessions_limit", new ArrayList());
+        expectedJsonResponse.put("appium_sessions_limit", new ArrayList());
+        expectedJsonResponse.put("phone_sessions_limit", new ArrayList());
         expectedJsonResponse.put("node_running", new ArrayList());
         expectedJsonResponse.put("node_info", new ArrayList());
         expectedJsonResponse.put("hub_running", new ArrayList());
@@ -97,6 +99,8 @@ public class GridStatusTest {
         expected.put(JsonCodec.WebDriver.Grid.NODE_INFO, GridStatus.HASH_OBJECT_DESCRIBING_THE_NODE_CONFIG_PROCESS);
         expected.put(JsonCodec.WebDriver.Grid.RECORDED_SESSIONS, GridStatus.LIST_OF_RECORDED_SESSIONS);
         expected.put(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT, GridStatus.INTEGER_UPPER_LIMIT_BEFORE_THE_BOX_REBOOTS);
+        expected.put(JsonCodec.WebDriver.Grid.APPIUM_SESSIONS_LIMIT, GridStatus.INTEGER_UPPER_LIMIT_BEFORE_THE_APPIUM_REBOOTS);
+        expected.put(JsonCodec.WebDriver.Grid.PHONE_SESSIONS_LIMIT, GridStatus.INTEGER_UPPER_LIMIT_BEFORE_THE_PHONE_REBOOTS);
         expected.put(JsonCodec.ERROR, JsonResponseBuilder.ERROR_RECEIVED_DURING_EXECUTION_OF_COMMAND);
         expected.put(JsonCodec.OUT, JsonResponseBuilder.ALL_OF_THE_STANDARD_OUT_RECEIVED_FROM_THE_SYSTEM );
         expected.put(JsonCodec.EXIT_CODE, JsonResponseBuilder.EXIT_CODE_FOR_OPERATION );
