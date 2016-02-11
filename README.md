@@ -1,5 +1,6 @@
 [![Gitter](https://badges.gitter.im/groupon/Selenium-Grid-Extras.svg)](https://gitter.im/groupon/Selenium-Grid-Extras?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+
 Selenium-Grid-Extras
 ====================
 ![](https://github.com/groupon/Selenium-Grid-Extras/blob/master/resources/node_view_screenshot.png)
@@ -185,6 +186,8 @@ launchctl load ~/Library/LaunchAgents/com.groupon.SeleniumGridExtras.plist
 ```
 
 
+[Debugging most common Selenium Grid Test failures](http://agilesoftwaretesting.com/debugging-most-common-selenium-grid-test-failures/)
+===================================================
 
 
 
