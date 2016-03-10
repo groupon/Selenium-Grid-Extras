@@ -267,6 +267,8 @@ public class FirstTimeRunConfig {
 
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
         defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
+        defaultConfig.getIEdriver().setBit(
+                RuntimeConfig.getOS().getWindowsRealArchitecture().equals("64")? "x64" : "Win32");		
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
         defaultConfig.getChromeDriver().setBit(bitOfChrome);
 
