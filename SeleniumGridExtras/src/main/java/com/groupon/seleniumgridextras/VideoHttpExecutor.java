@@ -34,23 +34,28 @@ public class VideoHttpExecutor implements HttpHandler {
         logger.info("New video download request for " + videoFile.getAbsolutePath());
 
         if (videoFile.exists()) {
+            OutputStream os = null;
+            FileInputStream fs = null;
             try {
                 logger.info(String.format("Requested video %s does exist, responding with 200", videoFile.getAbsolutePath()));
                 Headers h = t.getResponseHeaders();
                 h.add("Content-Type", "video/mp4");
 
                 t.sendResponseHeaders(200, 0);
-                OutputStream os = t.getResponseBody();
-                FileInputStream fs = new FileInputStream(videoFile);
+                os = t.getResponseBody();
+                fs = new FileInputStream(videoFile);
                 final byte[] buffer = new byte[0x10000];
                 int count = 0;
                 while ((count = fs.read(buffer)) >= 0) {
                     os.write(buffer, 0, count);
                 }
-                fs.close();
-                os.close();
             } catch (Exception e) {
                 logger.error("Something went wrong when serving video file " + videoFile.getAbsolutePath(), e);
+            } finally {
+                if(fs != null)
+                    fs.close();
+                if(os != null)
+                    os.close();
             }
 
         } else {
