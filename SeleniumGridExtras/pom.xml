@@ -19,6 +19,7 @@
 
     <properties>
         <version.selenium>2.46.0</version.selenium>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>

@@ -37,12 +37,18 @@
 package com.groupon.seleniumgridextras.tasks;
 
 
+import com.groupon.seleniumgridextras.config.Config;
+import com.groupon.seleniumgridextras.config.GridHub;
+import com.groupon.seleniumgridextras.config.GridNode;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import com.groupon.seleniumgridextras.utilities.json.JsonResponseBuilder;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
@@ -54,9 +60,15 @@ public class GridStatusTest {
 
     protected ExecuteOSTask task;
     protected Map expectedJsonResponse;
+    private static String GRID_EXTRAS_CONFIG_FILE = "config_grid_status_test.json";
+    private static String HUB_CONFIG_FILE = "hub_config_grid_status_test.json";
+    private static String NODE_CONFIG_FILE = "node_config_grid_status_test.json";
 
     @Before
     public void setUp() throws Exception {
+
+        loadTestConfiguration();
+
         task = new GridStatus();
 
         expectedJsonResponse = new HashMap();
@@ -69,7 +81,14 @@ public class GridStatusTest {
         expectedJsonResponse.put("hub_running", new ArrayList());
         expectedJsonResponse.put("hub_info", new ArrayList());
         expectedJsonResponse.put("sessions", new ArrayList());
+    }
 
+    @After
+    public void tearDown() throws Exception {
+        new File(GRID_EXTRAS_CONFIG_FILE).delete();
+        new File(HUB_CONFIG_FILE).delete();
+        new File(NODE_CONFIG_FILE).delete();
+        new File(RuntimeConfig.getConfigFile() + ".example").delete();
     }
 
     @Test
@@ -144,5 +163,21 @@ public class GridStatusTest {
         return String.format("Key: %s, Class: %s, Value: %s", key, value.getClass().getCanonicalName(), value.toString());
     }
 
+    private void loadTestConfiguration() {
+        Config config = new Config();
+        RuntimeConfig.setConfigFile(GRID_EXTRAS_CONFIG_FILE);
 
+        GridHub hub = new GridHub();
+        hub.getConfiguration().setPort(4444);
+        hub.writeToFile(HUB_CONFIG_FILE);
+        config.addHub(hub, HUB_CONFIG_FILE);
+
+        GridNode node = new GridNode();
+        node.getConfiguration().setPort(5555);
+        node.writeToFile(NODE_CONFIG_FILE);
+        config.addNode(node, NODE_CONFIG_FILE);
+
+        config.writeToDisk(RuntimeConfig.getConfigFile());
+        RuntimeConfig.load();
+    }
 }

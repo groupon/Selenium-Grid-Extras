@@ -186,7 +186,7 @@ public class GridStarterTest {
     @Test
     public void testChromeDriverDString() throws Exception {
         if (RuntimeConfig.getOS().isWindows()) {
-            assertTrue(GridStarter.getChromeDriverExecutionPathParam().contains("-Dwebdriver.chrome.driver=\\webdriver\\chromedriver\\chromedriver_"));
+            assertTrue(GridStarter.getChromeDriverExecutionPathParam().contains("-Dwebdriver.chrome.driver=\\tmp\\webdriver\\chromedriver\\chromedriver_"));
         } else {
             assertTrue(GridStarter.getChromeDriverExecutionPathParam().contains("-Dwebdriver.chrome.driver=/tmp/webdriver/chromedriver/chromedriver_"));
         }
