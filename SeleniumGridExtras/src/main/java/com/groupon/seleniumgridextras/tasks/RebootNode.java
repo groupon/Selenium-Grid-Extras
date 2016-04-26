@@ -90,7 +90,7 @@ public class RebootNode extends ExecuteOSTask {
     @Override
     public String getMacCommand(String param) {
         logReboot();
-        return "shutdown -r now";
+        return "sudo shutdown -r now";
     }
 
     protected void logReboot() {
