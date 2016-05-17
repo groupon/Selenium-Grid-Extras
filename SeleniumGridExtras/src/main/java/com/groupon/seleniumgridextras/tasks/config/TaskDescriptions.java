@@ -26,6 +26,7 @@ public class TaskDescriptions {
         public static final String LOG_DELETE = "/log_delete";
         public static final String NETSTAT = "/netstat";
         public static final String REBOOT = "/reboot";
+        public static final String RESOLUTION = "/resolution";
         public static final String SCREENSHOT = "/screenshot";
         public static final String SETUP = "/setup";
         public static final String START_GRID = "/start_grid";
@@ -109,6 +110,7 @@ public class TaskDescriptions {
                 NETSTAT =
                 "Returns a system call for all ports. Use /port_info to get parsed details";
         public static final String REBOOT = "Restart the host node";
+        public static final String RESOLUTION = "Changes the screen resolution. No param for current resolution";
         public static final String SCREENSHOT = "Take a full OS screen Screen Shot of the node";
         public static final
         String
@@ -171,6 +173,7 @@ public class TaskDescriptions {
             public static final String MOVE_MOUSE = "Move mouse";
             public static final String NETSTAT = "netstat";
             public static final String REBOOT = "reboot";
+            public static final String RESOLUTION = "resolution";
             public static final String SCREENSHOT = "screenshot";
             public static final String SETUP = "setup";
             public static final String START_GRID = "StartGrid";

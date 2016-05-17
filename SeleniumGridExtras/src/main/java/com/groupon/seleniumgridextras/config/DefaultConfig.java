@@ -279,6 +279,7 @@ public class DefaultConfig {
         config.addActivatedModules(StopGridExtras.class.getCanonicalName());
         config.addActivatedModules(IEProtectedMode.class.getCanonicalName());
         config.addActivatedModules(IEMixedContent.class.getCanonicalName());
+        config.addActivatedModules(Resolution.class.getCanonicalName());
         config.addActivatedModules(SystemInfo.class.getCanonicalName());
         config.addActivatedModules(GetNodeConfig.class.getCanonicalName());
         config.addActivatedModules(UpdateNodeConfig.class.getCanonicalName());

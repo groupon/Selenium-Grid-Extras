@@ -85,6 +85,8 @@ public class JsonCodec {
         public static final String CURRENT_USER = "current_user";
         public static final String CURRENT_DOMAIN = "current_domain";
         public static final String AUTO_LOGON_ENABLED = "auto_logon_enabled";
+        public static final String RESOLUTION_WIDTH = "width";
+        public static final String RESOLUTION_HEIGHT = "height";
 
         public static class JVM {
             public static final String JVM_INFO = "jvm";
