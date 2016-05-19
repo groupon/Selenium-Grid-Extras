@@ -47,7 +47,8 @@ import java.util.Map;
 
 // TODO Add Linux for get and set resolution. Add OSX set resolution.
 public class Resolution extends ExecuteOSTask {
-  private final String[] windowsGetResolution = {"powershell.exe", "Get-DisplayResolution"};
+//  private final String[] windowsGetResolution = {"cmd", "/C", "powershell.exe", "Get-DisplayResolution"};
+//  private final String windowsGetResolution = "wmic desktopmonitor get screenheight, screenwidth";
   private final String[] osxGetResolution = {"bash", "-c", "system_profiler SPDisplaysDataType | grep Resolution"};
   private final String windowsSetResolution = "powershell.exe Set-DisplayResolution -Width %s -Height %s -Force";
 
@@ -98,12 +99,28 @@ public class Resolution extends ExecuteOSTask {
   }
 
   private JsonObject setWindowsResolution(String width, String height) {
-	final String command = String.format(windowsSetResolution, width, height);
-    return ExecuteCommand.execRuntime(command, waitToFinishTask);
+    String[] getCommand = {"powershell.exe", "Get-Command", "Set-DisplayResolution", "-errorAction", "SilentlyContinue"};
+    JsonObject object = ExecuteCommand.execRuntime(getCommand, waitToFinishTask);
+    if (object.get("out").getAsJsonArray().size() > 1) { // Set-DisplayResolution is a valid command for Windows Server
+	  final String command = String.format(windowsSetResolution, width, height);
+      return ExecuteCommand.execRuntime(command, waitToFinishTask);
+    } else {
+	    getJsonResponse().addKeyValues(JsonCodec.ERROR,
+                "Set-DisplayResolution not found.");
+	    return getJsonResponse().getJson();
+    }
   }
 
   private JsonObject getWindowsResolution() {
-    return ExecuteCommand.execRuntime(windowsGetResolution, waitToFinishTask);
+	String[] command = {"powershell.exe", "Get-Command", "Get-DisplayResolution", "-errorAction", "SilentlyContinue"};
+    JsonObject object = ExecuteCommand.execRuntime(command, waitToFinishTask);
+    if (object.get("out").getAsJsonArray().size() > 1) { // Get-DisplayResolution is a valid command for Windows Server
+	  final String[] windowsGetResolution = {"powershell.exe", "Get-DisplayResolution"};
+	  return ExecuteCommand.execRuntime(windowsGetResolution, waitToFinishTask);
+	} else {
+      final String windowsGetResolution = "wmic desktopmonitor get screenheight, screenwidth";
+      return ExecuteCommand.execRuntime(windowsGetResolution, waitToFinishTask);
+	}
   }
 
   private JsonObject getOSXResolution() {
