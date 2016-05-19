@@ -47,8 +47,6 @@ import java.util.Map;
 
 // TODO Add Linux for get and set resolution. Add OSX set resolution.
 public class Resolution extends ExecuteOSTask {
-//  private final String[] windowsGetResolution = {"cmd", "/C", "powershell.exe", "Get-DisplayResolution"};
-//  private final String windowsGetResolution = "wmic desktopmonitor get screenheight, screenwidth";
   private final String[] osxGetResolution = {"bash", "-c", "system_profiler SPDisplaysDataType | grep Resolution"};
   private final String windowsSetResolution = "powershell.exe Set-DisplayResolution -Width %s -Height %s -Force";
 
