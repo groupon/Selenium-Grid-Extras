@@ -45,11 +45,12 @@ import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.ExecuteOsTaskCallable;
 import com.groupon.seleniumgridextras.utilities.threads.StreamGobbler;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 
 
 public class ExecuteCommand {
@@ -112,6 +113,8 @@ public class ExecuteCommand {
             // Get output and error messages
             String error = errorOutputStream.toString();
             String output = standardOutputStream.toString();
+            output = output.replace("\r", "");
+            output = output.replace("\u0000", "");
 
             jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
             jsonResponse.addKeyValues(JsonCodec.OUT, output);
@@ -130,17 +133,22 @@ public class ExecuteCommand {
         StringBuilder command = new StringBuilder();
         for(String s : cmd) {
             command.append(s + " ");
-        }        logger.debug("Starting to execute - " + command);
+        }        
+        logger.debug("Starting to execute - " + command);
 
         JsonResponseBuilder jsonResponse = new JsonResponseBuilder();
 
         jsonResponse.addKeyDescriptions(JsonCodec.COMMAND, "Command executed");
         jsonResponse.addKeyValues(JsonCodec.COMMAND, command.toString());
         Process process;
-
+        ProcessBuilder pb;
+        
         try {
             if (RuntimeConfig.getOS().isWindows()) {
-                process = Runtime.getRuntime().exec(cmd);
+                pb = new ProcessBuilder(cmd);
+                pb.redirectErrorStream(true);
+                pb.redirectInput(Redirect.from(new File("NUL")));
+                process = pb.start();
             } else {
                 process = Runtime.getRuntime().exec(cmd);
             }
@@ -181,6 +189,8 @@ public class ExecuteCommand {
             // Get output and error messages
             String error = errorOutputStream.toString();
             String output = standardOutputStream.toString();
+            output = output.replace("\r", "");
+            output = output.replace("\u0000", "");
 
             jsonResponse.addKeyValues(JsonCodec.EXIT_CODE, exitCode);
             jsonResponse.addKeyValues(JsonCodec.OUT, output);
