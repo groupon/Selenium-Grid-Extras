@@ -9,13 +9,14 @@ import com.xuggle.mediatool.IMediaWriter;
 import com.xuggle.mediatool.ToolFactory;
 import com.xuggle.xuggler.ICodec;
 import com.xuggle.xuggler.IRational;
-
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.log4j.Logger;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.Callable;
@@ -67,65 +68,104 @@ public class VideoRecorderCallable implements Callable {
                         + ")";
         this.lastCommand = null;
 
-        // This is the robot for taking a snapshot of the
-        // screen.  It's part of Java AWT
-        final Robot robot = new Robot();
-        final Toolkit toolkit = Toolkit.getDefaultToolkit();
-        final Rectangle screenBounds = new Rectangle(toolkit.getScreenSize());
-
-        screenBounds.setBounds(0, 0, dimension.width, dimension.height);
         // First, let's make a IMediaWriter to write the file.
-        final
-        IMediaWriter
-                writer =
-                ToolFactory.makeWriter(new File(outputDir, sessionId + ".mp4").getAbsolutePath());
+        final IMediaWriter writer = ToolFactory.makeWriter(new File(outputDir, sessionId + ".mp4").getAbsolutePath());
+        int time = 0;
 
-        // We tell it we're going to add one video stream, with id 0,
-        // at position 0, and that it will have a fixed frame rate of
-        // FRAME_RATE.
-        writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
-                FRAME_RATE,
-                screenBounds.width, screenBounds.height);
+        if (System.getenv("screencastOption").equalsIgnoreCase("desktop")) {
+            // This is the robot for taking a snapshot of the
+            // screen.  It's part of Java AWT
+            final Robot robot = new Robot();
+            final Toolkit toolkit = Toolkit.getDefaultToolkit();
+            final Rectangle screenBounds = new Rectangle(toolkit.getScreenSize());
 
-        logger
-                .info("Starting video recording for session " + getSessionId() + " to " + outputDir
-                        .getAbsolutePath());
+            screenBounds.setBounds(0, 0, dimension.width, dimension.height);
 
-        try {
-            int imageFrame = 1;
-            long startTime = System.nanoTime();
-            addTitleFrame(writer);
+            // We tell it we're going to add one video stream, with id 0,
+            // at position 0, and that it will have a fixed frame rate of
+            // FRAME_RATE.
+            writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
+                    FRAME_RATE,
+                    screenBounds.width, screenBounds.height);
 
-            while (stopActionNotCalled() && idleTimeoutNotReached()) {
+            logger
+                    .info("Starting video recording for session " + getSessionId() + " to " + outputDir
+                            .getAbsolutePath());
 
-                // take the screen shot
-                BufferedImage
-                        screenshot =
-                        ScreenshotUtility.getResizedScreenshot(dimension.width, dimension.height);
+            try {
+                int imageFrame = 1;
+                long startTime = System.nanoTime();
+                addTitleFrame(writer);
 
-                screenshot = ImageProcessor.addTextCaption(screenshot,
-                        "Session: " + this.sessionId,
-                        "Host: " + this.nodeName,
-                        "Timestamp: " + getTimestamp().toString(),
-                        this.lastAction
-                );
+                while (stopActionNotCalled() && idleTimeoutNotReached()) {
 
-                // convert to the right image type
-                BufferedImage bgrScreen = convertToType(screenshot,
-                        BufferedImage.TYPE_3BYTE_BGR);
+                    // take the screen shot
+                    BufferedImage
+                            screenshot =
+                            ScreenshotUtility.getResizedScreenshot(dimension.width, dimension.height);
 
-                // encode the image
-                writer.encodeVideo(0, bgrScreen,
-                        System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
+                    screenshot = ImageProcessor.addTextCaption(screenshot,
+                            "Session: " + this.sessionId,
+                            "Host: " + this.nodeName,
+                            "Timestamp: " + getTimestamp().toString(),
+                            this.lastAction
+                    );
 
-                // sleep for framerate milliseconds
-                Thread.sleep((long) (1000 / FRAME_RATE.getDouble()));
+                    // convert to the right image type
+                    BufferedImage bgrScreen = convertToType(screenshot,
+                            BufferedImage.TYPE_3BYTE_BGR);
 
+                    // encode the image
+                    writer.encodeVideo(0, bgrScreen,
+                            System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
+
+                    // sleep for framerate milliseconds
+                    Thread.sleep((long) (1000 / FRAME_RATE.getDouble()));
+
+                }
+            } finally {
+                writer.close();
             }
-        } finally {
-            writer.close();
-        }
+        } else {
 
+            try {
+                while (!recording) {
+                    // Do nothing, just waiting for the selenium session to finish
+                }
+
+                File folder = new File("C:\\\\Users\\steve\\Workspace\\grid-extras\\screenshots\\" + sessionId);
+                ArrayList<File> listOfImages = new ArrayList<File>(Arrays.asList(folder.listFiles()));
+                BufferedImage prepImage = ImageIO.read(listOfImages.get(0));
+                int width = prepImage.getWidth();
+                int height = prepImage.getHeight();
+
+                // We tell it we're going to add one video stream, with id 0,
+                // at position 0, and that it will have a fixed frame rate of
+                // FRAME_RATE.
+                writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
+                        FRAME_RATE,
+                        width, height);
+
+                logger
+                        .info("Starting video recording for session " + getSessionId() + " to " + outputDir
+                                .getAbsolutePath());
+
+                for (File image : listOfImages) {
+                    BufferedImage screenshot = ImageIO.read(image);
+
+                    // convert to the right image type
+                    BufferedImage bgrScreen = convertToType(screenshot,
+                            BufferedImage.TYPE_3BYTE_BGR);
+
+                    // encode the image
+                    time = time + (1000 / 3);
+                    writer.encodeVideo(0, bgrScreen, time, TimeUnit.MILLISECONDS);
+                }
+            } finally {
+                writer.close();
+            }
+
+        }
         return getSessionId();
     }
 
