@@ -287,7 +287,6 @@ public class HtmlNodeRenderer {
                     .getResizedScreenshotAsBase64String(WIDTH, HEIGHT);
         } catch (AWTException e) {
             logger.debug(e);
-            e.printStackTrace();
 
             BufferedImage
                     errorImage =
