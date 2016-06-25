@@ -238,10 +238,11 @@ public class FirstTimeRunConfig {
         String
                 answer =
                 askQuestion(
-                        "Would you like WebDriver, IEDriver and ChromeDriver to auto update (1-yes/0-no)", "1");
+                        "Would you like WebDriver, IEDriver, ChromeDriver and MarionetteDriver to auto update (1-yes/0-no)", "1");
 
         WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
         String versionOfChrome = manager.getChromeDriverLatestVersion().getPrettyPrintVersion(".");
+        String versionOfMarionette = manager.getMarionetteDriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
@@ -263,6 +264,8 @@ public class FirstTimeRunConfig {
                     askQuestion("What bit of Chrome Driver should we use?", bitOfChrome);
             versionOfIEDriver =
                     askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
+            versionOfMarionette =
+                    askQuestion("What version of Marionette Driver should we use?", versionOfMarionette);
         }
 
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
@@ -274,6 +277,8 @@ public class FirstTimeRunConfig {
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
         defaultConfig.getChromeDriver().setBit(bitOfChrome);
 
+        defaultConfig.getMarionetteDriver().setVersion(versionOfMarionette);
+
         System.out
                 .println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
         System.out.println("Current IE Driver Version: " + defaultConfig.getIEdriver().getVersion());
@@ -281,6 +286,8 @@ public class FirstTimeRunConfig {
                 .println("Current Chrome Driver Version: " + defaultConfig.getChromeDriver().getVersion());
         System.out
                 .println("Current Chrome Driver Bit: " + defaultConfig.getChromeDriver().getBit());
+        System.out
+        		.println("Current Marionette Driver Version: " + defaultConfig.getMarionetteDriver().getVersion());
 
     }
 

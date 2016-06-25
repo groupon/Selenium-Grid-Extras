@@ -19,7 +19,8 @@ public class WebDriverReleaseManagerTest {
   public void setUp() throws Exception {
       URL webDriverAndIEDriverURL = ClassLoader.getSystemResource("fixtures/selenium_release_manifest.xml");
       URL chromeDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
-      releaseManager = new WebDriverReleaseManager(webDriverAndIEDriverURL, chromeDriverVersionURL);
+      URL marionetteDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
+      releaseManager = new WebDriverReleaseManager(webDriverAndIEDriverURL, chromeDriverVersionURL, marionetteDriverVersionURL);
   }
 
   @Test
@@ -39,10 +40,11 @@ public class WebDriverReleaseManagerTest {
   public void testGetVersionsFromLiveSource() throws Exception {
     String wdManifest = "http://selenium-release.storage.googleapis.com/";
     String chromeManifest = "http://chromedriver.storage.googleapis.com/LATEST_RELEASE";
+    String marionetteManifest = "http://chromedriver.storage.googleapis.com/LATEST_RELEASE";
 
     WebDriverReleaseManager
         manager =
-        new WebDriverReleaseManager(new URL(wdManifest), new URL(chromeManifest));
+        new WebDriverReleaseManager(new URL(wdManifest), new URL(chromeManifest), new URL(marionetteManifest));
 
     assertNotEquals(null, manager.getWedriverLatestVersion().getPrettyPrintVersion("."));
     assertNotEquals(null, manager.getIeDriverLatestVersion().getPrettyPrintVersion("."));

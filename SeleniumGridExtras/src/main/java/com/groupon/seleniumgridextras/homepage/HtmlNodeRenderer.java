@@ -269,6 +269,8 @@ public class HtmlNodeRenderer {
             return RuntimeConfig.getConfig().getChromeDriver().getVersion();
         } else if (browserName.equalsIgnoreCase("internet explorer")) {
             return RuntimeConfig.getConfig().getIEdriver().getVersion();
+        } else if (browserName.equalsIgnoreCase("firefox")) {
+            return RuntimeConfig.getConfig().getMarionetteDriver().getVersion();
         } else {
             return RuntimeConfig.getConfig().getWebdriver().getVersion();
         }

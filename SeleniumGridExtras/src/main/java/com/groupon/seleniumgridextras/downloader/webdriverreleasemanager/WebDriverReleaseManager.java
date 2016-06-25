@@ -23,9 +23,11 @@ public class WebDriverReleaseManager {
   private static final String WEBDRIVER_JAR = "webdriver-jar";
   private static final String IE_DRIVER = "ie-driver";
   private static final String CHROME_DRIVER = "chrome-driver";
+  private static final String MARIONETTE_DRIVER = "marionette-driver";
   private WebDriverRelease latestWebdriverVersion;
   private WebDriverRelease latestIEDriverVersion;
   private WebDriverRelease latestChromeDriverVersion;
+  private WebDriverRelease latestMarionetteDriverVersion;
 
   private Document parsedXml;
   private static Logger logger = Logger.getLogger(WebDriverReleaseManager.class);
@@ -38,13 +40,14 @@ public class WebDriverReleaseManager {
     allProducts.put(WEBDRIVER_JAR, new LinkedList<WebDriverRelease>());
     allProducts.put(IE_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(CHROME_DRIVER, new LinkedList<WebDriverRelease>());
+    allProducts.put(MARIONETTE_DRIVER, new LinkedList<WebDriverRelease>());
   }
 
-  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL)
+  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL marionetteDriverVersionURL)
       throws DocumentException {
 
-    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver from "
-                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL
+    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver and MarionetteDriver from "
+                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL + " and " + marionetteDriverVersionURL
         .toExternalForm());
     initialize();
 
@@ -52,6 +55,7 @@ public class WebDriverReleaseManager {
     parsedXml = reader.read(webDriverAndIEDriverURL);
     loadWebDriverAndIEDriverVersions(parsedXml);
     loadChromeDriverVersionFromURL(chromeDriverVersionURL);
+    loadMarionetteDriverVersionFromURL(marionetteDriverVersionURL);
   }
 
   public int getWebdriverVersionCount() {
@@ -83,6 +87,15 @@ public class WebDriverReleaseManager {
     return this.latestChromeDriverVersion;
   }
 
+  public WebDriverRelease getMarionetteDriverLatestVersion() {
+//	return this.latestMarionetteDriverVersion;
+	WebDriverRelease version = new WebDriverRelease("0.8.0");
+	version.setMajorVersion(0);
+	version.setMinorVersion(8);
+	version.setPatchVersion(0);
+	return version;
+  }
+  
   private WebDriverRelease findLatestRelease(List<WebDriverRelease> list) {
 
     WebDriverRelease highestVersion = null;
@@ -114,7 +127,27 @@ public class WebDriverReleaseManager {
   }
 
   public void loadChromeDriverVersion(String version) {
+	  System.out.println("CHROME VERSION : " + version);
     this.latestChromeDriverVersion = new ChromeDriverRelease(version);
+  }
+
+  public void loadMarionetteDriverVersionFromURL(URL url) {
+    InputStream in = null;
+    try {
+      in = url.openStream();
+      loadMarionetteDriverVersion(IOUtils.toString(in));
+    } catch (IOException e) {
+      logger.error("Something went wrong when trying to get latest marionette driver version");
+      logger.error(e.toString());
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    } finally {
+      IOUtils.closeQuietly(in);
+    }
+  }
+
+  public void loadMarionetteDriverVersion(String version) {
+	  System.out.println("MARIONETTE VERSION : " + version);
+    this.latestMarionetteDriverVersion = new MarionetteDriverRelease(version);
   }
 
   public void loadWebDriverAndIEDriverVersions(Document xml) {

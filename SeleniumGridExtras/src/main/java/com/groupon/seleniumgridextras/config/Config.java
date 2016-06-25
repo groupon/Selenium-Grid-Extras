@@ -23,6 +23,7 @@ public class Config {
     public static final String IEDRIVER = "iedriver";
     public static final String EDGEDRIVER = "edgedriver";
     public static final String CHROME_DRIVER = "chromedriver";
+    public static final String MARIONETTE_DRIVER = "marionettedriver";
     public static final String SHARED_DIR = "expose_directory";
 
     public static final String AUTO_START_NODE = "auto_start_node";
@@ -134,6 +135,7 @@ public class Config {
         initializeWebdriver();
         initializeIEDriver();
         initializeChromeDriver();
+        initializeMarionetteDriver();
 
         getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
         getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
@@ -202,6 +204,10 @@ public class Config {
         getConfigMap().put(CHROME_DRIVER, new ChromeDriver());
     }
 
+    private void initializeMarionetteDriver() {
+        getConfigMap().put(MARIONETTE_DRIVER, new MarionetteDriver());
+    }
+
     public void addNodeConfigFile(String filename) {
         LinkedList<String> files = (LinkedList<String>) getConfigMap().get(NODE_CONFIG_FILES);
         files.add(filename);
@@ -232,6 +238,7 @@ public class Config {
         config.initializeHubConfig();
         config.initializeIEDriver();
         config.initializeChromeDriver();
+        config.initializeMarionetteDriver();
 
         return FirstTimeRunConfig.customiseConfig(config);
     }
@@ -303,6 +310,23 @@ public class Config {
             getConfigMap().put(CHROME_DRIVER, chromeDriver);
 
             return chromeDriver;
+        }
+    }
+
+    public DriverInfo getMarionetteDriver() {
+        try {
+            return (MarionetteDriver) getConfigMap().get(MARIONETTE_DRIVER);
+        } catch (ClassCastException e) {
+            LinkedTreeMap
+                    stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+                    (LinkedTreeMap) getConfigMap().get(MARIONETTE_DRIVER);
+            DriverInfo marionetteDriver = new MarionetteDriver();
+
+            marionetteDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+            getConfigMap().put(MARIONETTE_DRIVER, marionetteDriver);
+
+            return marionetteDriver;
         }
     }
 
