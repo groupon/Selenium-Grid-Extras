@@ -1,3 +1,16 @@
+1.12.3 (NOT RELEASED YET) - Add marionette suport. Ability to auto upgrade marionette as well.
+       - Add resolution endpoint. Ability to get resolution on Windows and OSX. Ability to set resolution on Windows Server.
+       - Fix test to work on Windows - testChromeDriverDString
+       - Add ability to add additional jars to the node classpath (#228) - NOT DONE
+       - Fix issue #156 - NOT DONE
+       - Ask for Node port in FirstTimeRunConfig - NOT DONE - Maybe in 1.12.4
+       - Add Opera support - NOT DONE - Maybe in 1.12.4
+1.12.2 - Add phantomjs support
+       - Add WIN10 to platform list
+       - Take into account idle timeout for video recording
+       - Fix issue #93
+       - Fix issue #214
+       - Fix FirstTimeRunConfig for windows. Only call getWindowsRealArchitecture() if Windows
 1.11.8 - Adding ability to set automatic user logon for Windows both on and off Active Directory
        - Start multiple hubs on a machine (PR #177)
        - Start nodes with minimized console window
