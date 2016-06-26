@@ -95,4 +95,14 @@ public class WebDriverReleaseTest {
     assertEquals("index.html?path=2.10/", chromeRelease.getRelativePath());
 
   }
+
+  @Test
+  public void testMarionetteDriverRelease() throws Exception{
+    WebDriverRelease marionetteRelease = new MarionetteDriverRelease("0.8.0");
+
+    assertEquals("0.8.0", marionetteRelease.getPrettyPrintVersion("."));
+    assertEquals("marionettedriver", marionetteRelease.getName());
+    assertEquals("index.html?path=0.8.0/", marionetteRelease.getRelativePath());
+
+  }
 }
