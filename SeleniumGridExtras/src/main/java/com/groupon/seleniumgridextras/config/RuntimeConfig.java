@@ -73,7 +73,7 @@ public class RuntimeConfig {
       releaseManager =
           loadWebDriverReleaseManager("https://selenium-release.storage.googleapis.com/",
                                       "https://chromedriver.storage.googleapis.com/LATEST_RELEASE",
-                                      "https://github.com/mozilla/geckodriver/releases");
+                                      "https://api.github.com/repos/mozilla/geckodriver/releases");
     }
 
     return releaseManager;

@@ -89,7 +89,7 @@ public class DefaultConfig {
     public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 86400000;
     private static Config config;
     private static final String webDriverDefaultVersion = "2.53.0";
-    private static final String ieDriverDefaultVersion = "2.53.0";
+    private static final String ieDriverDefaultVersion = "2.53.1";
     private static final String chromeDriverDefaultVersion = "2.22";
     private static final String marionetteDriverDefaultVersion = "0.8.0";
 
@@ -252,7 +252,6 @@ public class DefaultConfig {
 
         config.getMarionetteDriver().setDirectory(tmpDir + "marionettedriver");
         config.getMarionetteDriver().setVersion(getMarionetteDriverDefaultVersion());
-        config.getMarionetteDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
     }
 
     private static void loadLogConfig() {

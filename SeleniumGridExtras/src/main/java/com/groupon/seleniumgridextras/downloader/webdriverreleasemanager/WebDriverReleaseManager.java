@@ -8,6 +8,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.groupon.seleniumgridextras.config.DefaultConfig;
+import com.groupon.seleniumgridextras.downloader.GitHubDownloader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -88,12 +91,7 @@ public class WebDriverReleaseManager {
   }
 
   public WebDriverRelease getMarionetteDriverLatestVersion() {
-//	return this.latestMarionetteDriverVersion;
-	WebDriverRelease version = new WebDriverRelease("0.8.0");
-	version.setMajorVersion(0);
-	version.setMinorVersion(8);
-	version.setPatchVersion(0);
-	return version;
+	return this.latestMarionetteDriverVersion;
   }
   
   private WebDriverRelease findLatestRelease(List<WebDriverRelease> list) {
@@ -127,26 +125,24 @@ public class WebDriverReleaseManager {
   }
 
   public void loadChromeDriverVersion(String version) {
-	  System.out.println("CHROME VERSION : " + version);
     this.latestChromeDriverVersion = new ChromeDriverRelease(version);
   }
 
   public void loadMarionetteDriverVersionFromURL(URL url) {
-    InputStream in = null;
+    GitHubDownloader downloader = new GitHubDownloader(url.toString());
+
+    String latestVersion = DefaultConfig.getMarionetteDriverDefaultVersion();
     try {
-      in = url.openStream();
-      loadMarionetteDriverVersion(IOUtils.toString(in));
-    } catch (IOException e) {
-      logger.error("Something went wrong when trying to get latest marionette driver version");
-      logger.error(e.toString());
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    } finally {
-      IOUtils.closeQuietly(in);
-    }
+      List<Map<String, String>> downloadableAssets = downloader.getAllDownloadableAssets();
+      String latestName = (String) downloadableAssets.get(0).keySet().toArray()[0];
+      latestVersion = latestName.substring(latestName.indexOf("-")+1, latestName.lastIndexOf("-"));
+	} catch (Exception e) {
+      logger.error(e);
+	}
+    loadMarionetteDriverVersion(latestVersion);
   }
 
   public void loadMarionetteDriverVersion(String version) {
-	  System.out.println("MARIONETTE VERSION : " + version);
     this.latestMarionetteDriverVersion = new MarionetteDriverRelease(version);
   }
 

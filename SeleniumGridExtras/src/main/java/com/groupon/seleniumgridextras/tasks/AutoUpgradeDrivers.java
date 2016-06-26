@@ -19,7 +19,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
   private boolean updateWebDriver = false;
   private boolean updateIEDriver = false;
   private boolean updateChromeDriver = false;
-
+  private boolean updateMarionetteDriver = false;
 
   public AutoUpgradeDrivers() {
     setEndpoint(TaskDescriptions.Endpoints.AUTO_UPGRADE_WEBDRIVER);
@@ -31,6 +31,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
 
     addResponseDescription(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, "Old version of WebDriver Jar");
     addResponseDescription(JsonCodec.WebDriver.OLD_CHROME_DRIVER, "Old version of Chrome Driver");
+    addResponseDescription(JsonCodec.WebDriver.OLD_MARIONETTE_DRIVER, "Old version of Marionette Driver");
     addResponseDescription(JsonCodec.WebDriver.OLD_IE_DRIVER, "Old version of IE Driver");
 
     addResponseDescription(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, "New versions of WebDriver Jar");
@@ -74,6 +75,17 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER, newChromeDriverVersion);
     }
 
+    if (updateMarionetteDriver) {
+        String
+            newMarionetteDriverVersion =
+            RuntimeConfig.getReleaseManager().getMarionetteDriverLatestVersion().getPrettyPrintVersion(
+                ".");
+        logger.info("Marionette Driver " + genericUpdate + " " + newMarionetteDriverVersion);
+        RuntimeConfig.getConfig().getMarionetteDriver().setVersion(newMarionetteDriverVersion);
+
+        updateVersionFor(configHash, "marionettedriver", newMarionetteDriverVersion);
+        getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_MARIONETTE_DRIVER, newMarionetteDriverVersion);
+      }
 
     if (updateWebDriver) {
       String
@@ -95,7 +107,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, newIEDriverVersion);
     }
 
-    if (updateChromeDriver || updateIEDriver || updateWebDriver) {
+    if (updateChromeDriver || updateIEDriver || updateWebDriver || updateMarionetteDriver) {
       String
           message =
           "Update was detected for one or more versions of the drivers. You may need to restart Grid Extras for new versions to work";
@@ -143,6 +155,15 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
         RuntimeConfig.getReleaseManager().getChromeDriverLatestVersion().getComparableVersion();
 
     updateChromeDriver = currentChromeVersion < newestChromeVersion;
+
+    int
+        currentMarionetteVersion =
+        getComparableVersion(RuntimeConfig.getConfig().getMarionetteDriver().getVersion());
+    int
+        newestMarionetteVersion =
+        RuntimeConfig.getReleaseManager().getMarionetteDriverLatestVersion().getComparableVersion();
+
+    updateMarionetteDriver = currentMarionetteVersion < newestMarionetteVersion;
 
     int
         currentIEDriverVersion =

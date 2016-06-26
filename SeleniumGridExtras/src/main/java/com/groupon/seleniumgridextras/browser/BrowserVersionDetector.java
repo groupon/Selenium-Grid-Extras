@@ -24,6 +24,7 @@ public class BrowserVersionDetector {
   protected File jarPath;
   protected File ieDriverPath;
   protected File chromeDriverPath;
+  protected File marionetteDriverPath;
   protected List<GridNode> nodesFromConfigFile;
 
   public static final String[] chromeMacVersionCommand = {"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version"};
@@ -42,6 +43,10 @@ public class BrowserVersionDetector {
 
   public void setChromeDriverPath(File chromeDriverPath) {
     this.chromeDriverPath = chromeDriverPath;
+  }
+
+  public void setMarionetteDriverPath(File marionetteDriverPath) {
+    this.marionetteDriverPath = marionetteDriverPath;
   }
 
   public List<GridNode> updateVersions() {
@@ -95,6 +100,7 @@ public class BrowserVersionDetector {
   protected void setDriverPathsInSystemProperty() {
     System.setProperty("webdriver.ie.driver", this.ieDriverPath.getAbsolutePath());
     System.setProperty("webdriver.chrome.driver", this.chromeDriverPath.getAbsolutePath());
+    System.setProperty("webdriver.gecko.driver", this.marionetteDriverPath.getAbsolutePath());
   }
   
   /**

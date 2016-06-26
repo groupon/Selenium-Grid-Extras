@@ -52,13 +52,9 @@ public class Unzipper {
   private static Logger logger = Logger.getLogger(Unzipper.class);
 
   public static boolean unzip(String source, String destination) {
-	logger.error("Source : " + source);
-	logger.error("Destination : " + destination);
     if(source.endsWith(".gz")) {
-      logger.error("USIG GZIP DECOMPRESSION for " + source);
       return decompressGunzip(source, destination);
     }
-    logger.error("USIG UNZIP DECOMPRESSION for " + source);
     try {
       Unzip unzipper = new Unzip();
       unzipper.setSrc(new File(source));
@@ -73,11 +69,10 @@ public class Unzipper {
 
   private static boolean decompressGunzip(String source, String destination) {
     String sourceFileName = new File(source).getName();
-	destination = destination + "/" + sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
+	destination = destination + RuntimeConfig.getOS().getFileSeparator() + sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
     if (RuntimeConfig.getOS().isWindows()) {
       destination = destination + ".exe";
     }
-	logger.error("NEW destination : " + destination);
     try {
       FileInputStream fis = new FileInputStream(source);
       GZIPInputStream gis = new GZIPInputStream(fis);
