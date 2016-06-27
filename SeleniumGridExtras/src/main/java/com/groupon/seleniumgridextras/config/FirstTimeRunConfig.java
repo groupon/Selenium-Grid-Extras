@@ -257,13 +257,13 @@ public class FirstTimeRunConfig {
 
             versionOfWebDriver =
                     askQuestion("What version of WebDriver Jar should we use?", versionOfWebDriver);
-            versionOfChrome =
-                    askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
-            bitOfChrome =
-                    askQuestion("What bit of Chrome Driver should we use?", bitOfChrome);
             versionOfIEDriver =
                     askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
+            versionOfChrome =
+                    askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
         }
+        bitOfChrome =
+                askQuestion("What bit of Chrome Driver should we use (32 or 64)?", bitOfChrome);
 
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
         if(RuntimeConfig.getOS().isWindows()) {
