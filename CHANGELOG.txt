@@ -1,7 +1,7 @@
 1.12.3 (NOT RELEASED YET) - Add marionette suport. Ability to auto upgrade marionette as well.
        - Add resolution endpoint. Ability to get resolution on Windows and OSX. Ability to set resolution on Windows Server.
        - Fix test to work on Windows - testChromeDriverDString
-       - Add ability to add additional jars to the node classpath (#228) - NOT DONE
+       - Add ability to add additional jars to the node classpath (#228) - Fixed with PR234
        - Fix issue #156 - Fixed with PR233
        - Ask for Node port in FirstTimeRunConfig - NOT DONE - Maybe in 1.12.4
        - Add Opera support - NOT DONE - Maybe in 1.12.4
