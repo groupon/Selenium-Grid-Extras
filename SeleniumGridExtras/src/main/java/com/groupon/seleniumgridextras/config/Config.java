@@ -32,6 +32,7 @@ public class Config {
     public static final String NODE_CONFIG_FILES = "node_config_files";
     public static final String HUB_CONFIG_FILES = "hub_config_files";
     public static final String HUB_ADDITIONAL_CLASSPATH = "hub_additional_classpath";
+    public static final String NODE_ADDITIONAL_CLASSPATH = "node_additional_classpath";
 
     public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
     public static final String GRID_JVM_X_OPTIONS = "grid_jvm_x_options";
@@ -141,6 +142,7 @@ public class Config {
         initializeHubConfig();
 
         getConfigMap().put(HUB_ADDITIONAL_CLASSPATH, new ArrayList<String>());
+        getConfigMap().put(NODE_ADDITIONAL_CLASSPATH, new ArrayList<String>());
         getConfigMap().put(GRID_JVM_OPTIONS, new HashMap<String, Object>());
         getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
 
@@ -618,5 +620,15 @@ public class Config {
     @SuppressWarnings("unchecked")
     public void addHubClasspathItem(String item) {
         ((List<String>) getConfigMap().get(HUB_ADDITIONAL_CLASSPATH)).add(item);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public List<String> getAdditionalNodeConfig() {
+        return (List<String>) getConfigMap().get(NODE_ADDITIONAL_CLASSPATH);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void addNodeClasspathItem(String item) {
+        ((List<String>) getConfigMap().get(NODE_ADDITIONAL_CLASSPATH)).add(item);
     }
 }
