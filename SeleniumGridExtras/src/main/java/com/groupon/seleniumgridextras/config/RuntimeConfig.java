@@ -72,7 +72,8 @@ public class RuntimeConfig {
     if (releaseManager == null) {
       releaseManager =
           loadWebDriverReleaseManager("https://selenium-release.storage.googleapis.com/",
-                                      "https://chromedriver.storage.googleapis.com/LATEST_RELEASE");
+                                      "https://chromedriver.storage.googleapis.com/LATEST_RELEASE",
+                                      "https://api.github.com/repos/mozilla/geckodriver/releases");
     }
 
     return releaseManager;
@@ -80,10 +81,12 @@ public class RuntimeConfig {
 
 
   private static WebDriverReleaseManager loadWebDriverReleaseManager(String webDriverAndIEDriverURL,
-                                                                     String chromeDriverUrl) {
+                                                                     String chromeDriverUrl,
+                                                                     String marionetteDriverUrl) {
     try {
       return new WebDriverReleaseManager(new URL(webDriverAndIEDriverURL),
-                                         new URL(chromeDriverUrl));
+                                         new URL(chromeDriverUrl),
+                                         new URL(marionetteDriverUrl));
     } catch (MalformedURLException e) {
       logger.error("Seems that " + webDriverAndIEDriverURL + " is malformed");
       logger.error(e.toString());

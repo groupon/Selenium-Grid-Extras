@@ -88,9 +88,10 @@ public class DefaultConfig {
     public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
     public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 86400000;
     private static Config config;
-    private static final String webDriverDefaultVersion = "2.41.0";
-    private static final String ieDriverDefaultVersion = "2.41.0";
-    private static final String chromeDriverDefaultVersion = "2.10";
+    private static final String webDriverDefaultVersion = "2.53.0";
+    private static final String ieDriverDefaultVersion = "2.53.1";
+    private static final String chromeDriverDefaultVersion = "2.22";
+    private static final String marionetteDriverDefaultVersion = "0.8.0";
 
     public static Config getDefaultConfig() {
         config = new Config();
@@ -98,6 +99,7 @@ public class DefaultConfig {
         loadWebDriverInfo();
         loadIEDriverInfo();
         loadChromeDriverInfo();
+        loadMarionetteDriverInfo();
         loadDisabledPlugins();
         loadEnabledPlugins();
         loadSetupConfig();
@@ -200,6 +202,9 @@ public class DefaultConfig {
         return chromeDriverDefaultVersion;
     }
 
+    public static String getMarionetteDriverDefaultVersion() {
+        return marionetteDriverDefaultVersion;
+    }
 
     private static void loadSetupConfig() {
         config.addSetupTask(MoveMouse.class.getCanonicalName());
@@ -238,6 +243,15 @@ public class DefaultConfig {
         config.getChromeDriver().setDirectory(tmpDir + "chromedriver");
         config.getChromeDriver().setVersion(getChromeDriverDefaultVersion());
         config.getChromeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
+    }
+
+    private static void loadMarionetteDriverInfo() {
+        String tmpDir;
+
+        tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
+
+        config.getMarionetteDriver().setDirectory(tmpDir + "marionettedriver");
+        config.getMarionetteDriver().setVersion(getMarionetteDriverDefaultVersion());
     }
 
     private static void loadLogConfig() {
@@ -288,6 +302,7 @@ public class DefaultConfig {
         config.addActivatedModules(DownloadWebdriver.class.getCanonicalName());
         config.addActivatedModules(DownloadIEDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadChromeDriver.class.getCanonicalName());
+        config.addActivatedModules(DownloadMarionetteDriver.class.getCanonicalName());
         config.addActivatedModules(SessionHistory.class.getCanonicalName());
 
         config.addActivatedModules(UpgradeGridExtrasTask.class.getCanonicalName());

@@ -5,6 +5,7 @@ public class TaskDescriptions {
     public static class Endpoints {
         public static final String AUTO_UPGRADE_WEBDRIVER = "/auto_upgrade_webdriver";
         public static final String DOWNLOAD_CHROMEDRIVER = "/download_chromedriver";
+        public static final String DOWNLOAD_MARIONETTEDRIVER = "/download_marionette";
         public static final String DOWNLOAD_IEDRIVER = "/download_iedriver";
         public static final String DOWNLOAD_WEBDRIVER = "/download_webdriver";
         public static final String DIR = "/dir";
@@ -50,6 +51,9 @@ public class TaskDescriptions {
         public static final
         String DOWNLOAD_CHROMEDRIVER =
                 "Downloads a version of ChromeDriver to local machine";
+        public static final
+        String DOWNLOAD_MARIONETTEDRIVER =
+                "Downloads a version of MarionetteDriver to local machine";
         public static final
         String DOWNLOAD_IEDRIVER =
                 "Downloads a version of IEDriver.exe to local machine";
@@ -153,6 +157,7 @@ public class TaskDescriptions {
         public static class ButtonText {
 
             public static final String DOWNLOAD_CHROMEDRIVER = "Download Chrome-Driver";
+            public static final String DOWNLOAD_MARIONETTEDRIVER = "Download Marionette-Driver";
             public static final String DOWNLOAD_IEDRIVER = "Download IE-Driver";
             public static final String DOWNLOAD_WEBDRIVER = "Download WebDriver";
             public static final String DIR = "List Shared Dir";

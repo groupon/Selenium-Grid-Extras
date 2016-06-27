@@ -34,59 +34,30 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
-
-package com.groupon.seleniumgridextras.downloader;
-
-import org.apache.ant.compress.taskdefs.Unzip;
-import org.apache.log4j.Logger;
+package com.groupon.seleniumgridextras.config.driver;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPInputStream;
+public class MarionetteDriver extends DriverInfo {
 
-public class Unzipper {
-  private static Logger logger = Logger.getLogger(Unzipper.class);
+  @Override
+  public String getExecutablePath() {
 
-  public static boolean unzip(String source, String destination) {
-    if(source.endsWith(".gz")) {
-      return decompressGunzip(source, destination);
-    }
-    try {
-      Unzip unzipper = new Unzip();
-      unzipper.setSrc(new File(source));
-      unzipper.setDest(new File(destination));
-      unzipper.execute();
-    } catch (Exception e) {
-      logger.error(e.toString());
-      return false;
-    }
-    return true;
+    String
+        path =
+        this.getDirectory() + RuntimeConfig.getOS().getFileSeparator() + getExecutableName();
+
+    return path;
   }
 
-  private static boolean decompressGunzip(String source, String destination) {
-    String sourceFileName = new File(source).getName();
-	destination = destination + RuntimeConfig.getOS().getFileSeparator() + sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
+  @Override
+  public String getExecutableName() {
+    String exe = "marionettedriver_" + this.getVersion();
+//    String exe = this.getVersion();
+
     if (RuntimeConfig.getOS().isWindows()) {
-      destination = destination + ".exe";
+      exe = exe + ".exe";
     }
-    try {
-      FileInputStream fis = new FileInputStream(source);
-      GZIPInputStream gis = new GZIPInputStream(fis);
-      FileOutputStream fos = new FileOutputStream(destination);
-      byte[] buffer = new byte[1024];
-      int len;
-      while((len = gis.read(buffer)) != -1){
-        fos.write(buffer, 0, len);
-      }
-      fos.close();
-      gis.close();
-    } catch (IOException e) {
-      logger.error(e.toString());
-    }
-    return true;
+    return exe;
   }
 }

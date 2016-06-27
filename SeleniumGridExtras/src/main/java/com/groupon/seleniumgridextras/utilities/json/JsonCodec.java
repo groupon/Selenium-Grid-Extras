@@ -171,9 +171,11 @@ public class JsonCodec {
 
         public static final String OLD_WEB_DRIVER_JAR = "old_web_driver_jar";
         public static final String OLD_CHROME_DRIVER = "old_chrome_driver";
+        public static final String OLD_MARIONETTE_DRIVER = "old_marionette_driver";
         public static final String OLD_IE_DRIVER = "old_ie_driver";
         public static final String NEW_WEB_DRIVER_JAR = "new_web_driver_jar";
         public static final String NEW_CHROME_DRIVER = "new_chrome_driver";
+        public static final String NEW_MARIONETTE_DRIVER = "new_marionette_driver";
         public static final String NEW_IE_DRIVER = "new_ie_driver";
 
 

@@ -69,6 +69,7 @@ public class WebDriverRelease {
     return name;
   }
 
+  // TODO what is this for ? I don't see it used anywhere, besides in tests
   public String getRelativePath() {
     return relativePath;
   }

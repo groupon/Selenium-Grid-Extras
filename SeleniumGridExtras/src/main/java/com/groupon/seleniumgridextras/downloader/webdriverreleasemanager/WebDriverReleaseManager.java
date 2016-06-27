@@ -8,6 +8,9 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
+import com.groupon.seleniumgridextras.config.DefaultConfig;
+import com.groupon.seleniumgridextras.downloader.GitHubDownloader;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -23,9 +26,11 @@ public class WebDriverReleaseManager {
   private static final String WEBDRIVER_JAR = "webdriver-jar";
   private static final String IE_DRIVER = "ie-driver";
   private static final String CHROME_DRIVER = "chrome-driver";
+  private static final String MARIONETTE_DRIVER = "marionette-driver";
   private WebDriverRelease latestWebdriverVersion;
   private WebDriverRelease latestIEDriverVersion;
   private WebDriverRelease latestChromeDriverVersion;
+  private WebDriverRelease latestMarionetteDriverVersion;
 
   private Document parsedXml;
   private static Logger logger = Logger.getLogger(WebDriverReleaseManager.class);
@@ -38,13 +43,14 @@ public class WebDriverReleaseManager {
     allProducts.put(WEBDRIVER_JAR, new LinkedList<WebDriverRelease>());
     allProducts.put(IE_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(CHROME_DRIVER, new LinkedList<WebDriverRelease>());
+    allProducts.put(MARIONETTE_DRIVER, new LinkedList<WebDriverRelease>());
   }
 
-  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL)
+  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL marionetteDriverVersionURL)
       throws DocumentException {
 
-    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver from "
-                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL
+    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver and MarionetteDriver from "
+                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL + " and " + marionetteDriverVersionURL
         .toExternalForm());
     initialize();
 
@@ -52,6 +58,7 @@ public class WebDriverReleaseManager {
     parsedXml = reader.read(webDriverAndIEDriverURL);
     loadWebDriverAndIEDriverVersions(parsedXml);
     loadChromeDriverVersionFromURL(chromeDriverVersionURL);
+    loadMarionetteDriverVersionFromURL(marionetteDriverVersionURL);
   }
 
   public int getWebdriverVersionCount() {
@@ -83,6 +90,10 @@ public class WebDriverReleaseManager {
     return this.latestChromeDriverVersion;
   }
 
+  public WebDriverRelease getMarionetteDriverLatestVersion() {
+	return this.latestMarionetteDriverVersion;
+  }
+  
   private WebDriverRelease findLatestRelease(List<WebDriverRelease> list) {
 
     WebDriverRelease highestVersion = null;
@@ -115,6 +126,24 @@ public class WebDriverReleaseManager {
 
   public void loadChromeDriverVersion(String version) {
     this.latestChromeDriverVersion = new ChromeDriverRelease(version);
+  }
+
+  public void loadMarionetteDriverVersionFromURL(URL url) {
+    GitHubDownloader downloader = new GitHubDownloader(url.toString());
+
+    String latestVersion = DefaultConfig.getMarionetteDriverDefaultVersion();
+    try {
+      List<Map<String, String>> downloadableAssets = downloader.getAllDownloadableAssets();
+      String latestName = (String) downloadableAssets.get(0).keySet().toArray()[0];
+      latestVersion = latestName.substring(latestName.indexOf("-")+1, latestName.lastIndexOf("-"));
+	} catch (Exception e) {
+      logger.error(e);
+	}
+    loadMarionetteDriverVersion(latestVersion);
+  }
+
+  public void loadMarionetteDriverVersion(String version) {
+    this.latestMarionetteDriverVersion = new MarionetteDriverRelease(version);
   }
 
   public void loadWebDriverAndIEDriverVersions(Document xml) {
