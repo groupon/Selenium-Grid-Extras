@@ -25,8 +25,8 @@ public class GridStarterAdditionalNodeClasspathTest {
     public void setUp(){
         RuntimeConfig.setConfigFile(configFileName);
         Config config = new Config();
-        config.addHubClasspathItem(CLASSPATH_ITEM_1);
-        config.addHubClasspathItem(CLASSPATH_ITEM_2);
+        config.addNodeClasspathItem(CLASSPATH_ITEM_1);
+        config.addNodeClasspathItem(CLASSPATH_ITEM_2);
         config.writeToDisk(RuntimeConfig.getConfigFile());
         RuntimeConfig.load();
     }
