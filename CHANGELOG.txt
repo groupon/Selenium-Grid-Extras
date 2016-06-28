@@ -3,7 +3,7 @@
        - Fix test to work on Windows - testChromeDriverDString
        - Add ability to add additional jars to the node classpath (#228) - Fixed with PR234
        - Fix issue #156 - Fixed with PR233
-       - Ask for Node port in FirstTimeRunConfig - NOT DONE - Maybe in 1.12.4
+       - Ask for Node port in FirstTimeRunConfig - Fixed with PR236
        - Add Opera support - NOT DONE - Maybe in 1.12.4
 1.12.2 - Add phantomjs support
        - Add WIN10 to platform list
