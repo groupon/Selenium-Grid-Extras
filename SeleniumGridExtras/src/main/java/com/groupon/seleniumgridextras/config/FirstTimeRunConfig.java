@@ -80,10 +80,14 @@ public class FirstTimeRunConfig {
             configureHub(hubHost, hubPort, defaultConfig);
         }
 
+        String nodePort = "5555";
+        if (defaultConfig.getAutoStartNode()) {
+        	nodePort = getGridNodePort();
+        }
         List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
         if (defaultConfig.getAutoStartNode()) {
-            configureNodes(caps, hubHost, hubPort, defaultConfig);
+            configureNodes(caps, hubHost, hubPort, defaultConfig, nodePort);
 
             List<Capability> appiumCaps = getAppiumCapabilitiesFromUser(defaultConfig);
 
@@ -292,13 +296,12 @@ public class FirstTimeRunConfig {
     }
 
     private static void configureNodes(List<Capability> capabilities, String hubHost,
-                                       String hubPort, Config defaultConfig) {
+                                       String hubPort, Config defaultConfig, String nodePort) {
         GridNode node = new GridNode();
-        int nodePort = 5555;
 
         node.getConfiguration().setHubHost(hubHost);
         node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
-        node.getConfiguration().setPort(nodePort);
+        node.getConfiguration().setPort(Integer.parseInt(nodePort));
 
         for (Capability cap : capabilities) {
             node.getCapabilities().add(cap);
@@ -489,6 +492,11 @@ public class FirstTimeRunConfig {
 
     private static String getGridHubPort() {
         String port = askQuestion("What is the PORT for the Selenium Grid Hub?", "4444");
+        return port;
+    }
+
+    private static String getGridNodePort() {
+        String port = askQuestion("What is the PORT for the Selenium Grid Node?", "5555");
         return port;
     }
 
