@@ -273,30 +273,36 @@ public class FirstTimeRunConfig {
                 askQuestion("What bit of Chrome Driver should we use (32 or 64)?", bitOfChrome);
 
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
-        if(RuntimeConfig.getOS().isWindows()) {
-	        defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
-	        defaultConfig.getIEdriver().setBit(
-	                RuntimeConfig.getOS().getWindowsRealArchitecture().equals("64")? "x64" : "Win32");
+        if (RuntimeConfig.getOS().isWindows()) {
+            String bitOfIEDriver = RuntimeConfig.getOS().getWindowsRealArchitecture().equals("64")
+                    ? "x64" : "Win32";
+            bitOfIEDriver =
+                    askQuestion("What bit of IE Driver should we use (32 or 64)?", bitOfIEDriver);
+            bitOfIEDriver = bitOfIEDriver.equals("64") ? "x64" : "Win32";
+            defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
+            defaultConfig.getIEdriver().setBit(bitOfIEDriver);
         }
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
         defaultConfig.getChromeDriver().setBit(bitOfChrome);
 
         defaultConfig.getMarionetteDriver().setVersion(versionOfMarionette);
 
+        System.out.println(
+                "Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
         System.out
-                .println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
-        System.out.println("Current IE Driver Version: " + defaultConfig.getIEdriver().getVersion());
-        System.out
-                .println("Current Chrome Driver Version: " + defaultConfig.getChromeDriver().getVersion());
+                .println("Current IE Driver Version: " + defaultConfig.getIEdriver().getVersion());
+        System.out.println(
+                "Current Chrome Driver Version: " + defaultConfig.getChromeDriver().getVersion());
         System.out
                 .println("Current Chrome Driver Bit: " + defaultConfig.getChromeDriver().getBit());
-        System.out
-        		.println("Current Marionette Driver Version: " + defaultConfig.getMarionetteDriver().getVersion());
+        System.out.println("Current IE Driver Bit: " + defaultConfig.getIEdriver().getBit());
+        System.out.println("Current Marionette Driver Version: "
+                + defaultConfig.getMarionetteDriver().getVersion());
 
     }
 
     private static void configureNodes(List<Capability> capabilities, String hubHost,
-                                       String hubPort, Config defaultConfig, String nodePort) {
+            String hubPort, Config defaultConfig, String nodePort) {
         GridNode node = new GridNode();
 
         node.getConfiguration().setHubHost(hubHost);
