@@ -274,8 +274,7 @@ public class FirstTimeRunConfig {
 
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
         if (RuntimeConfig.getOS().isWindows()) {
-            String bitOfIEDriver = RuntimeConfig.getOS().getWindowsRealArchitecture().equals("64")
-                    ? "x64" : "Win32";
+            String bitOfIEDriver = RuntimeConfig.getOS().getWindowsRealArchitecture();
             bitOfIEDriver =
                     askQuestion("What bit of IE Driver should we use (32 or 64)?", bitOfIEDriver);
             bitOfIEDriver = bitOfIEDriver.equals("64") ? "x64" : "Win32";
