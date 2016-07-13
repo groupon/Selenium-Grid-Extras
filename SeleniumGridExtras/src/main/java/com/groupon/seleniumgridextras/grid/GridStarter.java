@@ -189,7 +189,7 @@ public class GridStarter {
         }
 
         command.append(getChromeDriverExecutionPathParam());
-        command.append(getMarionetteDriverExecutionPathParam());
+        command.append(getGeckoDriverExecutionPathParam());
         command.append(" -cp " + getOsSpecificQuote() + getGridExtrasJarFilePath());
 
         List<String> additionalClassPathItems = RuntimeConfig.getConfig().getAdditionalNodeConfig();
@@ -245,8 +245,8 @@ public class GridStarter {
                 .getExecutablePath();
     }
 
-    protected static String getMarionetteDriverExecutionPathParam() {
-        return " -Dwebdriver.gecko.driver=" + RuntimeConfig.getConfig().getMarionetteDriver()
+    protected static String getGeckoDriverExecutionPathParam() {
+        return " -Dwebdriver.gecko.driver=" + RuntimeConfig.getConfig().getGeckoDriver()
                 .getExecutablePath();
     }
 

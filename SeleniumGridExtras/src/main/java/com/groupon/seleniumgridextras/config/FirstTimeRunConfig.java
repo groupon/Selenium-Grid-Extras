@@ -242,11 +242,11 @@ public class FirstTimeRunConfig {
         String
                 answer =
                 askQuestion(
-                        "Would you like WebDriver, IEDriver, ChromeDriver and MarionetteDriver to auto update (1-yes/0-no)", "1");
+                        "Would you like WebDriver, IEDriver, ChromeDriver and GeckoDriver to auto update (1-yes/0-no)", "1");
 
         WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
         String versionOfChrome = manager.getChromeDriverLatestVersion().getPrettyPrintVersion(".");
-        String versionOfMarionette = manager.getMarionetteDriverLatestVersion().getPrettyPrintVersion(".");
+        String versionOfGecko = manager.getGeckoDriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
@@ -264,8 +264,8 @@ public class FirstTimeRunConfig {
                     askQuestion("What version of WebDriver Jar should we use?", versionOfWebDriver);
             versionOfIEDriver =
                     askQuestion("What version of IE Driver should we use?", versionOfIEDriver);
-            versionOfMarionette =
-                    askQuestion("What version of Marionette Driver should we use?", versionOfMarionette);
+            versionOfGecko =
+                    askQuestion("What version of Gecko Driver should we use?", versionOfGecko);
             versionOfChrome =
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
         }
@@ -284,7 +284,7 @@ public class FirstTimeRunConfig {
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
         defaultConfig.getChromeDriver().setBit(bitOfChrome);
 
-        defaultConfig.getMarionetteDriver().setVersion(versionOfMarionette);
+        defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
 
         System.out.println(
                 "Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
@@ -295,8 +295,8 @@ public class FirstTimeRunConfig {
         System.out
                 .println("Current Chrome Driver Bit: " + defaultConfig.getChromeDriver().getBit());
         System.out.println("Current IE Driver Bit: " + defaultConfig.getIEdriver().getBit());
-        System.out.println("Current Marionette Driver Version: "
-                + defaultConfig.getMarionetteDriver().getVersion());
+        System.out.println("Current Gecko Driver Version: "
+                + defaultConfig.getGeckoDriver().getVersion());
 
     }
 

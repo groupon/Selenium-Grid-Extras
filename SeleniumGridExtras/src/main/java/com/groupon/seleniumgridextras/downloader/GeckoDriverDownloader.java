@@ -43,24 +43,22 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 
-public class MarionetteDriverDownloader extends Downloader {
+public class GeckoDriverDownloader extends Downloader {
 
   private String version;
 
-  private static Logger logger = Logger.getLogger(MarionetteDriverDownloader.class);
+  private static Logger logger = Logger.getLogger(GeckoDriverDownloader.class);
 
-  public MarionetteDriverDownloader(String version) {
+  public GeckoDriverDownloader(String version) {
 
-    setDestinationDir(RuntimeConfig.getConfig().getMarionetteDriver().getDirectory());
+    setDestinationDir(RuntimeConfig.getConfig().getGeckoDriver().getDirectory());
     setVersion(version);
 
-    setDestinationFile("marionettedriver_" + getVersion() + "." + getExtension());
+    setDestinationFile("geckodriver_" + getVersion() + "." + getExtension());
+//    setDestinationFile("wires" + "." + getExtension());
 
     String sourceURL = "https://github.com/mozilla/geckodriver/releases/download/v" + 
     	      getVersion() + "/geckodriver-v" + getVersion() + "-" + getOSName() + "." + getExtension();
-    if(!RuntimeConfig.getOS().isWindows()) { // TODO bring this up to GeckoDriver maintainers
-    	sourceURL = sourceURL.replace("geckodriver-v", "geckodriver-");
-    }
     setSourceURL(sourceURL);
 
   }
@@ -85,20 +83,19 @@ public class MarionetteDriverDownloader extends Downloader {
 
     logger.info("Downloading from " + getSourceURL());
 
-
     if (startDownload()) {
 
       if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
 
-        String marionettedriver = "marionettedriver";
+        String geckodriver = "geckodriver";
         if (RuntimeConfig.getOS().isWindows()){
-          marionettedriver = marionettedriver + ".exe";
+          geckodriver = geckodriver + ".exe";
         }
 
 
-        File tempUnzipedExecutable = new File(getDestinationDir(), marionettedriver);
+        File tempUnzipedExecutable = new File(getDestinationDir(), geckodriver);
         File finalExecutable =
-            new File(RuntimeConfig.getConfig().getMarionetteDriver().getExecutablePath());
+            new File(RuntimeConfig.getConfig().getGeckoDriver().getExecutablePath());
 
         if (tempUnzipedExecutable.exists()){
           logger.debug(tempUnzipedExecutable.getAbsolutePath());
@@ -110,6 +107,8 @@ public class MarionetteDriverDownloader extends Downloader {
           logger.debug(finalExecutable.getAbsolutePath());
         }
 
+        System.out.println("finalExecutable : " + finalExecutable);
+        System.out.println("finalExecutable.getAbsolutePath() : " + finalExecutable.getAbsolutePath());
         tempUnzipedExecutable.renameTo(finalExecutable);
 
         setDestinationFile(finalExecutable.getAbsolutePath());
@@ -137,9 +136,9 @@ public class MarionetteDriverDownloader extends Downloader {
     if (RuntimeConfig.getOS().isWindows()) {
       ext = "zip";
     } else if (RuntimeConfig.getOS().isMac()) {
-      ext = "gz";
+      ext = "tar.gz";
     } else {
-      ext = "gz";
+      ext = "tar.gz";
     }
     return ext;
   }
@@ -163,11 +162,11 @@ public class MarionetteDriverDownloader extends Downloader {
   }
 
   protected String getMacName() {
-    return "OSX";
+    return "mac";
   }
 
   protected String getWindownsName() {
-    return "win32";
+    return "win64";
   }
 
 

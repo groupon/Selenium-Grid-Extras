@@ -82,11 +82,11 @@ public class RuntimeConfig {
 
   private static WebDriverReleaseManager loadWebDriverReleaseManager(String webDriverAndIEDriverURL,
                                                                      String chromeDriverUrl,
-                                                                     String marionetteDriverUrl) {
+                                                                     String geckoDriverUrl) {
     try {
       return new WebDriverReleaseManager(new URL(webDriverAndIEDriverURL),
                                          new URL(chromeDriverUrl),
-                                         new URL(marionetteDriverUrl));
+                                         new URL(geckoDriverUrl));
     } catch (MalformedURLException e) {
       logger.error("Seems that " + webDriverAndIEDriverURL + " is malformed");
       logger.error(e.toString());

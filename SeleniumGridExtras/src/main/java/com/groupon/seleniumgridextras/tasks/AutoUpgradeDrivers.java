@@ -19,7 +19,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
   private boolean updateWebDriver = false;
   private boolean updateIEDriver = false;
   private boolean updateChromeDriver = false;
-  private boolean updateMarionetteDriver = false;
+  private boolean updateGeckoDriver = false;
 
   public AutoUpgradeDrivers() {
     setEndpoint(TaskDescriptions.Endpoints.AUTO_UPGRADE_WEBDRIVER);
@@ -31,7 +31,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
 
     addResponseDescription(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, "Old version of WebDriver Jar");
     addResponseDescription(JsonCodec.WebDriver.OLD_CHROME_DRIVER, "Old version of Chrome Driver");
-    addResponseDescription(JsonCodec.WebDriver.OLD_MARIONETTE_DRIVER, "Old version of Marionette Driver");
+    addResponseDescription(JsonCodec.WebDriver.OLD_GECKO_DRIVER, "Old version of Gecko Driver");
     addResponseDescription(JsonCodec.WebDriver.OLD_IE_DRIVER, "Old version of IE Driver");
 
     addResponseDescription(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, "New versions of WebDriver Jar");
@@ -75,16 +75,16 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER, newChromeDriverVersion);
     }
 
-    if (updateMarionetteDriver) {
+    if (updateGeckoDriver) {
         String
-            newMarionetteDriverVersion =
-            RuntimeConfig.getReleaseManager().getMarionetteDriverLatestVersion().getPrettyPrintVersion(
+            newGeckoDriverVersion =
+            RuntimeConfig.getReleaseManager().getGeckoDriverLatestVersion().getPrettyPrintVersion(
                 ".");
-        logger.info("Marionette Driver " + genericUpdate + " " + newMarionetteDriverVersion);
-        RuntimeConfig.getConfig().getMarionetteDriver().setVersion(newMarionetteDriverVersion);
+        logger.info("Gecko Driver " + genericUpdate + " " + newGeckoDriverVersion);
+        RuntimeConfig.getConfig().getGeckoDriver().setVersion(newGeckoDriverVersion);
 
-        updateVersionFor(configHash, "marionettedriver", newMarionetteDriverVersion);
-        getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_MARIONETTE_DRIVER, newMarionetteDriverVersion);
+        updateVersionFor(configHash, "geckodriver", newGeckoDriverVersion);
+        getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_GECKO_DRIVER, newGeckoDriverVersion);
       }
 
     if (updateWebDriver) {
@@ -107,7 +107,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, newIEDriverVersion);
     }
 
-    if (updateChromeDriver || updateIEDriver || updateWebDriver || updateMarionetteDriver) {
+    if (updateChromeDriver || updateIEDriver || updateWebDriver || updateGeckoDriver) {
       String
           message =
           "Update was detected for one or more versions of the drivers. You may need to restart Grid Extras for new versions to work";
@@ -157,13 +157,13 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
     updateChromeDriver = currentChromeVersion < newestChromeVersion;
 
     int
-        currentMarionetteVersion =
-        getComparableVersion(RuntimeConfig.getConfig().getMarionetteDriver().getVersion());
+        currentGeckoVersion =
+        getComparableVersion(RuntimeConfig.getConfig().getGeckoDriver().getVersion());
     int
-        newestMarionetteVersion =
-        RuntimeConfig.getReleaseManager().getMarionetteDriverLatestVersion().getComparableVersion();
+        newestGeckoVersion =
+        RuntimeConfig.getReleaseManager().getGeckoDriverLatestVersion().getComparableVersion();
 
-    updateMarionetteDriver = currentMarionetteVersion < newestMarionetteVersion;
+    updateGeckoDriver = currentGeckoVersion < newestGeckoVersion;
 
     int
         currentIEDriverVersion =

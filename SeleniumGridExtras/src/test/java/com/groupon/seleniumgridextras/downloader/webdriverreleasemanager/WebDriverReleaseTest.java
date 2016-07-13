@@ -98,11 +98,10 @@ public class WebDriverReleaseTest {
 
   @Test
   public void testMarionetteDriverRelease() throws Exception{
-    WebDriverRelease marionetteRelease = new MarionetteDriverRelease("0.8.0");
+    WebDriverRelease marionetteRelease = new GeckoDriverRelease("0.9.0");
 
-    assertEquals("0.8.0", marionetteRelease.getPrettyPrintVersion("."));
-    assertEquals("marionettedriver", marionetteRelease.getName());
-    assertEquals("index.html?path=0.8.0/", marionetteRelease.getRelativePath());
+    assertEquals("0.9.0", marionetteRelease.getPrettyPrintVersion("."));
+    assertEquals("geckodriver", marionetteRelease.getName());
 
   }
 }

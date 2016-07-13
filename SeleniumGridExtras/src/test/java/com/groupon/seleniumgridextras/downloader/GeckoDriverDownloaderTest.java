@@ -12,25 +12,25 @@ import java.io.File;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MarionetteDriverDownloaderTest {
+public class GeckoDriverDownloaderTest {
 
-  private MarionetteDriverDownloader downloader;
-  private final String downloadDir = "/tmp/download_marionette_driver_test";
-  private File testDir = new File("marionette_downloader_test");
-  private final String VERSION = "0.8.0";
+  private GeckoDriverDownloader downloader;
+  private final String downloadDir = "/tmp/download_gecko_driver_test";
+  private File testDir = new File("gecko_downloader_test");
+  private final String VERSION = "0.9.0";
   
   @Before
   public void setUp() throws Exception {
-    RuntimeConfig.setConfigFile("marionette_download_test.json");
+    RuntimeConfig.setConfigFile("gecko_download_test.json");
     Config config = new Config();
 
-    config.getMarionetteDriver().setDirectory(downloadDir);
+    config.getGeckoDriver().setDirectory(downloadDir);
     config.writeToDisk(RuntimeConfig.getConfigFile());
     RuntimeConfig.load();
 
     testDir.mkdir();
 
-    downloader = new MarionetteDriverDownloader(VERSION);
+    downloader = new GeckoDriverDownloader(VERSION);
     downloader.setDestinationDir(testDir.getAbsolutePath());
   }
 
@@ -38,11 +38,14 @@ public class MarionetteDriverDownloaderTest {
   public void tearDown() throws Exception {
     new File(RuntimeConfig.getConfigFile()).delete();
     new File(RuntimeConfig.getConfigFile() + ".example").delete();
-    String EXPECTED_FILENAME = "marionettedriver_" + VERSION;
-    String EXPECTED_FILENAME_COMPRESSED = "marionettedriver_" + VERSION + ".gz";
+    String EXPECTED_FILENAME = "geckodriver";
+    String EXPECTED_FILENAME_COMPRESSED = "geckodriver" + VERSION + ".gz";
     if(RuntimeConfig.getOS().isWindows()) {
-      EXPECTED_FILENAME = "marionettedriver_" + VERSION + ".exe";
-      EXPECTED_FILENAME_COMPRESSED = "marionettedriver_" + VERSION + ".zip";
+      EXPECTED_FILENAME = "geckodriver_" + VERSION + ".exe";
+      EXPECTED_FILENAME_COMPRESSED = "geckodriver_" + VERSION + ".zip";
+    } else {
+      String EXPECTED_FILENAME_COMPRESSED2 = "geckodriver" + VERSION + ".tar.gz";
+      new File(testDir, EXPECTED_FILENAME_COMPRESSED2).delete();
     }
     new File(testDir, EXPECTED_FILENAME).delete();
     new File(testDir, EXPECTED_FILENAME_COMPRESSED).delete();
@@ -70,21 +73,21 @@ public class MarionetteDriverDownloaderTest {
 
   @Test
   public void testGetOSNames() throws Exception {
-    assertEquals("OSX", downloader.getMacName());
-    assertEquals("win32", downloader.getWindownsName());
+    assertEquals("mac", downloader.getMacName());
+    assertEquals("win64", downloader.getWindownsName());
     assertEquals("linux64", downloader.getLinuxName());
   }
   
   @Test
   public void testDownload() throws Exception {
-    String EXPECTED_FILENAME = "marionettedriver_" + VERSION;
+    String EXPECTED_FILENAME = "geckodriver";
     if(RuntimeConfig.getOS().isWindows()) {
-      EXPECTED_FILENAME = "marionettedriver_" + VERSION + ".exe";
+      EXPECTED_FILENAME = "geckodriver" + ".exe";
     }
     File expectedFile = new File(testDir, EXPECTED_FILENAME);
 
-    assertEquals(true, downloader.download());
-    assertEquals(true, expectedFile.exists());
+    assertEquals("Download failed.", true, downloader.download());
+    assertEquals("Expected File missing.", true, expectedFile.exists());
 
     assertTrue(expectedFile.length() > (1024000)*2);
     assertTrue(expectedFile.length() < (1024000)*4);

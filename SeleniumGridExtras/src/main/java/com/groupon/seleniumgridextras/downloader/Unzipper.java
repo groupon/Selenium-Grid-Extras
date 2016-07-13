@@ -52,7 +52,9 @@ public class Unzipper {
   private static Logger logger = Logger.getLogger(Unzipper.class);
 
   public static boolean unzip(String source, String destination) {
-    if(source.endsWith(".gz")) {
+    if(source.endsWith(".tar.gz")) {
+      return decompressTarGunzip(source, destination);
+    } else if(source.endsWith(".gz")) {
       return decompressGunzip(source, destination);
     }
     try {
@@ -69,7 +71,7 @@ public class Unzipper {
 
   private static boolean decompressGunzip(String source, String destination) {
     String sourceFileName = new File(source).getName();
-	destination = destination + RuntimeConfig.getOS().getFileSeparator() + sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
+    destination = destination + RuntimeConfig.getOS().getFileSeparator() + sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
     if (RuntimeConfig.getOS().isWindows()) {
       destination = destination + ".exe";
     }
@@ -86,6 +88,23 @@ public class Unzipper {
       gis.close();
     } catch (IOException e) {
       logger.error(e.toString());
+    }
+    return true;
+  }
+
+  private static boolean decompressTarGunzip(String source, String destination) {
+    try {
+      org.apache.ant.compress.taskdefs.GUnzip gunzip = new org.apache.ant.compress.taskdefs.GUnzip();
+      gunzip.setSrc(new File(source));
+      gunzip.setDest(new File(destination));
+      gunzip.execute();
+      org.apache.ant.compress.taskdefs.Untar untar = new org.apache.ant.compress.taskdefs.Untar();
+      untar.setSrc(new File(source.replace(".gz", "")));
+      untar.setDest(new File(destination)); // Destination doesn't matter?
+      untar.execute();
+    } catch (Exception e) {
+      logger.error(e.toString());
+      return false;
     }
     return true;
   }

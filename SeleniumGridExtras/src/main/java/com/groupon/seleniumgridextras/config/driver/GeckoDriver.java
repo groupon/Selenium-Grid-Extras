@@ -38,7 +38,7 @@ package com.groupon.seleniumgridextras.config.driver;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-public class MarionetteDriver extends DriverInfo {
+public class GeckoDriver extends DriverInfo {
 
   @Override
   public String getExecutablePath() {
@@ -52,7 +52,8 @@ public class MarionetteDriver extends DriverInfo {
 
   @Override
   public String getExecutableName() {
-    String exe = "marionettedriver_" + this.getVersion();
+//    String exe = "geckodriver_" + this.getVersion();
+    String exe = "wires";
 //    String exe = this.getVersion();
 
     if (RuntimeConfig.getOS().isWindows()) {

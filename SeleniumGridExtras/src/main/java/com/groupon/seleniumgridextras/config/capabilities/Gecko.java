@@ -1,6 +1,6 @@
 package com.groupon.seleniumgridextras.config.capabilities;
 
-public class Marionette extends Capability {
+public class Gecko extends Capability {
 
   @Override
   public String getWebDriverClass() {

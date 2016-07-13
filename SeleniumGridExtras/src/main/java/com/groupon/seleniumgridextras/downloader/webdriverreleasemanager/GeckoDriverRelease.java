@@ -4,9 +4,9 @@ package com.groupon.seleniumgridextras.downloader.webdriverreleasemanager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MarionetteDriverRelease extends WebDriverRelease {
+public class GeckoDriverRelease extends WebDriverRelease {
 
-  public MarionetteDriverRelease(String input) {
+  public GeckoDriverRelease(String input) {
     super(input);
 
     Matcher m = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)").matcher(input);
@@ -17,7 +17,7 @@ public class MarionetteDriverRelease extends WebDriverRelease {
       setPatchVersion(Integer.valueOf(m.group(3)));
     }
 
-    setName("marionettedriver");
+    setName("geckodriver");
     setRelativePath("index.html?path=" + getPrettyPrintVersion(".") + "/");
 
   }

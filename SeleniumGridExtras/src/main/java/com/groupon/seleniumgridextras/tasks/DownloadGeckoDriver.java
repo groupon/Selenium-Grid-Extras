@@ -40,7 +40,7 @@ package com.groupon.seleniumgridextras.tasks;
 import com.google.gson.JsonObject;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
-import com.groupon.seleniumgridextras.downloader.MarionetteDriverDownloader;
+import com.groupon.seleniumgridextras.downloader.GeckoDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.Downloader;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -50,22 +50,22 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.util.Map;
 
-public class DownloadMarionetteDriver extends ExecuteOSTask {
+public class DownloadGeckoDriver extends ExecuteOSTask {
 
-  private static Logger logger = Logger.getLogger(DownloadMarionetteDriver.class);
+  private static Logger logger = Logger.getLogger(DownloadGeckoDriver.class);
 
-  public DownloadMarionetteDriver() {
-    setEndpoint(TaskDescriptions.Endpoints.DOWNLOAD_MARIONETTEDRIVER);
-    setDescription(TaskDescriptions.Description.DOWNLOAD_MARIONETTEDRIVER);
+  public DownloadGeckoDriver() {
+    setEndpoint(TaskDescriptions.Endpoints.DOWNLOAD_GECKODRIVER);
+    setDescription(TaskDescriptions.Description.DOWNLOAD_GECKODRIVER);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.WebDriver.Downloader.VERSION,
-                       "Version of MarionetteDriver to download, such as 0.8.0");
+                       "Version of GeckoDriver to download, such as 0.9.0");
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
     setClassname(this.getClass().getCanonicalName().toString());
     setCssClass(TaskDescriptions.UI.BTN_SUCCESS);
-    setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_MARIONETTEDRIVER);
+    setButtonText(TaskDescriptions.UI.ButtonText.DOWNLOAD_GECKODRIVER);
     setEnabledInGui(true);
 
     addResponseDescription(JsonCodec.WebDriver.Downloader.ROOT_DIR,
@@ -81,7 +81,7 @@ public class DownloadMarionetteDriver extends ExecuteOSTask {
     logger.debug(RuntimeConfig.getConfig());
     getJsonResponse()
         .addKeyValues(JsonCodec.WebDriver.Downloader.ROOT_DIR,
-                      RuntimeConfig.getConfig().getMarionetteDriver().getDirectory());
+                      RuntimeConfig.getConfig().getGeckoDriver().getDirectory());
     getJsonResponse().addKeyValues(
         JsonCodec.WebDriver.Downloader.SOURCE_URL, "");
 
@@ -89,7 +89,7 @@ public class DownloadMarionetteDriver extends ExecuteOSTask {
 
   @Override
   public JsonObject execute() {
-    return execute(RuntimeConfig.getConfig().getMarionetteDriver().getVersion());
+    return execute(RuntimeConfig.getConfig().getGeckoDriver().getVersion());
   }
 
   @Override
@@ -108,9 +108,9 @@ public class DownloadMarionetteDriver extends ExecuteOSTask {
 
     Downloader
         downloader =
-        new MarionetteDriverDownloader(version);
+        new GeckoDriverDownloader(version);
 
-    if (!new File(RuntimeConfig.getConfig().getMarionetteDriver().getExecutablePath()).exists()) {
+    if (!new File(RuntimeConfig.getConfig().getGeckoDriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();
       getJsonResponse().addKeyValues(
           JsonCodec.WebDriver.Downloader.SOURCE_URL, downloader.getSourceURL());
@@ -140,16 +140,16 @@ public class DownloadMarionetteDriver extends ExecuteOSTask {
 
     try {
       File
-          marionetteDriverExecutable =
-          new File(RuntimeConfig.getConfig().getMarionetteDriver().getExecutablePath());
-      File marionetteDriverHome = new File(RuntimeConfig.getConfig().getMarionetteDriver().getDirectory());
+          geckoDriverExecutable =
+          new File(RuntimeConfig.getConfig().getGeckoDriver().getExecutablePath());
+      File geckoDriverHome = new File(RuntimeConfig.getConfig().getGeckoDriver().getDirectory());
 
-      if (!marionetteDriverHome.exists()) {
-        marionetteDriverHome.mkdir();
+      if (!geckoDriverHome.exists()) {
+        geckoDriverHome.mkdir();
       }
 
-      if (!marionetteDriverExecutable.exists()) {
-        systemAndLog("Downloading Marionette Driver " + RuntimeConfig.getConfig().getMarionetteDriver()
+      if (!geckoDriverExecutable.exists()) {
+        systemAndLog("Downloading Gecko Driver " + RuntimeConfig.getConfig().getGeckoDriver()
             .getVersion());
         logger.info(execute().toString());
       }
