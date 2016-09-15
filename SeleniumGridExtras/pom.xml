@@ -13,7 +13,8 @@
         </repository>
         <repository>
             <id>xuggle repo</id>
-            <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+            <!-- <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url> -->
+            <url>https://raw.github.com/smccarthy/xuggle-xuggler-dependency/master</url>
         </repository>
     </repositories>
 
