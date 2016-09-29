@@ -17,7 +17,7 @@ public class GeckoDriverDownloaderTest {
   private GeckoDriverDownloader downloader;
   private final String downloadDir = "/tmp/download_gecko_driver_test";
   private File testDir = new File("gecko_downloader_test");
-  private final String VERSION = "0.9.0";
+  private final String VERSION = "0.10.0";
   
   @Before
   public void setUp() throws Exception {
@@ -73,7 +73,7 @@ public class GeckoDriverDownloaderTest {
 
   @Test
   public void testGetOSNames() throws Exception {
-    assertEquals("mac", downloader.getMacName());
+    assertEquals("macos", downloader.getMacName());
     assertEquals("win64", downloader.getWindownsName());
     assertEquals("linux64", downloader.getLinuxName());
   }

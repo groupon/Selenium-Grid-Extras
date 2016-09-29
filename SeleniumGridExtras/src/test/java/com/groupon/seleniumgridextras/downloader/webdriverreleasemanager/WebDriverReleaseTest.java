@@ -98,9 +98,9 @@ public class WebDriverReleaseTest {
 
   @Test
   public void testMarionetteDriverRelease() throws Exception{
-    WebDriverRelease marionetteRelease = new GeckoDriverRelease("0.9.0");
+    WebDriverRelease marionetteRelease = new GeckoDriverRelease("0.10.0");
 
-    assertEquals("0.9.0", marionetteRelease.getPrettyPrintVersion("."));
+    assertEquals("0.10.0", marionetteRelease.getPrettyPrintVersion("."));
     assertEquals("geckodriver", marionetteRelease.getName());
 
   }

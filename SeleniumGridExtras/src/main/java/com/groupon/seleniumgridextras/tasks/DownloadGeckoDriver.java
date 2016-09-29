@@ -59,7 +59,7 @@ public class DownloadGeckoDriver extends ExecuteOSTask {
     setDescription(TaskDescriptions.Description.DOWNLOAD_GECKODRIVER);
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.WebDriver.Downloader.VERSION,
-                       "Version of GeckoDriver to download, such as 0.9.0");
+                       "Version of GeckoDriver to download, such as 0.10.0");
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);

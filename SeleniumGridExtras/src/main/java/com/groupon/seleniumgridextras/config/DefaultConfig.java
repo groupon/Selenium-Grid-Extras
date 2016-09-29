@@ -91,7 +91,7 @@ public class DefaultConfig {
     private static final String webDriverDefaultVersion = "2.53.0";
     private static final String ieDriverDefaultVersion = "2.53.1";
     private static final String chromeDriverDefaultVersion = "2.22";
-    private static final String geckoDriverDefaultVersion = "0.9.0";
+    private static final String geckoDriverDefaultVersion = "0.10.0";
 
     public static Config getDefaultConfig() {
         config = new Config();

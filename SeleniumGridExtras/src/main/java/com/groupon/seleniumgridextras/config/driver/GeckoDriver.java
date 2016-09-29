@@ -53,7 +53,7 @@ public class GeckoDriver extends DriverInfo {
   @Override
   public String getExecutableName() {
 //    String exe = "geckodriver_" + this.getVersion();
-    String exe = "wires";
+    String exe = "geckodriver";
 //    String exe = this.getVersion();
 
     if (RuntimeConfig.getOS().isWindows()) {

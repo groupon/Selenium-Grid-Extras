@@ -55,7 +55,6 @@ public class GeckoDriverDownloader extends Downloader {
     setVersion(version);
 
     setDestinationFile("geckodriver_" + getVersion() + "." + getExtension());
-//    setDestinationFile("wires" + "." + getExtension());
 
     String sourceURL = "https://github.com/mozilla/geckodriver/releases/download/v" + 
     	      getVersion() + "/geckodriver-v" + getVersion() + "-" + getOSName() + "." + getExtension();
@@ -162,7 +161,7 @@ public class GeckoDriverDownloader extends Downloader {
   }
 
   protected String getMacName() {
-    return "mac";
+    return "macos";
   }
 
   protected String getWindownsName() {
