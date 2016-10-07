@@ -45,6 +45,9 @@ public class GridNode {
         JsonObject topLevelJson = new JsonParser().parse(configString).getAsJsonObject();
 
         String configFromFile = topLevelJson.getAsJsonObject("configuration").toString();
+        if(RuntimeConfig.getConfig().getWebdriver().getVersion().contains("3.0")) {
+          configFromFile = topLevelJson.toString();
+        }
 
         GridNodeConfiguration
                 nodeConfiguration =
@@ -182,9 +185,7 @@ public class GridNode {
         private String hubHost;
         private String host;
         private String url;
-        private Integer registerCycle;
-        //    private int browserTimeout = 120;
-//    private int timeout = 120;
+        private Integer registerCycle = 5000;
         private int nodeStatusCheckTimeout = 10000;
         private String appiumStartCommand;
 

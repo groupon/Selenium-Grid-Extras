@@ -251,6 +251,9 @@ public class FirstTimeRunConfig {
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
         String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
+        if(RuntimeConfig.getOS().isMac()) {
+          bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_64;
+        }
 
         if (answer.equals("1")) {
             defaultConfig.setAutoUpdateDrivers("1");
