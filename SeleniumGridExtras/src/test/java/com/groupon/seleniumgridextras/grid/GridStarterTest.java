@@ -60,9 +60,9 @@ public class GridStarterTest {
         Config config = new Config();
         config.getWebdriver().setVersion("1.1.1");
 
-        GridNode node1 = new GridNode();
-        GridNode node2 = new GridNode();
-        GridNode nodeAppium = new GridNode();
+        GridNode node1 = new GridNode(false);
+        GridNode node2 = new GridNode(false);
+        GridNode nodeAppium = new GridNode(false);
         nodeAppium.getConfiguration().setAppiumStartCommand("appium");
         nodeAppium.getConfiguration().setPort(4723);
 

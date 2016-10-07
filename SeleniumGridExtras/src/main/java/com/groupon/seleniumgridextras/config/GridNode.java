@@ -27,26 +27,63 @@ public class GridNode {
     private GridNodeConfiguration configuration;
     private String loadedFromFile;
 
+    // Selenium 3.0 has values at top level, not in "configuration"
+    private String proxy;
+    private int maxSession;
+    private int port;
+    private boolean register;
+    private int unregisterIfStillDownAfter;
+    private int hubPort;
+    private String hubHost;
+    private String host;
+    private String url;
+    private Integer registerCycle;
+    private int nodeStatusCheckTimeout;
+    private String appiumStartCommand;
+
+    //Only test the node status 1 time, since the limit checker is
+    //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
+    private int downPollingLimit = 0;
+
     private static Logger logger = Logger.getLogger(GridNode.class);
 
-    public GridNode() {
+    public GridNode(boolean isSelenium3) {
         capabilities = new LinkedList<Capability>();
-        configuration = new GridNodeConfiguration();
+        if(!isSelenium3) { // This won't work for beta1, beta2, or beta3.
+          configuration = new GridNodeConfiguration();
+        } else {
+          proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
+          maxSession = 3;
+          register = true;
+          unregisterIfStillDownAfter = 10000;
+          registerCycle = 5000;
+          nodeStatusCheckTimeout = 10000;
+        }
     }
 
-    private GridNode(LinkedList<Capability> caps, GridNodeConfiguration config) {
+    private GridNode(LinkedList<Capability> caps, GridNodeConfiguration config, boolean isSelenium3) {
         capabilities = caps;
-        configuration = config;
+        if(!isSelenium3) { // This won't work for beta1, beta2, or beta3.
+          configuration = config;
+        } else {
+          proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
+          maxSession = 3;
+          register = true;
+          unregisterIfStillDownAfter = 10000;
+          registerCycle = 5000;
+          nodeStatusCheckTimeout = 10000;
+        }
     }
 
-    public static GridNode loadFromFile(String filename) {
-
+    public static GridNode loadFromFile(String filename, boolean isSelenium3) {
         String configString = readConfigFile(filename);
         JsonObject topLevelJson = new JsonParser().parse(configString).getAsJsonObject();
 
-        String configFromFile = topLevelJson.getAsJsonObject("configuration").toString();
-        if(RuntimeConfig.getConfig().getWebdriver().getVersion().contains("3.0")) {
+        String configFromFile;
+        if(isSelenium3) { // This won't work for beta1, beta2, or beta3.
           configFromFile = topLevelJson.toString();
+        } else {
+          configFromFile = topLevelJson.getAsJsonObject("configuration").toString();
         }
 
         GridNodeConfiguration
@@ -62,7 +99,7 @@ public class GridNode {
 
         }
 
-        GridNode node = new GridNode(filteredCapabilities, nodeConfiguration);
+        GridNode node = new GridNode(filteredCapabilities, nodeConfiguration, isSelenium3);
         node.setLoadedFromFile(filename);
 
         return node;
@@ -75,6 +112,39 @@ public class GridNode {
     public void setLoadedFromFile(String file) {
         this.loadedFromFile = file;
     }
+
+    // Selenium 3 requires these at the root
+  public int getPort() {
+      return port;
+  }
+
+  public void setPort(int port) {
+      this.port = port;
+  }
+
+  public int getHubPort() {
+      return hubPort;
+  }
+
+  public void setHubPort(int hubPort) {
+      this.hubPort = hubPort;
+  }
+
+  public String getHubHost() {
+      return hubHost;
+  }
+
+  public void setHubHost(String hubHost) {
+      this.hubHost = hubHost;
+  }
+
+  public String getAppiumStartCommand() {
+    return appiumStartCommand;
+  }
+
+  public void setAppiumStartCommand(String appiumStartCommand) {
+    this.appiumStartCommand = appiumStartCommand;
+  }
 
 
     public LinkedList<Capability> getCapabilities() {
@@ -94,6 +164,7 @@ public class GridNode {
         try {
             File f = new File(filename);
             String config = this.toPrettyJsonString();
+            System.out.println("CONFIG WRITING TO FILE : " + config);
             FileUtils.writeStringToFile(f, config);
         } catch (Exception e) {
             logger.fatal("Could not write node config for '" + filename + "' with following error");

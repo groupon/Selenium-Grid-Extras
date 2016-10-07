@@ -134,7 +134,12 @@ public class StartGrid extends ExecuteOSTask {
             continue;
         }
 
-        String hubHost = node.getConfiguration().getHubHost();
+        String hubHost;
+        if(RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0")) {
+          hubHost = node.getHubHost();
+        } else {
+          hubHost = node.getConfiguration().getHubHost();
+        }
         java.util.LinkedList<Capability> capabilities = node.getCapabilities();
         for (Capability cap : capabilities) {
           String newVersion = BrowserVersionDetector.guessBrowserVersion(cap.getBrowser());
@@ -142,7 +147,7 @@ public class StartGrid extends ExecuteOSTask {
             cap.setBrowserVersion(newVersion);
           }
         }
-        node.writeToFile(node.getLoadedFromFile());
+        node.writeToFile(node.getLoadedFromFile()); // TODO causing issues with missing values in node config file.
         if (!RuntimeConfig.getConfig().getAutoStartHub()) {
           if (configsDirectory.exists()) {
             pushConfigFileToHub(hubHost, node.getLoadedFromFile());

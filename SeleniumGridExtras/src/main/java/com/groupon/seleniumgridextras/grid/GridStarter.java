@@ -211,10 +211,15 @@ public class GridStarter {
 
     protected static String getAppiumNodeStartCommand(String configFile) {
         StringBuilder command = new StringBuilder();
-
-        GridNodeConfiguration config = GridNode.loadFromFile(configFile).getConfiguration();
-        command.append(config.getAppiumStartCommand());
-        command.append(" -p " + config.getPort());
+        if(!getWebdriverVersion().startsWith("3.")) {
+          GridNodeConfiguration config = GridNode.loadFromFile(configFile, false).getConfiguration();
+          command.append(config.getAppiumStartCommand());
+          command.append(" -p " + config.getPort());
+        } else {
+          GridNode node = GridNode.loadFromFile(configFile, true);
+          command.append(node.getAppiumStartCommand());
+          command.append(" -p " + node.getPort());
+        }
 
         String workingDirectory = System.getProperty("user.dir");
         String configFileFullPath = workingDirectory + RuntimeConfig.getOS().getFileSeparator() + configFile;
