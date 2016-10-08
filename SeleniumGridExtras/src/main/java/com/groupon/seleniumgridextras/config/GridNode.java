@@ -146,6 +146,14 @@ public class GridNode {
     this.hubHost = hubHost;
   }
 
+  public int getMaxSession() {
+    return this.maxSession;
+  }
+
+  public void setMaxSession(int maxSession) {
+    this.maxSession = maxSession;
+  }
+
   public String getAppiumStartCommand() {
     return appiumStartCommand;
   }

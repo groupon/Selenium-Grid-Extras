@@ -147,7 +147,7 @@ public class StartGrid extends ExecuteOSTask {
             cap.setBrowserVersion(newVersion);
           }
         }
-        node.writeToFile(node.getLoadedFromFile()); // TODO causing issues with missing values in node config file.
+        node.writeToFile(node.getLoadedFromFile());
         if (!RuntimeConfig.getConfig().getAutoStartHub()) {
           if (configsDirectory.exists()) {
             pushConfigFileToHub(hubHost, node.getLoadedFromFile());
