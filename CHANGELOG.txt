@@ -1,4 +1,5 @@
-1.12.4 (NOT RELEASED YET) - Add Opera support - NOT DONE
+1.12.4 (NOT RELEASED YET) - Support Selenium 3.0-beta4. - Fixed with PR257
+                          - Default to 64bit chromedriver on MAC - Fixed with PR257
 1.12.3 - Add marionette suport. Ability to auto upgrade marionette as well. Need Selenium 3.0 beta for this to work.
        - Add resolution endpoint. Ability to get resolution on Windows and OSX. Ability to set resolution on Windows Server.
        - Fix test to work on Windows - testChromeDriverDString
