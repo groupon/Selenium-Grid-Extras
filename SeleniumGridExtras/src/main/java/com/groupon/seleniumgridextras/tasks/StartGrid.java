@@ -61,6 +61,8 @@ public class StartGrid extends ExecuteOSTask {
   String CANT_LAUNCH_ERROR = "Something didn't go right in launching service";
   private static final
   String UPDATING_BROWSER_VERSIONS = "Updating browser capabilities, this may take some time";
+  private static final
+  String READ_NODE_CONFIGS = "Reading node configs and updating if switching from Selenium 2 to Selenium 3 or vice versa";
   private static Logger logger = Logger.getLogger(StartGrid.class);
 
   public StartGrid() {
@@ -116,6 +118,8 @@ public class StartGrid extends ExecuteOSTask {
    * @return
    */
   private JsonObject startNodes() {
+    boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0");
+        
     File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
     if (!RuntimeConfig.getConfig().getAutoStartHub()) {
       if (configsDirectory.exists()) {
@@ -135,7 +139,7 @@ public class StartGrid extends ExecuteOSTask {
         }
 
         String hubHost;
-        if(RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0")) {
+        if(isSelenium3) {
           hubHost = node.getHubHost();
         } else {
           hubHost = node.getConfiguration().getHubHost();
@@ -153,6 +157,13 @@ public class StartGrid extends ExecuteOSTask {
             pushConfigFileToHub(hubHost, node.getLoadedFromFile());
           }
         }
+      }
+    } else {
+      System.out.println(READ_NODE_CONFIGS);
+      logger.info(READ_NODE_CONFIGS);
+      java.util.List<GridNode> nodes = RuntimeConfig.getConfig().getNodes();
+      for (GridNode node : nodes) {
+        GridNode.loadFromFile(node.getLoadedFromFile(), isSelenium3);
       }
     }
 
