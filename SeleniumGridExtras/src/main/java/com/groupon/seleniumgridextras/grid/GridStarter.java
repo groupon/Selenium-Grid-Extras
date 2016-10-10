@@ -35,14 +35,13 @@ public class GridStarter {
         }
 
         command.append(jarPath + getOsSpecificQuote());
-        command.append(" org.openqa.grid.selenium.GridLauncher -role hub ");
-//	    command.append(RuntimeConfig.getConfig().getHub().getStartCommand()); // TODO Removed 
+        String classPath = getWebdriverVersion().startsWith("3.") ? "org.openqa.grid.selenium.GridLauncherV3" : "org.openqa.grid.selenium.GridLauncher";
+        command.append(" " + classPath + " -role hub ");
 
         String logFile = configFile.replace("json", "log");
         String logCommand = " -log log" + RuntimeConfig.getOS().getFileSeparator() + logFile;
 
         command.append(logCommand);
-//      command.append(" -browserTimeout 120 -timeout 120"); // TODO Removed
         command.append(" -hubConfig " + configFile);
 
         logger.info("Hub Start Command: \n\n" + String.valueOf(command));
@@ -174,8 +173,12 @@ public class GridStarter {
             host = " -host " + RuntimeConfig.getHostIp();
         }
 
-        if (RuntimeConfig.getOS().getHostName() != null) {
+        if ((RuntimeConfig.getOS().getHostName() != null) && 
+            !getWebdriverVersion().startsWith("3.")) { // Exception in thread "main" com.beust.jcommander.ParameterException: Unknown option: -friendlyHostName
             host = " -friendlyHostName " + RuntimeConfig.getOS().getHostName();
+        } else if ((RuntimeConfig.getOS().getHostName() != null) && 
+            getWebdriverVersion().startsWith("3.")) {
+            host = " -id " + RuntimeConfig.getOS().getHostName();
         }
 
         StringBuilder command = new StringBuilder();
@@ -198,7 +201,8 @@ public class GridStarter {
         }
         command.append(RuntimeConfig.getOS().getPathSeparator() + getCurrentWebDriverJarPath()
                 + getOsSpecificQuote());
-        command.append(" org.openqa.grid.selenium.GridLauncher -role wd ");
+        String classPath = getWebdriverVersion().startsWith("3.") ? "org.openqa.grid.selenium.GridLauncherV3" : "org.openqa.grid.selenium.GridLauncher";
+        command.append(" " + classPath + " -role wd ");
         command.append(host);
         command.append(" -nodeConfig " + configFile);
 
@@ -207,10 +211,15 @@ public class GridStarter {
 
     protected static String getAppiumNodeStartCommand(String configFile) {
         StringBuilder command = new StringBuilder();
-
-        GridNodeConfiguration config = GridNode.loadFromFile(configFile).getConfiguration();
-        command.append(config.getAppiumStartCommand());
-        command.append(" -p " + config.getPort());
+        if(!getWebdriverVersion().startsWith("3.")) {
+          GridNodeConfiguration config = GridNode.loadFromFile(configFile, false).getConfiguration();
+          command.append(config.getAppiumStartCommand());
+          command.append(" -p " + config.getPort());
+        } else {
+          GridNode node = GridNode.loadFromFile(configFile, true);
+          command.append(node.getAppiumStartCommand());
+          command.append(" -p " + node.getPort());
+        }
 
         String workingDirectory = System.getProperty("user.dir");
         String configFileFullPath = workingDirectory + RuntimeConfig.getOS().getFileSeparator() + configFile;
@@ -270,14 +279,12 @@ public class GridStarter {
     }
 
     protected static String getCurrentWebDriverJarPath() {
-        return getWebdriverHome() + RuntimeConfig.getOS().getFileSeparator() + getWebdriverVersion()
-                + ".jar";
+        return RuntimeConfig.getConfig().getWebdriver().getExecutablePath();
     }
 
     protected static String getWebdriverVersion() {
         return RuntimeConfig.getConfig().getWebdriver().getVersion();
     }
-
 
     protected static String getWebdriverHome() {
         return RuntimeConfig.getConfig().getWebdriver().getDirectory();

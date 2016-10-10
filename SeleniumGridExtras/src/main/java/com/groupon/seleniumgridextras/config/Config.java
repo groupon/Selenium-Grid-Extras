@@ -113,8 +113,9 @@ public class Config {
     }
 
     public void loadNodeClasses() {
+        boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0");
         for (String filename : getNodeConfigFiles()) {
-            GridNode node = GridNode.loadFromFile(filename);
+            GridNode node = GridNode.loadFromFile(filename, isSelenium3);
             getNodes().add(node);
         }
     }

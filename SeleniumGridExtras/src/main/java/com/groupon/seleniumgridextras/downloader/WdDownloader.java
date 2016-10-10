@@ -46,7 +46,10 @@ public class WdDownloader extends Downloader {
     setDestinationFile(version + ".jar");
 
     String versionMajor = version.substring(0, version.lastIndexOf('.'));
-
+    if(version.contains("beta")) {
+      versionMajor = version.substring(0, version.lastIndexOf('.')) + version.substring(version.indexOf('-'));
+    }
+    
     setSourceURL("http://selenium-release.storage.googleapis.com/" + versionMajor
                  + "/selenium-server-standalone-" + destinationFile);
   }
