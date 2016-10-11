@@ -38,6 +38,7 @@ public class Config {
     public static final String GRID_JVM_OPTIONS = "grid_jvm_options";
     public static final String GRID_JVM_X_OPTIONS = "grid_jvm_x_options";
     public static final String GRID_EXTRAS_JVM_OPTIONS = "grid_extras_jvm_options";
+    public static final String GRID_EXTRAS_PORT = "grid_extras_port";
 
     public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
     public static final String AUTO_UPDATE_BROWSER_VERSIONS = "auto_update_browser_versions";
@@ -148,6 +149,7 @@ public class Config {
         getConfigMap().put(NODE_ADDITIONAL_CLASSPATH, new ArrayList<String>());
         getConfigMap().put(GRID_JVM_OPTIONS, new HashMap<String, Object>());
         getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
+        getConfigMap().put(GRID_EXTRAS_PORT, 3000);
 
         getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
         getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, "");
@@ -591,6 +593,23 @@ public class Config {
 
     public String getGridExtrasReleaseUrl() {
         return (String) getConfigMap().get(GRID_EXTRAS_RELEASE_URL);
+    }
+
+    public void setGridExtrasPort(int port) {
+        getConfigMap().put(GRID_EXTRAS_PORT, port);
+    }
+
+    public Integer getGridExtrasPort() {
+        Object value = getConfigMap().get(GRID_EXTRAS_PORT);
+        if (value instanceof Integer) {
+            return ((Integer) value).intValue();
+        } else if (value instanceof String) {
+            return Integer.valueOf((String) value).intValue();
+        } else if (value instanceof Double) {
+            return ((Double) value).intValue();
+        } else {
+            return 3000;
+        }
     }
 
     public void setLogMaximumAge(long milliseconds) {

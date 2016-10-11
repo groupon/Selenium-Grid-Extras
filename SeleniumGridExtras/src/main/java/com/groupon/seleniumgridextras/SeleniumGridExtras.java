@@ -58,10 +58,8 @@ import java.util.Map;
 
 public class SeleniumGridExtras {
 
-    public static final String START_UP_COMPLETE = String.format(
-            "\nSelenium Grid Extras has been started!\nNavigate to http://%s:%s for more details",
-            RuntimeConfig.getOS().getHostIp(),
-            RuntimeConfig.getGridExtrasPort());
+    public static final String START_UP_COMPLETE = 
+            "\nSelenium Grid Extras has been started!\nNavigate to http://%s:%s for more details";
     private static Logger logger = Logger.getLogger(SeleniumGridExtras.class);
 
     public static void main(String[] args) throws Exception {
@@ -150,8 +148,12 @@ public class SeleniumGridExtras {
         server.start();
 
 
-        System.out.println(START_UP_COMPLETE);
-        logger.info(START_UP_COMPLETE);
+        System.out.println(String.format(START_UP_COMPLETE, 
+            RuntimeConfig.getOS().getHostIp(),
+            RuntimeConfig.getGridExtrasPort()));
+        logger.info(String.format(START_UP_COMPLETE, 
+            RuntimeConfig.getOS().getHostIp(),
+            RuntimeConfig.getGridExtrasPort()));
 
         new VideoShutdownHook().attachShutDownHook();
         new CleanTempShutdownHook(TempUtility.getWindowsTempForCurrentUser()).attachShutDownHook();
