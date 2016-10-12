@@ -59,35 +59,50 @@ java -jar Selenium-Grid-Extras-Jar.jar
 java -jar Selenium-Grid-Extras-Jar.jar
 ```
 
-2. You will be asked if you wish to use this computer as HUB or Node, select 1 for Node
+2. You will be asked if you wish to use this computer as HUB or Node, select 1 for Node.
 
-3. You will be asked for the host name of the HUB computer, type in the IP or hostname of the HUB computer
+3. You will be asked for the host name of the HUB computer, type in the IP or hostname of the HUB computer.
 
-4. When prompted for the port used by the HUB, enter that value
+4. When prompted for the port used by the HUB, enter that value.
 
-5. Selenium Grid Extras will attempt to guess the Operating System of the current computer, if it's wrong please enter the correct value
+5. You will be asked for the port to use for the Node, enter that value (default 5555).
 
-6. You will be asked what Browsers this Node will host, choose the ones that apply
+6. Selenium Grid Extras will attempt to guess the Operating System of the current computer, if it's wrong please enter the correct value.
 
-7. You will be asked how often to restart your whole computer. By default after 10 tests Selenium Grid Extras will attempt to restart the Node, provided the node is idle. Choose 0 if you do not wish to have the computer automatically restart.
+7. You will be asked what Browsers this Node will host, choose the ones that apply. Selenium Grid Extras tries to guess the browser version, if it is wrong, enter the correct value.
 
-8. You will be asked if Selenium Grid Extras should automatically check for updates of IEDriver, ChromeDriver and Selenium Stand Alone Server. If you answer no, you will be asked what version to lock into.
+8. You will be asked if you want to auto update the browser versions in your node config file. This does not upgrade the browser itself. It only updates the node config file.
 
-9. Finally, you will be asked if you wish to store all of the Node configs on the HUB. If you answer yes, Selenium Grid Extras will attempt to push Node's configs to the HUB. If it is successful, Selenium Grid Extras will attempt to download all of the configs from the HUB before it starts. This way all of the Node configs can be controlled directly from the HUB.
+9. You will be asked how many days of log files to keep. Enter that value.
+
+10. You will be asked how often to restart your whole computer. By default after 10 tests Selenium Grid Extras will attempt to restart the Node, provided the node is idle. Choose 0 if you do not wish to have the computer automatically restart.
+
+11. You will be asked if you want to automatically log in after restart. If you choose `1`, you will be asked a few more questions regarding the username, password, domain (Windows) or on a MAC the Accounts Preferences app will open.
+
+12. You will be asked if Selenium Grid Extras should automatically check for updates of IEDriver, ChromeDriver and Selenium Stand Alone Server. If you answer no, you will be asked what version to lock into.
+
+13. You will be asked for the ChromeDriver bit to use. For Windows and Linux, default to 32bit. For OSX default to 64bit.
+
+14. You will be asked if this node will run Appium.
+
+15. You will be asked if you want this node to record videos of test runs. If yes, you will also be asked how many videos you want to store.
+
+16. Finally, you will be asked if you wish to store all of the Node configs on the HUB. If you answer yes, Selenium Grid Extras will attempt to push Node's configs to the HUB. If it is successful, Selenium Grid Extras will attempt to download all of the configs from the HUB before it starts. This way all of the Node configs can be controlled directly from the HUB.
 
 ### Changing the logging on the grid hub, nodes, or selenium-grid-extras ###
 1. For grid extras, create a log4j.properties in the same directory as your jar file. Start the service like : java -Dlog4j.debug -Dlog4j.configuration=file:log4j.properties -cp .:SeleniumGridExtras-1.10.0-SNAPSHOT-jar-with-dependencies.jar com.groupon.seleniumgridextras.SeleniumGridExtras (Use a semi-colon in the classpath for Windows. Use a colon in the classpath for Mac/Linux).
-2. For hub and node log files, add the following to the selenium_grid_extras_config.json file (see selenium_grid_extras_config.json.example for an example):<br>
-"grid_jvm_options": {<br>
-  "selenium.LOGGER.level": "WARNING"<br>
-},<br>
+2. For hub and node log files, add the following to the selenium_grid_extras_config.json file (see selenium_grid_extras_config.json.example for an example):
+```"grid_jvm_options": {
+  "selenium.LOGGER.level": "WARNING"
+},
+```
 
 Upgrading Grid Extras
 ---------------------
 There are 2 options available for un-attended upgrades
 
 1. Automatic upgrades can be achieved by selected "auto update" on the first run, or setting "grid_extras_auto_update" key to have value of "1" in selenium_grid_extras_config.json
-2. Manual upgrade trigger can be achieved by making an HTTP GET request against http://node_name:3000/upgrade_grid_extras?version=X.X.X
+2. Manual upgrade trigger can be achieved by making an HTTP GET request against http://node_name:3000/upgrade_grid_extras?version=X.X.X . This will update the start_grid_extras.sh (OSX and Linux) or .bat file (Windows) with the correct version. The next time this script runs, the newer version of the Selenium-Grid-Extras will run.
 
 Auto Restarting Nodes
 -------------------
