@@ -61,7 +61,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
     }
 
 
-    public void writeStartShellFile(File jarFile) throws IOException {
+    private void writeStartShellFile(File jarFile) throws IOException {
 
         File javaBin = new File(System.getProperty("java.home"), "bin");
         File javaExe = new File(javaBin, "java");
