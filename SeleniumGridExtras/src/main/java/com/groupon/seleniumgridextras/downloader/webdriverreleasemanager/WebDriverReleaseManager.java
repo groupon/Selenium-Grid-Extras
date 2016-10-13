@@ -93,7 +93,11 @@ public class WebDriverReleaseManager {
   public WebDriverRelease getGeckoDriverLatestVersion() {
 	return this.latestGeckoDriverVersion;
   }
-  
+
+  /*
+   * Choose the greatest major version.
+   * If major version is the same, choose the greatest comparable version.
+   */
   private WebDriverRelease findLatestRelease(List<WebDriverRelease> list) {
 
     WebDriverRelease highestVersion = null;
@@ -101,6 +105,8 @@ public class WebDriverReleaseManager {
     for (WebDriverRelease r : list) {
 
       if (highestVersion == null) {
+        highestVersion = r;
+      } else if (r.getMajorVersion() > highestVersion.getMajorVersion()) {
         highestVersion = r;
       } else if (r.getComparableVersion() > highestVersion.getComparableVersion()) {
         highestVersion = r;
