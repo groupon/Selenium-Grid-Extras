@@ -72,6 +72,7 @@ public class FirstTimeRunConfig {
         System.out.println("\n\n\n\n" + message + "\n\n");
 
         setDefaultService(defaultConfig);
+        defaultConfig.setGridExtrasPort(3000);
 
         String hubHost = getGridHubHost();
         String hubPort = getGridHubPort();

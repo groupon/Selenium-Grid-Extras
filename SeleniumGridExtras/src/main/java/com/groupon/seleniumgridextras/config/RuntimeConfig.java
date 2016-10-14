@@ -59,13 +59,16 @@ public class RuntimeConfig {
   public static String configFile = "selenium_grid_extras_config.json";
   private static Config config = null;
   private static OS currentOS = new OS();
-  public final static int gridExtrasPort = 3000;
   private static Logger logger = Logger.getLogger(RuntimeConfig.class);
   private static WebDriverReleaseManager releaseManager;
   private static SessionTracker sessionTracker;
 
   public static int getGridExtrasPort() {
-    return gridExtrasPort;
+    if(getConfig() == null) {
+      return 3000;
+    } else {
+      return getConfig().getGridExtrasPort();
+    }
   }
 
   public static WebDriverReleaseManager getReleaseManager() {

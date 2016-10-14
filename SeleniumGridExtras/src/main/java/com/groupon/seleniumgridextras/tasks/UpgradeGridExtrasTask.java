@@ -136,7 +136,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
                 message = spacer + message + String.format(
                         "Or you can update the version manually by using http://%s:%s%s end-point\n",
                         RuntimeConfig.getHostIp(),
-                        RuntimeConfig.gridExtrasPort,
+                        RuntimeConfig.getGridExtrasPort(),
                         TaskDescriptions.Endpoints.UPGRADE_GRID_EXTRAS
                 );
                 message = spacer + message + "\n**************************************\n";
