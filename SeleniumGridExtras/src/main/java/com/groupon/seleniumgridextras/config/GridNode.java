@@ -112,6 +112,10 @@ public class GridNode {
         node.setUnregisterIfStillDownAfter(Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()));
         node.setNodeStatusCheckTimeout(Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()));
         node.setDownPollingLimit(Integer.parseInt(topLevelJson.get("downPollingLimit").toString()));
+        node.setHost(topLevelJson.get("host") != null ? topLevelJson.get("host").getAsString() : null);
+        node.setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
+        node.setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
+                ? topLevelJson.get("appiumStartCommand").getAsString() : null);
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
 
@@ -133,6 +137,9 @@ public class GridNode {
         node.setUnregisterIfStillDownAfter(nodeConfiguration.getUnregisterIfStillDownAfter());
         node.setNodeStatusCheckTimeout(nodeConfiguration.getNodeStatusCheckTimeout());
         node.setDownPollingLimit(nodeConfiguration.getDownPollingLimit());
+        node.setHost(nodeConfiguration.getHost());
+        node.setUrl(nodeConfiguration.getUrl());
+        node.setAppiumStartCommand(nodeConfiguration.getAppiumStartCommand());
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
 
@@ -159,6 +166,11 @@ public class GridNode {
         node.getConfiguration().setUnregisterIfStillDownAfter(Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()));
         node.getConfiguration().setNodeStatusCheckTimeout(Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()));
         node.getConfiguration().setDownPollingLimit(Integer.parseInt(topLevelJson.get("downPollingLimit").toString()));
+        node.getConfiguration().setHost(topLevelJson.get("host") != null
+                ? topLevelJson.get("host").getAsString() : null);
+        node.getConfiguration().setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
+        node.getConfiguration().setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
+                ? topLevelJson.get("appiumStartCommand").getAsString() : null);
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
         
