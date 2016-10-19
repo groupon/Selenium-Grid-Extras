@@ -335,15 +335,25 @@ public class FirstTimeRunConfig {
         String nodeUrl = "http://" + nodeIp + ":" + nodePort + "/wd/hub";
         int registerCycle = 5000;
 
-        node.getConfiguration().setMaxSession(1);
-        node.getConfiguration().setHubHost(hubHost);
-        node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
-        node.getConfiguration().setPort(nodePort);
-        node.getConfiguration().setHost(nodeIp);
-        node.getConfiguration().setUrl(nodeUrl);
-        node.getConfiguration().setRegisterCycle(registerCycle);
-        node.getConfiguration().setAppiumStartCommand(appiumStartCommand);
-
+        if(node.getConfiguration() != null) {
+            node.getConfiguration().setMaxSession(1);
+            node.getConfiguration().setHubHost(hubHost);
+            node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
+            node.getConfiguration().setPort(nodePort);
+            node.getConfiguration().setHost(nodeIp);
+            node.getConfiguration().setUrl(nodeUrl);
+            node.getConfiguration().setRegisterCycle(registerCycle);
+            node.getConfiguration().setAppiumStartCommand(appiumStartCommand);
+        } else {
+            node.setMaxSession(1);
+            node.setHubHost(hubHost);
+            node.setHubPort(Integer.parseInt(hubPort));
+            node.setPort(nodePort);
+            node.setHost(nodeIp);
+            node.setUrl(nodeUrl);
+            node.setRegisterCycle(registerCycle);
+            node.setAppiumStartCommand(appiumStartCommand);
+        }
         for (Capability cap : capabilities) {
             node.getCapabilities().add(cap);
         }
