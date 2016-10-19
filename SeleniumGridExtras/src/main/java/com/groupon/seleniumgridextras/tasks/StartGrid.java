@@ -127,6 +127,14 @@ public class StartGrid extends ExecuteOSTask {
       }
     }
 
+    // Might have to convert node config files from selenium 3 to selenium 2 or vice-versa
+    System.out.println(READ_NODE_CONFIGS);
+    logger.info(READ_NODE_CONFIGS);
+    java.util.List<GridNode> nodes2 = RuntimeConfig.getConfig().getNodes();
+    for (GridNode node : nodes2) {
+      GridNode.loadFromFile(node.getLoadedFromFile(), isSelenium3);
+    }
+    
     // Update browser capabilities and push to remote server
     if (RuntimeConfig.getConfig().getAutoUpdateBrowserVersions()) {
       System.out.println(UPDATING_BROWSER_VERSIONS);
@@ -157,13 +165,6 @@ public class StartGrid extends ExecuteOSTask {
             pushConfigFileToHub(hubHost, node.getLoadedFromFile());
           }
         }
-      }
-    } else {
-      System.out.println(READ_NODE_CONFIGS);
-      logger.info(READ_NODE_CONFIGS);
-      java.util.List<GridNode> nodes = RuntimeConfig.getConfig().getNodes();
-      for (GridNode node : nodes) {
-        GridNode.loadFromFile(node.getLoadedFromFile(), isSelenium3);
       }
     }
 

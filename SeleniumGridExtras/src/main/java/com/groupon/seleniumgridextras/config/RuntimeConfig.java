@@ -198,7 +198,7 @@ public class RuntimeConfig {
         } else if (config.getDefaultRole().equals("hub") && config.getHubs().size() > 0) {
             ip = config.getHubs().get(0).getConfiguration().getHost();
         } else if (config.getDefaultRole().equals("node") && config.getNodes().size() > 0) {
-            ip = config.getNodes().get(0).getConfiguration().getHost();
+            ip = config.getNodes().get(0).getConfiguration() != null ? config.getNodes().get(0).getConfiguration().getHost() : config.getNodes().get(0).getHost();
         }
     }
     if (ip == null) {

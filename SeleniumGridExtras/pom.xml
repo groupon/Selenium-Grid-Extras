@@ -61,11 +61,12 @@
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
         </dependency>
-<!--         <dependency> Selenium 2.53.1 comes with httpclient 4.5.1
+        <!-- Needed for `Should we store all of these configs in central location on the HUB node and update from there? (1-yes/0-no)` -->
+         <dependency> <!--  Selenium 2.53.1 comes with httpclient 4.5.1 -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.1</version>
-        </dependency> -->
+        </dependency>
 <!--         <dependency> Selenium 2.53.1 comes with commons-lang3 3.4
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

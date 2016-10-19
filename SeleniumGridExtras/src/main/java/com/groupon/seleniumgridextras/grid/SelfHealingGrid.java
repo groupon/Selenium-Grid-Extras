@@ -27,7 +27,7 @@ public class SelfHealingGrid extends GridStarter {
   private static void healNodesIfNeeded(Config config) {
     logger.info("Checking if all nodes are running");
     for (GridNode node : config.getNodes()) {
-      int port = node.getConfiguration().getPort();
+      int port = node.getConfiguration() != null ? node.getConfiguration().getPort() : node.getPort();
       if (portOccupied(port)) {
         logger.debug("Node on port " + port + " is running");
       } else {

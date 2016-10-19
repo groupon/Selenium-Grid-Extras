@@ -206,6 +206,22 @@ public class GridNode {
     this.hubHost = hubHost;
   }
 
+  public String getHost() {
+    return host;
+  }
+
+  public void setHost(String host) {
+    this.host = host;
+  }
+  
+  public String getUrl() {
+    return url;
+  }
+
+  public void setUrl(String url) {
+    this.url = url;
+  }
+
   public int getMaxSession() {
     return this.maxSession;
   }
