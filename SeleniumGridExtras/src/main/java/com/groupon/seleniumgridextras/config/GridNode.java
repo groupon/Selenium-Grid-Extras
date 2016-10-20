@@ -108,10 +108,14 @@ public class GridNode {
         node.setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.setProxy(topLevelJson.get("proxy").getAsString());
         node.setRegister(topLevelJson.get("register").getAsBoolean());
-        node.setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
-        node.setUnregisterIfStillDownAfter(Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()));
-        node.setNodeStatusCheckTimeout(Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()));
-        node.setDownPollingLimit(Integer.parseInt(topLevelJson.get("downPollingLimit").toString()));
+        node.setRegisterCycle(topLevelJson.get("registerCycle") != null
+                ? Integer.parseInt(topLevelJson.get("registerCycle").toString()) : null);
+        node.setUnregisterIfStillDownAfter(topLevelJson.get("unregisterIfStillDownAfter") != null
+                ? Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()) : null);
+        node.setNodeStatusCheckTimeout(topLevelJson.get("nodeStatusCheckTimeout") != null
+                ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()) : null);
+        node.setDownPollingLimit(topLevelJson.get("downPollingLimit") != null
+                ? Integer.parseInt(topLevelJson.get("downPollingLimit").toString()) : null);
         node.setHost(topLevelJson.get("host") != null ? topLevelJson.get("host").getAsString() : null);
         node.setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
         node.setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
@@ -133,7 +137,12 @@ public class GridNode {
         node.setMaxSession(nodeConfiguration.getMaxSession());
         node.setProxy(nodeConfiguration.getProxy());
         node.setRegister(nodeConfiguration.getRegister());
-        node.setRegisterCycle(nodeConfiguration.getRegisterCycle());
+        try {
+            // If register cycle is not configured, an exception is thrown when converting value to int
+            node.setRegisterCycle(nodeConfiguration.getRegisterCycle());
+        } catch (NullPointerException exc) {
+            node.setRegisterCycle(null);
+        }
         node.setUnregisterIfStillDownAfter(nodeConfiguration.getUnregisterIfStillDownAfter());
         node.setNodeStatusCheckTimeout(nodeConfiguration.getNodeStatusCheckTimeout());
         node.setDownPollingLimit(nodeConfiguration.getDownPollingLimit());
@@ -162,10 +171,15 @@ public class GridNode {
         node.getConfiguration().setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.getConfiguration().setProxy(topLevelJson.get("proxy").getAsString());
         node.getConfiguration().setRegister(topLevelJson.get("register").getAsBoolean());
-        node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
-        node.getConfiguration().setUnregisterIfStillDownAfter(Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()));
-        node.getConfiguration().setNodeStatusCheckTimeout(Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()));
-        node.getConfiguration().setDownPollingLimit(Integer.parseInt(topLevelJson.get("downPollingLimit").toString()));
+        if (topLevelJson.get("registerCycle") != null) {
+            node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
+        }
+        node.getConfiguration().setUnregisterIfStillDownAfter(topLevelJson.get("unregisterIfStillDownAfter") != null
+                ? Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()) : null);
+        node.getConfiguration().setNodeStatusCheckTimeout(topLevelJson.get("nodeStatusCheckTimeout") != null
+                ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()) : null);
+        node.getConfiguration().setDownPollingLimit(topLevelJson.get("downPollingLimit") != null
+                ? Integer.parseInt(topLevelJson.get("downPollingLimit").toString()) : null);
         node.getConfiguration().setHost(topLevelJson.get("host") != null
                 ? topLevelJson.get("host").getAsString() : null);
         node.getConfiguration().setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
