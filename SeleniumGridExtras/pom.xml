@@ -39,11 +39,10 @@
             <artifactId>apache-log4j-extras</artifactId>
             <version>1.2.17</version>
         </dependency>
-        <dependency> <!-- Needed for two VideoRecorderCallableTests, but can't see how -->
+        <dependency> <!-- Needed for two VideoRecorderCallable -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.7</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

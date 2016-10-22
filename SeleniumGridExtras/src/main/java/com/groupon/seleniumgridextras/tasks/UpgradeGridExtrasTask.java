@@ -86,7 +86,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
             shellFile = new File(gridExtrasHome, startGridExtrasShellFileName + ".sh");
         }
 
-        String startCommand = String.format("%s %s -jar '%s'",
+        String startCommand = String.format("%s %s -jar \"%s\"",
                 shellFileHeader,
                 javaPath,
                 jarFile);

@@ -5,8 +5,10 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.util.List;
 
 public class GridStarterAdditionalNodeClasspathTest {
 
@@ -21,12 +23,15 @@ public class GridStarterAdditionalNodeClasspathTest {
     private final String windowsBatchFileName = logFile.replace("log", "bat");
 
 
+    private Config config;
+    
     @Before
     public void setUp(){
         RuntimeConfig.setConfigFile(configFileName);
-        Config config = new Config();
+        config = new Config();
         config.addNodeClasspathItem(CLASSPATH_ITEM_1);
         config.addNodeClasspathItem(CLASSPATH_ITEM_2);
+        config.getWebdriver().setVersion("3.0.1");
         config.writeToDisk(RuntimeConfig.getConfigFile());
         RuntimeConfig.load();
     }
@@ -43,8 +48,12 @@ public class GridStarterAdditionalNodeClasspathTest {
 
     @Test
     public void testAdditionalClasspathItemsArePresent() {
-        String command = GridStarter.getWebNodeStartCommand(RuntimeConfig.getConfigFile(), RuntimeConfig.getOS().isWindows());
-        assert(command.contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_1 + RuntimeConfig.getOS().getPathSeparator()));
-        assert(command.contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_2 + RuntimeConfig.getOS().getPathSeparator()));
+        List<String> command = GridStarter.getWebNodeStartCommand(configFileName, RuntimeConfig.getOS().isWindows(), config);
+        StringBuilder sb = new StringBuilder();
+        for(String part : command) {
+          sb.append(part + " ");
+        }
+        assertTrue(sb.toString().contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_1 + RuntimeConfig.getOS().getPathSeparator()));
+        assertTrue(sb.toString().contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_2 + RuntimeConfig.getOS().getPathSeparator()));
     }
 }
