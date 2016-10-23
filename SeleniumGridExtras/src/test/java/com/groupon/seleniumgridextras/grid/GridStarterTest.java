@@ -136,7 +136,7 @@ public class GridStarterTest {
         cmd.clear();
         cmd.add(command);
         List<String> backgroundStartCmdWindows = GridStarter.getBackgroundStartCommandForNode(cmd, logFile, true);
-        assertEquals("start /MIN " + windowsBatchFileName + " ", convertCommandToString(backgroundStartCmdWindows));
+        assertEquals("cmd /C start /MIN " + windowsBatchFileName + " ", convertCommandToString(backgroundStartCmdWindows));
 
         cmd.clear();
         cmd.add(command);        
@@ -150,7 +150,7 @@ public class GridStarterTest {
         cmd.clear();
         cmd.add(command);
         List<String> backgroundStartCmdAppiumWindows = GridStarter.getBackgroundStartCommandForNode(cmd, appiumLogFile, true);
-        assertEquals("start /MIN " + windowsAppiumBatchFileName + " ", convertCommandToString(backgroundStartCmdAppiumWindows));
+        assertEquals("cmd /C start /MIN " + windowsAppiumBatchFileName + " ", convertCommandToString(backgroundStartCmdAppiumWindows));
 
         cmd.clear();
         cmd.add(command);
@@ -222,9 +222,9 @@ public class GridStarterTest {
         Config config = new Config();
         config.getChromeDriver().setDirectory("/tmp/webdriver/chromedriver");
         if (RuntimeConfig.getOS().isWindows()) {
-            assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=\"\\tmp\\webdriver\\chromedriver\\chromedriver_"));
+            assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=\\tmp\\webdriver\\chromedriver\\chromedriver_"));
         } else {
-            assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=\"/tmp/webdriver/chromedriver/chromedriver_"));
+            assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=/tmp/webdriver/chromedriver/chromedriver_"));
         }
     }
 

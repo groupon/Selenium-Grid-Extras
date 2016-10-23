@@ -171,7 +171,7 @@ public class GridStarter {
         sb.append(part + " ");
       }
       writeBatchFile(batchFile, sb.toString());
-      return new ArrayList<String> ( Arrays.asList ( "start" , "/MIN" , batchFile ) );
+      return new ArrayList<String> ( Arrays.asList ( "cmd", "/C", "start" , "/MIN" , batchFile ) );
     } else {
       return command;
     }
