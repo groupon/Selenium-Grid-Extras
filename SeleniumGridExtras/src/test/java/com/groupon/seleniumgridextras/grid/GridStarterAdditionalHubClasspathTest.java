@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 public class GridStarterAdditionalHubClasspathTest {
 
@@ -22,11 +22,12 @@ public class GridStarterAdditionalHubClasspathTest {
     private final String logFile = "foo.log";
     private final String windowsBatchFileName = logFile.replace("log", "bat");
 
-
+    private Config config;
+    
     @Before
     public void setUp(){
         RuntimeConfig.setConfigFile(configFileName);
-        Config config = new Config();
+        config = new Config();
         config.addHubClasspathItem(CLASSPATH_ITEM_1);
         config.addHubClasspathItem(CLASSPATH_ITEM_2);
         config.writeToDisk(RuntimeConfig.getConfigFile());
@@ -45,8 +46,12 @@ public class GridStarterAdditionalHubClasspathTest {
 
     @Test
     public void testAdditionalClasspathItemsArePresent() {
-        String command = GridStarter.getOsSpecificHubStartCommand(RuntimeConfig.getConfigFile(), RuntimeConfig.getOS().isWindows());
-        assert(command.contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_1 + RuntimeConfig.getOS().getPathSeparator()));
-        assert(command.contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_2 + RuntimeConfig.getOS().getPathSeparator()));
+        String[] command = GridStarter.getOsSpecificHubStartCommand(configFileName, RuntimeConfig.getOS().isWindows());
+        StringBuilder sb = new StringBuilder();
+        for(String part : command) {
+          sb.append(part + " ");
+        }
+        assertTrue(sb.toString().contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_1 + RuntimeConfig.getOS().getPathSeparator()));
+        assertTrue(sb.toString().contains(RuntimeConfig.getOS().getPathSeparator() + CLASSPATH_ITEM_2 + RuntimeConfig.getOS().getPathSeparator()));
     }
 }

@@ -7,6 +7,8 @@ import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.GridNode;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 
 public class SelfHealingGrid extends GridStarter {
@@ -39,9 +41,9 @@ public class SelfHealingGrid extends GridStarter {
         logger.debug(logFile);
         String configFile = node.getLoadedFromFile();
         logger.debug(configFile);
-        String startCommand = getNodeStartCommand(configFile, isWindows);
+        List<String> startCommand = getNodeStartCommand(configFile, isWindows, config);
         logger.debug(startCommand);
-        String backgroundCommand = getBackgroundStartCommandForNode(startCommand,logFile, isWindows);
+        List<String> backgroundCommand = getBackgroundStartCommandForNode(startCommand,logFile, isWindows);
         logger.debug(backgroundCommand);
 
         logger.debug(startOneNode(backgroundCommand));
