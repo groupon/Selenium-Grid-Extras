@@ -61,6 +61,8 @@ public class StartGrid extends ExecuteOSTask {
   String CANT_LAUNCH_ERROR = "Something didn't go right in launching service";
   private static final
   String UPDATING_BROWSER_VERSIONS = "Updating browser capabilities, this may take some time";
+  private static final
+  String READ_NODE_CONFIGS = "Reading node configs and updating if switching from Selenium 2 to Selenium 3 or vice versa";
   private static Logger logger = Logger.getLogger(StartGrid.class);
 
   public StartGrid() {
@@ -116,6 +118,8 @@ public class StartGrid extends ExecuteOSTask {
    * @return
    */
   private JsonObject startNodes() {
+    boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0");
+        
     File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
     if (!RuntimeConfig.getConfig().getAutoStartHub()) {
       if (configsDirectory.exists()) {
@@ -123,6 +127,14 @@ public class StartGrid extends ExecuteOSTask {
       }
     }
 
+    // Might have to convert node config files from selenium 3 to selenium 2 or vice-versa
+    System.out.println(READ_NODE_CONFIGS);
+    logger.info(READ_NODE_CONFIGS);
+    java.util.List<GridNode> nodes2 = RuntimeConfig.getConfig().getNodes();
+    for (GridNode node : nodes2) {
+      GridNode.loadFromFile(node.getLoadedFromFile(), isSelenium3);
+    }
+    
     // Update browser capabilities and push to remote server
     if (RuntimeConfig.getConfig().getAutoUpdateBrowserVersions()) {
       System.out.println(UPDATING_BROWSER_VERSIONS);
@@ -134,7 +146,12 @@ public class StartGrid extends ExecuteOSTask {
             continue;
         }
 
-        String hubHost = node.getConfiguration().getHubHost();
+        String hubHost;
+        if(isSelenium3) {
+          hubHost = node.getHubHost();
+        } else {
+          hubHost = node.getConfiguration().getHubHost();
+        }
         java.util.LinkedList<Capability> capabilities = node.getCapabilities();
         for (Capability cap : capabilities) {
           String newVersion = BrowserVersionDetector.guessBrowserVersion(cap.getBrowser());

@@ -72,6 +72,7 @@ public class FirstTimeRunConfig {
         System.out.println("\n\n\n\n" + message + "\n\n");
 
         setDefaultService(defaultConfig);
+        defaultConfig.setGridExtrasPort(3000);
 
         String hubHost = getGridHubHost();
         String hubPort = getGridHubPort();
@@ -86,24 +87,24 @@ public class FirstTimeRunConfig {
         }
         List<Capability> caps = getCapabilitiesFromUser(defaultConfig);
 
-        if (defaultConfig.getAutoStartNode()) {
-            configureNodes(caps, hubHost, hubPort, defaultConfig, nodePort);
-
-            List<Capability> appiumCaps = getAppiumCapabilitiesFromUser(defaultConfig);
-
-            if (appiumCaps.size() > 0) {
-                String appiumStartCommand = getAppiumStartCommand();
-
-                configureAppiumNodes(appiumCaps, hubHost, hubPort, appiumStartCommand, defaultConfig);
-            }
-        }
-
         setLogMaximumDaysToKeep(defaultConfig);
 
         setRebootAfterSessionLimit(defaultConfig);
         setAutoLogonAsUser(defaultConfig);
 
         setDriverAutoUpdater(defaultConfig);
+
+        if (defaultConfig.getAutoStartNode()) {
+          configureNodes(caps, hubHost, hubPort, defaultConfig, nodePort);
+
+          List<Capability> appiumCaps = getAppiumCapabilitiesFromUser(defaultConfig);
+
+          if (appiumCaps.size() > 0) {
+              String appiumStartCommand = getAppiumStartCommand();
+
+              configureAppiumNodes(appiumCaps, hubHost, hubPort, appiumStartCommand, defaultConfig);
+          }
+        }
 
         if (defaultConfig.getAutoStartNode()) {
             askToRecordVideo(defaultConfig);
@@ -251,6 +252,9 @@ public class FirstTimeRunConfig {
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
         String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
+        if(RuntimeConfig.getOS().isMac()) {
+          bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_64;
+        }
 
         if (answer.equals("1")) {
             defaultConfig.setAutoUpdateDrivers("1");
@@ -299,15 +303,20 @@ public class FirstTimeRunConfig {
                 + defaultConfig.getGeckoDriver().getVersion());
 
     }
-
+    
     private static void configureNodes(List<Capability> capabilities, String hubHost,
             String hubPort, Config defaultConfig, String nodePort) {
-        GridNode node = new GridNode();
+        GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3.0"));
 
-        node.getConfiguration().setHubHost(hubHost);
-        node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
-        node.getConfiguration().setPort(Integer.parseInt(nodePort));
-
+        if(defaultConfig.getWebdriver().getVersion().startsWith("3.0")) {
+          node.setHubHost(hubHost);
+          node.setHubPort(Integer.parseInt(hubPort));
+          node.setPort(Integer.parseInt(nodePort));
+        } else {
+          node.getConfiguration().setHubHost(hubHost);
+          node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
+          node.getConfiguration().setPort(Integer.parseInt(nodePort));
+        }
         for (Capability cap : capabilities) {
             node.getCapabilities().add(cap);
         }
@@ -320,21 +329,31 @@ public class FirstTimeRunConfig {
 
     private static void configureAppiumNodes(List<Capability> capabilities, String hubHost,
                                              String hubPort, String appiumStartCommand, Config defaultConfig) {
-        GridNode node = new GridNode();
+        GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3.0"));
         int nodePort = 4723;
         String nodeIp = new OS().getHostIp();
         String nodeUrl = "http://" + nodeIp + ":" + nodePort + "/wd/hub";
         int registerCycle = 5000;
 
-        node.getConfiguration().setMaxSession(1);
-        node.getConfiguration().setHubHost(hubHost);
-        node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
-        node.getConfiguration().setPort(nodePort);
-        node.getConfiguration().setHost(nodeIp);
-        node.getConfiguration().setUrl(nodeUrl);
-        node.getConfiguration().setRegisterCycle(registerCycle);
-        node.getConfiguration().setAppiumStartCommand(appiumStartCommand);
-
+        if(node.getConfiguration() != null) {
+            node.getConfiguration().setMaxSession(1);
+            node.getConfiguration().setHubHost(hubHost);
+            node.getConfiguration().setHubPort(Integer.parseInt(hubPort));
+            node.getConfiguration().setPort(nodePort);
+            node.getConfiguration().setHost(nodeIp);
+            node.getConfiguration().setUrl(nodeUrl);
+            node.getConfiguration().setRegisterCycle(registerCycle);
+            node.getConfiguration().setAppiumStartCommand(appiumStartCommand);
+        } else {
+            node.setMaxSession(1);
+            node.setHubHost(hubHost);
+            node.setHubPort(Integer.parseInt(hubPort));
+            node.setPort(nodePort);
+            node.setHost(nodeIp);
+            node.setUrl(nodeUrl);
+            node.setRegisterCycle(registerCycle);
+            node.setAppiumStartCommand(appiumStartCommand);
+        }
         for (Capability cap : capabilities) {
             node.getCapabilities().add(cap);
         }

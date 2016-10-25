@@ -61,7 +61,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
     }
 
 
-    public void writeStartShellFile(File jarFile) throws IOException {
+    private void writeStartShellFile(File jarFile) throws IOException {
 
         File javaBin = new File(System.getProperty("java.home"), "bin");
         File javaExe = new File(javaBin, "java");
@@ -86,7 +86,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
             shellFile = new File(gridExtrasHome, startGridExtrasShellFileName + ".sh");
         }
 
-        String startCommand = String.format("%s %s -jar %s",
+        String startCommand = String.format("%s %s -jar \"%s\"",
                 shellFileHeader,
                 javaPath,
                 jarFile);
@@ -136,7 +136,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
                 message = spacer + message + String.format(
                         "Or you can update the version manually by using http://%s:%s%s end-point\n",
                         RuntimeConfig.getHostIp(),
-                        RuntimeConfig.gridExtrasPort,
+                        RuntimeConfig.getGridExtrasPort(),
                         TaskDescriptions.Endpoints.UPGRADE_GRID_EXTRAS
                 );
                 message = spacer + message + "\n**************************************\n";

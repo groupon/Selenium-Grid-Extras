@@ -1,4 +1,11 @@
-1.12.4 (NOT RELEASED YET) - Add Opera support - NOT DONE
+1.12.5 - Able to set grid extras port - Fixes issue #204.
+       - Refactor pom.xml to make artifact size smaller.
+       - Use selenium version 2.53.1 instead of 2.46.0.
+       - Fixes to selenium 3.0 config issues (appium and desktop).
+       - Allow spaces in path of selenium-grid-extras jar - Fixes issue #263.
+       - Fix version comparability checker for selenium 3.0. 
+1.12.4 - Support Selenium 3.0-beta4. - Fixed with PR257
+       - Default to 64bit chromedriver on MAC - Fixed with PR257
 1.12.3 - Add marionette suport. Ability to auto upgrade marionette as well. Need Selenium 3.0 beta for this to work.
        - Add resolution endpoint. Ability to get resolution on Windows and OSX. Ability to set resolution on Windows Server.
        - Fix test to work on Windows - testChromeDriverDString

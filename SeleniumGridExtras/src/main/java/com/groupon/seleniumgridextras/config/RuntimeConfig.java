@@ -59,13 +59,16 @@ public class RuntimeConfig {
   public static String configFile = "selenium_grid_extras_config.json";
   private static Config config = null;
   private static OS currentOS = new OS();
-  public final static int gridExtrasPort = 3000;
   private static Logger logger = Logger.getLogger(RuntimeConfig.class);
   private static WebDriverReleaseManager releaseManager;
   private static SessionTracker sessionTracker;
 
   public static int getGridExtrasPort() {
-    return gridExtrasPort;
+    if(getConfig() == null) {
+      return 3000;
+    } else {
+      return getConfig().getGridExtrasPort();
+    }
   }
 
   public static WebDriverReleaseManager getReleaseManager() {
@@ -195,7 +198,7 @@ public class RuntimeConfig {
         } else if (config.getDefaultRole().equals("hub") && config.getHubs().size() > 0) {
             ip = config.getHubs().get(0).getConfiguration().getHost();
         } else if (config.getDefaultRole().equals("node") && config.getNodes().size() > 0) {
-            ip = config.getNodes().get(0).getConfiguration().getHost();
+            ip = config.getNodes().get(0).getConfiguration() != null ? config.getNodes().get(0).getConfiguration().getHost() : config.getNodes().get(0).getHost();
         }
     }
     if (ip == null) {

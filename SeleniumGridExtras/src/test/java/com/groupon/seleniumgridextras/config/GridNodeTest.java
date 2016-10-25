@@ -41,6 +41,7 @@ public class GridNodeTest {
     expectedConfiguration.put("maxSession", 3);
     expectedConfiguration.put("port", 5555);
     expectedConfiguration.put("register", true);
+    expectedConfiguration.put("registerCycle", 5000);
 //    expectedConfiguration.put("browserTimeout", 120);
 //    expectedConfiguration.put("timeout", 120);
     expectedConfiguration.put("hubPort", 4444);
@@ -54,7 +55,7 @@ public class GridNodeTest {
     expectedFirefoxCapability.put("version", "12");
     expectedCapabilities.add(expectedFirefoxCapability);
 
-    node = new GridNode();
+    node = new GridNode(false);
     node.getConfiguration().setHubHost("google.com");
     node.getConfiguration().setHubPort(4444);
     node.getConfiguration().setPort(5555);
@@ -82,8 +83,8 @@ public class GridNodeTest {
 
   @Test
   public void testCreateNodeFromFile() throws Exception {
-
-    GridNode nodeFromFile = GridNode.loadFromFile(fileaname);
+    boolean isSelenium3 = false;
+    GridNode nodeFromFile = GridNode.loadFromFile(fileaname, isSelenium3);
 
     assertEquals(1, nodeFromFile.getCapabilities().size());
     assertEquals(expectedCapabilities, nodeFromFile.getCapabilities());

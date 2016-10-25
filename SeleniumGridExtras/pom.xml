@@ -4,7 +4,7 @@
 
     <groupId>com.groupon.selenium-grid-extras</groupId>
     <artifactId>SeleniumGridExtras</artifactId>
-    <version>1.12.3-SNAPSHOT</version>
+    <version>1.12.6-SNAPSHOT</version>
 
     <repositories>
         <repository>
@@ -19,12 +19,12 @@
     </repositories>
 
     <properties>
-        <version.selenium>2.46.0</version.selenium>
+        <version.selenium>2.53.1</version.selenium>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
+        <dependency> <!-- Selenium 2.53.1 comes with jna-platform 4.1.0 -->
+            <groupId>net.java.dev.jna</groupId> <!-- Needed for BrowerVersionDetector (for IE) -->
             <artifactId>jna-platform</artifactId>
             <version>4.1.0</version>
         </dependency>
@@ -39,7 +39,7 @@
             <artifactId>apache-log4j-extras</artifactId>
             <version>1.2.17</version>
         </dependency>
-        <dependency>
+        <dependency> <!-- Needed for two VideoRecorderCallable -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.7</version>
@@ -48,22 +48,29 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
+            <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
+         <dependency> <!--  Selenium 2.53.1 comes with commons-io 2.4 -->
+            <groupId>commons-io</groupId> <!-- GridHub.writeToFile requires this -->
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
         </dependency>
-        <dependency>
+         <dependency> <!--  Selenium 2.53.1 comes with commons-codec 1.10 -->
+            <groupId>commons-codec</groupId> <!-- ScreenshotUtility.encodeStreamToBase64 requires this -->
+            <artifactId>commons-codec</artifactId>
+            <version>1.10</version>
+        </dependency>
+        <!-- Needed for `Should we store all of these configs in central location on the HUB node and update from there? (1-yes/0-no)` -->
+         <dependency> <!--  Selenium 2.53.1 comes with httpclient 4.5.1 -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.1</version>
         </dependency>
-        <dependency>
+<!--         <dependency> Selenium 2.53.1 comes with commons-lang3 3.4
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -84,11 +91,11 @@
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
         </dependency>
-        <dependency>
+<!--         <dependency> Not used anywhere
             <groupId>jaxen</groupId>
             <artifactId>jaxen</artifactId>
             <version>1.1.6</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-xuggler</artifactId>
@@ -99,21 +106,22 @@
             <artifactId>xuggler</artifactId>
             <version>0.16</version>
         </dependency>
-        <dependency>
+<!--         <dependency> selenium-api-2.53.1 comes with guava 19.0
             <artifactId>guava</artifactId>
             <groupId>com.google.guava</groupId>
             <type>jar</type>
             <version>18.0</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+<!--         <dependency> Not used anywhere
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20090211</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>2.0.31-beta</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

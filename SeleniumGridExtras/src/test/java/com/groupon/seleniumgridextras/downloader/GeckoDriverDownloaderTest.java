@@ -39,12 +39,12 @@ public class GeckoDriverDownloaderTest {
     new File(RuntimeConfig.getConfigFile()).delete();
     new File(RuntimeConfig.getConfigFile() + ".example").delete();
     String EXPECTED_FILENAME = "geckodriver";
-    String EXPECTED_FILENAME_COMPRESSED = "geckodriver" + VERSION + ".gz";
+    String EXPECTED_FILENAME_COMPRESSED = "geckodriver_" + VERSION + ".tar";
     if(RuntimeConfig.getOS().isWindows()) {
       EXPECTED_FILENAME = "geckodriver_" + VERSION + ".exe";
       EXPECTED_FILENAME_COMPRESSED = "geckodriver_" + VERSION + ".zip";
     } else {
-      String EXPECTED_FILENAME_COMPRESSED2 = "geckodriver" + VERSION + ".tar.gz";
+      String EXPECTED_FILENAME_COMPRESSED2 = "geckodriver_" + VERSION + ".tar.gz";
       new File(testDir, EXPECTED_FILENAME_COMPRESSED2).delete();
     }
     new File(testDir, EXPECTED_FILENAME).delete();

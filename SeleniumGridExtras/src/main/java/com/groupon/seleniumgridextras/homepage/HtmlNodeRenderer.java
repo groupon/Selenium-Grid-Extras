@@ -242,11 +242,15 @@ public class HtmlNodeRenderer {
         StringBuilder renderedCapabilities = new StringBuilder();
         renderedCapabilities.append("\n<ul class='capabilities'>");
         for (GridNode node : RuntimeConfig.getConfig().getNodes()) {
+            boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0");
+            int nodePort = isSelenium3 ? node.getPort() : node.getConfiguration().getPort();
+            int maxSession = isSelenium3 ? node.getMaxSession() : node.getConfiguration().getMaxSession();
+            
             renderedCapabilities.append("\n\t<li class='cap_node'>");
-            renderedCapabilities.append("\n\t\tNode: " + node.getConfiguration().getPort());
+            renderedCapabilities.append("\n\t\tNode: " + nodePort);
             renderedCapabilities.append("\n\t\t<ul class='node'>");
             renderedCapabilities.append("\n\t\t\t<li>Config File: " + node.getLoadedFromFile() + "</li>");
-            renderedCapabilities.append("\n\t\t\t<li>Max Sessions: " + node.getConfiguration().getMaxSession() + "</li>");
+            renderedCapabilities.append("\n\t\t\t<li>Max Sessions: " + maxSession + "</li>");
             renderedCapabilities.append("\n\t\t\t<li class='declared_browsers'>Declared Browsers: <br/> (Version / Max Instances / Driver Version)");
             renderedCapabilities.append("\n\t\t\t\t<ul class='browser_list'>");
             for (Capability cap : node.getCapabilities()) {
