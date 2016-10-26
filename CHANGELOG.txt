@@ -1,3 +1,5 @@
+1.12.7 - Add back guava and commons lang3 dependency.
+1.12.6 - Fix IE (add dependency back).
 1.12.5 - Able to set grid extras port - Fixes issue #204.
        - Refactor pom.xml to make artifact size smaller.
        - Use selenium version 2.53.1 instead of 2.46.0.
