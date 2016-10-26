@@ -66,11 +66,11 @@
             <artifactId>httpclient</artifactId>
             <version>4.3.1</version>
         </dependency>
-<!--         <dependency> Selenium 2.53.1 comes with commons-lang3 3.4
-            <groupId>org.apache.commons</groupId>
+        <dependency> <!-- Selenium 2.53.1 comes with commons-lang3 3.4 -->
+            <groupId>org.apache.commons</groupId> <!-- Needed all over -->
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -106,12 +106,12 @@
             <artifactId>xuggler</artifactId>
             <version>0.16</version>
         </dependency>
-<!--         <dependency> selenium-api-2.53.1 comes with guava 19.0
-            <artifactId>guava</artifactId>
+         <dependency> <!-- selenium-api-2.53.1 comes with guava 19.0 -->
+            <artifactId>guava</artifactId> <!-- Needed for UpgradeGridExtrasTask.getSanitizedReleaseList -->
             <groupId>com.google.guava</groupId>
             <type>jar</type>
             <version>18.0</version>
-        </dependency> -->
+        </dependency>
 <!--         <dependency> Not used anywhere
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
