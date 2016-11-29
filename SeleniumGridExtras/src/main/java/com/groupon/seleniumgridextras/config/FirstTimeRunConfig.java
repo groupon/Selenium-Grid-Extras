@@ -72,8 +72,8 @@ public class FirstTimeRunConfig {
         System.out.println("\n\n\n\n" + message + "\n\n");
 
         setDefaultService(defaultConfig);
-        defaultConfig.setGridExtrasPort(3000);
 
+        setGridExtrasPort(defaultConfig);
         String hubHost = getGridHubHost();
         String hubPort = getGridHubPort();
 
@@ -410,14 +410,18 @@ public class FirstTimeRunConfig {
                         capability =
                                 (Capability) Class.forName(currentCapabilityClass.getCanonicalName()).newInstance();
                         capability.setPlatform(platform.toUpperCase());
-                        String guessedBrowserVersion = BrowserVersionDetector.guessBrowserVersion(currentCapabilityClass.getSimpleName());
+                        String guessedBrowserVersion = "";
+                        try {
+                          guessedBrowserVersion = BrowserVersionDetector.guessBrowserVersion(currentCapabilityClass.getSimpleName());
+                        } catch(Exception e) {
+                          logger.warn("Unable to guess browser version for " + currentCapabilityClass.getSimpleName());
+                        }
                         String realBrowserVersion = askQuestion(
                                 "What version of '" + currentCapabilityClass.getSimpleName() + "' is installed?", guessedBrowserVersion);
                         capability.setBrowserVersion(realBrowserVersion);
                         if ((guessedBrowserVersion != realBrowserVersion) && ableToAutoDetectBrowserVersions.equals("1")) {
                             ableToAutoDetectBrowserVersions = "0";
                         }
-
                         chosenCapabilities.add(capability);
                     } catch (Exception e) {
                         logger.warn("Warning: Had an issue creating capability for " + currentCapabilityClass
@@ -505,6 +509,14 @@ public class FirstTimeRunConfig {
         defaultConfig.setAutoStartNode(value);
     }
 
+    private static void setGridExtrasPort(Config defaultConfig) {
+        String
+                answer =
+                askQuestion("What is the PORT for Selenium Grid Extras?", "3000");
+  
+        defaultConfig.setGridExtrasPort(answer);
+    }
+
     private static String getGridHubHost() {
         String
                 host =
@@ -512,7 +524,6 @@ public class FirstTimeRunConfig {
                         "127.0.0.1");
         return host;
     }
-
 
     private static String getGridHubPort() {
         String port = askQuestion("What is the PORT for the Selenium Grid Hub?", "4444");
