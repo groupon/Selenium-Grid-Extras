@@ -36,21 +36,18 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
 
     addResponseDescription(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, "New versions of WebDriver Jar");
     addResponseDescription(JsonCodec.WebDriver.NEW_CHROME_DRIVER, "New version of Chrome Driver");
+    addResponseDescription(JsonCodec.WebDriver.NEW_GECKO_DRIVER, "New version of Gecko Driver");
     addResponseDescription(JsonCodec.WebDriver.NEW_IE_DRIVER, "New version of IE Driver");
 
-    getJsonResponse()
-        .addKeyValues(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
-    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_CHROME_DRIVER,
-                                   RuntimeConfig.getConfig().getChromeDriver().getVersion());
-    getJsonResponse()
-        .addKeyValues(JsonCodec.WebDriver.OLD_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_CHROME_DRIVER, RuntimeConfig.getConfig().getChromeDriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_GECKO_DRIVER, RuntimeConfig.getConfig().getGeckoDriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
 
-    getJsonResponse()
-        .addKeyValues(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
-    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER,
-                                   RuntimeConfig.getConfig().getChromeDriver().getVersion());
-    getJsonResponse()
-        .addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER, RuntimeConfig.getConfig().getChromeDriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_GECKO_DRIVER, RuntimeConfig.getConfig().getGeckoDriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
 
   }
 
@@ -172,7 +169,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
         newestIEDriverVersion =
         RuntimeConfig.getReleaseManager().getIeDriverLatestVersion().getComparableVersion();
 
-    updateIEDriver = currentIEDriverVersion < newestIEDriverVersion;
+    updateIEDriver = currentIEDriverVersion != newestIEDriverVersion;
 
     int
         currentWebDriverJarVersion =
@@ -181,7 +178,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
         newestWebDriverJarVersion =
         RuntimeConfig.getReleaseManager().getWedriverLatestVersion().getComparableVersion();
 
-    updateWebDriver = currentWebDriverJarVersion < newestWebDriverJarVersion;
+    updateWebDriver = currentWebDriverJarVersion != newestWebDriverJarVersion;
 
   }
 
