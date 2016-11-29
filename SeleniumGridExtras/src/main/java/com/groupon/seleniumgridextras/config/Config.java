@@ -595,7 +595,7 @@ public class Config {
         return (String) getConfigMap().get(GRID_EXTRAS_RELEASE_URL);
     }
 
-    public void setGridExtrasPort(int port) {
+    public void setGridExtrasPort(String port) {
         getConfigMap().put(GRID_EXTRAS_PORT, port);
     }
 
