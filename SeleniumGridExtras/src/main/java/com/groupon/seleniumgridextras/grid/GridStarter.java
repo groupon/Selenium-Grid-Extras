@@ -27,10 +27,16 @@ public class GridStarter {
     List<String> command = new ArrayList<String>();
     command.add(getJavaExe());
     if(RuntimeConfig.getConfig().getGridJvmXOptions() != "") {
-      command.add(RuntimeConfig.getConfig().getGridJvmXOptions());
+      List<String> options = new ArrayList<String>(Arrays.asList(RuntimeConfig.getConfig().getGridJvmXOptions().split(" ")));
+      for(String option : options) {
+        command.add(option);
+      }
     }
     if(RuntimeConfig.getConfig().getGridJvmOptions() != "") {
-      command.add(RuntimeConfig.getConfig().getGridJvmOptions());
+      List<String> options = new ArrayList<String>(Arrays.asList(RuntimeConfig.getConfig().getGridJvmOptions().split(" ")));
+      for(String option : options) {
+        command.add(option);
+      }
     }
     String cp = getGridExtrasJarFilePath();
 
@@ -183,10 +189,16 @@ public class GridStarter {
     List<String> command = new ArrayList<String>();
     command.add(getJavaExe());
     if(config.getGridJvmXOptions() != "") {
-      command.add(config.getGridJvmXOptions());
+      List<String> options = new ArrayList<String>(Arrays.asList(RuntimeConfig.getConfig().getGridJvmXOptions().split(" ")));
+      for(String option : options) {
+        command.add(option);
+      }
     }
     if(config.getGridJvmOptions() != "") {
-      command.add(config.getGridJvmOptions());
+      List<String> options = new ArrayList<String>(Arrays.asList(RuntimeConfig.getConfig().getGridJvmOptions().split(" ")));
+      for(String option : options) {
+        command.add(option);
+      }
     }
     if (windows) {
       command.add(getIEDriverExecutionPathParam(config));
