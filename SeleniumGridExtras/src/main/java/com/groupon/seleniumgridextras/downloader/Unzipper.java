@@ -58,6 +58,7 @@ public class Unzipper {
       return decompressGunzip(source, destination);
     }
     try {
+      logger.info("Unzipping source : " + source + " to destination : " + destination);
       Unzip unzipper = new Unzip();
       unzipper.setSrc(new File(source));
       unzipper.setDest(new File(destination));
@@ -70,6 +71,7 @@ public class Unzipper {
   }
 
   private static boolean decompressGunzip(String source, String destination) {
+    logger.info("Decompress gunzip source : " + source + " to destination : " + destination);
     String sourceFileName = new File(source).getName();
     destination = destination + RuntimeConfig.getOS().getFileSeparator() + sourceFileName.substring(0, sourceFileName.lastIndexOf("."));
     if (RuntimeConfig.getOS().isWindows()) {
@@ -93,6 +95,7 @@ public class Unzipper {
   }
 
   private static boolean decompressTarGunzip(String source, String destination) {
+    logger.info("Decompress tar gunzip source : " + source + " to destination : " + destination);
     try {
       org.apache.ant.compress.taskdefs.GUnzip gunzip = new org.apache.ant.compress.taskdefs.GUnzip();
       gunzip.setSrc(new File(source));

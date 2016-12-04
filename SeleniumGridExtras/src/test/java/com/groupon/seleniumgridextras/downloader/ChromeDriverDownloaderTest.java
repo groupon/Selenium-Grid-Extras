@@ -67,7 +67,7 @@ public class ChromeDriverDownloaderTest {
   @Test
   public void testGetOSNames() throws Exception {
     assertEquals("mac", downloader.getMacName());
-    assertEquals("win", downloader.getWindownsName());
+    assertEquals("win", downloader.getWindowsName());
     assertEquals("linux", downloader.getLinuxName());
   }
 }

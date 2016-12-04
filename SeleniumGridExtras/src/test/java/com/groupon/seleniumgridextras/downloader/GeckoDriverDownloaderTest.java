@@ -74,7 +74,7 @@ public class GeckoDriverDownloaderTest {
   @Test
   public void testGetOSNames() throws Exception {
     assertEquals("macos", downloader.getMacName());
-    assertEquals("win64", downloader.getWindownsName());
+    assertEquals("win64", downloader.getWindowsName());
     assertEquals("linux64", downloader.getLinuxName());
   }
   

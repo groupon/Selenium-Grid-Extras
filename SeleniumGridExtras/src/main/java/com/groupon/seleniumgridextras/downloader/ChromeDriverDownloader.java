@@ -143,7 +143,7 @@ public class ChromeDriverDownloader extends Downloader {
     String os;
 
     if (RuntimeConfig.getOS().isWindows()) {
-      os = getWindownsName();
+      os = getWindowsName();
     } else if (RuntimeConfig.getOS().isMac()) {
       os = getMacName();
     } else {
@@ -161,7 +161,7 @@ public class ChromeDriverDownloader extends Downloader {
     return "mac";
   }
 
-  protected String getWindownsName() {
+  protected String getWindowsName() {
     return "win";
   }
 
