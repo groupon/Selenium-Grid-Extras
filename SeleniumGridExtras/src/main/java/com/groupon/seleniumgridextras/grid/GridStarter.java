@@ -231,10 +231,6 @@ public class GridStarter {
         !getWebdriverVersion(config).startsWith("3.")) { // Exception in thread "main" com.beust.jcommander.ParameterException: Unknown option: -friendlyHostName
       command.add("-friendlyHostName");
       command.add(RuntimeConfig.getOS().getHostName());
-    } else if ((RuntimeConfig.getOS().getHostName() != null) && 
-        getWebdriverVersion(config).startsWith("3.")) {
-      command.add("-id");
-      command.add(RuntimeConfig.getOS().getHostName());
     }
     
     command.add("-nodeConfig");
