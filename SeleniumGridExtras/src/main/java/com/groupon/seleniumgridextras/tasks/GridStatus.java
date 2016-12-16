@@ -102,6 +102,9 @@ public class GridStatus extends ExecuteOSTask {
             getJsonResponse()
                     .addKeyValues(JsonCodec.WebDriver.Grid.NODE_SESSIONS_LIMIT,
                             RuntimeConfig.getConfig().getRebootAfterSessions());
+            getJsonResponse()
+            .addKeyValues(JsonCodec.WebDriver.Grid.NODE_WILL_UNREGISTER_DURING_REBOOT,
+                    RuntimeConfig.getConfig().getUnregisterNodeDuringReboot());
 
             return getJsonResponse().getJson();
         } catch (Exception error) {
