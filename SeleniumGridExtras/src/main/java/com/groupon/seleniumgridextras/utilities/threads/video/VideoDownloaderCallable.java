@@ -1,6 +1,7 @@
 package com.groupon.seleniumgridextras.utilities.threads.video;
 
 import com.google.common.base.Throwables;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
@@ -186,7 +187,7 @@ public class VideoDownloaderCallable implements Callable {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(this.host);
-        builder.setPort(3000);
+        builder.setPort(RuntimeConfig.getGridExtrasPort());
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         try {
