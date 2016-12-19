@@ -117,7 +117,7 @@ public class NodeRestartCallable implements Callable {
     }
 
     public void unregister() {
-    	boolean markNodeAsTakenOffline = true;
+    	boolean unregisterDuringReboot = true;
     	
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
@@ -134,29 +134,20 @@ public class NodeRestartCallable implements Callable {
             logger.error(
                     String.format(
                             "Error getting the %s endpoint for proxy %s ",
-                            TaskDescriptions.Endpoints.CONFIG,
+                            TaskDescriptions.Endpoints.GRID_STATUS,
                             proxy.getId()),
                     e);
         }
         
         if (!response.equals("")) {
-        	Map config = JsonParserWrapper.toHashMap(response);
-        	if (config != null) {
-        		Map runtimeConfig = (Map) config.get(JsonCodec.Config.CONFIG_RUNTIME);
-        		if (runtimeConfig != null) {
-        			Map theConfigMap = (Map) runtimeConfig.get("theConfigMap");
-        			if (theConfigMap != null) {
-        				String unregisterNodeDuringRebootAsString = (String) theConfigMap.get(Config.UNREGISTER_NODE_DURING_REBOOT);
-        				if (unregisterNodeDuringRebootAsString != null) {
-        					boolean unregisterNodeDuringReboot = Boolean.valueOf(unregisterNodeDuringRebootAsString);
-        					markNodeAsTakenOffline = unregisterNodeDuringReboot;
-        				}
-        			}
-        		}
+        	Map status = JsonParserWrapper.toHashMap(response);
+        	if (status != null && status.containsKey(GridStatus.BOOLEAN_IF_NODE_WILL_UNREGISTER_DURING_REBOOT)) {
+				Boolean unregisterNodeDuringReboot = (Boolean) status.get(GridStatus.BOOLEAN_IF_NODE_WILL_UNREGISTER_DURING_REBOOT);
+				unregisterDuringReboot = unregisterNodeDuringReboot;
         	}
         }
         
-        if (markNodeAsTakenOffline) {
+        if (unregisterDuringReboot) {
         	proxy.addNewEvent(new RemoteUnregisterException(String.format("Taking proxy %s offline", proxy.getId())));
         } else {
         	proxy.addNewEvent(new RemoteNotReachableException(String.format("Taking proxy %s down", proxy.getId())));
