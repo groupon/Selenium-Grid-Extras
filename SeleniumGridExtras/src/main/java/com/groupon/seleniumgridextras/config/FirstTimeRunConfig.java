@@ -246,7 +246,7 @@ public class FirstTimeRunConfig {
             String
                     answer =
                     askQuestion(
-                    		"Would you like to unregister the node during reboot. If answer is no the node will be only marked as down. (1-yes/0-no)", "1");
+                    		"Would you like to unregister the node during reboot immediately so test clients will get an error if they try to connect. Otherwise the node will be only marked as down and test clients are stored in a queue until node is up again. (1-yes/0-no)", "1");
 
             if (answer.equals("1")) {
                 defaultConfig.setUnregisterNodeDuringReboot("true");
