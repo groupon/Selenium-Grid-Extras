@@ -229,7 +229,9 @@ public class FirstTimeRunConfig {
 
     private static void setRebootAfterSessionLimit(Config defaultConfig) {
 
-        if (!defaultConfig.getAutoStartHub()) { // If this is a HUB, we never want to restart it
+        if (defaultConfig.getAutoStartHub()) { // If this is a HUB, we never want to restart it
+        	defaultConfig.setRebootAfterSessions("0");
+        } else {
             String
                     answer =
                     askQuestion("Restart after how many tests (0-never restart)", "10");
