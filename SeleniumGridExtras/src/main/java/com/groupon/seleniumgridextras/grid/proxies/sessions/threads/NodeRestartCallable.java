@@ -123,7 +123,7 @@ public class NodeRestartCallable implements Callable {
                 new RemoteGridExtrasAsyncCallable(
                 		proxy.getRemoteHost().getHost(),
                         RuntimeConfig.getGridExtrasPort(),
-                        TaskDescriptions.Endpoints.CONFIG,
+                        TaskDescriptions.Endpoints.GRID_STATUS,
                         new HashMap<String, String>()));
 
         String response = "";
