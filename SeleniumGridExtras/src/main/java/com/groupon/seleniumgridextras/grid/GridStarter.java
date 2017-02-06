@@ -243,12 +243,16 @@ public class GridStarter {
     List<String> command = new ArrayList<String>();
     if(!getWebdriverVersion(runtimeConfig).startsWith("3.")) {
       GridNodeConfiguration config = GridNode.loadFromFile(configFile, false).getConfiguration();
-      command.add(config.getAppiumStartCommand());
+      for(String appiumCommand : config.getAppiumStartCommand().split(" ")) {
+        command.add(appiumCommand);
+      }
       command.add("-p");
       command.add(config.getPort() + "");
     } else {
       GridNode node = GridNode.loadFromFile(configFile, true);
-      command.add(node.getAppiumStartCommand());
+      for(String appiumCommand : node.getAppiumStartCommand().split(" ")) {
+        command.add(appiumCommand);
+      }
       command.add("-p");
       command.add(node.getPort() + "");
     }

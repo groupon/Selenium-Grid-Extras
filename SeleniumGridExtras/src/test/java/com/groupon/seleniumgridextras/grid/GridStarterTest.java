@@ -28,7 +28,8 @@ public class GridStarterTest {
     private static final String TEST_COMMAND = "command is here";
     private final String nodeOneConfig = "node1.json";
     private final String nodeTwoConfig = "node2.json";
-    private final String nodeAppiumConfig = "appium_node.json";
+    private final String nodeAppiumOneConfig = "appium_node1.json";
+    private final String nodeAppiumTwoConfig = "appium_node2.json";
 
     private final String logFile = "foo.log";
     private final String command = "command";
@@ -62,17 +63,22 @@ public class GridStarterTest {
 
         GridNode node1 = new GridNode(false);
         GridNode node2 = new GridNode(false);
-        GridNode nodeAppium = new GridNode(false);
-        nodeAppium.getConfiguration().setAppiumStartCommand("appium");
-        nodeAppium.getConfiguration().setPort(4723);
+        GridNode nodeAppium1 = new GridNode(false);
+        nodeAppium1.getConfiguration().setAppiumStartCommand("appium");
+        nodeAppium1.getConfiguration().setPort(4723);
+        GridNode nodeAppium2 = new GridNode(false);
+        nodeAppium2.getConfiguration().setAppiumStartCommand("appium --avd AVD_NAME");
+        nodeAppium2.getConfiguration().setPort(4723);
 
         node1.writeToFile(nodeOneConfig);
         node2.writeToFile(nodeTwoConfig);
-        nodeAppium.writeToFile(nodeAppiumConfig);
+        nodeAppium1.writeToFile(nodeAppiumOneConfig);
+        nodeAppium2.writeToFile(nodeAppiumTwoConfig);
 
         config.addNodeConfigFile(nodeOneConfig);
         config.addNodeConfigFile(nodeTwoConfig);
-        config.addNodeConfigFile(nodeAppiumConfig);
+        config.addNodeConfigFile(nodeAppiumOneConfig);
+        config.addNodeConfigFile(nodeAppiumTwoConfig);
 
         config.writeToDisk(RuntimeConfig.getConfigFile());
 
@@ -85,7 +91,8 @@ public class GridStarterTest {
         new File(GRID_HUB_LOG).delete();
         new File(nodeOneConfig).delete();
         new File(nodeTwoConfig).delete();
-        new File(nodeAppiumConfig).delete();
+        new File(nodeAppiumOneConfig).delete();
+        new File(nodeAppiumTwoConfig).delete();
         new File(windowsBatchFileName).delete();
         new File(windowsAppiumBatchFileName).delete();
         new File(gridStartTestJson).delete();
@@ -106,23 +113,37 @@ public class GridStarterTest {
         assertTrue(sb1.toString().contains("-role node"));
         assertTrue(sb1.toString().contains("-nodeConfig " + nodeOneConfig));
 
-        startCommand = GridStarter.getNodeStartCommand(nodeAppiumConfig, false, RuntimeConfig.getConfig());
-        StringBuilder sb2 = new StringBuilder();
-        for(String part : startCommand) {
-          sb2.append(part + " ");
-        }
-        assertTrue(sb2.toString().contains("appium -p 4723"));
-        assertTrue(sb2.toString().contains("--nodeconfig " + System.getProperty("user.dir")
-                + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumConfig));
+        // Linux
+        startCommand = GridStarter.getNodeStartCommand(nodeAppiumOneConfig, false, RuntimeConfig.getConfig());
+        assertTrue(startCommand.get(0).equals("appium"));
+        assertTrue(startCommand.get(1).equals("-p"));
+        assertTrue(startCommand.get(2).equals("4723"));
+        assertTrue(startCommand.get(3).equals("--log-timestamp"));
+        assertTrue(startCommand.get(4).equals("--nodeconfig"));
+        assertTrue(startCommand.get(5).equals(System.getProperty("user.dir")
+                + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumOneConfig));
 
-        startCommand = GridStarter.getNodeStartCommand(nodeAppiumConfig, true, RuntimeConfig.getConfig());
-        StringBuilder sb3 = new StringBuilder();
-        for(String part : startCommand) {
-          sb3.append(part + " ");
-        }
-        assertTrue(sb3.toString().contains("appium -p 4723"));
-        assertTrue(sb3.toString().contains("--nodeconfig " + System.getProperty("user.dir")
-                + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumConfig));
+        // Windows
+        startCommand = GridStarter.getNodeStartCommand(nodeAppiumOneConfig, true, RuntimeConfig.getConfig());
+        assertTrue(startCommand.get(0).equals("appium"));
+        assertTrue(startCommand.get(1).equals("-p"));
+        assertTrue(startCommand.get(2).equals("4723"));
+        assertTrue(startCommand.get(3).equals("--log-timestamp"));
+        assertTrue(startCommand.get(4).equals("--nodeconfig"));
+        assertTrue(startCommand.get(5).equals(System.getProperty("user.dir")
+                + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumOneConfig));
+
+        // Appium parameters in start command
+        startCommand = GridStarter.getNodeStartCommand(nodeAppiumTwoConfig, false, RuntimeConfig.getConfig());
+        assertTrue(startCommand.get(0).equals("appium"));
+        assertTrue(startCommand.get(1).equals("--avd"));
+        assertTrue(startCommand.get(2).equals("AVD_NAME"));
+        assertTrue(startCommand.get(3).equals("-p"));
+        assertTrue(startCommand.get(4).equals("4723"));
+        assertTrue(startCommand.get(5).equals("--log-timestamp"));
+        assertTrue(startCommand.get(6).equals("--nodeconfig"));
+        assertTrue(startCommand.get(7).equals(System.getProperty("user.dir")
+                + RuntimeConfig.getOS().getFileSeparator() + nodeAppiumTwoConfig));
     }
 
     @Test
