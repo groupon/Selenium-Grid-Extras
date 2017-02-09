@@ -202,6 +202,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
 
     private void startVideoRecording(TestSession session) {
+        if (!isVideoRecordingEnabled()) {
+          return;
+        }
 
         if (alreadyRecordingCurrentSession(session)) {
             return;
@@ -215,6 +218,10 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
 
     private void stopVideoRecording(TestSession session) {
+        if (!isVideoRecordingEnabled()) {
+          return;
+        }
+
         Future a = CommonThreadPool.startCallable(
                 new RemoteVideoRecordingControlCallable(
                         this,
@@ -234,6 +241,9 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     }
 
     private void updateLastCommand(TestSession session, HttpServletRequest request) {
+        if (!isVideoRecordingEnabled()) {
+          return;
+        }
 
         if (session.getExternalKey() == null) {
             return;
@@ -257,6 +267,13 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         }
     }
 
+
+    private boolean isVideoRecordingEnabled() {
+        if (RuntimeConfig.getConfig() == null) {
+            RuntimeConfig.load(false);
+        }
+        return RuntimeConfig.getConfig().getVideoRecording().getRecordTestVideos();
+    }
 
     public List<String> getSessionsRecording() {
         return this.sessionsRecording;
