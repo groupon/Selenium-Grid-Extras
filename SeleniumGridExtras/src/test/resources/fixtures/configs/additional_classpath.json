@@ -89,6 +89,7 @@
     "hub_config_files": [],
     "config_puller_http_timeout": 5000,
     "auto_start_hub": "0",
+    "unregisterNodeDuringReboot": "true",
     "chromedriver": {
       "bit": "32",
       "directory": "/tmp/webdriver/chromedriver",

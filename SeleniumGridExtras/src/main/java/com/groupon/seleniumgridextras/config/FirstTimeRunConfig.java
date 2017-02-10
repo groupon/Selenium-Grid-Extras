@@ -90,6 +90,7 @@ public class FirstTimeRunConfig {
         setLogMaximumDaysToKeep(defaultConfig);
 
         setRebootAfterSessionLimit(defaultConfig);
+        setUnregisterNodeDuringReboot(defaultConfig);
         setAutoLogonAsUser(defaultConfig);
 
         setDriverAutoUpdater(defaultConfig);
@@ -237,6 +238,23 @@ public class FirstTimeRunConfig {
                     askQuestion("Restart after how many tests (0-never restart)", "10");
 
             defaultConfig.setRebootAfterSessions(answer);
+        }
+
+    }
+    
+    private static void setUnregisterNodeDuringReboot(Config defaultConfig) {
+
+        if (!defaultConfig.getAutoStartHub()) { // If this is a HUB, we never want to restart it
+            String
+                    answer =
+                    askQuestion(
+                    		"Would you like to unregister the node during reboot immediately so test clients will get an error if they try to connect. Otherwise the node will be only marked as down and test clients are stored in a queue until node is up again. (1-yes/0-no)", "1");
+
+            if (answer.equals("1")) {
+                defaultConfig.setUnregisterNodeDuringReboot("true");
+            } else {
+            	defaultConfig.setUnregisterNodeDuringReboot("false");
+            }
         }
 
     }

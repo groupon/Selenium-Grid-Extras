@@ -185,6 +185,7 @@ public class JsonCodec {
             public static final String HUB_INFO = "hub_info";
             public static final String NODE_INFO = "node_info";
             public static final String NODE_SESSIONS_LIMIT = "node_sessions_limit";
+            public static final String NODE_WILL_UNREGISTER_DURING_REBOOT = "node_will_unregister_during_reboot";
             public static final String NODE = "node";
             public static final String PORT = "port";
             public static final String HOST = "host";
