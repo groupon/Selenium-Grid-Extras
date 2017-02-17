@@ -48,6 +48,7 @@ public class DefaultConfig {
 
     public static final String VIDEO_OUTPUT_DIRECTORY = "video_output";
     public static final String REBOOT_AFTER_THIS_MANY_SESSIONS = "10";
+    public static final String UNREGISTER_NODE_DURING_REBOOT = "true";
     public static final String DEFAULT_HUB_PORT = "4444";
     public static final String DEFAULT_SHARED_DIRECTORY = "shared";
 
@@ -108,6 +109,7 @@ public class DefaultConfig {
         loadSharedDir();
         setAutoUpdateDrivers(JsonCodec.TRUE_INT);
         setRebootAfterSessionCount(REBOOT_AFTER_THIS_MANY_SESSIONS);
+        setUnregisterNodeDuringReboot(UNREGISTER_NODE_DURING_REBOOT);
         loadDefaultVideoRecordingOptions();
         loadHTTPOptions();
         loadHtmlRenderOptions();
@@ -341,5 +343,7 @@ public class DefaultConfig {
         config.setRebootAfterSessions(sessionCount);
     }
 
-
+    public static void setUnregisterNodeDuringReboot(String unregisterNodeDuringReboot) {
+        config.setUnregisterNodeDuringReboot(unregisterNodeDuringReboot);
+    }
 }

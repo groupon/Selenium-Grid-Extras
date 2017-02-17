@@ -43,6 +43,7 @@ public class Config {
     public static final String AUTO_UPDATE_DRIVERS = "auto_update_drivers";
     public static final String AUTO_UPDATE_BROWSER_VERSIONS = "auto_update_browser_versions";
     public static final String REBOOT_AFTER_SESSIONS = "reboot_after_sessions";
+    public static final String UNREGISTER_NODE_DURING_REBOOT = "unregisterNodeDuringReboot";
 
     public static final String VIDEO_RECORDING_OPTIONS = "video_recording_options";
     public static final String HTTP_REQUEST_TIMEOUT = "http_request_timeout";
@@ -155,6 +156,7 @@ public class Config {
         getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, "");
 
         getConfigMap().put(REBOOT_AFTER_SESSIONS, 0);
+        getConfigMap().put(UNREGISTER_NODE_DURING_REBOOT, "true");
         initializeVideoRecorder();
         getConfigMap().put(HTML_RENDER_OPTIONS, new HtmlConfig());
 
@@ -569,6 +571,14 @@ public class Config {
 
     public int getRebootAfterSessions() {
         return Integer.valueOf((String) getConfigMap().get(REBOOT_AFTER_SESSIONS));
+    }
+    
+    public void setUnregisterNodeDuringReboot(String unregisterNodeDuringReboot) {
+        getConfigMap().put(UNREGISTER_NODE_DURING_REBOOT, unregisterNodeDuringReboot);
+    }
+
+    public boolean getUnregisterNodeDuringReboot() {
+        return Boolean.valueOf((String) getConfigMap().get(UNREGISTER_NODE_DURING_REBOOT));
     }
 
     public File getConfigsDirectory() {

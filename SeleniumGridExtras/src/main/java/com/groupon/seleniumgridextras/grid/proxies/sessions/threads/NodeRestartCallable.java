@@ -1,6 +1,7 @@
 package com.groupon.seleniumgridextras.grid.proxies.sessions.threads;
 
 import com.google.common.base.Throwables;
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
 import com.groupon.seleniumgridextras.tasks.GridStatus;
@@ -10,6 +11,7 @@ import com.groupon.seleniumgridextras.utilities.json.JsonParserWrapper;
 import com.groupon.seleniumgridextras.utilities.threads.CommonThreadPool;
 import com.groupon.seleniumgridextras.utilities.threads.RemoteGridExtrasAsyncCallable;
 import org.apache.log4j.Logger;
+import org.openqa.grid.common.exception.RemoteNotReachableException;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
 import org.openqa.grid.internal.TestSession;
 
@@ -115,7 +117,41 @@ public class NodeRestartCallable implements Callable {
     }
 
     public void unregister() {
-        proxy.addNewEvent(new RemoteUnregisterException(String.format("Taking proxy %s offline", proxy.getId())));
+    	boolean unregisterDuringReboot = true;
+    	
+        Future<String> f = CommonThreadPool.startCallable(
+                new RemoteGridExtrasAsyncCallable(
+                		proxy.getRemoteHost().getHost(),
+                        RuntimeConfig.getGridExtrasPort(),
+                        TaskDescriptions.Endpoints.GRID_STATUS,
+                        new HashMap<String, String>()));
+
+        String response = "";
+        try {
+            response = f.get();
+            logger.debug(response);
+        } catch (Exception e) {
+            logger.error(
+                    String.format(
+                            "Error getting the %s endpoint for proxy %s ",
+                            TaskDescriptions.Endpoints.GRID_STATUS,
+                            proxy.getId()),
+                    e);
+        }
+        
+        if (!response.equals("")) {
+        	Map status = JsonParserWrapper.toHashMap(response);
+        	if (status != null && status.containsKey(GridStatus.BOOLEAN_IF_NODE_WILL_UNREGISTER_DURING_REBOOT)) {
+				Boolean unregisterNodeDuringReboot = (Boolean) status.get(GridStatus.BOOLEAN_IF_NODE_WILL_UNREGISTER_DURING_REBOOT);
+				unregisterDuringReboot = unregisterNodeDuringReboot;
+        	}
+        }
+        
+        if (unregisterDuringReboot) {
+        	proxy.addNewEvent(new RemoteUnregisterException(String.format("Taking proxy %s offline", proxy.getId())));
+        } else {
+        	proxy.addNewEvent(new RemoteNotReachableException(String.format("Taking proxy %s down", proxy.getId())));
+        }
     }
 
     public static boolean timeToReboot(String nodeHost, String proxyId) {
