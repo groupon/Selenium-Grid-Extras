@@ -308,9 +308,9 @@ public class FirstTimeRunConfig {
     
     private static void configureNodes(List<Capability> capabilities, String hubHost,
             String hubPort, Config defaultConfig, String nodePort) {
-        GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3.0"));
+        GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3."));
 
-        if(defaultConfig.getWebdriver().getVersion().startsWith("3.0")) {
+        if(defaultConfig.getWebdriver().getVersion().startsWith("3.")) {
           node.setHubHost(hubHost);
           node.setHubPort(Integer.parseInt(hubPort));
           node.setPort(Integer.parseInt(nodePort));
@@ -331,7 +331,7 @@ public class FirstTimeRunConfig {
 
     private static void configureAppiumNodes(List<Capability> capabilities, String hubHost,
                                              String hubPort, String appiumStartCommand, Config defaultConfig) {
-        GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3.0"));
+        GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3."));
         int nodePort = 4723;
         String nodeIp = new OS().getHostIp();
         String nodeUrl = "http://" + nodeIp + ":" + nodePort + "/wd/hub";

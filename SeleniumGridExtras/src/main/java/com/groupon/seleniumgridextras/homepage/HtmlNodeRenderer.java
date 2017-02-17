@@ -242,7 +242,7 @@ public class HtmlNodeRenderer {
         StringBuilder renderedCapabilities = new StringBuilder();
         renderedCapabilities.append("\n<ul class='capabilities'>");
         for (GridNode node : RuntimeConfig.getConfig().getNodes()) {
-            boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0");
+            boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.");
             int nodePort = isSelenium3 ? node.getPort() : node.getConfiguration().getPort();
             int maxSession = isSelenium3 ? node.getMaxSession() : node.getConfiguration().getMaxSession();
             

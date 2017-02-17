@@ -27,7 +27,7 @@ public class GridNode {
   private GridNodeConfiguration configuration;
   private String loadedFromFile;
 
-  // Selenium 3.0 has values at top level, not in "configuration"
+  // Selenium 3 has values at top level, not in "configuration"
   private String proxy;
   private Integer maxSession;
   private Integer port;

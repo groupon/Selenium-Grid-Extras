@@ -118,7 +118,7 @@ public class StartGrid extends ExecuteOSTask {
    * @return
    */
   private JsonObject startNodes() {
-    boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.0");
+    boolean isSelenium3 = RuntimeConfig.getConfig().getWebdriver().getVersion().startsWith("3.");
         
     File configsDirectory = RuntimeConfig.getConfig().getConfigsDirectory();
     if (!RuntimeConfig.getConfig().getAutoStartHub()) {
