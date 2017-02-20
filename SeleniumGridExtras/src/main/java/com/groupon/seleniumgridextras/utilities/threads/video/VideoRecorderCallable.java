@@ -75,10 +75,13 @@ public class VideoRecorderCallable implements Callable {
 
         screenBounds.setBounds(0, 0, dimension.width, dimension.height);
         // First, let's make a IMediaWriter to write the file.
+        // Note we're writing to a temp file.  This is to prevent it from being
+        // downloaded while we're mid-write.
+        final File tempFile = new File(outputDir, sessionId + ".temp");
         final
         IMediaWriter
                 writer =
-                ToolFactory.makeWriter(new File(outputDir, sessionId + ".mp4").getAbsolutePath());
+                ToolFactory.makeWriter(tempFile.getAbsolutePath());
 
         // We tell it we're going to add one video stream, with id 0,
         // at position 0, and that it will have a fixed frame rate of
@@ -124,6 +127,20 @@ public class VideoRecorderCallable implements Callable {
             }
         } finally {
             writer.close();
+
+            // Now, rename our temporary file to the final filename, so that the downloaders can detect it
+            final File finalFile = new File(outputDir, sessionId + ".mp4");
+            if(!tempFile.exists()) {
+                logger.warn("Temporary video file for session " + getSessionId() + " doesn't exist at " + outputDir.getAbsolutePath());
+            } else if(finalFile.exists()) {
+                logger.warn("Destination video file for session " + getSessionId() + " already exists at " + outputDir.getAbsolutePath());
+            } else {
+                boolean success = tempFile.renameTo(finalFile);
+
+                if(!success) {
+                    logger.warn("Unable to rename temporary video file for session " + getSessionId());
+                }
+            }
         }
 
         return getSessionId();
