@@ -86,6 +86,8 @@ public class GridExtrasDownloaderTest {
 
         long msRange = TimeStampUtility.timestampInMs() - downloader.getCachedReleaseResponseFile().lastModified();
         assertTrue(msRange < 10000); //Make sure that file created is no older than 10 seconds
+        System.out.println("INITIAL RESPONSE : " + initialResponse);
+        System.out.println("downloader.getCachedReleaseList() : " + downloader.getCachedReleaseList());
         assertEquals(initialResponse, downloader.getCachedReleaseList());
 
         Thread.sleep(5000);
@@ -93,6 +95,8 @@ public class GridExtrasDownloaderTest {
         //But the file gets re-written
 
         assertEquals(initialResponse, downloader.getCachedReleaseList());
+        System.out.println("INITIAL RESPONSE : " + initialResponse);
+        System.out.println("downloader.getCachedReleaseList() : " + downloader.getCachedReleaseList());
         long msRange2 = TimeStampUtility.timestampInMs() - downloader.getCachedReleaseResponseFile().lastModified();
         assertTrue(msRange2 < 2000); //Make sure that file created is no older than 2 seconds
     }
@@ -156,22 +160,24 @@ public class GridExtrasDownloaderTest {
 
     @Test
     public void testGetAllAssets() throws Exception {
+        String expectedVersionOldest = "1.2.3";
+        String expectedVersionFifthOldest = "1.3.3";
         List<Map<String, String>> actual = downloader.getAllDownloadableAssets();
         int actualSize = actual.size();
 
         assertTrue(actualSize > 0);
 
-        assertEquals("SeleniumGridExtras-1.1.9-SNAPSHOT-jar-with-dependencies.jar",
+        assertEquals("SeleniumGridExtras-" + expectedVersionOldest +"-SNAPSHOT-jar-with-dependencies.jar",
                 actual.get(actualSize - 1).keySet().toArray()[0]);
 
-        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/1.1.9/SeleniumGridExtras-1.1.9-SNAPSHOT-jar-with-dependencies.jar",
+        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v" + expectedVersionOldest + "/SeleniumGridExtras-" + expectedVersionOldest + "-SNAPSHOT-jar-with-dependencies.jar",
                 actual.get(actualSize - 1).values().toArray()[0]);
 
 
-        assertEquals("SeleniumGridExtras-1.2.4-SNAPSHOT-jar-with-dependencies.jar",
+        assertEquals("SeleniumGridExtras-" + expectedVersionFifthOldest + "-SNAPSHOT-jar-with-dependencies.jar",
                 actual.get(actualSize - 5).keySet().toArray()[0]);
 
-        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.2.4/SeleniumGridExtras-1.2.4-SNAPSHOT-jar-with-dependencies.jar",
+        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v" + expectedVersionFifthOldest + "/SeleniumGridExtras-" + expectedVersionFifthOldest + "-SNAPSHOT-jar-with-dependencies.jar",
                 actual.get(actualSize - 5).values().toArray()[0]);
     }
 
