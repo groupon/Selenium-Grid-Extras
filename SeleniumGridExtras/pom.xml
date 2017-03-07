@@ -110,7 +110,7 @@
             <artifactId>guava</artifactId> <!-- Needed for UpgradeGridExtrasTask.getSanitizedReleaseList -->
             <groupId>com.google.guava</groupId>
             <type>jar</type>
-            <version>18.0</version>
+            <version>21.0</version>
         </dependency>
 <!--         <dependency> Not used anywhere
             <groupId>org.json</groupId>

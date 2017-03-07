@@ -77,7 +77,7 @@ public class VideoRecorderCallable implements Callable {
         // First, let's make a IMediaWriter to write the file.
         // Note we're writing to a temp file.  This is to prevent it from being
         // downloaded while we're mid-write.
-        final File tempFile = new File(outputDir, sessionId + ".temp");
+        final File tempFile = new File(outputDir, sessionId + ".temp.mp4");
         final
         IMediaWriter
                 writer =
