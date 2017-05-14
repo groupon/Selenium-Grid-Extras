@@ -27,6 +27,7 @@ Running
 2. As part of the initial execution, a starter script start_grid_extras.sh or start_grid_extras.bat will be generated.
 3. After the initial execution, use the generated start script to start HUB or nodes thereafter.
     * This will help with automatic upgrades and downgrades
+    * Be careul of putting the Selenium Grid Extras jar file in a directory with spaces. Doing so may cause issues. PR welcome to fix this.
 
 
 
