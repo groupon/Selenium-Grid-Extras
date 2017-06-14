@@ -291,12 +291,12 @@ public class FirstTimeRunConfig {
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
         }
 
-        String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
-        String[] bitVersions = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
-        if (bitVersions.length > 1) {
-            bitOfChrome = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersions, ",") + ")?");
-        } else if (bitVersions.length == 1) {
-            bitOfChrome = bitVersions[0];
+        String bitOfChromeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
+        String[] bitVersionsChromeDriver = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
+        if (bitVersionsChromeDriver.length > 1) {
+            bitOfChromeDriver = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersionsChromeDriver, ",") + ")?");
+        } else if (bitVersionsChromeDriver.length == 1) {
+            bitOfChromeDriver = bitVersionsChromeDriver[0];
         } else {
             System.out.println("WARNING: We were unable to find the correct bit of ChromeDriver for this OS and ChromeDriver version: " + versionOfChrome + "  so will default to '32' please update this to be more accurate, or grid may not function properly");
         }
