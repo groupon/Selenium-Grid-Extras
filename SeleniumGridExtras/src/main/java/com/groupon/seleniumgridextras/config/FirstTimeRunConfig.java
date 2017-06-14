@@ -290,6 +290,9 @@ public class FirstTimeRunConfig {
             versionOfChrome =
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
         }
+        defaultConfig.getChromeDriver().setVersion(versionOfChrome);
+        defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
+        defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
 
         String bitOfChromeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
         String[] bitVersionsChromeDriver = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
@@ -300,8 +303,8 @@ public class FirstTimeRunConfig {
         } else {
             System.out.println("WARNING: We were unable to find the correct bit of ChromeDriver for this OS and ChromeDriver version: " + versionOfChrome + "  so will default to '32' please update this to be more accurate, or grid may not function properly");
         }
+        defaultConfig.getChromeDriver().setBit(bitOfChromeDriver);
 
-        defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
         if (RuntimeConfig.getOS().isWindows()) {
             String bitOfIEDriver = RuntimeConfig.getOS().getWindowsRealArchitecture();
             bitOfIEDriver =
@@ -310,10 +313,6 @@ public class FirstTimeRunConfig {
             defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
             defaultConfig.getIEdriver().setBit(bitOfIEDriver);
         }
-        defaultConfig.getChromeDriver().setVersion(versionOfChrome);
-        defaultConfig.getChromeDriver().setBit(bitOfChrome);
-
-        defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
 
         System.out.println(
                 "Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
