@@ -40,13 +40,26 @@ package com.groupon.seleniumgridextras.downloader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
 import org.apache.log4j.Logger;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.*;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChromeDriverDownloader extends Downloader {
 
   private String bit;
   private String version;
+
+  private static final String CHROMEDRIVER_BASE_URL = "http://chromedriver.storage.googleapis.com/";
 
   private static Logger logger = Logger.getLogger(ChromeDriverDownloader.class);
 
@@ -58,7 +71,7 @@ public class ChromeDriverDownloader extends Downloader {
 
     setDestinationFile(getVersion() + "_" + getBitVersion() + "bit" + ".zip");
 
-    setSourceURL("http://chromedriver.storage.googleapis.com/" + getVersion() + "/chromedriver_"
+    setSourceURL(CHROMEDRIVER_BASE_URL + getVersion() + "/chromedriver_"
                  + getOSName() + getBitVersion() + ".zip");
 
   }
@@ -138,8 +151,7 @@ public class ChromeDriverDownloader extends Downloader {
     this.version = version;
   }
 
-
-  protected String getOSName() {
+  protected static String getOSName() {
     String os;
 
     if (RuntimeConfig.getOS().isWindows()) {
@@ -153,17 +165,57 @@ public class ChromeDriverDownloader extends Downloader {
     return os;
   }
 
-  protected String getLinuxName() {
+  protected static String getLinuxName() {
     return "linux";
   }
 
-  protected String getMacName() {
+  protected static String getMacName() {
     return "mac";
   }
 
-  protected String getWindowsName() {
+  protected static String getWindowsName() {
     return "win";
   }
 
+  public static String[] getBitArchitecturesForVersion(String chromeDriverVersionNumber) {
+    ArrayList<String> bitArchitecturesAvailable = new ArrayList<String>();
+    try {
+      String xpathString = "//*[text()[contains(.,'" + chromeDriverVersionNumber + "/chromedriver_" + getOSName() + "')]]";
+      XPathExpression expression = XPathFactory.newInstance().newXPath().compile(xpathString);
 
+      NodeList result = (NodeList) expression.evaluate(getVersionManifest(), XPathConstants.NODESET);
+
+      for (int i = 0; i < result.getLength(); i++) {
+        String nodeValue = result.item(i).getTextContent();
+        Matcher matcher = Pattern.compile("(\\d{2})(?=.zip)").matcher(nodeValue);
+        while (matcher.find())
+        {
+          bitArchitecturesAvailable.add(matcher.group(1));
+        }
+      }
+    }
+    catch (XPathExpressionException e) {
+      logger.error(e.toString());
+    }
+    finally {
+      return bitArchitecturesAvailable.toArray(new String[] {});
+    }
+  }
+
+  private static Document getVersionManifest() {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    try {
+      return factory.newDocumentBuilder().parse(new URL(CHROMEDRIVER_BASE_URL).openStream());
+    }
+    catch (ParserConfigurationException pce) {
+      logger.error(pce.toString());
+    }
+    catch (SAXException se) {
+      logger.error(se.toString());
+    }
+    catch (IOException ioe) {
+      logger.error(ioe.toString());
+    }
+    return null;
+  }
 }

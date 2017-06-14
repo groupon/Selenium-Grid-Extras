@@ -160,8 +160,8 @@ public class GridExtrasDownloaderTest {
 
     @Test
     public void testGetAllAssets() throws Exception {
-        String expectedVersionOldest = "1.2.3";
-        String expectedVersionFifthOldest = "1.3.3";
+        String expectedVersionOldest = "1.3.0";
+        String expectedVersionFifthOldest = "1.5.0";
         List<Map<String, String>> actual = downloader.getAllDownloadableAssets();
         int actualSize = actual.size();
 
@@ -170,7 +170,7 @@ public class GridExtrasDownloaderTest {
         assertEquals("SeleniumGridExtras-" + expectedVersionOldest +"-SNAPSHOT-jar-with-dependencies.jar",
                 actual.get(actualSize - 1).keySet().toArray()[0]);
 
-        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v" + expectedVersionOldest + "/SeleniumGridExtras-" + expectedVersionOldest + "-SNAPSHOT-jar-with-dependencies.jar",
+        assertEquals("https://github.com/groupon/Selenium-Grid-Extras/releases/download/v." + expectedVersionOldest + "/SeleniumGridExtras-" + expectedVersionOldest + "-SNAPSHOT-jar-with-dependencies.jar",
                 actual.get(actualSize - 1).values().toArray()[0]);
 
 

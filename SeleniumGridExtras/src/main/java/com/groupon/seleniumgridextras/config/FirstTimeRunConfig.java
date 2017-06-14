@@ -44,12 +44,14 @@ import com.groupon.seleniumgridextras.OS;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
+import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.os.GridPlatform;
 import com.groupon.seleniumgridextras.tasks.SetAutoLogonUser;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -271,11 +273,6 @@ public class FirstTimeRunConfig {
         String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
-        String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
-        if(RuntimeConfig.getOS().isMac()) {
-          bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_64;
-        }
-
         if (answer.equals("1")) {
             defaultConfig.setAutoUpdateDrivers("1");
 
@@ -293,8 +290,16 @@ public class FirstTimeRunConfig {
             versionOfChrome =
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
         }
-        bitOfChrome =
-                askQuestion("What bit of Chrome Driver should we use (32 or 64)?", bitOfChrome);
+
+        String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
+        String[] bitVersions = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
+        if (bitVersions.length > 1) {
+            bitOfChrome = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersions, ",") + ")?");
+        } else if (bitVersions.length == 1) {
+            bitOfChrome = bitVersions[0];
+        } else {
+            System.out.println("WARNING: We were unable to find the correct bit of ChromeDriver for this OS and ChromeDriver version: " + versionOfChrome + "  so will default to '32' please update this to be more accurate, or grid may not function properly");
+        }
 
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
         if (RuntimeConfig.getOS().isWindows()) {
