@@ -317,8 +317,11 @@ public class FirstTimeRunConfig {
 
         System.out.println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
         System.out.printf("Current Chrome Driver Version: %s (%s bit)\n", defaultConfig.getChromeDriver().getVersion(), defaultConfig.getChromeDriver().getBit());
-        System.out.printf("Current IE Driver Version: %s (%s bit)\n", defaultConfig.getIEdriver().getVersion(), defaultConfig.getIEdriver().getBit());
         System.out.printf("Current Gecko Driver Version: %s (%s bit)\n", defaultConfig.getGeckoDriver().getVersion(), defaultConfig.getGeckoDriver().getBit());
+        if (defaultConfig.getIEdriver() != null && defaultConfig.getIEdriver().getVersion() != null)
+        {
+            System.out.printf("Current IE Driver Version: %s (%s bit)\n", defaultConfig.getIEdriver().getVersion(), defaultConfig.getIEdriver().getBit());
+        }
     }
     
     private static void configureNodes(List<Capability> capabilities, String hubHost,
