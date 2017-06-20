@@ -52,6 +52,7 @@ import java.util.Map;
 
 public class DownloadGeckoDriver extends ExecuteOSTask {
 
+  private String bit = JsonCodec.WebDriver.Downloader.BIT_32;
   private static Logger logger = Logger.getLogger(DownloadGeckoDriver.class);
 
   public DownloadGeckoDriver() {
@@ -60,6 +61,8 @@ public class DownloadGeckoDriver extends ExecuteOSTask {
     JsonObject params = new JsonObject();
     params.addProperty(JsonCodec.WebDriver.Downloader.VERSION,
                        "Version of GeckoDriver to download, such as 0.10.0");
+    params.addProperty(JsonCodec.WebDriver.Downloader.BIT,
+                       "Bit Version of GeckoDriver 32/64 - (default: 32)");
     setAcceptedParams(params);
     setRequestType(TaskDescriptions.HTTP.GET);
     setResponseType(TaskDescriptions.HTTP.JSON);
@@ -77,6 +80,8 @@ public class DownloadGeckoDriver extends ExecuteOSTask {
     addResponseDescription(JsonCodec.WebDriver.Downloader.SOURCE_URL,
                            "Url from which the executable was downloaded. If file already exists, this will be blank, and download will be skipped");
 
+    // bit value should be initialized from configuration
+    this.bit = RuntimeConfig.getConfig().getGeckoDriver().getBit();
 
     logger.debug(RuntimeConfig.getConfig());
     getJsonResponse()
@@ -94,9 +99,12 @@ public class DownloadGeckoDriver extends ExecuteOSTask {
 
   @Override
   public JsonObject execute(Map<String, String> parameter) {
-
-    if (!parameter.isEmpty() && parameter.containsKey(
-        JsonCodec.WebDriver.Downloader.VERSION)) {
+    if (!parameter.isEmpty() && parameter.containsKey(JsonCodec.WebDriver.Downloader.VERSION)) {
+      if (parameter.containsKey(JsonCodec.WebDriver.Downloader.BIT)) {
+        this.bit = parameter.get(JsonCodec.WebDriver.Downloader.BIT).toString();
+      } else {
+        this.bit = JsonCodec.WebDriver.Downloader.BIT_32;
+      }
       return execute(parameter.get(JsonCodec.WebDriver.Downloader.VERSION).toString());
     } else {
       return execute();
@@ -108,7 +116,7 @@ public class DownloadGeckoDriver extends ExecuteOSTask {
 
     Downloader
         downloader =
-        new GeckoDriverDownloader(version);
+        new GeckoDriverDownloader(version, this.bit);
 
     if (!new File(RuntimeConfig.getConfig().getGeckoDriver().getExecutablePath()).exists()) {
       Boolean downloaded = downloader.download();

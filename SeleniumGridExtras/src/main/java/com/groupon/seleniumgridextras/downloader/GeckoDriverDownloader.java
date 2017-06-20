@@ -39,27 +39,35 @@ package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GeckoDriverDownloader extends Downloader {
 
+  private String bit;
   private String version;
 
   private static Logger logger = Logger.getLogger(GeckoDriverDownloader.class);
+  private static final String GECKODRIVER_RELEASES_URL = "https://api.github.com/repos/mozilla/geckodriver/releases";
 
-  public GeckoDriverDownloader(String version) {
+  public GeckoDriverDownloader(String version, String bitVersion) {
 
     setDestinationDir(RuntimeConfig.getConfig().getGeckoDriver().getDirectory());
     setVersion(version);
+    setBitVersion(bitVersion);
 
     setDestinationFile("geckodriver_" + getVersion() + "." + getExtension());
 
-    String sourceURL = "https://github.com/mozilla/geckodriver/releases/download/v" + 
-    	      getVersion() + "/geckodriver-v" + getVersion() + "-" + getOSName() + "." + getExtension();
-    setSourceURL(sourceURL);
-
+    setSourceURL(buildSourceURL());
   }
 
   @Override
@@ -119,6 +127,14 @@ public class GeckoDriverDownloader extends Downloader {
     return false;
   }
 
+  public String getBitVersion() {
+    return bit;
+  }
+
+  public void setBitVersion(String bit) {
+    this.bit = bit;
+  }
+
   public String getVersion() {
     return version;
   }
@@ -140,7 +156,7 @@ public class GeckoDriverDownloader extends Downloader {
     return ext;
   }
 
-  protected String getOSName() {
+  protected static String getOSName() {
     String os;
 
     if (RuntimeConfig.getOS().isWindows()) {
@@ -154,17 +170,77 @@ public class GeckoDriverDownloader extends Downloader {
     return os;
   }
 
-  protected String getLinuxName() {
-    return "linux64";
+  protected static String getLinuxName() {
+    return "linux";
   }
 
-  protected String getMacName() {
+  protected static String getMacName() {
     return "macos";
   }
 
-  protected String getWindowsName() {
-    return "win64";
+  protected static String getWindowsName() {
+    return "win";
   }
 
+  private String buildSourceURL()
+  {
+    final String base_url = "https://github.com/mozilla/geckodriver/releases/download/v";
 
+    String firstPart = base_url + getVersion() + "/geckodriver-v" + getVersion() + "-" + getOSName();
+
+    if (getOSName() == getMacName())
+    {
+      return firstPart + "." + getExtension();
+    }
+    else
+    {
+      return firstPart  + getBitVersion() + "." + getExtension();
+    }
+  }
+
+  public static String[] getBitArchitecturesForVersion(String geckoDriverVersionNumber)
+  {
+    ArrayList<String> bitArchitecturesAvailable = new ArrayList<String>();
+    String[] versions = getVersionManifest();
+    for (String version : versions)
+    {
+      Matcher versionMatcher = Pattern.compile("geckodriver-v" + geckoDriverVersionNumber + "-" + getOSName()).matcher(version);
+      if (versionMatcher.find())
+      {
+        if(Pattern.compile(getOSName() + JsonCodec.WebDriver.Downloader.BIT_64).matcher(version).find())
+        {
+          bitArchitecturesAvailable.add(JsonCodec.WebDriver.Downloader.BIT_64);
+        }
+        else if (Pattern.compile(getOSName() + JsonCodec.WebDriver.Downloader.BIT_32).matcher(version).find())
+        {
+          bitArchitecturesAvailable.add(JsonCodec.WebDriver.Downloader.BIT_32);
+        }
+      }
+    }
+    return  bitArchitecturesAvailable.toArray(new String[] {});
+  }
+
+  private static String[] getVersionManifest()
+  {
+    List<String> versions = new ArrayList<String>();
+    GitHubDownloader gitHubDownloader = new GitHubDownloader(GECKODRIVER_RELEASES_URL);
+    try
+    {
+      List<Map<String, String>> results = gitHubDownloader.getAllDownloadableAssets();
+      for (Map<String, String> kv : results) {
+        for (String key : kv.keySet()) {
+          versions.add(key);
+        }
+      }
+    } catch (IOException e)
+    {
+      e.printStackTrace();
+    } catch (URISyntaxException e)
+    {
+      e.printStackTrace();
+    }
+    finally{
+      return versions.toArray(new String[] {});
+    }
+  }
 }
