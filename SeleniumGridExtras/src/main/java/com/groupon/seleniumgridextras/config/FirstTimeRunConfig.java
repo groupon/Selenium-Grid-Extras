@@ -298,7 +298,7 @@ public class FirstTimeRunConfig {
         String bitOfChromeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
         String[] bitVersionsChromeDriver = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
         if (bitVersionsChromeDriver.length > 1) {
-            bitOfChromeDriver = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersionsChromeDriver, ", ") + ")?");
+            bitOfChromeDriver = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersionsChromeDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
         } else if (bitVersionsChromeDriver.length == 1) {
             bitOfChromeDriver = bitVersionsChromeDriver[0];
         } else {
@@ -318,7 +318,7 @@ public class FirstTimeRunConfig {
         String bitOfGeckoDriver = JsonCodec.WebDriver.Downloader.BIT_32;
         String[] bitVersionsGeckoDriver = GeckoDriverDownloader.getBitArchitecturesForVersion(versionOfGecko);
         if (bitVersionsGeckoDriver.length > 1) {
-            bitOfGeckoDriver = askQuestion("What bit of GeckoDriver should we use (" + StringUtils.join(bitVersionsGeckoDriver, ", ") + ")?");
+            bitOfGeckoDriver = askQuestion("What bit of GeckoDriver should we use (" + StringUtils.join(bitVersionsGeckoDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
         } else if (bitVersionsGeckoDriver.length == 1) {
             bitOfGeckoDriver = bitVersionsGeckoDriver[0];
         } else {
