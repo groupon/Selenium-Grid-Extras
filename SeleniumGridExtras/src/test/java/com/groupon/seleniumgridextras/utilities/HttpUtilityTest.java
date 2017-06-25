@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HttpUtilityTest {
 
@@ -30,9 +31,21 @@ public class HttpUtilityTest {
     assertEquals(200, HttpUtility.getRequest(new URL("http://google.com")).getResponseCode());
   }
 
-  @Test(expected = UnknownHostException.class)
+  @Test
   public void testUnknownHost() throws Exception {
-    HttpUtility.getRequest(new URL("http://googasdfasfdkjashfdkjahsfdle.com/")).getResponseCode();
+    boolean expectedExceptionThrown = false;
+    try {
+      HttpUtility.getRequest(new URL("http://googasdfasfdkjashfdkjahsfdle.com/")).getResponseCode();
+    }
+    catch (UnknownHostException uhe)
+    {
+      expectedExceptionThrown = true;
+    }
+    catch (ConnectException ce)
+    {
+        expectedExceptionThrown = true;
+    }
+    assertTrue("Expected either UnknownHostException or ConnectException", expectedExceptionThrown);
   }
 
   @Test

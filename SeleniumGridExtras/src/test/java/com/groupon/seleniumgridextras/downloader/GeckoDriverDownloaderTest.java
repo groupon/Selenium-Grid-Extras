@@ -30,7 +30,7 @@ public class GeckoDriverDownloaderTest {
 
     testDir.mkdir();
 
-    downloader = new GeckoDriverDownloader(VERSION);
+    downloader = new GeckoDriverDownloader(VERSION, "32");
     downloader.setDestinationDir(testDir.getAbsolutePath());
   }
 
@@ -74,8 +74,8 @@ public class GeckoDriverDownloaderTest {
   @Test
   public void testGetOSNames() throws Exception {
     assertEquals("macos", downloader.getMacName());
-    assertEquals("win64", downloader.getWindowsName());
-    assertEquals("linux64", downloader.getLinuxName());
+    assertEquals("win", downloader.getWindowsName());
+    assertEquals("linux", downloader.getLinuxName());
   }
   
   @Test

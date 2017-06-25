@@ -45,6 +45,7 @@ import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
+import com.groupon.seleniumgridextras.downloader.GeckoDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.os.GridPlatform;
 import com.groupon.seleniumgridextras.tasks.SetAutoLogonUser;
@@ -290,43 +291,48 @@ public class FirstTimeRunConfig {
             versionOfChrome =
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
         }
-
-        String bitOfChrome = JsonCodec.WebDriver.Downloader.BIT_32;
-        String[] bitVersions = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
-        if (bitVersions.length > 1) {
-            bitOfChrome = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersions, ",") + ")?");
-        } else if (bitVersions.length == 1) {
-            bitOfChrome = bitVersions[0];
-        } else {
-            System.out.println("WARNING: We were unable to find the correct bit of ChromeDriver for this OS and ChromeDriver version: " + versionOfChrome + "  so will default to '32' please update this to be more accurate, or grid may not function properly");
-        }
-
+        defaultConfig.getChromeDriver().setVersion(versionOfChrome);
+        defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
+
+        String bitOfChromeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
+        String[] bitVersionsChromeDriver = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChrome);
+        if (bitVersionsChromeDriver.length > 1) {
+            bitOfChromeDriver = askQuestion("What bit of ChromeDriver should we use (" + StringUtils.join(bitVersionsChromeDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
+        } else if (bitVersionsChromeDriver.length == 1) {
+            bitOfChromeDriver = bitVersionsChromeDriver[0];
+        } else {
+            System.out.println("\nWARNING: We were unable to find the correct bit of ChromeDriver for this OS and ChromeDriver version: " + versionOfChrome + "  so will default to '32' please update this to be more accurate, or grid may not function properly\n");
+        }
+        defaultConfig.getChromeDriver().setBit(bitOfChromeDriver);
+
         if (RuntimeConfig.getOS().isWindows()) {
             String bitOfIEDriver = RuntimeConfig.getOS().getWindowsRealArchitecture();
             bitOfIEDriver =
-                    askQuestion("What bit of IE Driver should we use (32 or 64)?", bitOfIEDriver);
+                    askQuestion("What bit of IE Driver should we use (32, 64)?", bitOfIEDriver);
             bitOfIEDriver = bitOfIEDriver.equals("64") ? "x64" : "Win32";
             defaultConfig.getIEdriver().setVersion(versionOfIEDriver);
             defaultConfig.getIEdriver().setBit(bitOfIEDriver);
         }
-        defaultConfig.getChromeDriver().setVersion(versionOfChrome);
-        defaultConfig.getChromeDriver().setBit(bitOfChrome);
 
-        defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
+        String bitOfGeckoDriver = JsonCodec.WebDriver.Downloader.BIT_32;
+        String[] bitVersionsGeckoDriver = GeckoDriverDownloader.getBitArchitecturesForVersion(versionOfGecko);
+        if (bitVersionsGeckoDriver.length > 1) {
+            bitOfGeckoDriver = askQuestion("What bit of GeckoDriver should we use (" + StringUtils.join(bitVersionsGeckoDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
+        } else if (bitVersionsGeckoDriver.length == 1) {
+            bitOfGeckoDriver = bitVersionsGeckoDriver[0];
+        } else {
+            System.out.println("\nWARNING: We were unable to find the correct bit of GeckoDriver for this OS and GeckoDriver version: " + versionOfGecko + "  so will default to '32' please update this to be more accurate, or grid may not function properly\n");
+        }
+        defaultConfig.getGeckoDriver().setBit(bitOfGeckoDriver);
 
-        System.out.println(
-                "Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
-        System.out
-                .println("Current IE Driver Version: " + defaultConfig.getIEdriver().getVersion());
-        System.out.println(
-                "Current Chrome Driver Version: " + defaultConfig.getChromeDriver().getVersion());
-        System.out
-                .println("Current Chrome Driver Bit: " + defaultConfig.getChromeDriver().getBit());
-        System.out.println("Current IE Driver Bit: " + defaultConfig.getIEdriver().getBit());
-        System.out.println("Current Gecko Driver Version: "
-                + defaultConfig.getGeckoDriver().getVersion());
-
+        System.out.println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
+        System.out.printf("Current Chrome Driver Version: %s (%s bit)\n", defaultConfig.getChromeDriver().getVersion(), defaultConfig.getChromeDriver().getBit());
+        System.out.printf("Current Gecko Driver Version: %s (%s bit)\n", defaultConfig.getGeckoDriver().getVersion(), defaultConfig.getGeckoDriver().getBit());
+        if (defaultConfig.getIEdriver() != null && defaultConfig.getIEdriver().getVersion() != null)
+        {
+            System.out.printf("Current IE Driver Version: %s (%s bit)\n", defaultConfig.getIEdriver().getVersion(), defaultConfig.getIEdriver().getBit());
+        }
     }
     
     private static void configureNodes(List<Capability> capabilities, String hubHost,
