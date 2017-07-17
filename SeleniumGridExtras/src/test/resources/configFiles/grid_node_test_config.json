@@ -1,0 +1,25 @@
+{
+  "capabilities": [
+    {
+      "seleniumProtocol": "WebDriver",
+      "browserName": "firefox",
+      "maxInstances": 3,
+      "version": "12"
+    }
+  ],
+  "proxy": "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy",
+  "maxSession": 3,
+  "port": 5555,
+  "register": true,
+  "unregisterIfStillDownAfter": 10000,
+  "hubPort": 4444,
+  "hubHost": "google.com",
+  "registerCycle": 5000,
+  "nodeStatusCheckTimeout": 10000,
+  "downPollingLimit": 0,
+  "custom": {
+    "customString": "custom",
+    "customInt": 1,
+    "customBoolean": false
+  }
+}

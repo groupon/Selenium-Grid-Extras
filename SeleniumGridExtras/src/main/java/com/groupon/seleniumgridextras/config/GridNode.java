@@ -1,6 +1,7 @@
 package com.groupon.seleniumgridextras.config;
 
 import com.google.common.base.Throwables;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -40,6 +42,7 @@ public class GridNode {
   private Integer registerCycle;
   private Integer nodeStatusCheckTimeout;
   private String appiumStartCommand;
+  private Map<String, Object> custom = new HashMap();
 
   //Only test the node status 1 time, since the limit checker is
   //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
@@ -120,6 +123,13 @@ public class GridNode {
         node.setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
         node.setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
                 ? topLevelJson.get("appiumStartCommand").getAsString() : null);
+
+        // Adding custom-config see Issue #342
+        Type type = new TypeToken<Map<String, Object>>(){}.getType();
+        Map<String, Object> customMap = new Gson().fromJson(topLevelJson.get("custom"), type);
+        doubleToIntConverter(customMap);
+        node.setCustom(customMap);
+
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
 
@@ -148,7 +158,7 @@ public class GridNode {
         node.setDownPollingLimit(nodeConfiguration.getDownPollingLimit());
         node.setHost(nodeConfiguration.getHost());
         node.setUrl(nodeConfiguration.getUrl());
-        node.setAppiumStartCommand(nodeConfiguration.getAppiumStartCommand());
+        node.setAppiumStartCommand(nodeConfiguration.getAppiumStartCommand());;
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
 
@@ -323,6 +333,14 @@ public class GridNode {
 
   public boolean isAppiumNode() {
     return getLoadedFromFile().startsWith("appium");
+  }
+
+  public Map<String, Object> getCustom() {
+    return custom;
+  }
+
+  public void setCustom(Map<String, Object> custom) {
+    this.custom = custom;
   }
 
   public void writeToFile(String filename) {
