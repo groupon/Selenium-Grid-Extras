@@ -40,6 +40,7 @@ public class GridNode {
   private Integer registerCycle;
   private Integer nodeStatusCheckTimeout;
   private String appiumStartCommand;
+  private String proxy;
 
   //Only test the node status 1 time, since the limit checker is
   //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
@@ -186,6 +187,7 @@ public class GridNode {
         node.getConfiguration().setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
                 ? topLevelJson.get("appiumStartCommand").getAsString() : null);
         node.setLoadedFromFile(filename);
+        node.getConfiguration().setProxy(topLevelJson.get("proxy") != null ? topLevelJson.get("proxy").getAsString() : null );
         node.writeToFile(filename);
         
         return node;
