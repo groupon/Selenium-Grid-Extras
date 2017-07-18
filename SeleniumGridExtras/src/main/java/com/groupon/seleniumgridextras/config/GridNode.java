@@ -40,6 +40,7 @@ public class GridNode {
   private Integer registerCycle;
   private Integer nodeStatusCheckTimeout;
   private String appiumStartCommand;
+  private String servlet;
 
   //Only test the node status 1 time, since the limit checker is
   //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
@@ -106,7 +107,7 @@ public class GridNode {
         nodePort = Integer.parseInt(topLevelJson.get("port").toString());
         GridNode node = new GridNode(filteredCapabilities, null, hubPort, hubHost, nodePort);
         node.setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
-        node.setProxy(topLevelJson.get("proxy").getAsString());
+        node.setProxy(topLevelJson.get("servlet").getAsString());
         node.setRegister(topLevelJson.get("register").getAsBoolean());
         node.setRegisterCycle(topLevelJson.get("registerCycle") != null
                 ? Integer.parseInt(topLevelJson.get("registerCycle").toString()) : null);
@@ -186,6 +187,7 @@ public class GridNode {
         node.getConfiguration().setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
                 ? topLevelJson.get("appiumStartCommand").getAsString() : null);
         node.setLoadedFromFile(filename);
+        node.getConfiguration().setProxy(topLevelJson.get("servlet") != null ? topLevelJson.get("servlet").getAsString() : null );
         node.writeToFile(filename);
         
         return node;
@@ -480,13 +482,14 @@ public class GridNode {
       this.url = url;
     }
 
-    public String getProxy() {
-      return proxy;
-    }
+    
+    public String getServlet() {
+        return servlet;
+      }
 
-    public void setProxy(String proxy) {
-      this.proxy = proxy;
-    }
+      public void setServlet(String servlet) {
+        this.servlet = servlet;
+      }
 
     public boolean getRegister() {
       return register;
@@ -538,5 +541,3 @@ public class GridNode {
   }
 
 }
-
-
