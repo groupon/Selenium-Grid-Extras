@@ -158,7 +158,7 @@ public class GridNode {
         node.setDownPollingLimit(nodeConfiguration.getDownPollingLimit());
         node.setHost(nodeConfiguration.getHost());
         node.setUrl(nodeConfiguration.getUrl());
-        node.setAppiumStartCommand(nodeConfiguration.getAppiumStartCommand());;
+        node.setAppiumStartCommand(nodeConfiguration.getAppiumStartCommand());
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
 
