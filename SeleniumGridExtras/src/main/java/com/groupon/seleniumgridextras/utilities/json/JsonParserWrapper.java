@@ -27,10 +27,10 @@ public class JsonParserWrapper {
     }
 
     public static String prettyPrintString(Object input) {
-        return new GsonBuilder().setPrettyPrinting().create().toJson(input);
+        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(input);
     }
 
     public static String prettyPrintString(JsonObject input) {
-        return new GsonBuilder().setPrettyPrinting().create().toJson(input);
+        return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create().toJson(input);
     }
 }
