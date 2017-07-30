@@ -1,5 +1,6 @@
 [![Gitter](https://badges.gitter.im/groupon/Selenium-Grid-Extras.svg)](https://gitter.im/groupon/Selenium-Grid-Extras?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
+NOTICE - Looking for people to maintain this project. I (@smccarthy) does not have the time for now. If interested please contact me via an open issue or #selenium on the freenode network (or Slack). Thank you!
 
 Selenium-Grid-Extras
 ====================
