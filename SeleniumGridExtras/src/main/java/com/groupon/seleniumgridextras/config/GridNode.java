@@ -126,9 +126,11 @@ public class GridNode {
 
         // Adding custom-config see Issue #342
         Type type = new TypeToken<Map<String, Object>>(){}.getType();
-        Map<String, Object> customMap = new Gson().fromJson(topLevelJson.get("custom"), type);
-        doubleToIntConverter(customMap);
-        node.setCustom(customMap);
+        if(topLevelJson.get("custom") != null) {
+          Map<String, Object> customMap = new Gson().fromJson(topLevelJson.get("custom"), type);
+          doubleToIntConverter(customMap);
+          node.setCustom(customMap);
+        }
 
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
