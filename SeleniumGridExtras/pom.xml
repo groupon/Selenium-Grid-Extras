@@ -4,7 +4,7 @@
 
     <groupId>com.groupon.selenium-grid-extras</groupId>
     <artifactId>SeleniumGridExtras</artifactId>
-    <version>1.12.13-SNAPSHOT</version>
+    <version>1.12.14-SNAPSHOT</version>
 
     <repositories>
         <repository>
