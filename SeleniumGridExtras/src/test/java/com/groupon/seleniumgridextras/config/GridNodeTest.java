@@ -98,6 +98,22 @@ public class GridNodeTest {
     assertEquals(expected, actual);
   }
 
+  @Test
+  public void testCustomConfigurationFromFile() throws Exception {
+    boolean isSelenium3 = true;
+    GridNode nodeFromFile = GridNode.loadFromFile(ClassLoader.getSystemResource("configFiles/grid_node_test_config.json").getPath(), isSelenium3);
+
+    assertEquals(1, nodeFromFile.getCapabilities().size());
+    assertEquals(expectedCapabilities, nodeFromFile.getCapabilities());
+
+    String actual = JsonParserWrapper.prettyPrintString(nodeFromFile);
+    assertTrue(actual.contains("\"custom\": {\n" +
+            "    \"customString\": \"custom\",\n" +
+            "    \"customInt\": 1,\n" +
+            "    \"customBoolean\": false\n" +
+            "  }"));
+  }
+
 
   @Test
   public void testGetCapabilities() throws Exception {
