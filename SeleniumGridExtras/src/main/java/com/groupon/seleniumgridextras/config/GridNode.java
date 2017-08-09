@@ -31,7 +31,7 @@ public class GridNode {
 
   // Selenium 3 has values at top level, not in "configuration"
   private String proxy;
-  private String servlet;
+  private String servlets;
   private Integer maxSession;
   private Integer port;
   private Boolean register;
@@ -58,7 +58,7 @@ public class GridNode {
       configuration = new GridNodeConfiguration();
     } else {
       proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
-      servlet = "" ; // by default servlet section is empty. If user passes it it can be used in selenium grid
+      servlets = "" ; // by default servlet section is empty. If user passes it it can be used in selenium grid
       maxSession = 3;
       register = true;
       unregisterIfStillDownAfter = 10000;
@@ -112,7 +112,8 @@ public class GridNode {
         GridNode node = new GridNode(filteredCapabilities, null, hubPort, hubHost, nodePort);
         node.setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.setProxy(topLevelJson.get("proxy").getAsString());
-        node.setServlet(topLevelJson.get("servlet").getAsString());
+        node.setServlets(topLevelJson.get("servlets") != null
+        		? topLevelJson.get("servlets").getAsString() : null );
         node.setRegister(topLevelJson.get("register").getAsBoolean());
         node.setRegisterCycle(topLevelJson.get("registerCycle") != null
                 ? Integer.parseInt(topLevelJson.get("registerCycle").toString()) : null);
@@ -151,7 +152,7 @@ public class GridNode {
         node.setPort(nodeConfiguration.getPort());
         node.setMaxSession(nodeConfiguration.getMaxSession());
         node.setProxy(nodeConfiguration.getProxy());
-        node.setServlet(nodeConfiguration.getServlet());
+        node.setServlets(nodeConfiguration.getServlets());
         node.setRegister(nodeConfiguration.getRegister());
         try {
             // If register cycle is not configured, an exception is thrown when converting value to int
@@ -186,7 +187,7 @@ public class GridNode {
         
         node.getConfiguration().setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.getConfiguration().setProxy(topLevelJson.get("proxy").getAsString());
-        node.getConfiguration().setServlet(topLevelJson.get("servlet").getAsString());
+        node.getConfiguration().setServlets(topLevelJson.get("servlets").getAsString());
         node.getConfiguration().setRegister(topLevelJson.get("register").getAsBoolean());
         if (topLevelJson.get("registerCycle") != null) {
             node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
@@ -297,12 +298,12 @@ public class GridNode {
     this.proxy = proxy;
   }
   
-  public void setServlet(String servlet) {
-      this.servlet = servlet;
+  public void setServlets(String servlets) {
+      this.servlets = servlets;
     }
 
-    public String getServlet() {
-      return this.servlet;
+    public String getServlets() {
+      return this.servlets;
     }
 
   public int getNodeStatusCheckTimeout() {
@@ -446,7 +447,7 @@ public class GridNode {
   public class GridNodeConfiguration {
 
     private String proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
-    private String servlet = "";
+    private String servlets = "";
     private int maxSession = 3;
     private int port;
     private boolean register = true;
@@ -522,12 +523,12 @@ public class GridNode {
       this.proxy = proxy;
     }
     
-    public String getServlet() {
-        return servlet;
+    public String getServlets() {
+        return servlets;
       }
     
-    public void setServlet(String servlet) {
-        this.servlet = servlet;
+    public void setServlets(String servlets) {
+        this.servlets = servlets;
       }
     
 
