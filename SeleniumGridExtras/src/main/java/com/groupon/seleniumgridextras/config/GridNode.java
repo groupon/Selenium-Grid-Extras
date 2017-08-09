@@ -187,7 +187,8 @@ public class GridNode {
         
         node.getConfiguration().setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.getConfiguration().setProxy(topLevelJson.get("proxy").getAsString());
-        node.getConfiguration().setServlets(topLevelJson.get("servlets").getAsString());
+        node.getConfiguration().setServlets(topLevelJson.get("servlets") != null 
+        		? topLevelJson.get("servlets").getAsString() : null );
         node.getConfiguration().setRegister(topLevelJson.get("register").getAsBoolean());
         if (topLevelJson.get("registerCycle") != null) {
             node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
