@@ -49,6 +49,7 @@ public class GridNodeTest {
     expectedConfiguration.put("unregisterIfStillDownAfter", 10000);
     expectedConfiguration.put("nodeStatusCheckTimeout", 10000);
     expectedConfiguration.put("downPollingLimit", 0);
+    expectedConfiguration.put("servlets", new LinkedList<String>());
 
     expectedCapabilities = new LinkedList<Capability>();
     expectedFirefoxCapability = new Firefox();
@@ -89,7 +90,7 @@ public class GridNodeTest {
     assertEquals(1, nodeFromFile.getCapabilities().size());
     assertEquals(expectedCapabilities, nodeFromFile.getCapabilities());
 
-    //Find lowest common denominator of comparison which is a HasMap, convert everything into that andd run test
+    //Find lowest common denominator of comparison which is a HasMap, convert everything into that and run test
     Map expected = new Gson().fromJson(new Gson().toJson(expectedConfiguration), HashMap.class);
     Map
         actual =
