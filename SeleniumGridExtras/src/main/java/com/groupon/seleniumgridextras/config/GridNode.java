@@ -32,7 +32,7 @@ public class GridNode {
 
   // Selenium 3 has values at top level, not in "configuration"
   private String proxy;
-  ArrayList<String> servlets = new ArrayList<String>();
+  private ArrayList<String> servlets = new ArrayList<String>();
   private Integer maxSession;
   private Integer port;
   private Boolean register;
