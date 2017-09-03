@@ -20,10 +20,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class GridNode {
@@ -34,8 +32,7 @@ public class GridNode {
 
   // Selenium 3 has values at top level, not in "configuration"
   private String proxy;
-  
-  private List<String> servlets ;
+  private ArrayList<String> servlets = new ArrayList<String>();
   private Integer maxSession;
   private Integer port;
   private Boolean register;
@@ -115,8 +112,6 @@ public class GridNode {
         GridNode node = new GridNode(filteredCapabilities, null, hubPort, hubHost, nodePort);
         node.setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.setProxy(topLevelJson.get("proxy").getAsString());
-        node.setServlets(topLevelJson.get("servlets") != null
-        		? Arrays.asList(topLevelJson.get("servlets").toString().split(",")) : null );
         node.setRegister(topLevelJson.get("register").getAsBoolean());
         node.setRegisterCycle(topLevelJson.get("registerCycle") != null
                 ? Integer.parseInt(topLevelJson.get("registerCycle").toString()) : null);
@@ -138,6 +133,15 @@ public class GridNode {
           doubleToIntConverter(customMap);
           node.setCustom(customMap);
         }
+        
+        Type listType = new TypeToken<ArrayList<String>>(){}.getType();
+        if(topLevelJson.get("servlets") != null) {
+          ArrayList<String> servlets = new Gson().fromJson(topLevelJson.get("servlets"), listType);
+          if ( servlets.size() > 0 ) {
+        	  node.setServlets(servlets);
+          }
+        }
+        
 
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
@@ -190,8 +194,7 @@ public class GridNode {
         
         node.getConfiguration().setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.getConfiguration().setProxy(topLevelJson.get("proxy").getAsString());
-        node.getConfiguration().setServlets(topLevelJson.get("servlets") != null
-        		? Arrays.asList(topLevelJson.get("servlets").toString().split(",")) : null );
+
         node.getConfiguration().setRegister(topLevelJson.get("register").getAsBoolean());
         if (topLevelJson.get("registerCycle") != null) {
             node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
@@ -207,6 +210,16 @@ public class GridNode {
         node.getConfiguration().setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
         node.getConfiguration().setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
                 ? topLevelJson.get("appiumStartCommand").getAsString() : null);
+        
+        Type listType = new TypeToken<ArrayList<String>>(){}.getType();
+		if (topLevelJson.get("servlets") != null) {
+			ArrayList<String> servlets = new Gson().fromJson(
+					topLevelJson.get("servlets"), listType);
+		     if ( servlets.size() > 0 ) {
+		    	 node.getConfiguration().setServlets(servlets);
+	          }
+		}
+        
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
         
@@ -302,11 +315,11 @@ public class GridNode {
     this.proxy = proxy;
   }
   
-  public void setServlets(List<String>  servlets) {
+  public void setServlets( ArrayList<String> servlets) { 
       this.servlets = servlets;
     }
 
-    public List<String>  getServlets() {
+    public ArrayList<String>  getServlets() {
       return this.servlets;
     }
 
@@ -451,7 +464,7 @@ public class GridNode {
   public class GridNodeConfiguration {
 
     private String proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
-    private List<String> servlets = new ArrayList<>();
+    private ArrayList<String> servlets = new ArrayList<String>();
     private int maxSession = 3;
     private int port;
     private boolean register = true;
@@ -527,11 +540,11 @@ public class GridNode {
       this.proxy = proxy;
     }
     
-    public List<String> getServlets() {
+    public ArrayList<String>  getServlets() {
         return servlets;
       }
     
-    public void setServlets(List<String> servlets) {
+    public void setServlets(ArrayList<String>  servlets) {
         this.servlets = servlets;
       }
     
