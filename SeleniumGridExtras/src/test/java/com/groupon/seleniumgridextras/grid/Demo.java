@@ -1,6 +1,6 @@
 package com.groupon.seleniumgridextras.grid;
 
-import org.openqa.grid.selenium.GridLauncher;
+import org.openqa.grid.selenium.GridLauncherV3;
 
 public class Demo {
 
@@ -8,6 +8,6 @@ public class Demo {
     String[] a = {"-port", "4444",
         "-role", "hub",
         "-servlets", "com.groupon.seleniumgridextras.grid.servlets.SeleniumGridExtrasServlet"};
-    GridLauncher.main(a);
+    GridLauncherV3.main(a);
   }
 }
