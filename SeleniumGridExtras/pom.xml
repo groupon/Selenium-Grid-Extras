@@ -19,7 +19,7 @@
     </repositories>
 
     <properties>
-        <version.selenium>3.5.2</version.selenium>
+        <version.selenium>3.5.3</version.selenium>
     </properties>
 
     <dependencies>
@@ -106,11 +106,11 @@
             <artifactId>xuggler</artifactId>
             <version>0.16</version>
         </dependency>
-         <dependency> <!-- selenium-api-2.53.1 comes with guava 19.0 -->
+        <dependency> <!-- selenium-api-2.53.1 comes with guava 19.0 -->
             <artifactId>guava</artifactId> <!-- Needed for UpgradeGridExtrasTask.getSanitizedReleaseList -->
             <groupId>com.google.guava</groupId>
             <type>jar</type>
-            <version>21.0</version>
+            <version>23.0</version>
         </dependency>
 <!--         <dependency> Not used anywhere
             <groupId>org.json</groupId>
