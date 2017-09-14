@@ -20,11 +20,11 @@ import static org.junit.Assert.assertTrue;
 
 public class GridExtrasDownloaderTest {
 
-    public static final String EXPECTED_VERSION = "1.3.3";
-    public static final String EXPECTED_133_DOWNLOAD_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.3.3/SeleniumGridExtras-1.3.3-SNAPSHOT-jar-with-dependencies.jar";
+    public static final String EXPECTED_VERSION = "1.10.1";
+    public static final String EXPECTED_1101_DOWNLOAD_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/1.10.1/SeleniumGridExtras-1.10.1-SNAPSHOT-jar-with-dependencies.jar";
     public static final String GRID_EXTRAS_RELEASE_API_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
     public static final String EXPECTED_171_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.7.1/SeleniumGridExtras-1.7.1-SNAPSHOT-jar-with-dependencies.jar";
-    public static final String EXPECTED_JAR_NAME = "SeleniumGridExtras-1.3.3-SNAPSHOT-jar-with-dependencies.jar";
+    public static final String EXPECTED_JAR_NAME = "SeleniumGridExtras-1.10.1-SNAPSHOT-jar-with-dependencies.jar";
     public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 2000;
     private GridExtrasDownloader downloader;
     private File testDir = new File("grid_extras_downloader_test");
@@ -119,7 +119,7 @@ public class GridExtrasDownloaderTest {
 
     @Test
     public void testGetDownloadJarUrl() throws Exception {
-        assertEquals(EXPECTED_133_DOWNLOAD_URL, downloader.getJarUrl());
+        assertEquals(EXPECTED_1101_DOWNLOAD_URL, downloader.getJarUrl());
 
         GridExtrasDownloader downloader2 = new GridExtrasDownloader();
 
@@ -144,9 +144,8 @@ public class GridExtrasDownloaderTest {
         assertEquals(true, downloader.download());
         assertEquals(true, expectedFile.exists());
 
-        assertTrue(expectedFile.length() > 4697835);
-        assertTrue(expectedFile.length() < 8697835);
-
+        assertTrue("Expected File Length " + expectedFile.length() + " should be greater than 45610976", expectedFile.length() > 45610976);
+        assertTrue("Expected File Length " + expectedFile.length() + " should be less than 65610976", expectedFile.length() < 65610976);
     }
 
     @Test
