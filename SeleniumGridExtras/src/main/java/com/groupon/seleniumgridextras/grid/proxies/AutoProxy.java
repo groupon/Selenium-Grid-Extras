@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.grid.proxies;
 
 import org.openqa.grid.common.RegistrationRequest;
 import org.openqa.grid.common.exception.RemoteUnregisterException;
-import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.GridRegistry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.SelfHealingProxy;
 import org.openqa.grid.internal.utils.HtmlRenderer;
@@ -24,7 +24,7 @@ public class AutoProxy extends DefaultRemoteProxy implements SelfHealingProxy {
   private Date startTime;
   private HtmlRenderer renderer = new ExtrasHtmlRenderer(this);
 
-  public AutoProxy(RegistrationRequest request, Registry registry) {
+  public AutoProxy(RegistrationRequest request, GridRegistry registry) {
     super(request, registry);
     NodeManager nodeManager = new NodeManager(this);
     new Thread(nodeManager).start();

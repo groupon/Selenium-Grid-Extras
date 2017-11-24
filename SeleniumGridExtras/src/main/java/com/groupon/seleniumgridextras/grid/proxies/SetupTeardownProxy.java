@@ -52,7 +52,7 @@ import com.groupon.seleniumgridextras.utilities.threads.video.RemoteVideoRecordi
 import com.groupon.seleniumgridextras.utilities.threads.video.VideoDownloaderCallable;
 import org.apache.log4j.Logger;
 import org.openqa.grid.common.RegistrationRequest;
-import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.GridRegistry;
 import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
@@ -78,7 +78,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
     private static Logger logger = Logger.getLogger(SetupTeardownProxy.class);
 
 
-    public SetupTeardownProxy(RegistrationRequest request, Registry registry) {
+    public SetupTeardownProxy(RegistrationRequest request, GridRegistry registry) {
         super(request, registry);
         logger.info(String.format("Attaching node %s", this.getId()));
     }
