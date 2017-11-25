@@ -204,8 +204,17 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
 
         getJsonResponse().addKeyValues(JsonCodec.GridExtras.NEW_VERSION, version);
 
-        if (version.startsWith("2.")) {
-          String webdriverVersion = RuntimeConfig.getConfig().getWebdriver().getVersion();
+        String webdriverVersion = RuntimeConfig.getConfig().getWebdriver().getVersion();
+        System.out.println("webdriverVersion : " + webdriverVersion);
+        System.out.println("Upgraded version of grid extras : " + version);
+        if (version.startsWith("1.")) {
+          if (VersionCompare.versionCompare(webdriverVersion, "3.7.1") >= 0) {
+            String message = String.format("SeleniumGridExtras 2.X is not compatible with Selenium version 3.7.0 or less.");
+            logger.info(message);
+            getJsonResponse().addKeyValues(JsonCodec.OUT, message);
+            return getJsonResponse().getJson();
+          }
+        } else if (version.startsWith("2.")) {
           if (VersionCompare.versionCompare(webdriverVersion, "3.7.1") < 0) {
             String message = String.format("SeleniumGridExtras 2.X is not compatible with Selenium version 3.7.0 or less.");
             logger.info(message);

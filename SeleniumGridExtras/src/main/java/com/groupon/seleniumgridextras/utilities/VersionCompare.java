@@ -8,14 +8,15 @@ public class VersionCompare {
   Return -1 if version 1 is less than version2
   */
   public static int versionCompare(String version1, String version2) {
-    int major1 = (version1.split(".").length > 0) ? Integer.parseInt(version1.split(".")[0]) : 0;
-    int minor1 = (version1.split(".").length > 1) ? Integer.parseInt(version1.split(".")[1]) : 0;
-    int patch1 = (version1.split(".").length > 2) ? Integer.parseInt(version1.split(".")[2]) : 0;
+    String[] version1Split = version1.split("\\.");
+    String[] version2Split = version2.split("\\.");
+    int major1 = (version1Split.length > 0) ? Integer.parseInt(version1Split[0]) : 0;
+    int minor1 = (version1Split.length > 1) ? Integer.parseInt(version1Split[1]) : 0;
+    int patch1 = (version1Split.length > 2) ? Integer.parseInt(version1Split[2]) : 0;
 
-    int major2 = (version2.split(".").length > 0) ? Integer.parseInt(version2.split(".")[0]) : 0;
-    int minor2 = (version2.split(".").length > 1) ? Integer.parseInt(version2.split(".")[1]) : 0;
-    int patch2 = (version2.split(".").length > 2) ? Integer.parseInt(version2.split(".")[2]) : 0;
-
+    int major2 = (version2Split.length > 0) ? Integer.parseInt(version2Split[0]) : 0;
+    int minor2 = (version2Split.length > 1) ? Integer.parseInt(version2Split[1]) : 0;
+    int patch2 = (version2Split.length > 2) ? Integer.parseInt(version2Split[2]) : 0;
     if (major1 > major2) {
       return 1;
     } else if (major1 < major2) {

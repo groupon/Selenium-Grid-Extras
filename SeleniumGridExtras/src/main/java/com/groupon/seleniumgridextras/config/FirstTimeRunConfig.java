@@ -41,6 +41,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.groupon.seleniumgridextras.ExecuteCommand;
 import com.groupon.seleniumgridextras.OS;
+import com.groupon.seleniumgridextras.Version;
 import com.groupon.seleniumgridextras.browser.BrowserVersionDetector;
 import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
@@ -52,6 +53,7 @@ import com.groupon.seleniumgridextras.tasks.SetAutoLogonUser;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.ValueConverter;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.utilities.VersionCompare;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -244,7 +246,7 @@ public class FirstTimeRunConfig {
         }
 
     }
-    
+
     private static void setUnregisterNodeDuringReboot(Config defaultConfig) {
 
         if (!defaultConfig.getAutoStartHub()) { // If this is a HUB, we never want to restart it
@@ -263,6 +265,12 @@ public class FirstTimeRunConfig {
     }
 
     private static void setDriverAutoUpdater(Config defaultConfig) {
+        String gridExtrasVersion = Version.getSanitizedVersion();
+        if (gridExtrasVersion.startsWith("1.")) {
+          System.out.println("WARNING: Selenium 3.7.0 is the latest compatible version with Selenium-Grid-Extras 1.x. Upgrade to Selenium-Grid-Extras 2.x if you would like to use the latest webdriver.");
+        } else if (gridExtrasVersion.startsWith("2.")) {
+          System.out.println("WARNING: Selenium 3.7.1 is the oldest compatible version with Selenium-Grid-Extras 2.x. Downgrade to Selenium-Grid-Extras 1.x if you would like to use an older version of webdriver.");
+        }
         String
                 answer =
                 askQuestion(
@@ -293,6 +301,19 @@ public class FirstTimeRunConfig {
         }
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
         defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
+
+        if(gridExtrasVersion.startsWith("1.")) {
+          if(VersionCompare.versionCompare(versionOfWebDriver, "3.7.1") >= 0) {
+            System.out.println("WARNING: Selenium " + versionOfWebDriver + " is not compatible with this verison of Selenium-Grid-Extras. Changing your selection to 3.7.0. Please upgrade to Selenium-Grid-Extras 2.x to use selenium " + versionOfWebDriver);
+            versionOfWebDriver = "3.7.0";
+          }
+        } else if(gridExtrasVersion.startsWith("2.")) {
+          if(VersionCompare.versionCompare(versionOfWebDriver, "3.7.1") < 0) {
+            System.out.println("WARNING: Selenium " + versionOfWebDriver + " is not compatible with this verison of Selenium-Grid-Extras. Changing your selection to 3.7.1. Please downgrade to Selenium-Grid-Extras 1.x to use selenium " + versionOfWebDriver);
+            versionOfWebDriver = "3.7.1";
+          }
+        }
+
         defaultConfig.getWebdriver().setVersion(versionOfWebDriver);
 
         String bitOfChromeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
@@ -334,7 +355,7 @@ public class FirstTimeRunConfig {
             System.out.printf("Current IE Driver Version: %s (%s bit)\n", defaultConfig.getIEdriver().getVersion(), defaultConfig.getIEdriver().getBit());
         }
     }
-    
+
     private static void configureNodes(List<Capability> capabilities, String hubHost,
             String hubPort, Config defaultConfig, String nodePort) {
         GridNode node = new GridNode(defaultConfig.getWebdriver().getVersion().startsWith("3."));
@@ -425,7 +446,7 @@ public class FirstTimeRunConfig {
                     guessedPlatform);
 
 
-      /* If we can't detect the correct browser version, default to No for auto updating the 
+      /* If we can't detect the correct browser version, default to No for auto updating the
        * browser version automatically on node startup */
             String ableToAutoDetectBrowserVersions = "1";
             for (Class currentCapabilityClass : Capability.getSupportedWebCapabilities().keySet()) {
@@ -544,7 +565,7 @@ public class FirstTimeRunConfig {
         String
                 answer =
                 askQuestion("What is the PORT for Selenium Grid Extras?", "3000");
-  
+
         defaultConfig.setGridExtrasPort(answer);
     }
 
