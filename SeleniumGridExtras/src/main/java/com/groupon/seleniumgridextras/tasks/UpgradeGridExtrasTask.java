@@ -9,6 +9,7 @@ import com.groupon.seleniumgridextras.downloader.GridExtrasDownloader;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.FileIOUtility;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.utilities.VersionCompare;
 import org.apache.log4j.Logger;
 
 import java.io.File;
@@ -203,6 +204,24 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
 
         getJsonResponse().addKeyValues(JsonCodec.GridExtras.NEW_VERSION, version);
 
+        String webdriverVersion = RuntimeConfig.getConfig().getWebdriver().getVersion();
+        System.out.println("webdriverVersion : " + webdriverVersion);
+        System.out.println("Upgraded version of grid extras : " + version);
+        if (version.startsWith("1.")) {
+          if (VersionCompare.versionCompare(webdriverVersion, "3.7.1") >= 0) {
+            String message = String.format("SeleniumGridExtras 2.X is not compatible with Selenium version 3.7.0 or less.");
+            logger.info(message);
+            getJsonResponse().addKeyValues(JsonCodec.OUT, message);
+            return getJsonResponse().getJson();
+          }
+        } else if (version.startsWith("2.")) {
+          if (VersionCompare.versionCompare(webdriverVersion, "3.7.1") < 0) {
+            String message = String.format("SeleniumGridExtras 2.X is not compatible with Selenium version 3.7.0 or less.");
+            logger.info(message);
+            getJsonResponse().addKeyValues(JsonCodec.OUT, message);
+            return getJsonResponse().getJson();
+          }
+        }
 
         File destinationJar = new File(RuntimeConfig.getSeleniungGridExtrasHomePath(),
                 String.format("SeleniumGridExtras-%s-SNAPSHOT-jar-with-dependencies.jar", version));

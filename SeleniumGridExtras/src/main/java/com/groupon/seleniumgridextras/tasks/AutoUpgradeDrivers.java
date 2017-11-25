@@ -7,6 +7,8 @@ import com.groupon.seleniumgridextras.config.ConfigFileReader;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import com.groupon.seleniumgridextras.Version;
+import com.groupon.seleniumgridextras.utilities.VersionCompare;
 
 import org.apache.log4j.Logger;
 
@@ -85,9 +87,25 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       }
 
     if (updateWebDriver) {
+      String gridExtrasVersion = Version.getSanitizedVersion();
       String
           newWebDriverVersion =
           RuntimeConfig.getReleaseManager().getWedriverLatestVersion().getPrettyPrintVersion(".");
+      if(gridExtrasVersion.startsWith("1.")) {
+        if(VersionCompare.versionCompare(newWebDriverVersion, "3.7.1") >= 0) {
+          String message = String.format("SeleniumGridExtras 2.X is not compatible with Selenium version 3.7.0 or less.");
+          logger.info(message);
+          getJsonResponse().addKeyValues(JsonCodec.OUT, message);
+          return getJsonResponse().getJson();
+        }
+      } else if(gridExtrasVersion.startsWith("2.")) {
+        if(VersionCompare.versionCompare(newWebDriverVersion, "3.7.1") < 0) {
+          String message = String.format("SeleniumGridExtras 2.X is not compatible with Selenium version 3.7.0 or less.");
+          logger.info(message);
+          getJsonResponse().addKeyValues(JsonCodec.OUT, message);
+          return getJsonResponse().getJson();
+        }
+      }
       logger.info("WebDriver JAR " + genericUpdate + " " + newWebDriverVersion);
       RuntimeConfig.getConfig().getWebdriver().setVersion(newWebDriverVersion);
       updateVersionFor(configHash, "webdriver", newWebDriverVersion);
