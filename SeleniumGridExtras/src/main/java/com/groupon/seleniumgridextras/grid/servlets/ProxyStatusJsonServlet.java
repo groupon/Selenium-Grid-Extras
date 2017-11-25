@@ -3,7 +3,7 @@ package com.groupon.seleniumgridextras.grid.servlets;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import org.openqa.grid.internal.ProxySet;
-import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.GridRegistry;
 import org.openqa.grid.internal.RemoteProxy;
 import org.openqa.grid.internal.TestSlot;
 import org.openqa.grid.web.servlet.RegistryBasedServlet;
@@ -27,7 +27,7 @@ public class ProxyStatusJsonServlet extends RegistryBasedServlet {
         this(null);
     }
 
-    public ProxyStatusJsonServlet(Registry registry) {
+    public ProxyStatusJsonServlet(GridRegistry registry) {
         super(registry);
     }
 
