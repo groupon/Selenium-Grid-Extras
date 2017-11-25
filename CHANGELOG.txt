@@ -1,4 +1,4 @@
-2.0.0 - Fix for Selenium 3.7.1. This is a BREAKING CHANGE. This version will not work with Selenium 3.7.0 or older.
+2.0.0 - Fix for Selenium 3.7.1. This is a BREAKING CHANGE. This version will not work with Selenium 3.7.0 or older. Fix was provided by danny6514 in https://github.com/groupon/Selenium-Grid-Extras/pull/375.
 1.12.8 - Fix grid hub and node jvm arguments. Fixes #281.
 1.12.7 - Add back guava and commons lang3 dependency.
 1.12.6 - Fix IE (add dependency back).
