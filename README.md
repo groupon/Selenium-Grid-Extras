@@ -192,6 +192,9 @@ launchctl load ~/Library/LaunchAgents/com.groupon.SeleniumGridExtras.plist
 ===================================================
 
 
+Docker Images
+-------------------
+https://github.com/viltgroup/docker-selenium-grid-extras provided by @mariolameiras . If you see any issues with these images please report them on the https://github.com/viltgroup/docker-selenium-grid-extras repo, and not this repo. These are new images, so please keep that in mind.
 
 
 Contributing
