@@ -106,13 +106,14 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         try {
 
             String host = session.getSlot().getRemoteURL().getHost();
+            int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
 
             logNewSessionHistoryAsync(session);
 
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             host,
-                            RuntimeConfig.getGridExtrasPort(),
+                            port,
                             TaskDescriptions.Endpoints.SETUP,
                             new HashMap<String, String>()));
 
@@ -142,6 +143,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
         Map<String, Object> cap = session.getRequestedCapabilities();
         String browser = (String) cap.get(CapabilityType.BROWSER_NAME);
+        int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
 
         if (browser != null &&
                 (browser.equals(BrowserType.IE) ||
@@ -151,7 +153,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             this.getRemoteHost().getHost(),
-                            RuntimeConfig.getGridExtrasPort(),
+                            port,
                             TaskDescriptions.Endpoints.KILL_IE,
                             new HashMap<String, String>()));
         }
@@ -169,7 +171,8 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                 CommonThreadPool.startCallable(
                         new VideoDownloaderCallable(
                                 session.getExternalKey().getKey(),
-                                session.getSlot().getRemoteURL().getHost()));
+                                session.getSlot().getRemoteURL().getHost(),
+                                session.getSlot().getProxy().getConfig().custom.get("grid-extras-port")));
             }
         }
 
@@ -181,7 +184,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                         new HashMap<String, String>()));
 
 
-        if (NodeRestartCallable.timeToReboot(this.getRemoteHost().getHost(), this.getId())) {
+        if (NodeRestartCallable.timeToReboot(this.getRemoteHost().getHost(), this.getId(),session)) {
             this.setAvailable(false);
             this.setRestarting(true);
 

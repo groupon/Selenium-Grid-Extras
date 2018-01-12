@@ -48,10 +48,11 @@ public class SessionHistoryCallable implements Callable<String> {
 
     protected String notifyNodeGridExtrasOfNewSession() {
         try {
+            int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
             URIBuilder uri = new URIBuilder();
             uri.setScheme("http");
             uri.setHost(getSession().getSlot().getRemoteURL().getHost());
-            uri.setPort(RuntimeConfig.getGridExtrasPort());
+            uri.setPort(port);
             uri.setPath(TaskDescriptions.Endpoints.GRID_STATUS);
             if (getSession().getExternalKey() != null) {
                 uri.addParameter(JsonCodec.WebDriver.Grid.NEW_SESSION_PARAM, getSession().getExternalKey().getKey());

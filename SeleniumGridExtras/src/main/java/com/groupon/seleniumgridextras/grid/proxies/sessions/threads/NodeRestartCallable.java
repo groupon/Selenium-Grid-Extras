@@ -52,7 +52,7 @@ public class NodeRestartCallable implements Callable {
         }
 
         stopGridNode();
-        NodeRestartCallable.rebootGridExtrasNode(proxy.getRemoteHost().getHost());
+        NodeRestartCallable.rebootGridExtrasNode(proxy.getRemoteHost().getHost(), session);
 
         logger.info(String.format("Proxy restart command sent for %s", proxy.getId()));
         return "Done";
@@ -78,12 +78,13 @@ public class NodeRestartCallable implements Callable {
     }
 
 
-    public static void rebootGridExtrasNode(String host) {
+    public static void rebootGridExtrasNode(String host, TestSession session) {
         logger.info("Asking SeleniumGridExtras to reboot node" + host);
+        int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         host,
-                        RuntimeConfig.getGridExtrasPort(),
+                        port,
                         TaskDescriptions.Endpoints.REBOOT,
                         new HashMap<String, String>()));
         try {
@@ -97,6 +98,9 @@ public class NodeRestartCallable implements Callable {
     public void stopGridNode() {
 
         logger.info(String.format("Asking proxy %s to stop gracefully", proxy.getId()));
+        
+        int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
+
 
         Map<String, String> params = new HashMap<String, String>();
         params.put(JsonCodec.WebDriver.Grid.PORT, String.valueOf(proxy.getRemoteHost().getPort()));
@@ -104,7 +108,7 @@ public class NodeRestartCallable implements Callable {
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         proxy.getRemoteHost().getHost(),
-                        RuntimeConfig.getGridExtrasPort(),
+                        port,
                         TaskDescriptions.Endpoints.STOP_GRID,
                         params));
 
@@ -118,11 +122,13 @@ public class NodeRestartCallable implements Callable {
 
     public void unregister() {
     	boolean unregisterDuringReboot = true;
+        int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
+
     	
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                 		proxy.getRemoteHost().getHost(),
-                        RuntimeConfig.getGridExtrasPort(),
+                        port,
                         TaskDescriptions.Endpoints.GRID_STATUS,
                         new HashMap<String, String>()));
 
@@ -154,11 +160,12 @@ public class NodeRestartCallable implements Callable {
         }
     }
 
-    public static boolean timeToReboot(String nodeHost, String proxyId) {
+    public static boolean timeToReboot(String nodeHost, String proxyId, TestSession session) {
+        int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
         Future<String> f = CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         nodeHost,
-                        RuntimeConfig.getGridExtrasPort(),
+                        port,
                         TaskDescriptions.Endpoints.GRID_STATUS,
                         new HashMap<String, String>()));
 

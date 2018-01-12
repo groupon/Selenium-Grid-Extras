@@ -17,12 +17,12 @@ import java.util.Map;
 public class RemoteVideoRecorderHelper {
     private static Logger logger = Logger.getLogger(RemoteVideoRecorderHelper.class);
 
-    public static String startVideoRecording(String host, String session) {
+    public static String startVideoRecording(String host, String port, String session) {
 
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(RuntimeConfig.getGridExtrasPort());
+        builder.setPort(Integer.valueOf(port));
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.START);
@@ -33,7 +33,7 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                RuntimeConfig.getGridExtrasPort(),
+                port,
                 session,
                 JsonCodec.Video.START,
                 params.toString());
@@ -51,12 +51,12 @@ public class RemoteVideoRecorderHelper {
 
     }
 
-    public static String stopVideoRecording(String host, String session) {
+    public static String stopVideoRecording(String host, String port, String session) {
 
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(RuntimeConfig.getGridExtrasPort());
+        builder.setPort(Integer.valueOf(port));
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.STOP);
@@ -66,7 +66,7 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                RuntimeConfig.getGridExtrasPort(),
+                port,
                 session,
                 JsonCodec.Video.STOP,
                 params.toString());
@@ -84,11 +84,11 @@ public class RemoteVideoRecorderHelper {
 
     }
 
-    public static String updateLastAction(String host, String session, String action) {
+    public static String updateLastAction(String host, String port, String session, String action) {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(RuntimeConfig.getGridExtrasPort());
+        builder.setPort(Integer.valueOf(port));
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.HEARTBEAT);
@@ -100,7 +100,7 @@ public class RemoteVideoRecorderHelper {
         URI uri;
         String errorMessage = String.format("Error building URI for host: %s, port: %s, session: %s, action: %s, params: %s",
                 host,
-                RuntimeConfig.getGridExtrasPort(),
+                port,
                 session,
                 JsonCodec.Video.HEARTBEAT,
                 params.toString());
