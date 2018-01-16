@@ -111,7 +111,7 @@ public class RemoteVideoRecordingControlCallable implements Callable {
     protected String updateLastAction() {
         String m = RemoteVideoRecorderHelper.updateLastAction(
                 this.session.getSlot().getRemoteURL().getHost(),
-                this.session.getSlot().getProxy().getConfig().custom.get("grid-extras-port"),
+                SetupTeardownProxy.getNodeExtrasPort(session),
                 this.session.getExternalKey().getKey(),
                 this.lastAction);
 
@@ -122,7 +122,7 @@ public class RemoteVideoRecordingControlCallable implements Callable {
     protected String stopVideo() {
         String m = RemoteVideoRecorderHelper.stopVideoRecording(
                 this.session.getSlot().getRemoteURL().getHost(),
-                this.session.getSlot().getProxy().getConfig().custom.get("grid-extras-port"),
+                SetupTeardownProxy.getNodeExtrasPort(session),
                 this.session.getExternalKey().getKey());
 
         logger.debug(m);
@@ -133,7 +133,7 @@ public class RemoteVideoRecordingControlCallable implements Callable {
     protected String startVideo() {
         return RemoteVideoRecorderHelper.startVideoRecording(
                 this.session.getSlot().getRemoteURL().getHost(),
-                this.session.getSlot().getProxy().getConfig().custom.get("grid-extras-port"),
+                SetupTeardownProxy.getNodeExtrasPort(session),
                 this.session.getExternalKey().getKey());
     }
 

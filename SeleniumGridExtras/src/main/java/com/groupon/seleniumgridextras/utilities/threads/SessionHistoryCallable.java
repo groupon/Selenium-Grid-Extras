@@ -3,6 +3,7 @@ package com.groupon.seleniumgridextras.utilities.threads;
 import com.google.common.base.Throwables;
 import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
 import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
 import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 import com.groupon.seleniumgridextras.utilities.HttpUtility;
@@ -48,7 +49,7 @@ public class SessionHistoryCallable implements Callable<String> {
 
     protected String notifyNodeGridExtrasOfNewSession() {
         try {
-            int port = Integer.parseInt(session.getSlot().getRemoteURL().getHost());
+            int port = SetupTeardownProxy.getNodeExtrasPort(session);
             URIBuilder uri = new URIBuilder();
             uri.setScheme("http");
             uri.setHost(getSession().getSlot().getRemoteURL().getHost());
@@ -81,7 +82,7 @@ public class SessionHistoryCallable implements Callable<String> {
             sessionDetails.put(JsonCodec.WebDriver.Grid.INTERNAL_KEY, getSession().getInternalKey());
             sessionDetails.put(JsonCodec.WebDriver.Grid.EXTERNAL_KEY, JsonCodec.WebDriver.Grid.NOT_YET_ASSIGNED);
             sessionDetails.put(JsonCodec.WebDriver.Grid.HOST, getSession().getSlot().getRemoteURL().getHost());
-            sessionDetails.put(JsonCodec.WebDriver.Grid.PORT, String.valueOf(getSession().getSlot().getRemoteURL().getPort()));
+            sessionDetails.put(JsonCodec.WebDriver.Grid.PORT, SetupTeardownProxy.getNodeExtrasPort(session));
             sessionDetails.put(JsonCodec.TIMESTAMP, TimeStampUtility.getTimestampAsString());
 //            sessionDetails.put(JsonCodec.WebDriver.Grid.REQUESTED_CAPABILITIES, getSession().getRequestedCapabilities());
 

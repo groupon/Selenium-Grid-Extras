@@ -17,12 +17,12 @@ import java.util.Map;
 public class RemoteVideoRecorderHelper {
     private static Logger logger = Logger.getLogger(RemoteVideoRecorderHelper.class);
 
-    public static String startVideoRecording(String host, String port, String session) {
+    public static String startVideoRecording(String host, int port, String session) {
 
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(Integer.valueOf(port));
+        builder.setPort(port);
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.START);
@@ -51,12 +51,12 @@ public class RemoteVideoRecorderHelper {
 
     }
 
-    public static String stopVideoRecording(String host, String port, String session) {
+    public static String stopVideoRecording(String host, int port, String session) {
 
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(Integer.valueOf(port));
+        builder.setPort(port);
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.STOP);
@@ -84,11 +84,11 @@ public class RemoteVideoRecorderHelper {
 
     }
 
-    public static String updateLastAction(String host, String port, String session, String action) {
+    public static String updateLastAction(String host, int port, String session, String action) {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(host);
-        builder.setPort(Integer.valueOf(port));
+        builder.setPort(port);
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         Map<String, String> params = getBlankParams(session, JsonCodec.Video.HEARTBEAT);

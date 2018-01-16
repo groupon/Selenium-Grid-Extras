@@ -65,6 +65,8 @@ public class GridNode {
       registerCycle = 5000;
       nodeStatusCheckTimeout = 10000;
       downPollingLimit = 0;
+      // Init custom with grid_extras_port value from node
+      custom.put(Config.GRID_EXTRAS_PORT, RuntimeConfig.getGridExtrasPort());
     }
   }
 
@@ -131,6 +133,11 @@ public class GridNode {
         if(topLevelJson.get("custom") != null) {
           Map<String, Object> customMap = new Gson().fromJson(topLevelJson.get("custom"), type);
           doubleToIntConverter(customMap);
+          // Init custom with grid_extras_port value from node if it doesn't exist
+          if (!customMap.containsKey(Config.GRID_EXTRAS_PORT))
+          {
+              customMap.put(Config.GRID_EXTRAS_PORT, RuntimeConfig.getGridExtrasPort());
+          }
           node.setCustom(customMap);
         }
         

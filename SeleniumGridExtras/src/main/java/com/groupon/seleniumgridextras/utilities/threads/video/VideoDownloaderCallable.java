@@ -28,11 +28,11 @@ public class VideoDownloaderCallable implements Callable {
     private final int ATTEMPTS_TO_DOWNLOAD = 5;
     private final int TIME_TO_WAIT_BETWEEN_ATTEMPTS = 30000;
 
-    public VideoDownloaderCallable(String session, String host, String nodePort) {
+    public VideoDownloaderCallable(String session, String host, int nodePort) {
         logger.info(String.format("New instance for session: %s host: %s", session, host));
         this.session = session;
         this.host = host;
-        this.nodePort = Integer.parseInt(nodePort);
+        this.nodePort = nodePort;
         this.uri = buildVideoStatusUri();
 
     }
