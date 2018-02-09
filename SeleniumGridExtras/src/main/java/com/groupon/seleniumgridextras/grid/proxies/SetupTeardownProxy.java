@@ -39,6 +39,7 @@
 package com.groupon.seleniumgridextras.grid.proxies;
 
 import com.google.common.base.Throwables;
+import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.BrowserType;
 import com.groupon.seleniumgridextras.grid.proxies.sessions.threads.NodeRestartCallable;
@@ -83,7 +84,6 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         logger.info(String.format("Attaching node %s", this.getId()));
     }
 
-
     @Override
     public TestSession getNewSession(Map<String, Object> requestedCapability) {
         if (isDown() || isRestarting()) {
@@ -106,13 +106,14 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         try {
 
             String host = session.getSlot().getRemoteURL().getHost();
-
+            int port = getNodeExtrasPort(session);
+         
             logNewSessionHistoryAsync(session);
 
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             host,
-                            RuntimeConfig.getGridExtrasPort(),
+                            port,
                             TaskDescriptions.Endpoints.SETUP,
                             new HashMap<String, String>()));
 
@@ -142,6 +143,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
         Map<String, Object> cap = session.getRequestedCapabilities();
         String browser = (String) cap.get(CapabilityType.BROWSER_NAME);
+        int port = getNodeExtrasPort(session);
 
         if (browser != null &&
                 (browser.equals(BrowserType.IE) ||
@@ -151,7 +153,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             CommonThreadPool.startCallable(
                     new RemoteGridExtrasAsyncCallable(
                             this.getRemoteHost().getHost(),
-                            RuntimeConfig.getGridExtrasPort(),
+                            port,
                             TaskDescriptions.Endpoints.KILL_IE,
                             new HashMap<String, String>()));
         }
@@ -169,19 +171,20 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
                 CommonThreadPool.startCallable(
                         new VideoDownloaderCallable(
                                 session.getExternalKey().getKey(),
-                                session.getSlot().getRemoteURL().getHost()));
+                                session.getSlot().getRemoteURL().getHost(),
+                                getNodeExtrasPort(session)));
             }
         }
 
         CommonThreadPool.startCallable(
                 new RemoteGridExtrasAsyncCallable(
                         this.getRemoteHost().getHost(),
-                        RuntimeConfig.getGridExtrasPort(),
+                        getNodeExtrasPort(session),
                         TaskDescriptions.Endpoints.TEARDOWN,
                         new HashMap<String, String>()));
 
 
-        if (NodeRestartCallable.timeToReboot(this.getRemoteHost().getHost(), this.getId())) {
+        if (NodeRestartCallable.timeToReboot(this.getRemoteHost().getHost(), this.getId(), session)) {
             this.setAvailable(false);
             this.setRestarting(true);
 
@@ -300,6 +303,20 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
             return CommonThreadPool.startCallable(new SessionHistoryCallable(session));
         }
         return null;
+    }
+    
+    public static int getNodeExtrasPort(TestSession session){
+        try {
+            
+            String port = session.getSlot().getProxy().getConfig().custom.get(Config.GRID_EXTRAS_PORT);
+            if(port!= null || ! port.equals("")) {
+                return Integer.parseInt(port);
+            }
+        }catch(NumberFormatException e)
+        {
+            logger.info("Error parsing port, returning default");
+        }
+        return RuntimeConfig.getGridExtrasPort();
     }
 
 }
