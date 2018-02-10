@@ -108,10 +108,11 @@ public class GridNodeTest {
     assertEquals(expectedCapabilities, nodeFromFile.getCapabilities());
 
     String actual = JsonParserWrapper.prettyPrintString(nodeFromFile);
-    assertTrue(actual.contains("\"custom\": {\n" +
+    assertTrue("ACTUAL : \n" + actual, actual.contains("\"custom\": {\n" +
             "    \"customString\": \"custom\",\n" +
             "    \"customInt\": 1,\n" +
-            "    \"customBoolean\": false\n" +
+            "    \"customBoolean\": false,\n" +
+            "    \"grid_extras_port\": 3000\n" +
             "  }"));
   }
 
