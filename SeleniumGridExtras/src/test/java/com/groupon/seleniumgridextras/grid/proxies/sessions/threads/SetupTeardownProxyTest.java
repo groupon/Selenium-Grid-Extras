@@ -7,6 +7,8 @@ import com.groupon.seleniumgridextras.config.DefaultConfig;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.config.capabilities.BrowserType;
 import com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy;
+import com.groupon.seleniumgridextras.loggers.SessionHistoryLog;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -19,6 +21,8 @@ import org.openqa.selenium.remote.CapabilityType;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
@@ -85,6 +89,12 @@ public class SetupTeardownProxyTest {
         Assert.assertTrue(!Strings.isNullOrEmpty(result));
 
         File sessionLogDir = DefaultConfig.SESSION_LOG_DIRECTORY;
+        SessionHistoryLog.setOutputDir(sessionLogDir);
+        Map sessionInfo = new HashMap();
+        sessionInfo.put("id", "123456");
+        sessionInfo.put("stuff", "stuff");
+        SessionHistoryLog.newSession("node", sessionInfo);
+
         Assert.assertTrue("Expect the session log directory to exist!", sessionLogDir.exists());
         Assert.assertTrue("Expect the session log directory to be a directory!", sessionLogDir.isDirectory());
         Assert.assertTrue("Expect the session log directory to have a file!", sessionLogDir.list().length > 0);

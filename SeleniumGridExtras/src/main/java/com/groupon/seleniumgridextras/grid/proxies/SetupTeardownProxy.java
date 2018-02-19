@@ -58,6 +58,7 @@ import org.openqa.grid.internal.TestSession;
 import org.openqa.grid.internal.listeners.TestSessionListener;
 import org.openqa.grid.selenium.proxy.DefaultRemoteProxy;
 import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.server.jmx.ManagedService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,7 +70,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-
+@ManagedService(description = "Selenium-Grid-Extras SetupTeardownProxy")
 public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessionListener {
 
     private boolean available = true;
@@ -107,7 +108,7 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
 
             String host = session.getSlot().getRemoteURL().getHost();
             int port = getNodeExtrasPort(session);
-         
+
             logNewSessionHistoryAsync(session);
 
             CommonThreadPool.startCallable(
@@ -304,10 +305,10 @@ public class SetupTeardownProxy extends DefaultRemoteProxy implements TestSessio
         }
         return null;
     }
-    
+
     public static int getNodeExtrasPort(TestSession session){
         try {
-            
+
             String port = session.getSlot().getProxy().getConfig().custom.get(Config.GRID_EXTRAS_PORT);
             if(port!= null || ! port.equals("")) {
                 return Integer.parseInt(port);
