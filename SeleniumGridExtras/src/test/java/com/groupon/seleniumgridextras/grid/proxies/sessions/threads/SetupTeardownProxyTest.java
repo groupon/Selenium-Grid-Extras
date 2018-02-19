@@ -93,7 +93,7 @@ public class SetupTeardownProxyTest {
         Map sessionInfo = new HashMap();
         sessionInfo.put("id", "123456");
         sessionInfo.put("stuff", "stuff");
-        SessionHistoryLog.newSession("node", sessionInfo);
+        SessionHistoryLog.newSession("nodez", sessionInfo);
 
         Assert.assertTrue("Expect the session log directory to exist!", sessionLogDir.exists());
         Assert.assertTrue("Expect the session log directory to be a directory!", sessionLogDir.isDirectory());
