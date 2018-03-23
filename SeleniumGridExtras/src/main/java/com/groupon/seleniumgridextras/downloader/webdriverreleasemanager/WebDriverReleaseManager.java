@@ -104,8 +104,7 @@ public class WebDriverReleaseManager {
 
     for (WebDriverRelease r : list) {
       if ("IEDriverServer".equals(r.getName()) && r.getMajorVersion() == 9){
-        r.setMajorVersion(3);
-        r.setMinorVersion(9);
+	continue;
       }	
       if (highestVersion == null) {
         highestVersion = r;
