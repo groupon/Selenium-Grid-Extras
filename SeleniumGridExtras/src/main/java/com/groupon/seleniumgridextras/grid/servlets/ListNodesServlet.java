@@ -15,7 +15,6 @@ import org.openqa.grid.internal.Registry;
 import org.openqa.grid.internal.ProxySet;
 import org.openqa.grid.internal.RemoteProxy;
 import org.openqa.grid.web.servlet.RegistryBasedServlet;
-import org.openqa.selenium.remote.JsonException;
 
 import com.google.gson.GsonBuilder;
 
@@ -50,7 +49,7 @@ public class ListNodesServlet extends RegistryBasedServlet {
          response.getWriter().close();
      }
 
-     private Map<String, List<String>> getResponse() throws IOException, JsonException {
+     private Map<String, List<String>> getResponse() throws IOException {
          Map<String, List<String>> res = new HashMap<>();
          ArrayList<String> nodeList = new ArrayList<>();
 
