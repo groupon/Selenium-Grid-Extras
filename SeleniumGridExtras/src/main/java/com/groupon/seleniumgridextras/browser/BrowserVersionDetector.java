@@ -165,7 +165,7 @@ public class BrowserVersionDetector {
       String[] cmd = new String[4];
       cmd[0] = "cmd";
       cmd[1] = "/C";
-      File f = new File("C:/Program Files (x86)");
+      File f = new File("C:/Program Files (x86)/Mozilla Firefox");
       if (f.exists()) {
         cmd[2] = "C:/Program Files (x86)/Mozilla Firefox/firefox.exe";
       } else {
