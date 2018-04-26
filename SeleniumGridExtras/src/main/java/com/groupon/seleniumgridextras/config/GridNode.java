@@ -45,6 +45,8 @@ public class GridNode {
   private Integer nodeStatusCheckTimeout;
   private String appiumStartCommand;
   private Map<String, Object> custom = new HashMap();
+  private Integer timeout;
+  private Integer browserTimeout;
 
   //Only test the node status 1 time, since the limit checker is
   //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
@@ -127,6 +129,8 @@ public class GridNode {
         node.setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
         node.setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
                 ? topLevelJson.get("appiumStartCommand").getAsString() : null);
+        node.setTimeout(topLevelJson.get("timeout") != null ? topLevelJson.get("timeout").getAsInt() : null);
+        node.setBrowserTimeout(topLevelJson.get("browserTimeout") != null ? topLevelJson.get("browserTimeout").getAsInt() : null);
 
         // Adding custom-config see Issue #342
         Type type = new TypeToken<Map<String, Object>>(){}.getType();
@@ -326,7 +330,23 @@ public class GridNode {
       this.servlets = servlets;
     }
 
-    public ArrayList<String>  getServlets() {
+  public Integer getTimeout() {
+    return timeout;
+  }
+
+  public void setTimeout(Integer timeout) {
+    this.timeout = timeout;
+  }
+
+  public Integer getBrowserTimeout() {
+    return browserTimeout;
+  }
+
+  public void setBrowserTimeout(Integer browserTimeout) {
+    this.browserTimeout = browserTimeout;
+  }
+
+  public ArrayList<String>  getServlets() {
       return this.servlets;
     }
 
