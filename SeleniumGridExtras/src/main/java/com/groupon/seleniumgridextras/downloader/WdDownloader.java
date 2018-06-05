@@ -50,7 +50,7 @@ public class WdDownloader extends Downloader {
       versionMajor = version.substring(0, version.lastIndexOf('.')) + version.substring(version.indexOf('-'));
     }
     
-    setSourceURL("http://selenium-release.storage.googleapis.com/" + versionMajor
+    setSourceURL("https://selenium-release.storage.googleapis.com/" + versionMajor
                  + "/selenium-server-standalone-" + destinationFile);
   }
 
