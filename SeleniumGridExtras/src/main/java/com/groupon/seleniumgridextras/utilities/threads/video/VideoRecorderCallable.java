@@ -260,7 +260,9 @@ public class VideoRecorderCallable implements Callable {
         else {
             image = new BufferedImage(sourceImage.getWidth(),
                     sourceImage.getHeight(), targetType);
-            image.getGraphics().drawImage(sourceImage, 0, 0, null);
+            Graphics g = image.getGraphics();
+            g.drawImage(sourceImage, 0, 0, null);
+            g.dispose();
         }
 
         return image;
