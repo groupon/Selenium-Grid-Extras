@@ -6,6 +6,7 @@ import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.videorecording.ImageProcessor;
 
+import io.humble.ferry.*;
 import io.humble.video.*;
 import io.humble.video.awt.*;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
@@ -58,6 +59,10 @@ public class VideoRecorderCallable implements Callable {
 
     @Override
     public String call() throws Exception {
+        if (Boolean.getBoolean("memory.debug")) {
+            JNIMemoryManager.getMgr().setMemoryDebugging(true);
+        }
+
         //Probably overkill to null these out, but i'm playing it safe until proven otherwise
         this.nodeName =
                 "Node: " + RuntimeConfig.getOS().getHostName() + " (" + RuntimeConfig.getHostIp()
@@ -77,14 +82,14 @@ public class VideoRecorderCallable implements Callable {
         final File tempFile = new File(outputDir, sessionId + ".temp.mp4");
 
         /** First we create a muxer using the passed in filename and formatname if given. */
-        final Muxer muxer = Muxer.make(tempFile.getAbsolutePath(), null, /*formatname*/null);
+        Muxer muxer = Muxer.make(tempFile.getAbsolutePath(), null, /*formatname*/null);
 
         /** Now, we need to decide what type of codec to use to encode video. Muxers
          * have limited sets of codecs they can use. We're going to pick the first one that
          * works, or if the user supplied a codec name, we're going to force-fit that
          * in instead.
          */
-        final MuxerFormat format = muxer.getFormat();
+        MuxerFormat format = muxer.getFormat();
 
         final Codec codec = Codec.findEncodingCodec(Codec.ID.CODEC_ID_H264);
 
@@ -146,7 +151,7 @@ public class VideoRecorderCallable implements Callable {
             .info("Starting video recording for session " + getSessionId() + " to " + outputDir
                 .getAbsolutePath());
 
-        final MediaPacket packet = MediaPacket.make();
+        MediaPacket packet = MediaPacket.make();
         try {
             int imageFrame = 0;
 
@@ -229,6 +234,16 @@ public class VideoRecorderCallable implements Callable {
             /** Finally, let's clean up after ourselves. */
             muxer.close();
 
+            muxer.delete();
+            converter.delete();
+            packet.delete();
+            format.delete();
+
+            muxer = null;
+            converter = null;
+            packet = null;
+            format = null;
+
             // Now, rename our temporary file to the final filename, so that the downloaders can detect it
             final File finalFile = new File(outputDir, sessionId + ".mp4");
             if(!tempFile.exists()) {
@@ -242,6 +257,10 @@ public class VideoRecorderCallable implements Callable {
                     logger.warn("Unable to rename temporary video file for session " + getSessionId());
                 }
             }
+        }
+
+        if (Boolean.getBoolean("memory.debug")) {
+            logger.info("number of alive objects:" + JNIMemoryManager.getMgr().getNumPinnedObjects());
         }
 
         return getSessionId();

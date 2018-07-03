@@ -82,6 +82,7 @@ public class ImageProcessor {
     g.setFont(new Font("TimesRoman", Font.PLAIN, 14));
     g.drawString("" + line2, firstLineX, secondLineY);
     g.drawString("" + line3, firstLineX, thirdLineY);
+    g.dispose();
 
     return image;
   }
