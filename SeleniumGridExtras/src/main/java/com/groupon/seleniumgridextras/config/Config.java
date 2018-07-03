@@ -150,7 +150,7 @@ public class Config {
         getConfigMap().put(NODE_ADDITIONAL_CLASSPATH, new ArrayList<String>());
         getConfigMap().put(GRID_JVM_OPTIONS, new HashMap<String, Object>());
         getConfigMap().put(GRID_EXTRAS_JVM_OPTIONS, new HashMap<String, Object>());
-        getConfigMap().put(GRID_EXTRAS_PORT, 3000);
+        getConfigMap().put(GRID_EXTRAS_PORT, "3000");
 
         getConfigMap().put(AUTO_UPDATE_DRIVERS, "");
         getConfigMap().put(AUTO_UPDATE_BROWSER_VERSIONS, "");

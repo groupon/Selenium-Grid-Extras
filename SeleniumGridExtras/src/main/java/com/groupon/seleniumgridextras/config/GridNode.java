@@ -33,22 +33,36 @@ public class GridNode {
   // Selenium 3 has values at top level, not in "configuration"
   private String proxy;
   private ArrayList<String> servlets = new ArrayList<String>();
-  private Integer maxSession;
-  private Integer port;
+  private String maxSession;
+  private String port;
   private Boolean register;
-  private Integer unregisterIfStillDownAfter;
-  private Integer hubPort;
+  private String unregisterIfStillDownAfter;
+  private String hubPort;
   private String hubHost;
   private String host;
   private String url;
-  private Integer registerCycle;
-  private Integer nodeStatusCheckTimeout;
+  private String registerCycle;
+  private String nodeStatusCheckTimeout;
   private String appiumStartCommand;
+
+  private String browserTimeout;
+  private String timeout;
+
+  public void setBrowserTimeout(Integer browserTimeout)
+  {
+    this.browserTimeout = String.valueOf(browserTimeout);
+  }
+
+  public void setTimeout(Integer timeout)
+  {
+    this.timeout = String.valueOf(timeout);
+  }
+
   private Map<String, Object> custom = new HashMap();
 
   //Only test the node status 1 time, since the limit checker is
   //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
-  private Integer downPollingLimit;
+  private String downPollingLimit;
 
   private static Logger logger = Logger.getLogger(GridNode.class);
 
@@ -59,18 +73,20 @@ public class GridNode {
       configuration = new GridNodeConfiguration();
     } else {
       proxy = "com.groupon.seleniumgridextras.grid.proxies.SetupTeardownProxy";
-      maxSession = 3;
+      maxSession = "3";
       register = true;
-      unregisterIfStillDownAfter = 10000;
-      registerCycle = 5000;
-      nodeStatusCheckTimeout = 10000;
-      downPollingLimit = 0;
+      unregisterIfStillDownAfter = "10000";
+      registerCycle = "5000";
+      nodeStatusCheckTimeout = "10000";
+      downPollingLimit = "0";
+      // Init custom with grid_extras_port value from node
+      custom.put(Config.GRID_EXTRAS_PORT, String.valueOf(RuntimeConfig.getGridExtrasPort()));
     }
   }
 
   private GridNode(LinkedList<Capability> caps, GridNodeConfiguration config, int hubPort, String hubHost, int nodePort) {
     capabilities = caps;
-    if(config != null) { // If config is not null, this is Selenium 2 
+    if(config != null) { // If config is not null, this is Selenium 2
       configuration = config;
       setHubPort(null);
       setPort(null);
@@ -98,7 +114,7 @@ public class GridNode {
         filteredCapabilities.add(Capability.getCapabilityFor((String) capHash.get("browserName"), capHash));
       }
     }
-    
+
     String configFromFile = null;
     GridNodeConfiguration nodeConfiguration = null;
     String hubHost = null;
@@ -106,34 +122,45 @@ public class GridNode {
     int nodePort = 0;
     if(isSelenium3) { // This won't work for beta1, beta2, or beta3.
       try {
-        hubPort = Integer.parseInt(topLevelJson.get("hubPort").toString());
+        hubPort = Integer.parseInt(topLevelJson.get("hubPort").getAsString());
         hubHost = topLevelJson.get("hubHost").getAsString();
-        nodePort = Integer.parseInt(topLevelJson.get("port").toString());
+        nodePort = Integer.parseInt(topLevelJson.get("port").getAsString());
         GridNode node = new GridNode(filteredCapabilities, null, hubPort, hubHost, nodePort);
-        node.setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
+        node.setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").getAsString()));
         node.setProxy(topLevelJson.get("proxy").getAsString());
         node.setRegister(topLevelJson.get("register").getAsBoolean());
         node.setRegisterCycle(topLevelJson.get("registerCycle") != null
-                ? Integer.parseInt(topLevelJson.get("registerCycle").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("registerCycle").getAsString()) : null);
         node.setUnregisterIfStillDownAfter(topLevelJson.get("unregisterIfStillDownAfter") != null
-                ? Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").getAsString()) : null);
         node.setNodeStatusCheckTimeout(topLevelJson.get("nodeStatusCheckTimeout") != null
-                ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").getAsString()) : null);
         node.setDownPollingLimit(topLevelJson.get("downPollingLimit") != null
-                ? Integer.parseInt(topLevelJson.get("downPollingLimit").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("downPollingLimit").getAsString()) : null);
         node.setHost(topLevelJson.get("host") != null ? topLevelJson.get("host").getAsString() : null);
         node.setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
         node.setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
-                ? topLevelJson.get("appiumStartCommand").getAsString() : null);
+            ? topLevelJson.get("appiumStartCommand").getAsString() : null);
+        node.setBrowserTimeout(topLevelJson.get("browserTimeout") != null
+            ? Integer.parseInt(topLevelJson.get("browserTimeout").getAsString()) : null);
+        node.setTimeout(topLevelJson.get("timeout") != null
+            ? Integer.parseInt(topLevelJson.get("timeout").getAsString()) : null);
 
         // Adding custom-config see Issue #342
         Type type = new TypeToken<Map<String, Object>>(){}.getType();
         if(topLevelJson.get("custom") != null) {
           Map<String, Object> customMap = new Gson().fromJson(topLevelJson.get("custom"), type);
           doubleToIntConverter(customMap);
+          // Init custom with grid_extras_port value from node if it doesn't exist
+          if (!customMap.containsKey(Config.GRID_EXTRAS_PORT))
+          {
+            customMap.put(Config.GRID_EXTRAS_PORT, String.valueOf(RuntimeConfig.getGridExtrasPort()));
+          } else {
+            customMap.put(Config.GRID_EXTRAS_PORT, String.valueOf(customMap.get(Config.GRID_EXTRAS_PORT)));
+          }
           node.setCustom(customMap);
         }
-        
+
         Type listType = new TypeToken<ArrayList<String>>(){}.getType();
         if(topLevelJson.get("servlets") != null) {
           ArrayList<String> servlets = new Gson().fromJson(topLevelJson.get("servlets"), listType);
@@ -141,7 +168,7 @@ public class GridNode {
         	  node.setServlets(servlets);
           }
         }
-        
+
 
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
@@ -151,7 +178,7 @@ public class GridNode {
         configFromFile = topLevelJson.getAsJsonObject("configuration").toString();
         nodeConfiguration =
             new Gson().fromJson(configFromFile, GridNodeConfiguration.class);
-        
+
         GridNode node = new GridNode(true);
         node.setCapabilities(filteredCapabilities);
         node.setHubPort(nodeConfiguration.getHubPort());
@@ -177,7 +204,7 @@ public class GridNode {
         node.writeToFile(filename);
 
         nodeConfiguration = null; // Should be null for Selenium 3
-        
+
         return node;
       }
     } else { // Selenium 2
@@ -191,38 +218,38 @@ public class GridNode {
         node.getConfiguration().setHubHost(topLevelJson.get("hubHost").getAsString());
         node.getConfiguration().setHubPort(Integer.parseInt(topLevelJson.get("hubPort").toString()));
         node.getConfiguration().setPort(Integer.parseInt(topLevelJson.get("port").toString()));
-        
+
         node.getConfiguration().setMaxSession(Integer.parseInt(topLevelJson.get("maxSession").toString()));
         node.getConfiguration().setProxy(topLevelJson.get("proxy").getAsString());
 
         node.getConfiguration().setRegister(topLevelJson.get("register").getAsBoolean());
         if (topLevelJson.get("registerCycle") != null) {
-            node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
+          node.getConfiguration().setRegisterCycle(Integer.parseInt(topLevelJson.get("registerCycle").toString()));
         }
         node.getConfiguration().setUnregisterIfStillDownAfter(topLevelJson.get("unregisterIfStillDownAfter") != null
-                ? Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("unregisterIfStillDownAfter").toString()) : null);
         node.getConfiguration().setNodeStatusCheckTimeout(topLevelJson.get("nodeStatusCheckTimeout") != null
-                ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").toString()) : null);
         node.getConfiguration().setDownPollingLimit(topLevelJson.get("downPollingLimit") != null
-                ? Integer.parseInt(topLevelJson.get("downPollingLimit").toString()) : null);
+            ? Integer.parseInt(topLevelJson.get("downPollingLimit").toString()) : null);
         node.getConfiguration().setHost(topLevelJson.get("host") != null
-                ? topLevelJson.get("host").getAsString() : null);
+            ? topLevelJson.get("host").getAsString() : null);
         node.getConfiguration().setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
         node.getConfiguration().setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
-                ? topLevelJson.get("appiumStartCommand").getAsString() : null);
-        
+            ? topLevelJson.get("appiumStartCommand").getAsString() : null);
+
         Type listType = new TypeToken<ArrayList<String>>(){}.getType();
-		if (topLevelJson.get("servlets") != null) {
-			ArrayList<String> servlets = new Gson().fromJson(
-					topLevelJson.get("servlets"), listType);
-		     if ( servlets.size() > 0 ) {
-		    	 node.getConfiguration().setServlets(servlets);
-	          }
-		}
-        
+        if (topLevelJson.get("servlets") != null) {
+          ArrayList<String> servlets = new Gson().fromJson(
+              topLevelJson.get("servlets"), listType);
+          if ( servlets.size() > 0 ) {
+            node.getConfiguration().setServlets(servlets);
+          }
+        }
+
         node.setLoadedFromFile(filename);
         node.writeToFile(filename);
-        
+
         return node;
       }
     }
@@ -244,19 +271,19 @@ public class GridNode {
 
   // Selenium 3 requires these at the root
   public int getPort() {
-    return port;
+    return Integer.parseInt(port);
   }
 
   public void setPort(Integer port) {
-    this.port = port;
+    this.port = String.valueOf(port);
   }
 
   public int getHubPort() {
-    return hubPort;
+    return Integer.parseInt(hubPort);
   }
 
   public void setHubPort(Integer hubPort) {
-    this.hubPort = hubPort;
+    this.hubPort = String.valueOf(hubPort);
   }
 
   public String getHubHost() {
@@ -274,7 +301,7 @@ public class GridNode {
   public void setHost(String host) {
     this.host = host;
   }
-  
+
   public String getUrl() {
     return url;
   }
@@ -284,27 +311,27 @@ public class GridNode {
   }
 
   public int getMaxSession() {
-    return this.maxSession;
+    return Integer.parseInt(this.maxSession);
   }
 
   public void setMaxSession(Integer maxSession) {
-    this.maxSession = maxSession;
+    this.maxSession = String.valueOf(maxSession);
   }
 
   public boolean getRegister() {
     return register;
   }
-  
+
   public void setRegister(Boolean register) {
     this.register = register;
   }
 
   public int getRegisterCycle() {
-    return registerCycle;
+    return Integer.parseInt(registerCycle);
   }
-  
+
   public void setRegisterCycle(Integer registerCycle) {
-    this.registerCycle = registerCycle;
+    this.registerCycle = String.valueOf(registerCycle);
   }
 
   public String getProxy() {
@@ -314,35 +341,35 @@ public class GridNode {
   public void setProxy(String proxy) {
     this.proxy = proxy;
   }
-  
-  public void setServlets( ArrayList<String> servlets) { 
-      this.servlets = servlets;
-    }
 
-    public ArrayList<String>  getServlets() {
-      return this.servlets;
-    }
+  public void setServlets( ArrayList<String> servlets) {
+    this.servlets = servlets;
+  }
+
+  public ArrayList<String>  getServlets() {
+    return this.servlets;
+  }
 
   public int getNodeStatusCheckTimeout() {
-    return nodeStatusCheckTimeout;
+    return Integer.parseInt(nodeStatusCheckTimeout);
   }
-  
+
   public void setNodeStatusCheckTimeout(Integer nodeStatusCheckTimeout) {
-    this.nodeStatusCheckTimeout = nodeStatusCheckTimeout;
+    this.nodeStatusCheckTimeout = String.valueOf(nodeStatusCheckTimeout);
   }
-  
+
   public int getUnregisterIfStillDownAfter() {
-    return unregisterIfStillDownAfter;
+    return Integer.parseInt(unregisterIfStillDownAfter);
   }
-  
+
   public void setUnregisterIfStillDownAfter(Integer unregisterIfStillDownAfter) {
-    this.unregisterIfStillDownAfter = unregisterIfStillDownAfter;
+    this.unregisterIfStillDownAfter = String.valueOf(unregisterIfStillDownAfter);
   }
 
   public void setDownPollingLimit(Integer downPollingLimit) {
-    this.downPollingLimit = downPollingLimit;
+    this.downPollingLimit = String.valueOf(downPollingLimit);
   }
-  
+
   public String getAppiumStartCommand() {
     return appiumStartCommand;
   }
@@ -477,6 +504,9 @@ public class GridNode {
     private int nodeStatusCheckTimeout = 10000;
     private String appiumStartCommand;
 
+    private String browserTimeout;
+    private String timeout;
+
     //Only test the node status 1 time, since the limit checker is
     //Since DefaultRemoteProxy.java does this check failedPollingTries >= downPollingLimit
     private int downPollingLimit = 0;
@@ -539,40 +569,40 @@ public class GridNode {
     public void setProxy(String proxy) {
       this.proxy = proxy;
     }
-    
+
     public ArrayList<String>  getServlets() {
-        return servlets;
-      }
-    
+      return servlets;
+    }
+
     public void setServlets(ArrayList<String>  servlets) {
-        this.servlets = servlets;
-      }
-    
+      this.servlets = servlets;
+    }
+
 
     public boolean getRegister() {
       return register;
     }
-    
+
     public void setRegister(boolean register) {
       this.register = register;
     }
-    
+
     public int getUnregisterIfStillDownAfter() {
       return unregisterIfStillDownAfter;
     }
-    
+
     public void setUnregisterIfStillDownAfter(int unregisterIfStillDownAfter) {
       this.unregisterIfStillDownAfter = unregisterIfStillDownAfter;
     }
-    
+
     public int getNodeStatusCheckTimeout() {
       return nodeStatusCheckTimeout;
     }
-    
+
     public void setNodeStatusCheckTimeout(int nodeStatusCheckTimeout) {
       this.nodeStatusCheckTimeout = nodeStatusCheckTimeout;
     }
-    
+
     public int getRegisterCycle() {
       return registerCycle.intValue();
     }
@@ -580,11 +610,11 @@ public class GridNode {
     public void setRegisterCycle(int registerCycle) {
       this.registerCycle = new Integer(registerCycle);
     }
-    
+
     public int getDownPollingLimit() {
       return downPollingLimit;
     }
-    
+
     public void setDownPollingLimit(int downPollingLimit) {
       this.downPollingLimit = downPollingLimit;
     }
@@ -595,6 +625,26 @@ public class GridNode {
 
     public void setAppiumStartCommand(String appiumStartCommand) {
       this.appiumStartCommand = appiumStartCommand;
+    }
+
+    public String getBrowserTimeout()
+    {
+      return browserTimeout;
+    }
+
+    public void setBrowserTimeout(String browserTimeout)
+    {
+      this.browserTimeout = browserTimeout;
+    }
+
+    public String getTimeout()
+    {
+      return timeout;
+    }
+
+    public void setTimeout(String timeout)
+    {
+      this.timeout = timeout;
     }
   }
 
