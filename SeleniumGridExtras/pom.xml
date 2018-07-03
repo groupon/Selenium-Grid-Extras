@@ -91,20 +91,15 @@
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
         </dependency>
-<!--         <dependency> Not used anywhere
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>1.1.6</version>
-        </dependency> -->
         <dependency>
-            <groupId>xuggle</groupId>
-            <artifactId>xuggle-xuggler</artifactId>
-            <version>5.4</version>
+            <groupId>io.humble</groupId>
+            <artifactId>humble-video-noarch</artifactId>
+            <version>0.2.1</version>
         </dependency>
         <dependency>
-            <groupId>org.boofcv</groupId>
-            <artifactId>xuggler</artifactId>
-            <version>0.16</version>
+            <groupId>io.humble</groupId>
+            <artifactId>humble-video-arch-x86_64-pc-linux-gnu6</artifactId>
+            <version>0.2.1</version>
         </dependency>
         <dependency> <!-- selenium-api-2.53.1 comes with guava 19.0 -->
             <artifactId>guava</artifactId> <!-- Needed for UpgradeGridExtrasTask.getSanitizedReleaseList -->
@@ -112,11 +107,7 @@
             <type>jar</type>
             <version>23.0</version>
         </dependency>
-<!--         <dependency> Not used anywhere
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20090211</version>
-        </dependency> -->
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -154,6 +145,11 @@
                                 </manifest>
                                 <manifestEntries>
                                     <Class-Path>.</Class-Path>
+                                    <!-- Add manifest entries used to identify what's in this bundle -->
+                                    <Humble-Native-App>humble-video</Humble-Native-App>
+                                    <Humble-Native-Root>.</Humble-Native-Root>
+                                    <Humble-Native-Paths>.</Humble-Native-Paths>
+                                    <Humble-Native-Bundles>x86_64-pc-linux-gnu6</Humble-Native-Bundles>
                                 </manifestEntries>
                             </archive>
                             <descriptorRefs>
