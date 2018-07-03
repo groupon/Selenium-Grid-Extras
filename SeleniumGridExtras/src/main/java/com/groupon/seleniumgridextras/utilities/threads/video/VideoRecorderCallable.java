@@ -134,6 +134,16 @@ public class VideoRecorderCallable implements Callable {
         /** And open the muxer for business. */
         muxer.open(null, null);
 
+        int n = muxer.getNumStreams();
+        MuxerStream[] muxerStreams = new MuxerStream[n];
+        Coder[] coder = new Coder[n];
+        for (int i = 0; i < n; i++) {
+            muxerStreams[i] = muxer.getStream(i);
+            if (muxerStreams[i] != null) {
+                coder[i] = muxerStreams[i].getCoder();
+            }
+        }
+
         /** Next, we need to make sure we have the right MediaPicture format objects
          * to encode data with. Java (and most on-screen graphics programs) use some
          * variant of Red-Green-Blue image encoding (a.k.a. RGB or BGR). Most video
@@ -243,6 +253,17 @@ public class VideoRecorderCallable implements Callable {
             converter = null;
             packet = null;
             format = null;
+
+            for (int i=0; i < muxerStreams.length; i++) {
+                if (muxerStreams[i] != null) {
+                    muxerStreams[i].delete();
+                    muxerStreams[i] = null;
+                }
+                if (coder[i] != null) {
+                    coder[i].delete();
+                    coder[i] = null;
+                }
+            }
 
             // Now, rename our temporary file to the final filename, so that the downloaders can detect it
             final File finalFile = new File(outputDir, sessionId + ".mp4");
