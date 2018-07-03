@@ -52,7 +52,10 @@ public class VideoRecordingThreadPool {
         } else {
             logger.info("Politely asking video recording to stop");
             video.stop();
-            int timeout = 5;
+            // lets give time for the ffmpeg to finish, at least the first time
+            // it runs, takes a little bit longer.
+            // Will give it 3 minutes for now.
+            int timeout = 3*60;
             while(!future.isDone() && !future.isCancelled() && timeout > 0) {
                 try {
                     timeout -= 1;

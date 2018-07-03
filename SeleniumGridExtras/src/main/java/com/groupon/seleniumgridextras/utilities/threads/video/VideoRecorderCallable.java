@@ -1,25 +1,26 @@
 package com.groupon.seleniumgridextras.utilities.threads.video;
 
 
+import com.google.common.io.*;
+import com.groupon.seleniumgridextras.*;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.videorecording.ImageProcessor;
-import com.xuggle.mediatool.IMediaWriter;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IRational;
 
+import org.apache.commons.io.*;
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
+import org.apache.commons.lang3.*;
+import org.apache.commons.lang3.time.*;
 import org.apache.log4j.Logger;
 
+import javax.imageio.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 
 public class VideoRecorderCallable implements Callable {
@@ -36,14 +37,7 @@ public class VideoRecorderCallable implements Callable {
     protected String lastCommand;
     protected int idleTimeout;
 
-
-    final private static
-    IRational
-            FRAME_RATE =
-            IRational.make(RuntimeConfig.getConfig().getVideoRecording().getFrames(),
-                    RuntimeConfig.getConfig().getVideoRecording().getSecondsPerFrame());
     private static Dimension dimension;
-
 
     public VideoRecorderCallable(String sessionID, int timeout) {
         this.sessionId = sessionID;
@@ -74,59 +68,81 @@ public class VideoRecorderCallable implements Callable {
         final Rectangle screenBounds = new Rectangle(toolkit.getScreenSize());
 
         screenBounds.setBounds(0, 0, dimension.width, dimension.height);
-        // First, let's make a IMediaWriter to write the file.
-        // Note we're writing to a temp file.  This is to prevent it from being
-        // downloaded while we're mid-write.
-        final File tempFile = new File(outputDir, sessionId + ".temp.mp4");
-        final
-        IMediaWriter
-                writer =
-                ToolFactory.makeWriter(tempFile.getAbsolutePath());
 
-        // We tell it we're going to add one video stream, with id 0,
-        // at position 0, and that it will have a fixed frame rate of
-        // FRAME_RATE.
-        writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
-                FRAME_RATE,
-                screenBounds.width, screenBounds.height);
+        logger.info(
+            "Starting video recording for session " + getSessionId()
+                + " to " + outputDir.getAbsolutePath());
 
-        logger
-                .info("Starting video recording for session " + getSessionId() + " to " + outputDir
-                        .getAbsolutePath());
+        File tempOutputFolder = Files.createTempDir();
 
         try {
-            int imageFrame = 1;
-            long startTime = System.nanoTime();
-            addTitleFrame(writer);
+            int imageFrame = 0;
+
+            // creates the title frame
+            {
+                BufferedImage titleFrame
+                    = ImageProcessor.createTitleFrame(
+                    dimension,
+                    BufferedImage.TYPE_INT_RGB,
+                    "Session :" + this.sessionId,
+                    "Host :" + RuntimeConfig.getOS().getHostName() + " ("
+                        + RuntimeConfig.getHostIp() + ")",
+                    getTimestamp().toString());
+
+                // 4 symbol string from 0000 to 9999
+                // with 5 frame per second this gives us ~2000 seconds
+                // more than 30 minutes of recording
+                ImageIO.write(titleFrame, "png",
+                    new File(tempOutputFolder,
+                        StringUtils.leftPad(String.valueOf(imageFrame++), 4, '0')
+                            + ".png"));
+            }
 
             while (stopActionNotCalled() && idleTimeoutNotReached()) {
 
                 // take the screen shot
-                BufferedImage
-                        screenshot =
-                        ScreenshotUtility.getResizedScreenshot(dimension.width, dimension.height);
+                BufferedImage screenshot
+                    = ScreenshotUtility.getResizedScreenshot(
+                    dimension.width, dimension.height);
 
                 screenshot = ImageProcessor.addTextCaption(screenshot,
-                        "Session: " + this.sessionId,
-                        "Host: " + this.nodeName,
-                        "Timestamp: " + getTimestamp().toString(),
-                        this.lastAction
+                    "Session: " + this.sessionId,
+                    "Host: " + this.nodeName,
+                    "Timestamp: " + getTimestamp().toString(),
+                    this.lastAction
                 );
 
-                // convert to the right image type
-                BufferedImage bgrScreen = convertToType(screenshot,
-                        BufferedImage.TYPE_3BYTE_BGR);
+                ImageIO.write(screenshot, "png",
+                    new File(tempOutputFolder,
+                        StringUtils.leftPad(String.valueOf(imageFrame++), 4, '0')
+                            + ".png"));
 
-                // encode the image
-                writer.encodeVideo(0, bgrScreen,
-                        System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
-
-                // sleep for framerate milliseconds
-                Thread.sleep((long) (1000 / FRAME_RATE.getDouble()));
-
+                Thread.sleep(
+                    1000 / RuntimeConfig.getConfig().getVideoRecording().getFrames());
             }
         } finally {
-            writer.close();
+            final File tempFile = new File(outputDir, sessionId + ".temp.mp4");
+
+            // no execute ffmpeg and wait for it
+            //ffmpeg -r $FRAME_RATE(5) -f image2 -s $RESOLUTION(1024x768) -i %04d.png -vcodec libx264 -crf 25  -pix_fmt yuv420p test.mp4
+            String ffmpegCommand
+                = "ffmpeg -r %s -f image2 -s %sx%s -i %s.png -vcodec libx264 -crf 25 -pix_fmt yuv420p %s";
+
+            String cmd = String.format(
+                ffmpegCommand,
+                String.valueOf(RuntimeConfig.getConfig().getVideoRecording().getFrames()),
+                new Double(dimension.getWidth()).intValue(),
+                new Double(dimension.getHeight()).intValue(),
+                // %04d means that zeros will be padded until the length of the string is 4 i.e 0001…0020…0030…2000 and so on.
+                tempOutputFolder.getAbsolutePath() + File.separator + "%04d",
+                tempFile.getAbsolutePath());
+
+            long t1 = System.currentTimeMillis();
+            Object result = ExecuteCommand.execRuntime(cmd, true);
+            logger.debug(cmd + " result:" + result);
+            logger.info("Video encoding for " + this.sessionId + " took: "
+                + DurationFormatUtils.formatDuration(
+                    System.currentTimeMillis() - t1, "mm 'minutes' ss.SSS 'seconds'."));
 
             // Now, rename our temporary file to the final filename, so that the downloaders can detect it
             final File finalFile = new File(outputDir, sessionId + ".mp4");
@@ -141,28 +157,12 @@ public class VideoRecorderCallable implements Callable {
                     logger.warn("Unable to rename temporary video file for session " + getSessionId());
                 }
             }
+
+            FileUtils.deleteDirectory(tempOutputFolder);
         }
 
         return getSessionId();
     }
-
-    protected void addTitleFrame(IMediaWriter writer) {
-        writer.encodeVideo(0,
-                ImageProcessor
-                        .createTitleFrame(dimension, BufferedImage.TYPE_3BYTE_BGR,
-                                "Session :" + this.sessionId,
-                                "Host :" + RuntimeConfig.getOS().getHostName() + " ("
-                                        + RuntimeConfig.getHostIp() + ")",
-                                getTimestamp().toString()),
-                0,
-                TimeUnit.NANOSECONDS);
-        try {
-            Thread.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-    }
-
 
     public void lastAction(String action) {
         this.lastActionTimestamp = getTimestamp();
@@ -259,8 +259,10 @@ public class VideoRecorderCallable implements Callable {
 
         else {
             image = new BufferedImage(sourceImage.getWidth(),
-                    sourceImage.getHeight(), targetType);
-            image.getGraphics().drawImage(sourceImage, 0, 0, null);
+                sourceImage.getHeight(), targetType);
+            Graphics g = image.getGraphics();
+            g.drawImage(sourceImage, 0, 0, null);
+            g.dispose();
         }
 
         return image;

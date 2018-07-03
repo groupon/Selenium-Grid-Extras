@@ -11,11 +11,6 @@
             <id>maven2</id>
             <url>http://repo1.maven.org/maven2</url>
         </repository>
-        <repository>
-            <id>xuggle repo</id>
-            <!-- <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url> -->
-            <url>https://raw.github.com/smccarthy/xuggle-xuggler-dependency/master</url>
-        </repository>
     </repositories>
 
     <properties>
@@ -90,21 +85,6 @@
             <groupId>dom4j</groupId>
             <artifactId>dom4j</artifactId>
             <version>1.6.1</version>
-        </dependency>
-<!--         <dependency> Not used anywhere
-            <groupId>jaxen</groupId>
-            <artifactId>jaxen</artifactId>
-            <version>1.1.6</version>
-        </dependency> -->
-        <dependency>
-            <groupId>xuggle</groupId>
-            <artifactId>xuggle-xuggler</artifactId>
-            <version>5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.boofcv</groupId>
-            <artifactId>xuggler</artifactId>
-            <version>0.16</version>
         </dependency>
         <dependency> <!-- selenium-api-2.53.1 comes with guava 19.0 -->
             <artifactId>guava</artifactId> <!-- Needed for UpgradeGridExtrasTask.getSanitizedReleaseList -->
