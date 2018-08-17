@@ -49,11 +49,13 @@ public class GridNode {
   private String timeout;
 
   public void setBrowserTimeout(Integer browserTimeout) {
-      this.browserTimeout = String.valueOf(browserTimeout);
+      if (browserTimeout != null)
+        this.browserTimeout = String.valueOf(browserTimeout);
   }
 
   public void setTimeout(Integer timeout) {
-      this.timeout = String.valueOf(timeout);
+      if (timeout != null)
+        this.timeout = String.valueOf(timeout);
   }
 
     private Map<String, Object> custom = new HashMap();
@@ -135,15 +137,20 @@ public class GridNode {
                 ? Integer.parseInt(topLevelJson.get("nodeStatusCheckTimeout").getAsString()) : null);
         node.setDownPollingLimit(topLevelJson.get("downPollingLimit") != null
                 ? Integer.parseInt(topLevelJson.get("downPollingLimit").getAsString()) : null);
-        node.setHost(topLevelJson.get("host") != null ? topLevelJson.get("host").getAsString() : null);
-        node.setUrl(topLevelJson.get("url") != null ? topLevelJson.get("url").getAsString() : null);
-        node.setAppiumStartCommand(topLevelJson.get("appiumStartCommand") != null
+        node.setHost(
+            topLevelJson.get("host") != null && !topLevelJson.get("host").isJsonNull()
+            ? topLevelJson.get("host").getAsString() : null);
+        node.setUrl(
+            topLevelJson.get("url") != null && !topLevelJson.get("url").isJsonNull()
+                ? topLevelJson.get("url").getAsString() : null);
+        node.setAppiumStartCommand(
+            topLevelJson.get("appiumStartCommand") != null && !topLevelJson.get("appiumStartCommand").isJsonNull()
                 ? topLevelJson.get("appiumStartCommand").getAsString() : null);
         node.setBrowserTimeout(
-            topLevelJson.get("browserTimeout") != null && !topLevelJson.get("browserTimeout").getAsString().equals("null")
+            topLevelJson.get("browserTimeout") != null && !topLevelJson.get("browserTimeout").isJsonNull()
             ? Integer.parseInt(topLevelJson.get("browserTimeout").getAsString()) : null);
         node.setTimeout(
-            topLevelJson.get("timeout") != null && !topLevelJson.get("timeout").getAsString().equals("null")
+            topLevelJson.get("timeout") != null && !topLevelJson.get("timeout").isJsonNull()
             ? Integer.parseInt(topLevelJson.get("timeout").getAsString()) : null);
 
         // Adding custom-config see Issue #342
@@ -275,7 +282,8 @@ public class GridNode {
   }
 
   public void setPort(Integer port) {
-    this.port = String.valueOf(port);
+    if (port != null)
+      this.port = String.valueOf(port);
   }
 
   public int getHubPort() {
@@ -283,7 +291,8 @@ public class GridNode {
   }
 
   public void setHubPort(Integer hubPort) {
-    this.hubPort = String.valueOf(hubPort);
+    if (hubPort != null)
+      this.hubPort = String.valueOf(hubPort);
   }
 
   public String getHubHost() {
@@ -315,7 +324,8 @@ public class GridNode {
   }
 
   public void setMaxSession(Integer maxSession) {
-    this.maxSession = String.valueOf(maxSession);
+    if (maxSession != null)
+      this.maxSession = String.valueOf(maxSession);
   }
 
   public boolean getRegister() {
@@ -331,7 +341,8 @@ public class GridNode {
   }
   
   public void setRegisterCycle(Integer registerCycle) {
-    this.registerCycle = String.valueOf(registerCycle);
+    if (registerCycle != null)
+      this.registerCycle = String.valueOf(registerCycle);
   }
 
   public String getProxy() {
@@ -355,7 +366,8 @@ public class GridNode {
   }
   
   public void setNodeStatusCheckTimeout(Integer nodeStatusCheckTimeout) {
-    this.nodeStatusCheckTimeout = String.valueOf(nodeStatusCheckTimeout);
+    if (nodeStatusCheckTimeout != null)
+      this.nodeStatusCheckTimeout = String.valueOf(nodeStatusCheckTimeout);
   }
   
   public int getUnregisterIfStillDownAfter() {
@@ -363,7 +375,8 @@ public class GridNode {
   }
   
   public void setUnregisterIfStillDownAfter(Integer unregisterIfStillDownAfter) {
-    this.unregisterIfStillDownAfter = String.valueOf(unregisterIfStillDownAfter);
+    if (unregisterIfStillDownAfter != null)
+      this.unregisterIfStillDownAfter = String.valueOf(unregisterIfStillDownAfter);
   }
 
   public void setDownPollingLimit(Integer downPollingLimit) {
