@@ -112,7 +112,7 @@ public class GridNodeTest {
             "    \"customString\": \"custom\",\n" +
             "    \"customInt\": 1,\n" +
             "    \"customBoolean\": false,\n" +
-            "    \"grid_extras_port\": 3000\n" +
+            "    \"grid_extras_port\": \"3000\"\n" +
             "  }"));
   }
 
