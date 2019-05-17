@@ -23,7 +23,7 @@ public class GridExtrasDownloaderTest {
     public static final String EXPECTED_VERSION = "1.10.1";
     public static final String EXPECTED_1101_DOWNLOAD_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/1.10.1/SeleniumGridExtras-1.10.1-SNAPSHOT-jar-with-dependencies.jar";
     public static final String GRID_EXTRAS_RELEASE_API_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
-    public static final String EXPECTED_171_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v1.7.1/SeleniumGridExtras-1.7.1-SNAPSHOT-jar-with-dependencies.jar";
+    public static final String EXPECTED_204_URL = "https://github.com/groupon/Selenium-Grid-Extras/releases/download/v2.0.4/SeleniumGridExtras-2.0.4-SNAPSHOT-jar-with-dependencies.jar";
     public static final String EXPECTED_JAR_NAME = "SeleniumGridExtras-1.10.1-SNAPSHOT-jar-with-dependencies.jar";
     public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 2000;
     private GridExtrasDownloader downloader;
@@ -123,8 +123,8 @@ public class GridExtrasDownloaderTest {
 
         GridExtrasDownloader downloader2 = new GridExtrasDownloader();
 
-        downloader2.setVersion("1.7.1");
-        assertEquals(EXPECTED_171_URL, downloader2.getJarUrl());
+        downloader2.setVersion("2.0.4");
+        assertEquals(EXPECTED_204_URL, downloader2.getJarUrl());
     }
 
     @Test
