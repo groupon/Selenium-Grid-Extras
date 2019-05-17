@@ -17,7 +17,7 @@ public class GeckoDriverDownloaderTest {
   private GeckoDriverDownloader downloader;
   private final String downloadDir = "/tmp/download_gecko_driver_test";
   private File testDir = new File("gecko_downloader_test");
-  private final String VERSION = "0.10.0";
+  private final String VERSION = "0.24.0";
   
   @Before
   public void setUp() throws Exception {
