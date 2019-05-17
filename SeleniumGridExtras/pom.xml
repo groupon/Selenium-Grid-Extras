@@ -12,10 +12,15 @@
             <url>http://repo1.maven.org/maven2</url>
         </repository>
         <repository>
-            <id>xuggle repo</id>
-            <!-- <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url> -->
-            <url>https://raw.github.com/smccarthy/xuggle-xuggler-dependency/master</url>
+            <id>dcm4che repo</id>
+            <url>http://www.dcm4che.org/maven2/</url>
         </repository>
+
+        <repository>
+            <id>xuggle repo</id>
+            <url>https://files.liferay.com/mirrors/xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+        </repository>
+
     </repositories>
 
     <properties>
