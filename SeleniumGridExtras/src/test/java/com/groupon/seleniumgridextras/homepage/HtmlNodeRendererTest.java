@@ -38,14 +38,16 @@ public class HtmlNodeRendererTest {
     }
   }
 
-//  @Test
-//  public void testGetSystemInfo() throws Exception {
-//    assertEquals("<div class='col-lg-6'>\n"
-//                 + "<h4>CPU</h4><p>10% Load</p>\n"
-//                 + "<h4>RAM</h4><p>20% Load</p>\n"
-//                 + "<h4>HD</h4><p>30% Full</p></div><!-- col-lg-6 -->",
-//                 renderer.getSystemInfo("10", "20", "30"));
-//  }
+  @Test
+  public void testGetSystemInfo() throws Exception {
+    String formattedHdInfo = renderer.getFormattedHdInfo("10", "20", "30");
+    assertEquals("\n\t<ul>\n" +
+                    "\t\t<li>Total: 10</li>\n" +
+                    "\t\t<li>Free: 20</li>\n" +
+                    "\t\t<li>Total Usable: 30</li>\n" +
+                    "\t</ul>",
+                 formattedHdInfo);
+  }
 //
 //  @Test
 //  public void testGetFooter() throws Exception {
