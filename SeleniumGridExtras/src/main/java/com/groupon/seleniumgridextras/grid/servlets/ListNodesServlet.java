@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.openqa.grid.internal.Registry;
+import org.openqa.grid.internal.GridRegistry;
 import org.openqa.grid.internal.ProxySet;
 import org.openqa.grid.internal.RemoteProxy;
 import org.openqa.grid.web.servlet.RegistryBasedServlet;
@@ -26,7 +26,7 @@ public class ListNodesServlet extends RegistryBasedServlet {
         this(null);
     }
 
-    public ListNodesServlet(Registry registry) {
+    public ListNodesServlet(GridRegistry registry) {
         super(registry);
     }
 
