@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.groupon.selenium-grid-extras</groupId>
@@ -12,14 +13,19 @@
             <url>http://repo1.maven.org/maven2</url>
         </repository>
         <repository>
-            <id>xuggle repo</id>
-            <!-- <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url> -->
-            <url>https://raw.github.com/smccarthy/xuggle-xuggler-dependency/master</url>
+            <id>dcm4che repo</id>
+            <url>http://www.dcm4che.org/maven2/</url>
         </repository>
+
+        <repository>
+            <id>xuggle repo</id>
+            <url>https://files.liferay.com/mirrors/xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
+        </repository>
+
     </repositories>
 
     <properties>
-        <version.selenium>3.8.1</version.selenium>
+        <version.selenium>3.141.59</version.selenium>
     </properties>
 
     <dependencies>
@@ -50,18 +56,18 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-         <dependency> <!--  Selenium 3.7.1 comes with commons-io 2.5 -->
+        <dependency> <!--  Selenium 3.7.1 comes with commons-io 2.5 -->
             <groupId>commons-io</groupId> <!-- GridHub.writeToFile requires this -->
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
         </dependency>
-         <dependency> <!--  Selenium 2.53.1 comes with commons-codec 1.10 -->
+        <dependency> <!--  Selenium 2.53.1 comes with commons-codec 1.10 -->
             <groupId>commons-codec</groupId> <!-- ScreenshotUtility.encodeStreamToBase64 requires this -->
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
         </dependency>
         <!-- Needed for `Should we store all of these configs in central location on the HUB node and update from there? (1-yes/0-no)` -->
-         <dependency> <!--  Selenium 3.7.1 comes with httpclient 4.5.3 -->
+        <dependency> <!--  Selenium 3.7.1 comes with httpclient 4.5.3 -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.3</version>
@@ -127,6 +133,26 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                    <id>copy-dependencies</id>
+                    <phase>install</phase>
+                    <goals>
+                        <goal>copy-dependencies</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        <overWriteReleases>false</overWriteReleases>
+                        <overWriteSnapshots>false</overWriteSnapshots>
+                        <overWriteIfNewer>true</overWriteIfNewer>
+                    </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

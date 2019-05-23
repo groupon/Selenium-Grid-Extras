@@ -167,9 +167,9 @@ public class VideoRecorderCallableTest {
         VideoRecorderCallable.deleteOldMovies(outputDir);
 
         // Older files has been removed
-        assertFalse(session1File.exists());
-        assertFalse(session2File.exists());
-        assertTrue(session3File.exists());
+        assertFalse("Session 1 file still exists at: " + session1File.getAbsolutePath(), session1File.exists());
+        assertFalse("Session 2 file still exists at: " + session2File.getAbsolutePath(), session2File.exists());
+        assertTrue("Session 3 file still exists at: " + session3File.getAbsolutePath(), session3File.exists());
     }
 
     @Test
