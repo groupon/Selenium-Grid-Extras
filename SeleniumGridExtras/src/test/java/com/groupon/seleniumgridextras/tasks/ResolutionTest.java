@@ -37,6 +37,7 @@
 
 package com.groupon.seleniumgridextras.tasks;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,8 +68,12 @@ public class ResolutionTest {
   @Test
   public void testGetResolution() {
     JsonObject object = task.execute();
-    assertEquals(object.get("error").getAsJsonArray().size(), 0);
-    if(System.getProperty("os.name").contains("Mac")) {
+    if (SystemUtils.IS_OS_LINUX) {
+      // not implemented in Linux yet.
+    } else {
+      assertEquals(object.get("error").getAsJsonArray().size(), 0);
+    }
+    if(SystemUtils.IS_OS_MAC) {
       assertTrue(object.get("out").getAsJsonArray().get(0).getAsString().contains("Resolution"));
     }
   }
