@@ -6,6 +6,10 @@ public class Safari extends Capability {
   public String getWebDriverClass() {
     return "org.openqa.selenium.safari.SafariDriver";
   }
+  
+  public Safari() {
+    this.put("maxInstances", 1);
+  }
 
   @Override
   public String getIcon() {
