@@ -227,7 +227,6 @@ public class BrowserVersionDetector {
       try {
         JsonObject object = ExecuteCommand.execRuntime(chromeMacVersionCommand, true);
         version = object.get("out").getAsString().trim().replaceAll("[^\\d.]", ""); // Removes "Google Chrome"
-        version = version.substring(0, version.indexOf('.'));
       } catch (Exception e) {
         // If ExecuteCommand.execRuntime fails, still return "";
         logger.warn(e.getMessage());
