@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class GridStarter {
 
@@ -200,9 +201,43 @@ public class GridStarter {
         command.add(option);
       }
     }
+    // Check if MicrosoftEdge is declared as browser in  node config
+    File file = new File(configFile);
+    Boolean edgeExist = false;
+    Boolean edgePrior44 = false;
+    String fullVersion;
+    int version = 44;
+    try {
+      Scanner scanner = new Scanner(file);
+      int lineNum = 0;
+      while (scanner.hasNextLine()) {
+        String line = scanner.nextLine();
+        lineNum ++;
+        // Store version
+        if(line.contains("version")) {
+          fullVersion = line.trim().replaceAll("[^\\d.]", "");
+          version = Integer.parseInt(fullVersion.split("\\.")[0]);
+        }
+        if(line.contains("MicrosoftEdge")) {
+          edgeExist = true;
+        }
+      }
+      // If MicrosoftEdge is declared in node capabilities
+      // Check it's version prior than 44 or no
+      if (edgeExist && version < 44) {
+          logger.info("Edge exist and it's version is prior than 44");
+          edgePrior44 = true;
+      }
+    } catch(Exception e) {
+      System.out.println("file doesn't exist");
+    }
+
     if (windows) {
       command.add(getIEDriverExecutionPathParam(config));
-      command.add(getEdgeDriverExecutionPathParam(config));
+      if(edgePrior44){
+        logger.info("Add Edge Driver to the command to start Grid Node");
+        command.add(getEdgeDriverExecutionPathParam(config));
+      }
     }
 
     command.add(getChromeDriverExecutionPathParam(config));
