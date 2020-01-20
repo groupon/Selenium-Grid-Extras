@@ -5,6 +5,10 @@ public class Edge extends Capability {
     public String getWebDriverClass() {
         return "org.openqa.selenium.edge.EdgeDriver";
     }
+    
+    public Edge() {
+        this.put("maxInstances", 1);
+    }
 
     @Override
     public String getIcon() {
