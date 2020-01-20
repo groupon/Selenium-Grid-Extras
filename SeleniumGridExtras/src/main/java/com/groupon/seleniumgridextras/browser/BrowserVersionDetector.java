@@ -117,6 +117,8 @@ public class BrowserVersionDetector {
       return getIEVersion();
     } else if (browserName.equalsIgnoreCase("internet explorer")) {
       return getIEVersion();
+    } else if (browserName.equalsIgnoreCase("safari")) {
+      return getSafariVersion();  
     } else {
       return "";
     }
@@ -233,6 +235,24 @@ public class BrowserVersionDetector {
         logger.warn(e.getMessage());
       }
       return version;
+    }
+    return version;
+  }
+  
+    /**
+   *
+   * @return version of Safari installed
+   */
+  private static String getSafariVersion() {
+    String version ="";
+    try {
+      String cmd = "mdls -name kMDItemVersion /Applications/Safari.app";
+      JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+      logger.info("Detected Safari version: " + object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""));
+      version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", "");
+    } catch (Exception e) {
+      // If ExecuteCommand.execRuntime fails, still return "";
+      logger.warn(e.getMessage());
     }
     return version;
   }
