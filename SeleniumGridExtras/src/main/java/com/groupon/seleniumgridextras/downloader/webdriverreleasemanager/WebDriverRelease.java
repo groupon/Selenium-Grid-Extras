@@ -8,6 +8,7 @@ public class WebDriverRelease {
   private int majorVersion;
   private int minorVersion;
   private int patchVersion;
+  private int patch2Version;
   private String name;
   private String relativePath;
 
@@ -63,6 +64,14 @@ public class WebDriverRelease {
 
   public int getPatchVersion() {
     return patchVersion;
+  }
+  
+  public int getPatch2Version() {
+    return patch2Version;
+  }
+
+  public void setPatch2Version(int patch2Version) {
+    this.patch2Version = patch2Version;
   }
 
   public String getName() {
