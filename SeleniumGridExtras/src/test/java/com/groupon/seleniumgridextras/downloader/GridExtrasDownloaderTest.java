@@ -86,8 +86,8 @@ public class GridExtrasDownloaderTest {
 
         long msRange = TimeStampUtility.timestampInMs() - downloader.getCachedReleaseResponseFile().lastModified();
         assertTrue(msRange < 10000); //Make sure that file created is no older than 10 seconds
-        System.out.println("INITIAL RESPONSE : " + initialResponse);
-        System.out.println("downloader.getCachedReleaseList() : " + downloader.getCachedReleaseList());
+        // System.out.println("INITIAL RESPONSE : " + initialResponse);
+        // System.out.println("downloader.getCachedReleaseList() : " + downloader.getCachedReleaseList());
         assertEquals(initialResponse, downloader.getCachedReleaseList());
 
         Thread.sleep(5000);
@@ -95,8 +95,8 @@ public class GridExtrasDownloaderTest {
         //But the file gets re-written
 
         assertEquals(initialResponse, downloader.getCachedReleaseList());
-        System.out.println("INITIAL RESPONSE : " + initialResponse);
-        System.out.println("downloader.getCachedReleaseList() : " + downloader.getCachedReleaseList());
+        // System.out.println("INITIAL RESPONSE : " + initialResponse);
+        // System.out.println("downloader.getCachedReleaseList() : " + downloader.getCachedReleaseList());
         long msRange2 = TimeStampUtility.timestampInMs() - downloader.getCachedReleaseResponseFile().lastModified();
         assertTrue(msRange2 < 2000); //Make sure that file created is no older than 2 seconds
     }

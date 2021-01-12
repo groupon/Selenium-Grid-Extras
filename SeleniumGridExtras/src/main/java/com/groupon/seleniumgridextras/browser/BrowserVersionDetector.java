@@ -117,6 +117,10 @@ public class BrowserVersionDetector {
       return getIEVersion();
     } else if (browserName.equalsIgnoreCase("internet explorer")) {
       return getIEVersion();
+    } else if (browserName.equalsIgnoreCase("Edge")) {
+      return getEdgeVersion();
+    } else if (browserName.equalsIgnoreCase("MicrosoftEdge")) {
+      return getEdgeVersion();
     } else {
       return "";
     }
@@ -165,7 +169,7 @@ public class BrowserVersionDetector {
       String[] cmd = new String[4];
       cmd[0] = "cmd";
       cmd[1] = "/C";
-      File f = new File("C:/Program Files (x86)/Mozilla Firefox");
+      File f = new File("C:/Program Files (x86)");
       if (f.exists()) {
         cmd[2] = "C:/Program Files (x86)/Mozilla Firefox/firefox.exe";
       } else {
@@ -236,4 +240,34 @@ public class BrowserVersionDetector {
     }
     return version;
   }
+
+  /**
+   *
+   * @return version of Edge installed
+   */
+  private static String getEdgeVersion() {
+    String version ="";
+    try {
+      /************ First Method ****************/
+//      String[] cmd = new String[7];
+//      cmd[0] = "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe ";
+//      cmd[1] = "Get-AppxPackage";
+//      cmd[2] = "Microsoft.MicrosoftEdge";
+//      cmd[3] = "|";
+//      cmd[4] = "Format-Wide";
+//      cmd[5] = "-Property";
+//      cmd[6] = "Version";
+
+      /************ Second Method ****************/
+      String cmd = "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe  (Get-AppxPackage Microsoft.MicrosoftEdge).Version";
+      JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+      logger.info("Detected Edge version: " + object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""));
+      version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", "");
+    } catch (Exception e) {
+      // If ExecuteCommand.execRuntime fails, still return "";
+      logger.warn(e.getMessage());
+    }
+    return version;
+  }
+
 }
