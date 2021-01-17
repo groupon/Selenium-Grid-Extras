@@ -61,6 +61,7 @@
       "com.groupon.seleniumgridextras.tasks.KillAllFirefox",
       "com.groupon.seleniumgridextras.tasks.KillAllChrome",
       "com.groupon.seleniumgridextras.tasks.KillAllSafari",
+      "com.groupon.seleniumgridextras.tasks.KillAllEdge",
       "com.groupon.seleniumgridextras.tasks.GetProcesses",
       "com.groupon.seleniumgridextras.tasks.KillPid",
       "com.groupon.seleniumgridextras.tasks.Netstat",
@@ -82,6 +83,7 @@
       "com.groupon.seleniumgridextras.tasks.DownloadWebdriver",
       "com.groupon.seleniumgridextras.tasks.DownloadIEDriver",
       "com.groupon.seleniumgridextras.tasks.DownloadChromeDriver",
+      "com.groupon.seleniumgridextras.tasks.DownloadEdgeDriver",
       "com.groupon.seleniumgridextras.tasks.SessionHistory",
       "com.groupon.seleniumgridextras.tasks.UpgradeGridExtrasTask"
     ],
@@ -94,6 +96,11 @@
       "bit": "32",
       "directory": "/tmp/webdriver/chromedriver",
       "version": "2.10"
+    },
+    "edgedriver": {
+      "bit": "32",
+      "directory": "/tmp/webdriver/edgedriver",
+      "version": "86.0.598.0"
     },
     "disabled_modules": [
       "com.groupon.seleniumgridextras.tasks.GetFile"

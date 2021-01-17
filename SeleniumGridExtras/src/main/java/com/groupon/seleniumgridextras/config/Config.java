@@ -21,9 +21,9 @@ public class Config {
     public static final String GRID = "grid";
     public static final String WEBDRIVER = "webdriver";
     public static final String IEDRIVER = "iedriver";
-    public static final String EDGEDRIVER = "edgedriver";
     public static final String CHROME_DRIVER = "chromedriver";
     public static final String GECKO_DRIVER = "geckodriver";
+    public static final String EDGE_DRIVER = "msedgedriver";
     public static final String SHARED_DIR = "expose_directory";
 
     public static final String AUTO_START_NODE = "auto_start_node";
@@ -140,6 +140,7 @@ public class Config {
         initializeIEDriver();
         initializeChromeDriver();
         initializeGeckoDriver();
+        initializeEdgeDriver();
 
         getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
         getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
@@ -215,6 +216,10 @@ public class Config {
         getConfigMap().put(GECKO_DRIVER, new GeckoDriver());
     }
 
+    private void initializeEdgeDriver() {
+        getConfigMap().put(EDGE_DRIVER, new EdgeDriver());
+    }
+
     public void addNodeConfigFile(String filename) {
         LinkedList<String> files = (LinkedList<String>) getConfigMap().get(NODE_CONFIG_FILES);
         files.add(filename);
@@ -246,6 +251,7 @@ public class Config {
         config.initializeIEDriver();
         config.initializeChromeDriver();
         config.initializeGeckoDriver();
+        config.initializeEdgeDriver();
 
         return FirstTimeRunConfig.customiseConfig(config);
     }
@@ -340,22 +346,22 @@ public class Config {
     public DriverInfo getEdgeDriver() {
         try {
             EdgeDriver driver;
-            driver = (EdgeDriver) getConfigMap().get(EDGEDRIVER);
+            driver = (EdgeDriver) getConfigMap().get(EDGE_DRIVER);
             if (driver == null){
                 driver = new EdgeDriver();
-                getConfigMap().put(EDGEDRIVER, driver);
+                getConfigMap().put(EDGE_DRIVER, driver);
 
             }
             return driver;
         } catch (ClassCastException e) {
             LinkedTreeMap
                     stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
-                    (LinkedTreeMap) getConfigMap().get(EDGEDRIVER);
+                    (LinkedTreeMap) getConfigMap().get(EDGE_DRIVER);
             DriverInfo edgeDriver = new EdgeDriver();
 
             edgeDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
 
-            getConfigMap().put(EDGEDRIVER, edgeDriver);
+            getConfigMap().put(EDGE_DRIVER, edgeDriver);
 
             return edgeDriver;
         }

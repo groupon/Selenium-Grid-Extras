@@ -173,10 +173,12 @@ public class JsonCodec {
         public static final String OLD_CHROME_DRIVER = "old_chrome_driver";
         public static final String OLD_GECKO_DRIVER = "old_gecko_driver";
         public static final String OLD_IE_DRIVER = "old_ie_driver";
+        public static final String OLD_EDGE_DRIVER = "old_ie_driver";
         public static final String NEW_WEB_DRIVER_JAR = "new_web_driver_jar";
         public static final String NEW_CHROME_DRIVER = "new_chrome_driver";
         public static final String NEW_GECKO_DRIVER = "new_gecko_driver";
         public static final String NEW_IE_DRIVER = "new_ie_driver";
+        public static final String NEW_EDGE_DRIVER = "new_ie_driver";
 
 
         public static class Grid {

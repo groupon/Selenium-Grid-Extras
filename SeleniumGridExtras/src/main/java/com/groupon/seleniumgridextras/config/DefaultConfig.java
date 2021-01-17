@@ -92,6 +92,7 @@ public class DefaultConfig {
     private static final String webDriverDefaultVersion = "2.53.0";
     private static final String ieDriverDefaultVersion = "2.53.1";
     private static final String chromeDriverDefaultVersion = "2.22";
+    private static final String edgeDriverDefaultVersion = "86.0.622.38";
     private static final String geckoDriverDefaultVersion = "0.10.0";
 
     public static Config getDefaultConfig() {
@@ -101,6 +102,7 @@ public class DefaultConfig {
         loadIEDriverInfo();
         loadChromeDriverInfo();
         loadGeckoDriverInfo();
+        loadEdgeDriverInfo();
         loadDisabledPlugins();
         loadEnabledPlugins();
         loadSetupConfig();
@@ -203,6 +205,9 @@ public class DefaultConfig {
     public static String getChromeDriverDefaultVersion() {
         return chromeDriverDefaultVersion;
     }
+    public static String getEdgeDriverDefaultVersion() {
+        return edgeDriverDefaultVersion;
+    }
 
     public static String getGeckoDriverDefaultVersion() {
         return geckoDriverDefaultVersion;
@@ -254,6 +259,16 @@ public class DefaultConfig {
 
         config.getGeckoDriver().setDirectory(tmpDir + "geckodriver");
         config.getGeckoDriver().setVersion(getGeckoDriverDefaultVersion());
+    }
+
+    private static void loadEdgeDriverInfo() {
+        String tmpDir;
+
+        tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
+
+        config.getEdgeDriver().setDirectory(tmpDir + "msedgedriver");
+        config.getEdgeDriver().setVersion(getEdgeDriverDefaultVersion());
+        config.getEdgeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
     }
 
     private static void loadLogConfig() {

@@ -14,6 +14,7 @@ import com.groupon.seleniumgridextras.downloader.GitHubDownloader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,10 +28,12 @@ public class WebDriverReleaseManager {
   private static final String IE_DRIVER = "ie-driver";
   private static final String CHROME_DRIVER = "chrome-driver";
   private static final String GECKO_DRIVER = "gecko-driver";
+  private static final String EDGE_DRIVER = "msedgedriver";
   private WebDriverRelease latestWebdriverVersion;
   private WebDriverRelease latestIEDriverVersion;
   private WebDriverRelease latestChromeDriverVersion;
   private WebDriverRelease latestGeckoDriverVersion;
+  private WebDriverRelease latestEdgeDriverVersion;
 
   private Document parsedXml;
   private static Logger logger = Logger.getLogger(WebDriverReleaseManager.class);
@@ -44,9 +47,10 @@ public class WebDriverReleaseManager {
     allProducts.put(IE_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(CHROME_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(GECKO_DRIVER, new LinkedList<WebDriverRelease>());
+    allProducts.put(EDGE_DRIVER, new LinkedList<WebDriverRelease>());
   }
 
-  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL geckoDriverVersionURL)
+  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL geckoDriverVersionURL, URL edgeDriverVersionURL)
       throws DocumentException {
 
     logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver and GeckoDriver from "
@@ -59,6 +63,7 @@ public class WebDriverReleaseManager {
     loadWebDriverAndIEDriverVersions(parsedXml);
     loadChromeDriverVersionFromURL(chromeDriverVersionURL);
     loadGeckoDriverVersionFromURL(geckoDriverVersionURL);
+    loadEdgeDriverVersionFromURL(edgeDriverVersionURL);
   }
 
   public int getWebdriverVersionCount() {
@@ -94,6 +99,10 @@ public class WebDriverReleaseManager {
 	return this.latestGeckoDriverVersion;
   }
 
+  public WebDriverRelease getEdgeDriverLatestVersion() {
+    return this.latestEdgeDriverVersion;
+  }
+
   /*
    * Choose the greatest major version.
    * If major version is the same, choose the greatest comparable version.
@@ -119,16 +128,12 @@ public class WebDriverReleaseManager {
   }
 
   public void loadChromeDriverVersionFromURL(URL url) {
-    InputStream in = null;
     try {
-      in = url.openStream();
-      loadChromeDriverVersion(IOUtils.toString(in));
+      loadChromeDriverVersion(IOUtils.toString(url, StandardCharsets.UTF_8));
     } catch (IOException e) {
       logger.error("Something went wrong when trying to get latest chrome driver version");
       logger.error(e.toString());
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    } finally {
-      IOUtils.closeQuietly(in);
     }
   }
 
@@ -169,6 +174,20 @@ public class WebDriverReleaseManager {
         allProducts.get(IE_DRIVER).add(release);
       }
     }
+  }
+
+  public void loadEdgeDriverVersionFromURL(URL url){
+    try {
+      loadChromeDriverVersion(IOUtils.toString(url, StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      logger.error("Something went wrong when trying to get latest chrome driver version");
+      logger.error(e.toString());
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    }
+  }
+
+  public void loadEdgeDriverVersion(String version) {
+    this.latestEdgeDriverVersion = new EdgeDriverRelease(version);
   }
 
 }

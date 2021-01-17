@@ -202,11 +202,11 @@ public class GridStarter {
     }
     if (windows) {
       command.add(getIEDriverExecutionPathParam(config));
-      command.add(getEdgeDriverExecutionPathParam(config));
     }
 
     command.add(getChromeDriverExecutionPathParam(config));
     command.add(getGeckoDriverExecutionPathParam(config));
+    command.add(getEdgeDriverExecutionPathParam(config));
     command.add("-cp");
 
     String cp = getGridExtrasJarFilePath();

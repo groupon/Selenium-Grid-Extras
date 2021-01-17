@@ -22,6 +22,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
   private boolean updateIEDriver = false;
   private boolean updateChromeDriver = false;
   private boolean updateGeckoDriver = false;
+  private boolean updateEdgeDriver = false;
 
   public AutoUpgradeDrivers() {
     setEndpoint(TaskDescriptions.Endpoints.AUTO_UPGRADE_WEBDRIVER);
@@ -35,21 +36,25 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
     addResponseDescription(JsonCodec.WebDriver.OLD_CHROME_DRIVER, "Old version of Chrome Driver");
     addResponseDescription(JsonCodec.WebDriver.OLD_GECKO_DRIVER, "Old version of Gecko Driver");
     addResponseDescription(JsonCodec.WebDriver.OLD_IE_DRIVER, "Old version of IE Driver");
+    addResponseDescription(JsonCodec.WebDriver.OLD_EDGE_DRIVER, "Old version of Edge Driver");
 
     addResponseDescription(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, "New versions of WebDriver Jar");
     addResponseDescription(JsonCodec.WebDriver.NEW_CHROME_DRIVER, "New version of Chrome Driver");
     addResponseDescription(JsonCodec.WebDriver.NEW_GECKO_DRIVER, "New version of Gecko Driver");
     addResponseDescription(JsonCodec.WebDriver.NEW_IE_DRIVER, "New version of IE Driver");
+    addResponseDescription(JsonCodec.WebDriver.NEW_CHROME_DRIVER, "New version of Edge Driver");
 
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_CHROME_DRIVER, RuntimeConfig.getConfig().getChromeDriver().getVersion());
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_GECKO_DRIVER, RuntimeConfig.getConfig().getGeckoDriver().getVersion());
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.OLD_EDGE_DRIVER, RuntimeConfig.getConfig().getEdgeDriver().getVersion());
 
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_WEB_DRIVER_JAR, RuntimeConfig.getConfig().getWebdriver().getVersion());
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_CHROME_DRIVER, RuntimeConfig.getConfig().getChromeDriver().getVersion());
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_GECKO_DRIVER, RuntimeConfig.getConfig().getGeckoDriver().getVersion());
     getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, RuntimeConfig.getConfig().getIEdriver().getVersion());
+    getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_EDGE_DRIVER, RuntimeConfig.getConfig().getEdgeDriver().getVersion());
 
   }
 
@@ -85,6 +90,17 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
         updateVersionFor(configHash, "geckodriver", newGeckoDriverVersion);
         getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_GECKO_DRIVER, newGeckoDriverVersion);
       }
+    if (updateEdgeDriver) {
+      String
+              newEdgeDriverVersion =
+              RuntimeConfig.getReleaseManager().getEdgeDriverLatestVersion().getPrettyPrintVersion(
+                      ".");
+      logger.info("Chrome Driver " + genericUpdate + " " + newEdgeDriverVersion);
+      RuntimeConfig.getConfig().getChromeDriver().setVersion(newEdgeDriverVersion);
+
+      updateVersionFor(configHash, "edgedriver", newEdgeDriverVersion);
+      getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_EDGE_DRIVER, newEdgeDriverVersion);
+    }
 
     if (updateWebDriver) {
       String gridExtrasVersion = Version.getSanitizedVersion();
@@ -122,7 +138,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
       getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_IE_DRIVER, newIEDriverVersion);
     }
 
-    if (updateChromeDriver || updateIEDriver || updateWebDriver || updateGeckoDriver) {
+    if (updateChromeDriver || updateIEDriver || updateWebDriver || updateGeckoDriver || updateEdgeDriver) {
       String
           message =
           "Update was detected for one or more versions of the drivers. You may need to restart Grid Extras for new versions to work";
@@ -198,6 +214,14 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
 
     updateWebDriver = currentWebDriverJarVersion != newestWebDriverJarVersion;
 
+    int
+            currentEdgeVersion =
+            getComparableVersion(RuntimeConfig.getConfig().getEdgeDriver().getVersion());
+    int
+            newestEdgeVersion =
+            RuntimeConfig.getReleaseManager().getEdgeDriverLatestVersion().getComparableVersion();
+
+    updateEdgeDriver = currentEdgeVersion < newestEdgeVersion;
   }
 
   private Integer getComparableVersion(String version) {

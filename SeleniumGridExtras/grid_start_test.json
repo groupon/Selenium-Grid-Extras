@@ -6,24 +6,30 @@
     "html_render_options": {},
     "node_additional_classpath": [],
     "video_recording_options": {},
-    "grid_extras_release_url": "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases",
     "hub_additional_classpath": [],
     "geckodriver": {},
+    "msedgedriver": {},
     "reboot_after_sessions": 0,
     "tear_down": [],
-    "webdriver": {},
+    "webdriver": {
+      "version": "1.1.1"
+    },
     "active_modules": [],
     "hub_config_files": [],
     "unregisterNodeDuringReboot": "true",
     "chromedriver": {},
     "disabled_modules": [],
-    "grid_extras_auto_update_check_interval": "2000",
     "hub_config": {},
     "grid_extras_port": 3000,
     "grid": {},
     "setup": [],
     "grid_jvm_options": {},
-    "node_config_files": [],
+    "node_config_files": [
+      "node1.json",
+      "node2.json",
+      "appium_node1.json",
+      "appium_node2.json"
+    ],
     "grid_extras_jvm_options": {}
   }
 }
