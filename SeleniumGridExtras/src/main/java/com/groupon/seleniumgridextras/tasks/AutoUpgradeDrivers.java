@@ -95,10 +95,10 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
               newEdgeDriverVersion =
               RuntimeConfig.getReleaseManager().getEdgeDriverLatestVersion().getPrettyPrintVersion(
                       ".");
-      logger.info("Chrome Driver " + genericUpdate + " " + newEdgeDriverVersion);
-      RuntimeConfig.getConfig().getChromeDriver().setVersion(newEdgeDriverVersion);
+      logger.info("Edge Driver " + genericUpdate + " " + newEdgeDriverVersion);
+      RuntimeConfig.getConfig().getEdgeDriver().setVersion(newEdgeDriverVersion);
 
-      updateVersionFor(configHash, "edgedriver", newEdgeDriverVersion);
+      updateVersionFor(configHash, "msedgedriver", newEdgeDriverVersion);
       getJsonResponse().addKeyValues(JsonCodec.WebDriver.NEW_EDGE_DRIVER, newEdgeDriverVersion);
     }
 

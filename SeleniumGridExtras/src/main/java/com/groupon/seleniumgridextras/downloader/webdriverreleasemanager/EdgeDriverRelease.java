@@ -18,7 +18,7 @@ public class EdgeDriverRelease extends WebDriverRelease {
       setPatch2Version(Integer.valueOf(m.group(4)));
     }
 
-    setName("edgedriver");
+    setName("msedgedriver");
     setRelativePath("index.html?path=" + getPrettyPrintVersion(".") + "/");
 
   }

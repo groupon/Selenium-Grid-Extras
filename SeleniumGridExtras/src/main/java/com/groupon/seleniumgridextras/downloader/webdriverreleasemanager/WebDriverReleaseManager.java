@@ -178,9 +178,9 @@ public class WebDriverReleaseManager {
 
   public void loadEdgeDriverVersionFromURL(URL url){
     try {
-      loadChromeDriverVersion(IOUtils.toString(url, StandardCharsets.UTF_8));
+      loadEdgeDriverVersion(IOUtils.toString(url, StandardCharsets.UTF_8));
     } catch (IOException e) {
-      logger.error("Something went wrong when trying to get latest chrome driver version");
+      logger.error("Something went wrong when trying to get latest edge driver version");
       logger.error(e.toString());
       e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
     }
