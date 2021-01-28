@@ -86,7 +86,7 @@ public class DefaultConfig {
     public static final String ENABLE_SESSION_HISTORY_DEFAULT = "1";  // Session history is turned on by default.
     public static final File SESSION_LOG_DIRECTORY = new File("log", "session_logs");
     public static final int VIDEOS_TO_KEEP = 40;
-    public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
+    public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/chamiz/Selenium-Grid-Extras/releases";
     public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 86400000;
     private static Config config;
     private static final String webDriverDefaultVersion = "2.53.0";
@@ -293,6 +293,7 @@ public class DefaultConfig {
         config.addActivatedModules(KillAllIE.class.getCanonicalName());
         config.addActivatedModules(KillAllFirefox.class.getCanonicalName());
         config.addActivatedModules(KillAllChrome.class.getCanonicalName());
+        config.addActivatedModules(KillAllEdge.class.getCanonicalName());
         config.addActivatedModules(KillAllSafari.class.getCanonicalName());
 
         config.addActivatedModules(SetAutoLogonUser.class.getCanonicalName());
@@ -320,6 +321,7 @@ public class DefaultConfig {
         config.addActivatedModules(DownloadIEDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadChromeDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadGeckoDriver.class.getCanonicalName());
+        config.addActivatedModules(DownloadEdgeDriver.class.getCanonicalName());
         config.addActivatedModules(SessionHistory.class.getCanonicalName());
 
         config.addActivatedModules(UpgradeGridExtrasTask.class.getCanonicalName());

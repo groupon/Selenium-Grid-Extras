@@ -46,12 +46,11 @@ public class WebDriverRelease {
     stringBuilder.append(getMinorVersion());
     stringBuilder.append(separator);
     stringBuilder.append(getPatchVersion());
-
     return stringBuilder.toString();
   }
 
   public int getComparableVersion(){
-    return Integer.valueOf(getPrettyPrintVersion("0"));
+    return Integer.valueOf(getPrettyPrintVersion(""));
   }
 
   public int getMajorVersion() {

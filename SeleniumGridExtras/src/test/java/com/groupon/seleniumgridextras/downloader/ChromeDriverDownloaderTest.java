@@ -3,6 +3,8 @@ package com.groupon.seleniumgridextras.downloader;
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
+import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,8 +55,15 @@ public class ChromeDriverDownloaderTest {
 
   @Test
   public void testSetBitVersion() throws Exception {
-      downloader.setBitVersion("64");
-      assertEquals("64", downloader.getBitVersion());
+/*      downloader.setBitVersion("64");
+      assertEquals("64", downloader.getBitVersion());*/
+
+    WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
+    String versionOfChromeDriver = manager.getChromeDriverLatestVersion().getPrettyPrintVersion(".");
+    String bitOfEdgeDriver = JsonCodec.WebDriver.Downloader.BIT_64;
+    String[] bitVersionsChromeDriver = ChromeDriverDownloader.getBitArchitecturesForVersion(versionOfChromeDriver);
+    System.out.println("\nWARNING: We were unable to find the correct bit of EdgeDriver for this OS and EdgeDriver version: " + versionOfChromeDriver + "  so will default to '32' please update this to be more accurate, or grid may not function properly\n");
+
   }
 
 

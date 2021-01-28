@@ -38,21 +38,30 @@
 package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import sun.net.www.http.ChunkedInputStream;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,19 +69,17 @@ public class EdgeDriverDownloader extends Downloader {
 
   private String bit;
   private String version;
-
-  private static final String EDGEDRIVER_BASE_URL = "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/";
-
+  private static final String EDGEDRIVER_BASE_URL = "https://msedgedriver.azureedge.net/";
   private static Logger logger = Logger.getLogger(EdgeDriverDownloader.class);
 
   public EdgeDriverDownloader(String version, String bitVersion) {
-
     setDestinationDir(RuntimeConfig.getConfig().getEdgeDriver().getDirectory());
     setVersion(version);
     setBitVersion(bitVersion);
 
     setDestinationFile(getVersion() + "_" + getBitVersion() + "bit" + ".zip");
 
+    //https://msedgedriver.azureedge.net/87.0.669.0/edgedriver_win64.zip
     setSourceURL(EDGEDRIVER_BASE_URL + getVersion() + "/edgedriver_"
                  + getOSName() + getBitVersion() + ".zip");
 
@@ -95,20 +102,13 @@ public class EdgeDriverDownloader extends Downloader {
 
   @Override
   public boolean download() {
-
     logger.info("Downloading from " + getSourceURL());
-
-
     if (startDownload()) {
-
       if (Unzipper.unzip(getDestinationFileFullPath().getAbsolutePath(), getDestinationDir())) {
-
         String edgedriver = "msedgedriver";
         if (RuntimeConfig.getOS().isWindows()){
           edgedriver = edgedriver + ".exe";
         }
-
-
         File tempUnzipedExecutable = new File(getDestinationDir(), edgedriver);
         File finalExecutable =
             new File(RuntimeConfig.getConfig().getEdgeDriver().getExecutablePath());
@@ -204,8 +204,39 @@ public class EdgeDriverDownloader extends Downloader {
     }
   }
 
-  private static Document getVersionManifest() {
+  private static Document getVersionManifest() throws IOException, ParserConfigurationException {
+    HttpClient httpClient = new DefaultHttpClient();
+    HttpGet httpGet = new HttpGet(EDGEDRIVER_BASE_URL);
+    httpGet.addHeader("user-agent", "Apache-HttpClient/5.0");
+    httpGet.addHeader("accept-encoding", "gzip, deflate, br");
+    httpGet.addHeader("cache-control", "max-age=0");
+    httpGet.addHeader("connection", "keep-alive");
+
+    HttpResponse response = httpClient.execute(httpGet);
+
+    InputStream inputStream = response.getEntity().getContent();
+    String xmlStr = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).readLine();
+
+/*
+    Properties versionsProperties = new Properties();
+    versionsProperties.load(inputStream);
+    String xmlStr = versionsProperties.getProperty("ï»¿<?xml");
+*/
+
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    Document doc = null;
+    try {
+      doc = factory.newDocumentBuilder().parse(new InputSource(new ByteArrayInputStream(xmlStr.getBytes(StandardCharsets.UTF_8))));
+      //doc = docBuilder.parse(new InputSource( new StringReader( xmlStr )));
+      return doc;
+    } catch (SAXException e) {
+      logger.error(e.toString());
+    }
+
+
+
+
+/*
     try {
       return factory.newDocumentBuilder().parse(new URL(EDGEDRIVER_BASE_URL).openStream());
     }
@@ -218,6 +249,7 @@ public class EdgeDriverDownloader extends Downloader {
     catch (IOException ioe) {
       logger.error(ioe.toString());
     }
+*/
     return null;
   }
 }

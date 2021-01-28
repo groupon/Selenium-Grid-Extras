@@ -225,7 +225,7 @@ public class AutoUpgradeDrivers extends ExecuteOSTask {
   }
 
   private Integer getComparableVersion(String version) {
-    return Integer.valueOf(version.replace(".", "0"));
+    return Integer.valueOf(version.replace(".", ""));
   }
 
 

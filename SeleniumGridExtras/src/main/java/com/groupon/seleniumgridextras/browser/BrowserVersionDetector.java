@@ -25,6 +25,7 @@ public class BrowserVersionDetector {
   protected File ieDriverPath;
   protected File chromeDriverPath;
   protected File geckoDriverPath;
+  protected File edgeDriverPath;
   protected List<GridNode> nodesFromConfigFile;
 
   public static final String[] chromeMacVersionCommand = {"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--version"};
@@ -101,6 +102,7 @@ public class BrowserVersionDetector {
     System.setProperty("webdriver.ie.driver", this.ieDriverPath.getAbsolutePath());
     System.setProperty("webdriver.chrome.driver", this.chromeDriverPath.getAbsolutePath());
     System.setProperty("webdriver.gecko.driver", this.geckoDriverPath.getAbsolutePath());
+    System.setProperty("webdriver.msedgedriver", this.edgeDriverPath.getAbsolutePath());
   }
   
   /**
@@ -118,9 +120,9 @@ public class BrowserVersionDetector {
     } else if (browserName.equalsIgnoreCase("internet explorer")) {
       return getIEVersion();
     } else if (browserName.equalsIgnoreCase("Edge")) {
-      return getEdgeVersion();
+      return getMSEdgeVersion();
     } else if (browserName.equalsIgnoreCase("MicrosoftEdge")) {
-      return getEdgeVersion();
+      return getMSEdgeVersion();
     } else {
       return "";
     }
@@ -169,11 +171,11 @@ public class BrowserVersionDetector {
       String[] cmd = new String[4];
       cmd[0] = "cmd";
       cmd[1] = "/C";
-      File f = new File("C:/Program Files (x86)");
+      File f = new File("C:/Program Files (x86)/Mozilla Firefox/");
       if (f.exists()) {
         cmd[2] = "C:/Program Files (x86)/Mozilla Firefox/firefox.exe";
       } else {
-        cmd[2] = "C:/Program Files/Mozilla Firefox/firefox.exe";
+        cmd[2] = "\"C:/Program Files/Mozilla Firefox/firefox.exe\"";
       }
 
       cmd[3] = "--version|more";
@@ -263,6 +265,25 @@ public class BrowserVersionDetector {
       JsonObject object = ExecuteCommand.execRuntime(cmd, true);
       logger.info("Detected Edge version: " + object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", ""));
       version = object.get("out").getAsJsonArray().get(0).getAsString().trim().replaceAll("[^\\d.]", "");
+    } catch (Exception e) {
+      // If ExecuteCommand.execRuntime fails, still return "";
+      logger.warn(e.getMessage());
+    }
+    return version;
+  }
+
+  /*
+   Get MS Edge version
+   */
+
+  private static String getMSEdgeVersion() {
+    String version ="";
+    try {
+      /************ Second Method ****************/
+      String cmd = "wmic.exe DATAFILE WHERE \"NAME='C:\\\\Program Files (x86)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe'\" GET Version /value";
+      JsonObject object = ExecuteCommand.execRuntime(cmd, true);
+      logger.info("Detected Edge version: " + object.get("out").getAsJsonArray().get(2).getAsString().trim().replaceAll("[^\\d.]", ""));
+      version = object.get("out").getAsJsonArray().get(2).getAsString().trim().replaceAll("[^\\d.]", "");
     } catch (Exception e) {
       // If ExecuteCommand.execRuntime fails, still return "";
       logger.warn(e.getMessage());

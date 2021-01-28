@@ -53,8 +53,8 @@ public class WebDriverReleaseManager {
   public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL geckoDriverVersionURL, URL edgeDriverVersionURL)
       throws DocumentException {
 
-    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver and GeckoDriver from "
-                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL + " and " + geckoDriverVersionURL
+    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver, GeckoDriver and MSEdgeDriver from "
+                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL + " and " + geckoDriverVersionURL + " and " + edgeDriverVersionURL
         .toExternalForm());
     initialize();
 
@@ -100,6 +100,7 @@ public class WebDriverReleaseManager {
   }
 
   public WebDriverRelease getEdgeDriverLatestVersion() {
+    logger.debug("latestEdgeDriverVersion : " + this.latestEdgeDriverVersion);
     return this.latestEdgeDriverVersion;
   }
 

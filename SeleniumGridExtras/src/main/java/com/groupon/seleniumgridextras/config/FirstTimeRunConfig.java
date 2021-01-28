@@ -282,7 +282,7 @@ public class FirstTimeRunConfig {
         String versionOfGecko = manager.getGeckoDriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
-        String versionOfEdgeDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
+        String versionOfEdgeDriver = manager.getEdgeDriverLatestVersion().getPrettyPrintVersion(".");
 
         if (answer.equals("1")) {
             defaultConfig.setAutoUpdateDrivers("1");
@@ -341,7 +341,7 @@ public class FirstTimeRunConfig {
             defaultConfig.getIEdriver().setBit(bitOfIEDriver);
         }
 
-        String bitOfGeckoDriver = JsonCodec.WebDriver.Downloader.BIT_32;
+        String bitOfGeckoDriver = JsonCodec.WebDriver.Downloader.BIT_64;
         String[] bitVersionsGeckoDriver = GeckoDriverDownloader.getBitArchitecturesForVersion(versionOfGecko);
         if (bitVersionsGeckoDriver.length > 1) {
             bitOfGeckoDriver = askQuestion("What bit of GeckoDriver should we use (" + StringUtils.join(bitVersionsGeckoDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
@@ -352,15 +352,15 @@ public class FirstTimeRunConfig {
         }
         defaultConfig.getGeckoDriver().setBit(bitOfGeckoDriver);
 
-        String bitOfEdgeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
-        String[] bitVersionsEdgeDriver = EdgeDriverDownloader.getBitArchitecturesForVersion(versionOfEdgeDriver);
+        String bitOfEdgeDriver = JsonCodec.WebDriver.Downloader.BIT_64;
+/*        String[] bitVersionsEdgeDriver = EdgeDriverDownloader.getBitArchitecturesForVersion(versionOfEdgeDriver);
         if (bitVersionsEdgeDriver.length > 1) {
             bitOfEdgeDriver = askQuestion("What bit of EdgeDriver should we use (" + StringUtils.join(bitVersionsChromeDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
         } else if (bitVersionsChromeDriver.length == 1) {
             bitOfEdgeDriver = bitVersionsEdgeDriver[0];
         } else {
-            System.out.println("\nWARNING: We were unable to find the correct bit of EdgeDriver for this OS and ChromeDriver version: " + versionOfChrome + "  so will default to '32' please update this to be more accurate, or grid may not function properly\n");
-        }
+            System.out.println("\nWARNING: We were unable to find the correct bit of EdgeDriver for this OS and EdgeDriver version: " + versionOfEdgeDriver + "  so will default to '32' please update this to be more accurate, or grid may not function properly\n");
+        }*/
         defaultConfig.getEdgeDriver().setBit(bitOfEdgeDriver);
 
         System.out.println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());

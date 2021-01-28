@@ -2,6 +2,9 @@ package com.groupon.seleniumgridextras.downloader;
 
 import com.groupon.seleniumgridextras.config.Config;
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
+import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
+import com.groupon.seleniumgridextras.utilities.json.JsonCodec;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,8 +26,6 @@ public class EdgeDriverDownloaderTest {
     config.getEdgeDriver().setDirectory(downloadDir);
     config.writeToDisk(RuntimeConfig.getConfigFile());
     RuntimeConfig.load();
-
-
     downloader = new EdgeDriverDownloader("86.0.598.0", "32");
   }
 
