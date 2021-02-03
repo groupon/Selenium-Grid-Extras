@@ -21,6 +21,7 @@ public class CapabilityTest {
     Capability iphone = Capability.getCapabilityFor("iPhone");
     Capability ipad = Capability.getCapabilityFor("iPad");
     Capability phantomjs = Capability.getCapabilityFor("phantomjs");
+    Capability msedge = Capability.getCapabilityFor("MicrosoftEdge");
 
     assertTrue(firefox instanceof Firefox);
     assertTrue(ie instanceof InternetExplorer);
@@ -32,6 +33,7 @@ public class CapabilityTest {
     assertTrue(iphone instanceof IPhone);
     assertTrue(ipad instanceof IPad);
     assertTrue(phantomjs instanceof PhantomJs);
+    assertTrue(msedge instanceof Edge);
   }
 
 
@@ -47,6 +49,7 @@ public class CapabilityTest {
     assertEquals("browser", Capability.getSupportedCapabilities().get(Browser.class));
     assertEquals("iPhone", Capability.getSupportedCapabilities().get(IPhone.class));
     assertEquals("iPad", Capability.getSupportedCapabilities().get(IPad.class));
+    assertEquals("MicrosoftEdge", Capability.getSupportedCapabilities().get(Edge.class));
   }
 
   @Test
@@ -72,6 +75,8 @@ public class CapabilityTest {
             Capability.getCapabilityFor("iPad").getWebDriverClass());
     assertEquals("org.openqa.selenium.phantomjs.PhantomJSDriver",
             Capability.getCapabilityFor("phantomjs").getWebDriverClass());
+    assertEquals("microsoft.edge.seleniumtools.edgeDriver",
+            Capability.getCapabilityFor("MicrosoftEdge").getWebDriverClass());
 
   }
 }
