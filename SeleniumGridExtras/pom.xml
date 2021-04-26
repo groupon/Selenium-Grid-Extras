@@ -50,10 +50,10 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-         <dependency> <!--  Selenium 2.53.1 comes with commons-io 2.4 -->
+         <dependency> <!--  Selenium 2.53.1 comes with commons-io 2.7 -->
             <groupId>commons-io</groupId> <!-- GridHub.writeToFile requires this -->
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>2.7</version>
         </dependency>
          <dependency> <!--  Selenium 2.53.1 comes with commons-codec 1.10 -->
             <groupId>commons-codec</groupId> <!-- ScreenshotUtility.encodeStreamToBase64 requires this -->
