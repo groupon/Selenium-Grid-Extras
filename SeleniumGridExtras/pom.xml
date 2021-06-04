@@ -64,7 +64,7 @@
          <dependency> <!--  Selenium 2.53.1 comes with httpclient 4.5.1 -->
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.1</version>
+            <version>4.5.13</version>
         </dependency>
         <dependency> <!-- Selenium 2.53.1 comes with commons-lang3 3.4 -->
             <groupId>org.apache.commons</groupId> <!-- Needed all over -->
