@@ -5,10 +5,10 @@ import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ScreenshotUtility;
 import com.groupon.seleniumgridextras.utilities.TimeStampUtility;
 import com.groupon.seleniumgridextras.videorecording.ImageProcessor;
-import com.xuggle.mediatool.IMediaWriter;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.xuggler.ICodec;
-import com.xuggle.xuggler.IRational;
+// import com.xuggle.mediatool.IMediaWriter;
+// import com.xuggle.mediatool.ToolFactory;
+// import com.xuggle.xuggler.ICodec;
+// import com.xuggle.xuggler.IRational;
 
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.log4j.Logger;
@@ -37,11 +37,11 @@ public class VideoRecorderCallable implements Callable {
     protected int idleTimeout;
 
 
-    final private static
-    IRational
-            FRAME_RATE =
-            IRational.make(RuntimeConfig.getConfig().getVideoRecording().getFrames(),
-                    RuntimeConfig.getConfig().getVideoRecording().getSecondsPerFrame());
+    // final private static
+    // IRational
+            // FRAME_RATE =
+            // IRational.make(RuntimeConfig.getConfig().getVideoRecording().getFrames(),
+                    // RuntimeConfig.getConfig().getVideoRecording().getSecondsPerFrame());
     private static Dimension dimension;
 
 
@@ -78,17 +78,17 @@ public class VideoRecorderCallable implements Callable {
         // Note we're writing to a temp file.  This is to prevent it from being
         // downloaded while we're mid-write.
         final File tempFile = new File(outputDir, sessionId + ".temp.mp4");
-        final
-        IMediaWriter
-                writer =
-                ToolFactory.makeWriter(tempFile.getAbsolutePath());
+        // final
+        // IMediaWriter
+                // writer =
+                // ToolFactory.makeWriter(tempFile.getAbsolutePath());
 
         // We tell it we're going to add one video stream, with id 0,
         // at position 0, and that it will have a fixed frame rate of
-        // FRAME_RATE.
-        writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
-                FRAME_RATE,
-                screenBounds.width, screenBounds.height);
+        // s.
+        // writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_H264,
+                // FRAME_RATE,
+                // screenBounds.width, screenBounds.height);
 
         logger
                 .info("Starting video recording for session " + getSessionId() + " to " + outputDir
@@ -97,7 +97,7 @@ public class VideoRecorderCallable implements Callable {
         try {
             int imageFrame = 1;
             long startTime = System.nanoTime();
-            addTitleFrame(writer);
+            // addTitleFrame(writer);
 
             while (stopActionNotCalled() && idleTimeoutNotReached()) {
 
@@ -118,15 +118,15 @@ public class VideoRecorderCallable implements Callable {
                         BufferedImage.TYPE_3BYTE_BGR);
 
                 // encode the image
-                writer.encodeVideo(0, bgrScreen,
-                        System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
+                // writer.encodeVideo(0, bgrScreen,
+                        // System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
 
                 // sleep for framerate milliseconds
-                Thread.sleep((long) (1000 / FRAME_RATE.getDouble()));
+                // Thread.sleep((long) (1000 / FRAME_RATE.getDouble()));
 
             }
         } finally {
-            writer.close();
+            // writer.close();
 
             // Now, rename our temporary file to the final filename, so that the downloaders can detect it
             final File finalFile = new File(outputDir, sessionId + ".mp4");
@@ -146,22 +146,22 @@ public class VideoRecorderCallable implements Callable {
         return getSessionId();
     }
 
-    protected void addTitleFrame(IMediaWriter writer) {
-        writer.encodeVideo(0,
-                ImageProcessor
-                        .createTitleFrame(dimension, BufferedImage.TYPE_3BYTE_BGR,
-                                "Session :" + this.sessionId,
-                                "Host :" + RuntimeConfig.getOS().getHostName() + " ("
-                                        + RuntimeConfig.getHostIp() + ")",
-                                getTimestamp().toString()),
-                0,
-                TimeUnit.NANOSECONDS);
-        try {
-            Thread.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-    }
+    // protected void addTitleFrame(IMediaWriter writer) {
+    //     writer.encodeVideo(0,
+    //             ImageProcessor
+    //                     .createTitleFrame(dimension, BufferedImage.TYPE_3BYTE_BGR,
+    //                             "Session :" + this.sessionId,
+    //                             "Host :" + RuntimeConfig.getOS().getHostName() + " ("
+    //                                     + RuntimeConfig.getHostIp() + ")",
+    //                             getTimestamp().toString()),
+    //             0,
+    //             TimeUnit.NANOSECONDS);
+    //     try {
+    //         Thread.sleep(2);
+    //     } catch (InterruptedException e) {
+    //         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    //     }
+    // }
 
 
     public void lastAction(String action) {

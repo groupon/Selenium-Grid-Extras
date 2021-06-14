@@ -11,11 +11,11 @@
             <id>maven2</id>
             <url>http://repo1.maven.org/maven2</url>
         </repository>
-        <repository>
+        <!-- <repository>
             <id>xuggle repo</id>
-            <!-- <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url> -->
+            <url>http://xuggle.googlecode.com/svn/trunk/repo/share/java/</url>
             <url>https://raw.github.com/smccarthy/xuggle-xuggler-dependency/master</url>
-        </repository>
+        </repository> -->
     </repositories>
 
     <properties>
@@ -96,7 +96,7 @@
             <artifactId>jaxen</artifactId>
             <version>1.1.6</version>
         </dependency> -->
-        <dependency>
+        <!-- <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-xuggler</artifactId>
             <version>5.4</version>
@@ -105,7 +105,7 @@
             <groupId>org.boofcv</groupId>
             <artifactId>xuggler</artifactId>
             <version>0.16</version>
-        </dependency>
+        </dependency> -->
         <dependency> <!-- selenium-api-3.7.1 comes with guava 23.0 -->
             <artifactId>guava</artifactId> <!-- Needed for UpgradeGridExtrasTask.getSanitizedReleaseList -->
             <groupId>com.google.guava</groupId>
