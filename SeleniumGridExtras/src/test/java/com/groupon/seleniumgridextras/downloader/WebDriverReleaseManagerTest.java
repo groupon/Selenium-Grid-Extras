@@ -18,7 +18,7 @@ public class WebDriverReleaseManagerTest {
   @Before
   public void setUp() throws Exception {
       URL webDriverAndIEDriverURL = ClassLoader.getSystemResource("fixtures/selenium_release_manifest.xml");
-      URL chromeDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
+      URL chromeDriverVersionURL = ClassLoader.getSystemResource("fixtures/chromedriver_release_version.txt");
       URL marionetteDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
       releaseManager = new WebDriverReleaseManager(webDriverAndIEDriverURL, chromeDriverVersionURL, marionetteDriverVersionURL);
   }
@@ -33,7 +33,7 @@ public class WebDriverReleaseManagerTest {
   public void testGetLatestVersion() throws Exception {
     assertEquals("2.41.0", releaseManager.getWedriverLatestVersion().getPrettyPrintVersion("."));
     assertEquals("2.41.0", releaseManager.getIeDriverLatestVersion().getPrettyPrintVersion("."));
-    assertEquals("2.10", releaseManager.getChromeDriverLatestVersion().getPrettyPrintVersion("."));
+    assertEquals("2.10.13.42", releaseManager.getChromeDriverLatestVersion().getPrettyPrintVersion("."));
   }
 
   @Test
