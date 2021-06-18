@@ -10,6 +10,7 @@ public interface BrowserType {
 
     String FIREFOX = "firefox";
 
+    @Deprecated
     String EDGE = "MicrosoftEdge";
 
     @Deprecated
@@ -32,6 +33,7 @@ public interface BrowserType {
     @Deprecated
     String SAFARI_PROXY = "safariproxy";
     String CHROME = "chrome";
+    String MSEDGE = "MicrosoftEdge";
     @Deprecated
     String KONQUEROR = "konqueror";
     @Deprecated

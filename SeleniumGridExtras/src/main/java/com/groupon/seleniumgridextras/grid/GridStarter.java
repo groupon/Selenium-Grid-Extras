@@ -202,11 +202,12 @@ public class GridStarter {
     }
     if (windows) {
       command.add(getIEDriverExecutionPathParam(config));
-      command.add(getEdgeDriverExecutionPathParam(config));
+      // command.add(getEdgeDriverExecutionPathParam(config));
     }
 
     command.add(getChromeDriverExecutionPathParam(config));
     command.add(getGeckoDriverExecutionPathParam(config));
+    command.add(getMsEdgeDriverExecutionPathParam(config));
     command.add("-cp");
 
     String cp = getGridExtrasJarFilePath();
@@ -292,6 +293,10 @@ public class GridStarter {
 
   protected static String getGeckoDriverExecutionPathParam(Config config) {
     return String.format("-Dwebdriver.gecko.driver=%s", config.getGeckoDriver().getExecutablePath());
+  }
+
+  protected static String getMsEdgeDriverExecutionPathParam(Config config) {
+    return String.format("-Dwebdriver.edge.driver=%s", config.getMsEdgeDriver().getExecutablePath());
   }
 
   protected static String buildBackgroundStartCommand(String command, Boolean windows) {

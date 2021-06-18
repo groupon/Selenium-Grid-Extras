@@ -47,6 +47,7 @@ import com.groupon.seleniumgridextras.config.capabilities.Capability;
 import com.groupon.seleniumgridextras.config.remote.ConfigPusher;
 import com.groupon.seleniumgridextras.downloader.ChromeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.GeckoDriverDownloader;
+import com.groupon.seleniumgridextras.downloader.MsEdgeDriverDownloader;
 import com.groupon.seleniumgridextras.downloader.webdriverreleasemanager.WebDriverReleaseManager;
 import com.groupon.seleniumgridextras.os.GridPlatform;
 import com.groupon.seleniumgridextras.tasks.SetAutoLogonUser;
@@ -279,6 +280,7 @@ public class FirstTimeRunConfig {
         WebDriverReleaseManager manager = RuntimeConfig.getReleaseManager();
         String versionOfChrome = manager.getChromeDriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfGecko = manager.getGeckoDriverLatestVersion().getPrettyPrintVersion(".");
+        String versionOfMsEdge = manager.getMsEdgeDriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfWebDriver = manager.getWedriverLatestVersion().getPrettyPrintVersion(".");
         String versionOfIEDriver = manager.getIeDriverLatestVersion().getPrettyPrintVersion(".");
 
@@ -298,9 +300,12 @@ public class FirstTimeRunConfig {
                     askQuestion("What version of Gecko Driver should we use?", versionOfGecko);
             versionOfChrome =
                     askQuestion("What version of Chrome Driver should we use?", versionOfChrome);
+            versionOfMsEdge =
+                    askQuestion("What version of MsEdge Driver should we use?", versionOfMsEdge);
         }
         defaultConfig.getChromeDriver().setVersion(versionOfChrome);
         defaultConfig.getGeckoDriver().setVersion(versionOfGecko);
+        defaultConfig.getMsEdgeDriver().setVersion(versionOfMsEdge);
 
         if(gridExtrasVersion.startsWith("1.")) {
           if(VersionCompare.versionCompare(versionOfWebDriver, "3.7.1") >= 0) {
@@ -347,9 +352,21 @@ public class FirstTimeRunConfig {
         }
         defaultConfig.getGeckoDriver().setBit(bitOfGeckoDriver);
 
+        String bitOfMsEdgeDriver = JsonCodec.WebDriver.Downloader.BIT_32;
+        String[] bitVersionsMsEdgeDriver = MsEdgeDriverDownloader.getBitArchitecturesForVersion(versionOfMsEdge);
+        if (bitVersionsMsEdgeDriver.length > 1) {
+            bitOfMsEdgeDriver = askQuestion("What bit of MsEdgeDriver should we use (" + StringUtils.join(bitVersionsMsEdgeDriver, ", ") + ")?", JsonCodec.WebDriver.Downloader.BIT_32);
+        } else if (bitVersionsMsEdgeDriver.length == 1) {
+            bitOfMsEdgeDriver = bitVersionsMsEdgeDriver[0];
+        } else {
+            System.out.println("\nWARNING: We were unable to find the correct bit of MsEdgeDriver for this OS and MsEdgeDriver version: " + versionOfMsEdge + "  so will default to '32' please update this to be more accurate, or grid may not function properly\n");
+        }
+        defaultConfig.getMsEdgeDriver().setBit(bitOfMsEdgeDriver);
+
         System.out.println("Current Selenium Driver Version: " + defaultConfig.getWebdriver().getVersion());
         System.out.printf("Current Chrome Driver Version: %s (%s bit)\n", defaultConfig.getChromeDriver().getVersion(), defaultConfig.getChromeDriver().getBit());
         System.out.printf("Current Gecko Driver Version: %s (%s bit)\n", defaultConfig.getGeckoDriver().getVersion(), defaultConfig.getGeckoDriver().getBit());
+        System.out.printf("Current MsEdge Driver Version: %s (%s bit)\n", defaultConfig.getMsEdgeDriver().getVersion(), defaultConfig.getMsEdgeDriver().getBit());
         if (defaultConfig.getIEdriver() != null && defaultConfig.getIEdriver().getVersion() != null)
         {
             System.out.printf("Current IE Driver Version: %s (%s bit)\n", defaultConfig.getIEdriver().getVersion(), defaultConfig.getIEdriver().getBit());

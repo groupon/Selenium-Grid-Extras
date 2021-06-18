@@ -250,6 +250,18 @@ public class GridStarterTest {
         }
     }
 
+    @Test
+    public void testMsEdgeDriverDString() throws Exception {
+        Config config = new Config();
+        if (RuntimeConfig.getOS().isWindows()) {
+            config.getMsEdgeDriver().setDirectory("\\tmp\\webdriver\\msedgedriver");
+            assertTrue(GridStarter.getMsEdgeDriverExecutionPathParam(config).contains("-Dwebdriver.edge.driver=\\tmp\\webdriver\\msedgedriver\\msedgedriver_"));
+        } else {
+            config.getMsEdgeDriver().setDirectory("/tmp/webdriver/msedgedriver");
+            assertTrue(GridStarter.getMsEdgeDriverExecutionPathParam(config).contains("-Dwebdriver.edge.driver=/tmp/webdriver/msedgedriver/msedgedriver_"));
+        }
+    }
+
 
     private String readFile(String filePath) {
         String returnString = "";

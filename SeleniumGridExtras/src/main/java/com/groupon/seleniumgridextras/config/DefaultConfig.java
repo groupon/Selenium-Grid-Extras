@@ -93,6 +93,7 @@ public class DefaultConfig {
     private static final String ieDriverDefaultVersion = "2.53.1";
     private static final String chromeDriverDefaultVersion = "2.22";
     private static final String geckoDriverDefaultVersion = "0.10.0";
+    private static final String msEdgeDriverDefaultVersion = "75.0.139.20";
 
     public static Config getDefaultConfig() {
         config = new Config();
@@ -101,6 +102,7 @@ public class DefaultConfig {
         loadIEDriverInfo();
         loadChromeDriverInfo();
         loadGeckoDriverInfo();
+        loadMsEdgeDriverInfo();
         loadDisabledPlugins();
         loadEnabledPlugins();
         loadSetupConfig();
@@ -208,6 +210,10 @@ public class DefaultConfig {
         return geckoDriverDefaultVersion;
     }
 
+    public static String getMsEdgeDriverDefaultVersion() {
+        return msEdgeDriverDefaultVersion;
+    }
+
     private static void loadSetupConfig() {
         config.addSetupTask(MoveMouse.class.getCanonicalName());
     }
@@ -256,6 +262,16 @@ public class DefaultConfig {
         config.getGeckoDriver().setVersion(getGeckoDriverDefaultVersion());
     }
 
+    private static void loadMsEdgeDriverInfo() {
+        String tmpDir;
+
+        tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
+
+        config.getMsEdgeDriver().setDirectory(tmpDir + "msedgedriver");
+        config.getMsEdgeDriver().setVersion(getMsEdgeDriverDefaultVersion());
+        config.getMsEdgeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
+    }
+
     private static void loadLogConfig() {
         config.setLogMaximumSize(LOG_MAXIMUM_SIZE);
         config.setLogMaximumAge(LOG_MAX_AGE);
@@ -279,6 +295,7 @@ public class DefaultConfig {
         config.addActivatedModules(KillAllFirefox.class.getCanonicalName());
         config.addActivatedModules(KillAllChrome.class.getCanonicalName());
         config.addActivatedModules(KillAllSafari.class.getCanonicalName());
+        config.addActivatedModules(KillAllMsEdge.class.getCanonicalName());
 
         config.addActivatedModules(SetAutoLogonUser.class.getCanonicalName());
         config.addActivatedModules(GetProcesses.class.getCanonicalName());
@@ -305,6 +322,7 @@ public class DefaultConfig {
         config.addActivatedModules(DownloadIEDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadChromeDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadGeckoDriver.class.getCanonicalName());
+        config.addActivatedModules(DownloadMsEdgeDriver.class.getCanonicalName());
         config.addActivatedModules(SessionHistory.class.getCanonicalName());
 
         config.addActivatedModules(UpgradeGridExtrasTask.class.getCanonicalName());

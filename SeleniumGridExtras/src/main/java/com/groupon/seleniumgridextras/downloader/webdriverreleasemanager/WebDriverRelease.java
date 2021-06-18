@@ -31,10 +31,7 @@ public class WebDriverRelease {
         setName(detailedMatcher.group(3));
 
       }
-
     }
-
-
   }
 
   public String getPrettyPrintVersion(String separator){

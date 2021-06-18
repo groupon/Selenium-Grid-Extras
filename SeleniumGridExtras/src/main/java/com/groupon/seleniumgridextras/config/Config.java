@@ -24,6 +24,7 @@ public class Config {
     public static final String EDGEDRIVER = "edgedriver";
     public static final String CHROME_DRIVER = "chromedriver";
     public static final String GECKO_DRIVER = "geckodriver";
+    public static final String MSEDGE_DRIVER = "msedgedriver";
     public static final String SHARED_DIR = "expose_directory";
 
     public static final String AUTO_START_NODE = "auto_start_node";
@@ -140,6 +141,7 @@ public class Config {
         initializeIEDriver();
         initializeChromeDriver();
         initializeGeckoDriver();
+        initializeMsEdgeDriver();
 
         getConfigMap().put(NODE_CONFIG_FILES, new LinkedList<String>());
         getConfigMap().put(HUB_CONFIG_FILES, new LinkedList<String>());
@@ -215,6 +217,10 @@ public class Config {
         getConfigMap().put(GECKO_DRIVER, new GeckoDriver());
     }
 
+    private void initializeMsEdgeDriver() {
+        getConfigMap().put(MSEDGE_DRIVER, new MsEdgeDriver());
+    }
+
     public void addNodeConfigFile(String filename) {
         LinkedList<String> files = (LinkedList<String>) getConfigMap().get(NODE_CONFIG_FILES);
         files.add(filename);
@@ -246,6 +252,7 @@ public class Config {
         config.initializeIEDriver();
         config.initializeChromeDriver();
         config.initializeGeckoDriver();
+        config.initializeMsEdgeDriver();
 
         return FirstTimeRunConfig.customiseConfig(config);
     }
@@ -334,6 +341,23 @@ public class Config {
             getConfigMap().put(GECKO_DRIVER, geckoDriver);
 
             return geckoDriver;
+        }
+    }
+
+    public DriverInfo getMsEdgeDriver() {
+        try {
+            return (MsEdgeDriver) getConfigMap().get(MSEDGE_DRIVER);
+        } catch (ClassCastException e) {
+            LinkedTreeMap
+                    stringMapFromGoogleWhoCantUseHashMapOnNestedObjects =
+                    (LinkedTreeMap) getConfigMap().get(MSEDGE_DRIVER);
+            DriverInfo msEdgeDriver = new MsEdgeDriver();
+
+            msEdgeDriver.putAll(stringMapFromGoogleWhoCantUseHashMapOnNestedObjects);
+
+            getConfigMap().put(MSEDGE_DRIVER, msEdgeDriver);
+
+            return msEdgeDriver;
         }
     }
 
