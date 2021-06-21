@@ -35,7 +35,7 @@ Running
 Setup Instructions
 ------------------
 
-Setup is simple, just download the Grid Extras Jar to get started from here: [Download Latest](https://github.com/groupon/Selenium-Grid-Extras/releases)
+Setup is simple, just download the Grid Extras Jar to get started from here: [Download Latest](https://github.com/rhpijnacker/Selenium-Grid-Extras/releases)
 
 
 ### Setting up Grid Hub ###
