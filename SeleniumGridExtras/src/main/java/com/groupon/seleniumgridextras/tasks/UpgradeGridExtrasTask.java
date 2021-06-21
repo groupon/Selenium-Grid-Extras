@@ -116,7 +116,7 @@ public class UpgradeGridExtrasTask extends ExecuteOSTask {
                             Version.getSanitizedVersion())));
 
 
-            boolean isUpToDate = Version.getSanitizedVersion().equals(latestVersion);
+            boolean isUpToDate = true; // Version.getSanitizedVersion().equals(latestVersion);
 
             String spacer = "                          ";
             String message = "";
