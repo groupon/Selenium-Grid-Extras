@@ -37,15 +37,36 @@
 
 package com.groupon.seleniumgridextras;
 
+import com.groupon.seleniumgridextras.tasks.ExecuteOSTask;
+import com.groupon.seleniumgridextras.tasks.KillAllMsEdge;
+
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
-public class VersionTest {
+public class KillAllMsEdgeTest {
 
-  // @Test
-  // public void testGetVersion() throws Exception {
-  //   String version = Version.getVersion();
-  //   assertTrue("Version is " + version + ", but should contain 'SNAPSHOT'", version.contains("SNAPSHOT"));
-  // }
+  private ExecuteOSTask task;
+  private String windowsCommand;
+  private String linuxCommnad;
+  private String macCommand;
+
+  @Before
+  public void setUp() throws Exception {
+    task = new KillAllMsEdge();
+    windowsCommand = "taskkill -F -IM msedge.exe";
+    linuxCommnad = "killall -v -m msedge";
+    macCommand = linuxCommnad;
+  }
+
+  @Test
+  public void testGetDescription() throws Exception {
+    assertEquals("Executes os level kill command on all instance of Microsoft Edge", task.getDescription());
+  }
+
+  @Test
+  public void testGetEndpoint() throws Exception {
+    assertEquals("/kill_msedge", task.getEndpoint());
+  }
 }

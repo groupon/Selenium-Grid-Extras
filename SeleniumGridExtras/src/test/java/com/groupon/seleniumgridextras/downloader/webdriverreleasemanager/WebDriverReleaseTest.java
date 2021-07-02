@@ -88,11 +88,11 @@ public class WebDriverReleaseTest {
 
   @Test
   public void testChromeDriverRelease() throws Exception{
-    WebDriverRelease chromeRelease = new ChromeDriverRelease("2.10");
+    WebDriverRelease chromeRelease = new ChromeDriverRelease("2.10.13.42");
 
-    assertEquals("2.10", chromeRelease.getPrettyPrintVersion("."));
+    assertEquals("2.10.13.42", chromeRelease.getPrettyPrintVersion("."));
     assertEquals("chromedriver", chromeRelease.getName());
-    assertEquals("index.html?path=2.10/", chromeRelease.getRelativePath());
+    assertEquals("index.html?path=2.10.13.42/", chromeRelease.getRelativePath());
 
   }
 

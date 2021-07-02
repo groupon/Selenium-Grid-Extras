@@ -35,17 +35,39 @@
  * Time: 4:06 PM
  */
 
-package com.groupon.seleniumgridextras;
+package com.groupon.seleniumgridextras.tasks;
 
-import org.junit.Test;
+import com.google.gson.JsonObject;
 
-import static org.junit.Assert.assertTrue;
+import com.groupon.seleniumgridextras.tasks.config.TaskDescriptions;
 
-public class VersionTest {
+public class KillAllMsEdge extends KillAllByName {
 
-  // @Test
-  // public void testGetVersion() throws Exception {
-  //   String version = Version.getVersion();
-  //   assertTrue("Version is " + version + ", but should contain 'SNAPSHOT'", version.contains("SNAPSHOT"));
-  // }
+  public KillAllMsEdge() {
+    setEndpoint(TaskDescriptions.Endpoints.KILL_MSEDGE);
+    setDescription(TaskDescriptions.Description.KILL_MSEDGE);
+    JsonObject params = new JsonObject();
+    setAcceptedParams(params);
+    setRequestType("GET");
+    setResponseType("json");
+    setClassname(this.getClass().getCanonicalName().toString());
+    setCssClass(TaskDescriptions.UI.BTN_DANGER);
+    setButtonText(TaskDescriptions.UI.ButtonText.KILL_MSEDGE);
+    setEnabledInGui(true);
+  }
+
+  @Override
+  public String getWindowsCommand() {
+    return super.getWindowsCommand("msedge.exe");
+  }
+
+  @Override
+  public String getLinuxCommand() {
+    return super.getLinuxCommand("msedge");
+  }
+
+  @Override
+  public String getMacCommand() {
+    return super.getMacCommand("msedge");
+  }
 }

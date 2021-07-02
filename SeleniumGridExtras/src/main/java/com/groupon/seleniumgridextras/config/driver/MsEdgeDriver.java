@@ -34,18 +34,29 @@
  * Date: 5/10/13
  * Time: 4:06 PM
  */
+package com.groupon.seleniumgridextras.config.driver;
 
-package com.groupon.seleniumgridextras;
+import com.groupon.seleniumgridextras.config.RuntimeConfig;
 
-import org.junit.Test;
+public class MsEdgeDriver extends DriverInfo {
 
-import static org.junit.Assert.assertTrue;
+  @Override
+  public String getExecutablePath() {
 
-public class VersionTest {
+    String
+        path =
+        this.getDirectory() + RuntimeConfig.getOS().getFileSeparator() + getExecutableName();
 
-  // @Test
-  // public void testGetVersion() throws Exception {
-  //   String version = Version.getVersion();
-  //   assertTrue("Version is " + version + ", but should contain 'SNAPSHOT'", version.contains("SNAPSHOT"));
-  // }
+    return path;
+  }
+
+  @Override
+  public String getExecutableName() {
+    String exe = "msedgedriver_" + this.getVersion() + "_" + this.getBit() + "bit";
+
+    if (RuntimeConfig.getOS().isWindows()) {
+      exe = exe + ".exe";
+    }
+    return exe;
+  }
 }

@@ -27,14 +27,15 @@ public class WebDriverReleaseManager {
   private static final String IE_DRIVER = "ie-driver";
   private static final String CHROME_DRIVER = "chrome-driver";
   private static final String GECKO_DRIVER = "gecko-driver";
+  private static final String MSEDGE_DRIVER = "msedge-driver";
   private WebDriverRelease latestWebdriverVersion;
   private WebDriverRelease latestIEDriverVersion;
   private WebDriverRelease latestChromeDriverVersion;
   private WebDriverRelease latestGeckoDriverVersion;
+  private WebDriverRelease latestMsEdgeDriverVersion;
 
   private Document parsedXml;
   private static Logger logger = Logger.getLogger(WebDriverReleaseManager.class);
-
 
   private Map<String, List<WebDriverRelease>> allProducts;
 
@@ -44,13 +45,17 @@ public class WebDriverReleaseManager {
     allProducts.put(IE_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(CHROME_DRIVER, new LinkedList<WebDriverRelease>());
     allProducts.put(GECKO_DRIVER, new LinkedList<WebDriverRelease>());
+    allProducts.put(MSEDGE_DRIVER, new LinkedList<WebDriverRelease>());
   }
 
-  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL geckoDriverVersionURL)
+  public WebDriverReleaseManager(URL webDriverAndIEDriverURL, URL chromeDriverVersionURL, URL geckoDriverVersionURL, URL msEdgeDriverVersionURL)
       throws DocumentException {
 
-    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver and GeckoDriver from "
-                       + webDriverAndIEDriverURL.toExternalForm() + " and " + chromeDriverVersionURL + " and " + geckoDriverVersionURL
+    logger.info("Checking the latest version of WebDriver, IEDriver, ChromeDriver, GeckoDriver, MsEdgeDriver from "
+                       + webDriverAndIEDriverURL.toExternalForm() + " and "
+                       + chromeDriverVersionURL + " and " 
+                       + geckoDriverVersionURL + " and "
+                       + msEdgeDriverVersionURL
         .toExternalForm());
     initialize();
 
@@ -59,6 +64,7 @@ public class WebDriverReleaseManager {
     loadWebDriverAndIEDriverVersions(parsedXml);
     loadChromeDriverVersionFromURL(chromeDriverVersionURL);
     loadGeckoDriverVersionFromURL(geckoDriverVersionURL);
+    loadMsEdgeDriverVersionFromURL(msEdgeDriverVersionURL);
   }
 
   public int getWebdriverVersionCount() {
@@ -92,6 +98,10 @@ public class WebDriverReleaseManager {
 
   public WebDriverRelease getGeckoDriverLatestVersion() {
 	return this.latestGeckoDriverVersion;
+  }
+
+  public WebDriverRelease getMsEdgeDriverLatestVersion() {
+    return this.latestMsEdgeDriverVersion;
   }
 
   /*
@@ -152,6 +162,24 @@ public class WebDriverReleaseManager {
 
   public void loadGeckoDriverVersion(String version) {
     this.latestGeckoDriverVersion = new GeckoDriverRelease(version);
+  }
+
+  public void loadMsEdgeDriverVersionFromURL(URL url) {
+    InputStream in = null;
+    try {
+      in = url.openStream();
+      loadMsEdgeDriverVersion(IOUtils.toString(in, "UTF-16LE"));
+    } catch (IOException e) {
+      logger.error("Something went wrong when trying to get latest msedge driver version");
+      logger.error(e.toString());
+      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+    } finally {
+      IOUtils.closeQuietly(in);
+    }
+  }
+
+  public void loadMsEdgeDriverVersion(String version) {
+    this.latestMsEdgeDriverVersion = new MsEdgeDriverRelease(version);
   }
 
   public void loadWebDriverAndIEDriverVersions(Document xml) {

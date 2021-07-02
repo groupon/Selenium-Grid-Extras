@@ -7,6 +7,7 @@ public class TaskDescriptions {
         public static final String DOWNLOAD_CHROMEDRIVER = "/download_chromedriver";
         public static final String DOWNLOAD_GECKODRIVER = "/download_geckodriver";
         public static final String DOWNLOAD_IEDRIVER = "/download_iedriver";
+        public static final String DOWNLOAD_MSEDGEDRIVER = "/download_msedgedriver";
         public static final String DOWNLOAD_WEBDRIVER = "/download_webdriver";
         public static final String DIR = "/dir";
         public static final String CONFIG = "/config";
@@ -21,6 +22,7 @@ public class TaskDescriptions {
         public static final String KILL_CHROME = "/kill_chrome";
         public static final String KILL_FIREFOX = "/kill_firefox";
         public static final String KILL_IE = "/kill_ie";
+        public static final String KILL_MSEDGE = "/kill_msedge";
         public static final String KILL_SAFARI = "/kill_safari";
         public static final String KILL_PID = "/kill_pid";
         public static final String MOVE_MOUSE = "/move_mouse";
@@ -57,6 +59,9 @@ public class TaskDescriptions {
         public static final
         String DOWNLOAD_IEDRIVER =
                 "Downloads a version of IEDriver.exe to local machine";
+        public static final
+        String DOWNLOAD_MSEDGEDRIVER =
+                "Downloads a version of MsEdgeDriver to local machine";
         public static final
         String DOWNLOAD_WEBDRIVER =
                 "Downloads a version of WebDriver jar to local machine";
@@ -99,6 +104,10 @@ public class TaskDescriptions {
         String
                 KILL_IE =
                 "Executes os level kill command on all instance of Internet Explorer";
+        public static final
+        String
+                KILL_MSEDGE =
+                "Executes os level kill command on all instance of Microsoft Edge";
         public static final
         String
                 KILL_SAFARI =
@@ -159,6 +168,7 @@ public class TaskDescriptions {
             public static final String DOWNLOAD_CHROMEDRIVER = "Download Chrome-Driver";
             public static final String DOWNLOAD_GECKODRIVER = "Download Gecko-Driver";
             public static final String DOWNLOAD_IEDRIVER = "Download IE-Driver";
+            public static final String DOWNLOAD_MSEDGEDRIVER = "Download MsEdge-Driver";
             public static final String DOWNLOAD_WEBDRIVER = "Download WebDriver";
             public static final String DIR = "List Shared Dir";
             public static final String CONFIG = "Get Config";
@@ -173,6 +183,7 @@ public class TaskDescriptions {
             public static final String KILL_CHROME = "Kill all chrome";
             public static final String KILL_FIREFOX = "Kill all firefox";
             public static final String KILL_IE = "Kill all IE";
+            public static final String KILL_MSEDGE = "Kill all ms edge";
             public static final String KILL_SAFARI = "Kill all Safari";
             public static final String KILL_PID = "Kill PID";
             public static final String MOVE_MOUSE = "Move mouse";

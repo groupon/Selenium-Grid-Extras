@@ -4,9 +4,9 @@ package com.groupon.seleniumgridextras.videorecording;
 
 import com.groupon.seleniumgridextras.config.RuntimeConfig;
 import com.groupon.seleniumgridextras.utilities.ImageUtils;
-import com.xuggle.mediatool.IMediaWriter;
-import com.xuggle.mediatool.ToolFactory;
-import com.xuggle.xuggler.ICodec;
+// import com.xuggle.mediatool.IMediaWriter;
+// import com.xuggle.mediatool.ToolFactory;
+// import com.xuggle.xuggler.ICodec;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -31,7 +31,7 @@ public class ImageToVideoConverter implements Callable {
   protected int imageType;
   protected boolean readyToConvert = true;
 
-  protected IMediaWriter writer;
+  // protected IMediaWriter writer;
 
   protected List<File> imageList;
 
@@ -52,7 +52,7 @@ public class ImageToVideoConverter implements Callable {
       readyToConvert = false;
     }
 
-    this.writer = ToolFactory.makeWriter(this.outputVideo.getAbsolutePath());
+    // this.writer = ToolFactory.makeWriter(this.outputVideo.getAbsolutePath());
 
     logger.info("Ready to start converting images in " + inputDir + " into " + this.outputVideo
         .getAbsolutePath());
@@ -63,11 +63,11 @@ public class ImageToVideoConverter implements Callable {
   public Object call() throws Exception {
     logger.info("Starting to generation test video " + this.outputVideo.getName());
 
-    this.writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_MPEG4, screenBounds.width,
-                               screenBounds.height);
+    // this.writer.addVideoStream(0, 0, ICodec.ID.CODEC_ID_MPEG4, screenBounds.width,
+    //                            screenBounds.height);
 
     try {
-      writer.encodeVideo(0, getTitleFrame(), 0, TimeUnit.MILLISECONDS);
+      // writer.encodeVideo(0, getTitleFrame(), 0, TimeUnit.MILLISECONDS);
 
       int index = 1;
 
@@ -75,7 +75,7 @@ public class ImageToVideoConverter implements Callable {
         BufferedImage currentFrame = ImageUtils.readImage(image);
 
         int frameIndex = 1000 * index;
-        writer.encodeVideo(0, currentFrame, frameIndex, TimeUnit.MILLISECONDS);
+        // writer.encodeVideo(0, currentFrame, frameIndex, TimeUnit.MILLISECONDS);
 
         index++;
       }
@@ -87,7 +87,7 @@ public class ImageToVideoConverter implements Callable {
       e.printStackTrace();
       return "error";
     } finally {
-      writer.close();
+      // writer.close();
       logger.info("Video conversion done for " + this.outputVideo.getName());
       return "done";
     }

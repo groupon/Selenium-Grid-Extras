@@ -241,11 +241,24 @@ public class GridStarterTest {
     @Test
     public void testChromeDriverDString() throws Exception {
         Config config = new Config();
-        config.getChromeDriver().setDirectory("/tmp/webdriver/chromedriver");
         if (RuntimeConfig.getOS().isWindows()) {
+            config.getChromeDriver().setDirectory("\\tmp\\webdriver\\chromedriver");
             assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=\\tmp\\webdriver\\chromedriver\\chromedriver_"));
         } else {
+            config.getChromeDriver().setDirectory("/tmp/webdriver/chromedriver");
             assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=/tmp/webdriver/chromedriver/chromedriver_"));
+        }
+    }
+
+    @Test
+    public void testMsEdgeDriverDString() throws Exception {
+        Config config = new Config();
+        if (RuntimeConfig.getOS().isWindows()) {
+            config.getMsEdgeDriver().setDirectory("\\tmp\\webdriver\\msedgedriver");
+            assertTrue(GridStarter.getMsEdgeDriverExecutionPathParam(config).contains("-Dwebdriver.edge.driver=\\tmp\\webdriver\\msedgedriver\\msedgedriver_"));
+        } else {
+            config.getMsEdgeDriver().setDirectory("/tmp/webdriver/msedgedriver");
+            assertTrue(GridStarter.getMsEdgeDriverExecutionPathParam(config).contains("-Dwebdriver.edge.driver=/tmp/webdriver/msedgedriver/msedgedriver_"));
         }
     }
 
