@@ -275,7 +275,10 @@ public class HtmlNodeRenderer {
             return RuntimeConfig.getConfig().getIEdriver().getVersion();
         } else if (browserName.equalsIgnoreCase("firefox")) {
             return RuntimeConfig.getConfig().getGeckoDriver().getVersion();
-        } else {
+        } else if (browserName.equalsIgnoreCase("msedge")) {
+            return RuntimeConfig.getConfig().getEdgeDriver().getVersion();
+        }
+        else {
             return RuntimeConfig.getConfig().getWebdriver().getVersion();
         }
     }
