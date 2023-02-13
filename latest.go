@@ -72,7 +72,7 @@ type Uploader struct {
 }
 
 func get_latest_release() {
-  resp, err := http.Get("https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases")
+  resp, err := http.Get("https://api.github.com/repos/chamiz/Selenium-Grid-Extras/releases")
   if err != nil {
     log.Fatal(err)
   }

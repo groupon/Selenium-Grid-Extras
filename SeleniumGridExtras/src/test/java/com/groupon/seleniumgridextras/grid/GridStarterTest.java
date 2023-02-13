@@ -234,8 +234,10 @@ public class GridStarterTest {
     @Test
     public void testEdgeDriverDString() throws Exception {
         Config config = new Config();
+        config.getChromeDriver().setDirectory("/tmp/webdriver/msedgedriver");
+        String path = GridStarter.getEdgeDriverExecutionPathParam(config);
         assertEquals("-Dwebdriver.edge.driver=\"C:\\Program Files (x86)\\Microsoft Web Driver\\MicrosoftWebDriver.exe\"",
-                GridStarter.getEdgeDriverExecutionPathParam(config));
+           path     );
     }
 
     @Test
@@ -243,7 +245,8 @@ public class GridStarterTest {
         Config config = new Config();
         config.getChromeDriver().setDirectory("/tmp/webdriver/chromedriver");
         if (RuntimeConfig.getOS().isWindows()) {
-            assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=\\tmp\\webdriver\\chromedriver\\chromedriver_"));
+            String path = GridStarter.getChromeDriverExecutionPathParam(config);
+            assertTrue(path.contains("-Dwebdriver.chrome.driver=\\tmp\\webdriver\\chromedriver\\chromedriver_"));
         } else {
             assertTrue(GridStarter.getChromeDriverExecutionPathParam(config).contains("-Dwebdriver.chrome.driver=/tmp/webdriver/chromedriver/chromedriver_"));
         }

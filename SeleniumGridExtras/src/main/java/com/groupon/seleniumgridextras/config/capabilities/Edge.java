@@ -3,7 +3,11 @@ package com.groupon.seleniumgridextras.config.capabilities;
 public class Edge extends Capability {
     @Override
     public String getWebDriverClass() {
-        return "org.openqa.selenium.edge.EdgeDriver";
+        return "microsoft.edge.seleniumtools.edgeDriver";
+    }
+
+    public Edge() {
+        this.put("maxInstances", 3);
     }
 
     @Override

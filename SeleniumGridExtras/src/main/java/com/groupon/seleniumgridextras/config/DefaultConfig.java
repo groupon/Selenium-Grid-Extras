@@ -86,12 +86,13 @@ public class DefaultConfig {
     public static final String ENABLE_SESSION_HISTORY_DEFAULT = "1";  // Session history is turned on by default.
     public static final File SESSION_LOG_DIRECTORY = new File("log", "session_logs");
     public static final int VIDEOS_TO_KEEP = 40;
-    public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/groupon/Selenium-Grid-Extras/releases";
+    public static final String DEFAULT_GRID_EXTRAS_RELEASE_URL = "https://api.github.com/repos/chamiz/Selenium-Grid-Extras/releases";
     public static final int GRID_EXTRAS_AUTO_UPDATE_CHECK_INTERVAL = 86400000;
     private static Config config;
     private static final String webDriverDefaultVersion = "2.53.0";
     private static final String ieDriverDefaultVersion = "2.53.1";
     private static final String chromeDriverDefaultVersion = "2.22";
+    private static final String edgeDriverDefaultVersion = "86.0.622.38";
     private static final String geckoDriverDefaultVersion = "0.10.0";
 
     public static Config getDefaultConfig() {
@@ -101,6 +102,7 @@ public class DefaultConfig {
         loadIEDriverInfo();
         loadChromeDriverInfo();
         loadGeckoDriverInfo();
+        loadEdgeDriverInfo();
         loadDisabledPlugins();
         loadEnabledPlugins();
         loadSetupConfig();
@@ -203,6 +205,9 @@ public class DefaultConfig {
     public static String getChromeDriverDefaultVersion() {
         return chromeDriverDefaultVersion;
     }
+    public static String getEdgeDriverDefaultVersion() {
+        return edgeDriverDefaultVersion;
+    }
 
     public static String getGeckoDriverDefaultVersion() {
         return geckoDriverDefaultVersion;
@@ -256,6 +261,16 @@ public class DefaultConfig {
         config.getGeckoDriver().setVersion(getGeckoDriverDefaultVersion());
     }
 
+    private static void loadEdgeDriverInfo() {
+        String tmpDir;
+
+        tmpDir = config.getWebdriver().getDirectory() + RuntimeConfig.getOS().getFileSeparator();
+
+        config.getEdgeDriver().setDirectory(tmpDir + "msedgedriver");
+        config.getEdgeDriver().setVersion(getEdgeDriverDefaultVersion());
+        config.getEdgeDriver().setBit(JsonCodec.WebDriver.Downloader.BIT_32);
+    }
+
     private static void loadLogConfig() {
         config.setLogMaximumSize(LOG_MAXIMUM_SIZE);
         config.setLogMaximumAge(LOG_MAX_AGE);
@@ -278,6 +293,7 @@ public class DefaultConfig {
         config.addActivatedModules(KillAllIE.class.getCanonicalName());
         config.addActivatedModules(KillAllFirefox.class.getCanonicalName());
         config.addActivatedModules(KillAllChrome.class.getCanonicalName());
+        config.addActivatedModules(KillAllEdge.class.getCanonicalName());
         config.addActivatedModules(KillAllSafari.class.getCanonicalName());
 
         config.addActivatedModules(SetAutoLogonUser.class.getCanonicalName());
@@ -305,6 +321,7 @@ public class DefaultConfig {
         config.addActivatedModules(DownloadIEDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadChromeDriver.class.getCanonicalName());
         config.addActivatedModules(DownloadGeckoDriver.class.getCanonicalName());
+        config.addActivatedModules(DownloadEdgeDriver.class.getCanonicalName());
         config.addActivatedModules(SessionHistory.class.getCanonicalName());
 
         config.addActivatedModules(UpgradeGridExtrasTask.class.getCanonicalName());

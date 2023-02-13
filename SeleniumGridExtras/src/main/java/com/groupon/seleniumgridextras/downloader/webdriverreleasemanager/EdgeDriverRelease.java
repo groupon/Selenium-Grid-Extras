@@ -4,11 +4,11 @@ package com.groupon.seleniumgridextras.downloader.webdriverreleasemanager;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ChromeDriverRelease extends WebDriverRelease {
+public class EdgeDriverRelease extends WebDriverRelease {
 
-  public ChromeDriverRelease(String input) {
+  public EdgeDriverRelease(String input) {
     super(input);
-
+    input = input.trim().substring(2).replaceAll("\u0000", "");
     Matcher m = Pattern.compile("(\\d+)\\.(\\d+)\\.(\\d+)\\.(\\d+)").matcher(input);
 
     if (m.find()){
@@ -18,7 +18,7 @@ public class ChromeDriverRelease extends WebDriverRelease {
       setPatch2Version(Integer.valueOf(m.group(4)));
     }
 
-    setName("chromedriver");
+    setName("msedgedriver");
     setRelativePath("index.html?path=" + getPrettyPrintVersion(".") + "/");
 
   }

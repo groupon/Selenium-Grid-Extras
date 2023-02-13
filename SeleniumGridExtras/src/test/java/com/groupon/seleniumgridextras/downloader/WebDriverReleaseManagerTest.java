@@ -20,7 +20,8 @@ public class WebDriverReleaseManagerTest {
       URL webDriverAndIEDriverURL = ClassLoader.getSystemResource("fixtures/selenium_release_manifest.xml");
       URL chromeDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
       URL marionetteDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
-      releaseManager = new WebDriverReleaseManager(webDriverAndIEDriverURL, chromeDriverVersionURL, marionetteDriverVersionURL);
+      URL edgeDriverVersionURL = ClassLoader.getSystemResource("fixtures/selenium_release_version.txt");
+      releaseManager = new WebDriverReleaseManager(webDriverAndIEDriverURL, chromeDriverVersionURL, marionetteDriverVersionURL , edgeDriverVersionURL);
   }
 
   @Test
@@ -41,22 +42,26 @@ public class WebDriverReleaseManagerTest {
     String wdManifest = "http://selenium-release.storage.googleapis.com/";
     String chromeManifest = "http://chromedriver.storage.googleapis.com/LATEST_RELEASE";
     String marionetteManifest = "http://chromedriver.storage.googleapis.com/LATEST_RELEASE";
+    String edgeManifest = "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/LATEST_STABLE";
 
     WebDriverReleaseManager
         manager =
-        new WebDriverReleaseManager(new URL(wdManifest), new URL(chromeManifest), new URL(marionetteManifest));
+        new WebDriverReleaseManager(new URL(wdManifest), new URL(chromeManifest), new URL(marionetteManifest) , new URL(edgeManifest));
 
     assertNotEquals(null, manager.getWedriverLatestVersion().getPrettyPrintVersion("."));
     assertNotEquals(null, manager.getIeDriverLatestVersion().getPrettyPrintVersion("."));
     assertNotEquals(null, manager.getChromeDriverLatestVersion().getPrettyPrintVersion("."));
+    assertNotEquals(null, manager.getEdgeDriverLatestVersion().getPrettyPrintVersion("."));
 
     assertEquals("selenium-server-standalone", manager.getWedriverLatestVersion().getName());
     assertEquals("IEDriverServer", manager.getIeDriverLatestVersion().getName());
     assertEquals("chromedriver", manager.getChromeDriverLatestVersion().getName());
+    assertEquals("edgedriver", manager.getChromeDriverLatestVersion().getName());
 
     assertNotEquals(null, manager.getWedriverLatestVersion().getRelativePath());
     assertNotEquals(null, manager.getIeDriverLatestVersion().getRelativePath());
     assertNotEquals(null, manager.getChromeDriverLatestVersion().getRelativePath());
+    assertNotEquals(null, manager.getEdgeDriverLatestVersion().getRelativePath());
 
   }
 

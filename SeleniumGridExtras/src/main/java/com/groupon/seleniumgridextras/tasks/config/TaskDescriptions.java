@@ -8,6 +8,7 @@ public class TaskDescriptions {
         public static final String DOWNLOAD_GECKODRIVER = "/download_geckodriver";
         public static final String DOWNLOAD_IEDRIVER = "/download_iedriver";
         public static final String DOWNLOAD_WEBDRIVER = "/download_webdriver";
+        public static final String DOWNLOAD_EDGEDRIVER = "/download_edgedriver";
         public static final String DIR = "/dir";
         public static final String CONFIG = "/config";
         public static final String GET_FILE = "/get_file";
@@ -22,6 +23,7 @@ public class TaskDescriptions {
         public static final String KILL_FIREFOX = "/kill_firefox";
         public static final String KILL_IE = "/kill_ie";
         public static final String KILL_SAFARI = "/kill_safari";
+        public static final String KILL_EDGE = "/kill_edge";
         public static final String KILL_PID = "/kill_pid";
         public static final String MOVE_MOUSE = "/move_mouse";
         public static final String LOG_DELETE = "/log_delete";
@@ -57,6 +59,9 @@ public class TaskDescriptions {
         public static final
         String DOWNLOAD_IEDRIVER =
                 "Downloads a version of IEDriver.exe to local machine";
+        public static final
+        String DOWNLOAD_EDGEDRIVER =
+                "Downloads a version of MSEDGEDriver to local machine";
         public static final
         String DOWNLOAD_WEBDRIVER =
                 "Downloads a version of WebDriver jar to local machine";
@@ -103,6 +108,12 @@ public class TaskDescriptions {
         String
                 KILL_SAFARI =
                 "Executes os level kill command on all instance of Safari";
+
+        public static final
+        String
+                KILL_EDGE =
+                "Executes os level kill command on all instance of Edge";
+
         public static final String KILL_PID = "Kills a given process id";
         public static final String LOG_DELETE = "Delete logs older than X Days. X is define in the config.json";
         public static final
@@ -160,6 +171,7 @@ public class TaskDescriptions {
             public static final String DOWNLOAD_GECKODRIVER = "Download Gecko-Driver";
             public static final String DOWNLOAD_IEDRIVER = "Download IE-Driver";
             public static final String DOWNLOAD_WEBDRIVER = "Download WebDriver";
+            public static final String DOWNLOAD_EDGEDRIVER = "Download WebDriver";
             public static final String DIR = "List Shared Dir";
             public static final String CONFIG = "Get Config";
             public static final String GET_FILE = "Get File";
@@ -174,6 +186,7 @@ public class TaskDescriptions {
             public static final String KILL_FIREFOX = "Kill all firefox";
             public static final String KILL_IE = "Kill all IE";
             public static final String KILL_SAFARI = "Kill all Safari";
+            public static final String KILL_EDGE = "Kill all Edge";
             public static final String KILL_PID = "Kill PID";
             public static final String MOVE_MOUSE = "Move mouse";
             public static final String NETSTAT = "netstat";

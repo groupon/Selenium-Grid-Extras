@@ -23,14 +23,16 @@ public class VideoDownloaderCallable implements Callable {
     private static Logger logger = Logger.getLogger(VideoDownloaderCallable.class);
     private final String session;
     private final String host;
+    private final int nodePort;
     private final URI uri;
     private final int ATTEMPTS_TO_DOWNLOAD = 5;
     private final int TIME_TO_WAIT_BETWEEN_ATTEMPTS = 30000;
 
-    public VideoDownloaderCallable(String session, String host) {
+    public VideoDownloaderCallable(String session, String host, int nodePort) {
         logger.info(String.format("New instance for session: %s host: %s", session, host));
         this.session = session;
         this.host = host;
+        this.nodePort = nodePort;
         this.uri = buildVideoStatusUri();
 
     }
@@ -187,7 +189,7 @@ public class VideoDownloaderCallable implements Callable {
         URIBuilder builder = new URIBuilder();
         builder.setScheme("http");
         builder.setHost(this.host);
-        builder.setPort(RuntimeConfig.getGridExtrasPort());
+        builder.setPort(this.nodePort);
         builder.setPath(TaskDescriptions.Endpoints.VIDEO);
 
         try {

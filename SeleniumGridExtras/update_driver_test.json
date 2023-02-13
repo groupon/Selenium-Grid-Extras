@@ -4,8 +4,8 @@
     "log_maximum_size": "20000000",
     "iedriver": {
       "bit": "Win32",
-      "directory": "/tmp/webdriver/iedriver",
-      "version": "2.41.0"
+      "directory": "\\tmp\\webdriver\\iedriver",
+      "version": "3.141.59"
     },
     "default_role": "hub",
     "auto_update_drivers": "1",
@@ -22,7 +22,8 @@
       "html_nav_bar": "/nav_bar_partial.html",
       "main_template_fallback": "http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css"
     },
-    "http_request_timeout": 60000,
+    "http_request_timeout": 60000.0,
+    "node_additional_classpath": [],
     "video_recording_options": {
       "frameSeconds": "1",
       "frames": "5",
@@ -37,18 +38,24 @@
       "lower_third_font_color": "255,255,255,255"
     },
     "grid_extras_release_url": "https://api.github.com/repos/chamiz/Selenium-Grid-Extras/releases",
-    "hub_additional_classpath": [
-      "/opt/selenium/prioritizer.jar",
-      "/opt/selenium/lib/capabilitymatcher.jar"
-    ],
+    "hub_additional_classpath": [],
+    "geckodriver": {
+      "directory": "\\tmp\\webdriver\\geckodriver",
+      "version": "0.10.0"
+    },
+    "msedgedriver": {
+      "bit": "32",
+      "directory": "\\tmp\\webdriver\\msedgedriver",
+      "version": "88.0.705.53"
+    },
     "reboot_after_sessions": "10",
     "expose_directory": "shared",
     "tear_down": [
       "com.groupon.seleniumgridextras.tasks.MoveMouse"
     ],
     "webdriver": {
-      "directory": "/tmp/webdriver",
-      "version": "2.41.0"
+      "directory": "\\tmp\\webdriver",
+      "version": "3.141.59"
     },
     "active_modules": [
       "com.groupon.seleniumgridextras.tasks.DeleteOldLogsTask",
@@ -60,8 +67,9 @@
       "com.groupon.seleniumgridextras.tasks.KillAllIE",
       "com.groupon.seleniumgridextras.tasks.KillAllFirefox",
       "com.groupon.seleniumgridextras.tasks.KillAllChrome",
-      "com.groupon.seleniumgridextras.tasks.KillAllSafari",
       "com.groupon.seleniumgridextras.tasks.KillAllEdge",
+      "com.groupon.seleniumgridextras.tasks.KillAllSafari",
+      "com.groupon.seleniumgridextras.tasks.SetAutoLogonUser",
       "com.groupon.seleniumgridextras.tasks.GetProcesses",
       "com.groupon.seleniumgridextras.tasks.KillPid",
       "com.groupon.seleniumgridextras.tasks.Netstat",
@@ -76,6 +84,7 @@
       "com.groupon.seleniumgridextras.tasks.StopGridExtras",
       "com.groupon.seleniumgridextras.tasks.IEProtectedMode",
       "com.groupon.seleniumgridextras.tasks.IEMixedContent",
+      "com.groupon.seleniumgridextras.tasks.Resolution",
       "com.groupon.seleniumgridextras.tasks.SystemInfo",
       "com.groupon.seleniumgridextras.tasks.GetNodeConfig",
       "com.groupon.seleniumgridextras.tasks.UpdateNodeConfig",
@@ -83,24 +92,19 @@
       "com.groupon.seleniumgridextras.tasks.DownloadWebdriver",
       "com.groupon.seleniumgridextras.tasks.DownloadIEDriver",
       "com.groupon.seleniumgridextras.tasks.DownloadChromeDriver",
+      "com.groupon.seleniumgridextras.tasks.DownloadGeckoDriver",
       "com.groupon.seleniumgridextras.tasks.DownloadEdgeDriver",
       "com.groupon.seleniumgridextras.tasks.SessionHistory",
       "com.groupon.seleniumgridextras.tasks.UpgradeGridExtrasTask"
     ],
-    "grid_extras_auto_update": "0",
     "hub_config_files": [],
-    "config_puller_http_timeout": 5000,
+    "config_puller_http_timeout": 5000.0,
     "auto_start_hub": "0",
     "unregisterNodeDuringReboot": "true",
     "chromedriver": {
       "bit": "32",
-      "directory": "/tmp/webdriver/chromedriver",
-      "version": "2.10"
-    },
-    "edgedriver": {
-      "bit": "32",
-      "directory": "/tmp/webdriver/edgedriver",
-      "version": "86.0.598.0"
+      "directory": "/tmp/update_driver_test",
+      "version": "88.0.4324.96"
     },
     "disabled_modules": [
       "com.groupon.seleniumgridextras.tasks.GetFile"
@@ -111,15 +115,17 @@
       "role": "hub",
       "port": "4444",
       "servlets": "com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet",
-      "host": "192.168.1.12"
+      "host": "192.168.0.102"
     },
-    "log_maximum_age_ms": 864000000,
+    "log_maximum_age_ms": 8.64E8,
+    "grid_extras_port": 3000.0,
     "grid": {},
     "setup": [
       "com.groupon.seleniumgridextras.tasks.MoveMouse"
     ],
     "grid_jvm_options": {},
     "node_config_files": [],
-    "grid_extras_jvm_options": {}
+    "grid_extras_jvm_options": {},
+    "enable_session_history": "1"
   }
 }

@@ -1,0 +1,86 @@
+{
+  "theConfigMap": {
+    "auto_update_browser_versions": "",
+    "log_maximum_size": "20000000",
+    "iedriver": {
+      "bit": "Win32",
+      "directory": "\\tmp\\webdriver\\iedriver",
+      "version": "2.53.1"
+    },
+    "default_role": "hub",
+    "auto_update_drivers": "",
+    "html_render_options": {
+      "html_footer_partial": "/footer_partial.html",
+      "main_js_file": "/bootstrap.3.2.0.min.js",
+      "primary_css_file_fallback": "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css",
+      "html_header_file": "/header_partial.html",
+      "main_template": "/jumbotron-narrow.css",
+      "primary_css_file": "/bootstrap.3.2.0.min.css",
+      "main_js_fallback": "https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js",
+      "jquery_file": "/jquery.1.11.1.min.js",
+      "jquery_fallback": "https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js",
+      "html_nav_bar": "/nav_bar_partial.html",
+      "main_template_fallback": "http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css"
+    },
+    "http_request_timeout": 60000,
+    "node_additional_classpath": [],
+    "video_recording_options": {
+      "frameSeconds": "1",
+      "frames": "5",
+      "videos_to_keep": "40",
+      "lower_third_background_color": "0,0,0,200",
+      "idle_video_timeout": "120",
+      "width": "1024",
+      "video_output_dir": "video_output",
+      "title_frame_font_color": "129,182,64,128",
+      "record_test_videos": "true",
+      "height": "768",
+      "lower_third_font_color": "255,255,255,255"
+    },
+    "grid_extras_release_url": "https://api.github.com/repos/chamiz/Selenium-Grid-Extras/releases",
+    "hub_additional_classpath": [],
+    "geckodriver": {
+      "directory": "\\tmp\\webdriver\\geckodriver",
+      "version": "0.10.0"
+    },
+    "msedgedriver": {
+      "bit": "32",
+      "directory": "/tmp/download_edge_driver_test",
+      "version": "86.0.622.38"
+    },
+    "reboot_after_sessions": 0.0,
+    "expose_directory": "shared",
+    "tear_down": [],
+    "webdriver": {
+      "directory": "\\tmp\\webdriver",
+      "version": "2.53.0"
+    },
+    "active_modules": [],
+    "hub_config_files": [],
+    "config_puller_http_timeout": 5000,
+    "auto_start_hub": "0",
+    "unregisterNodeDuringReboot": "true",
+    "chromedriver": {
+      "bit": "32",
+      "directory": "\\tmp\\webdriver\\chromedriver",
+      "version": "2.22"
+    },
+    "disabled_modules": [],
+    "grid_extras_auto_update_check_interval": "86400000",
+    "auto_start_node": "1",
+    "hub_config": {
+      "role": "hub",
+      "port": "4444",
+      "servlets": "com.groupon.seleniumgridextras.grid.servlets.ProxyStatusJsonServlet",
+      "host": "192.168.0.102"
+    },
+    "log_maximum_age_ms": 864000000,
+    "grid_extras_port": 3000.0,
+    "grid": {},
+    "setup": [],
+    "grid_jvm_options": {},
+    "node_config_files": [],
+    "grid_extras_jvm_options": {},
+    "enable_session_history": "1"
+  }
+}
